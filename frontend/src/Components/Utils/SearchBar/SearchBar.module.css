@@ -1,0 +1,26 @@
+*{
+    box-sizing: border-box;
+}
+.SearchBar{
+    display: flex;
+    align-items: center;
+    width: 350px;
+    box-shadow:  0px 0px 10px #c4c4c4;
+    margin: 10px auto;
+    padding:5px 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    
+}
+.SearchBar svg{
+    color: #9f9f9f;
+}
+.SearchBar input{
+    color: #858585;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+    padding-left: 10px;
+
+
+}

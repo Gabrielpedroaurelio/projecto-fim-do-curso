@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@font-face {
+    font-family: 'Open Sans';
+    src:url(../public/fonts/Open_Sans/static/OpenSans-Regular.ttf);
+    
+}

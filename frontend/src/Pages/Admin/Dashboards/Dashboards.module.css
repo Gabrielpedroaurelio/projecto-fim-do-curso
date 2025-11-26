@@ -1,0 +1,96 @@
+.ContainerGeneral {
+    margin-left: 50px;
+}
+.ContainerGeneral >h1{
+    font-size: 15pt;
+    font-weight: 600;
+    
+}
+.ContainerGeneral >small{
+    color: #777777;
+    font-size: 8pt;
+}
+.ContainerGeneral .cardsResumes {
+    display: flex;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+overflow-x: auto;
+}
+
+.ContainerGeneral .cardsResumes::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.ContainerGeneral .cardsResumes::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.ContainerGeneral .cardsResumes::-webkit-scrollbar-thumb {
+    background-color: #c5c5c5af;
+    border-radius: 10px;
+}
+
+.ContainerGeneral .cardsResumes::-webkit-scrollbar-thumb:hover {
+    background-color: #7c7c7c;
+    cursor: pointer;
+}
+
+.ContainerGeneral .cardsResumes .cardResume {
+    border-radius: 6px;
+    width: 200px;
+    padding: 10px;
+    flex-shrink: 0;
+    flex-grow: 0;
+margin: 0px 2px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 75% 25%;
+}
+
+.ContainerGeneral .cardsResumes .cardResume:nth-child(1) {
+    background-color: #f1e6ff;
+    
+}
+
+.ContainerGeneral .cardsResumes .cardResume:nth-child(2) {
+    background-color: #e4f5ff;
+   
+}
+
+.ContainerGeneral .cardsResumes .cardResume:nth-child(3) {
+    background-color: #ffefe7;
+    
+}
+
+.ContainerGeneral .cardsResumes .cardResume:nth-child(4) {
+    background-color: #ebfdee;
+   
+}
+
+.ContainerGeneral .cardsResumes .cardResume .content {
+   
+    padding: 5px 10px;
+}
+.ContainerGeneral .cardsResumes .cardResume .content span{
+    color: #777777;
+}
+.ContainerGeneral .cardsResumes .cardResume .content h3{
+    font-size: 15pt;
+    color: #181818;
+    font-weight: 700;
+}
+
+.ContainerGeneral .cardsResumes .cardResume:nth-child(1) .icon {
+    color: #a879f2;
+}
+.ContainerGeneral .cardsResumes .cardResume:nth-child(2) .icon {
+     color: #73c5fd;
+}
+.ContainerGeneral .cardsResumes .cardResume:nth-child(3) .icon {
+    color: #ff9b6c;
+}
+.ContainerGeneral .cardsResumes .cardResume:nth-child(4) .icon {
+     color: #60d274;
+}

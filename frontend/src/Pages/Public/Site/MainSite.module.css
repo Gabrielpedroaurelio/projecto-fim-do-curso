@@ -1,0 +1,50 @@
+.site {}
+
+.slide {
+    color: #fff;
+    background-image: url(../../../assets/images/foto-imp.jpg);
+    background-size: cover;
+    background-position: center center;
+    height: 300px;
+
+    display: grid;
+ 
+
+}
+
+.slide>div {
+    background-color: rgba(0, 0, 0, 0.407);
+    -webkit-backdrop-filter: blur(0px);
+    backdrop-filter: blur(0px);
+    display: grid;
+    grid-template-columns: 80% 20%;
+}
+.slide >div .infor{
+    
+    width: 80%;
+    margin:20px auto 0px auto;
+}
+.slide h1 {
+    font-size: 20pt;
+    font-family: var(--font-weight-extrabold);
+
+    font-weight: 500;
+}
+
+.slide h1 span {
+    color: #2bc97d;
+}
+.slide >div .infor p{
+    font-size: 10px;
+    width: 50%;
+}
+.slide >div .infor{}
+.slide >div .infor button{
+    background-color: #2bc97d;
+    color: #ffffff;
+    padding: 3px 10px;
+    width: 80px;
+    font-size: 10px;
+    cursor: pointer;
+
+}

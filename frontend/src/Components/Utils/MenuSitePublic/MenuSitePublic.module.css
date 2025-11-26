@@ -1,0 +1,56 @@
+@import url(../../../assets/includes/includes.includes.css);
+
+.headerMenu {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 10px var(--color-gray-400);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    z-index: 3;
+}
+
+.headerMenu .menu {}
+
+.headerMenu .menu .btnMenu {
+    cursor: pointer;
+}
+
+.headerMenu .menu .btnMenu svg {
+    border: 1px solid #12b989;
+    border-radius: 4px;
+    color: #12b989;
+}
+
+.headerMenu .menu nav {
+    display: flex;
+
+}
+
+.headerMenu .menu nav a {
+    display: flex;
+    align-items: center;
+    color: #4b4b4b;
+    font-size: 10pt;
+
+    margin: 3px auto;
+    padding: 5px 10px;
+
+
+}
+
+.headerMenu .menu nav a:hover {
+    color: #12b989;
+}
+
+.headerMenu .menu nav a span {
+    margin-left: 5px;
+
+}
+
+.headerMenu .menu nav span:last-child a {
+    background-color: #12b989;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
