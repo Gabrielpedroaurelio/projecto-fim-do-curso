@@ -6,6 +6,7 @@ import AuthAdmin from './Pages/Admin/Auth/AuthAdmin'
 import DashboardsStudents from './Pages/Client/Students/Dashboards/DashboardsStudents'
 import LIbrary from './Pages/Public/LIbrary/LIbrary'
 import AuthPublic from './Pages/Public/AuthPublic/AuthPublic'
+import DashboardEncarregado from './Pages/Client/Parents/Dashboards/DashboardEncarregado'
 const Routers=()=>{
     return (
         <>
@@ -26,8 +27,8 @@ const Routers=()=>{
                  * Router for clients site
                  */}
                  <Route  path='/client/student'exact element={<DashboardsStudents/>}/>
-                 <Route  path='/client/student'exact element={''}/>
-                 <Route  path='/client/parents'exact element={''}/>
+                 <Route  path='/client/student'exact element={<DashboardsStudents/>}/>
+                 <Route  path='/client/parents'exact element={<DashboardEncarregado/>}/>
                  
                 {/**
                  * Router for public

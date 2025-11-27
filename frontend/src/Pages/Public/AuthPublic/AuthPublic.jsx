@@ -1,100 +1,97 @@
-import { useReducer, useState } from "react"
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import favicon from '../../../assets/images/favicon.ico'
-import imgLoginParant from '../../../assets/images/img-login-Parants.png'
-import imgLoginStudent from '../../../assets/images/img-login-Student.png'
-import style from './AuthPublic.module.css'
+import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import favicon from '../../../assets/images/favicon.ico';
+import imgLoginParant from '../../../assets/images/img-login-Parants.png';
+import imgLoginStudent from '../../../assets/images/img-login-Student.png';
+import style from './AuthPublic.module.css';
+
 export default function AuthPublic() {
+
+    // Array com imagens de cada tipo de login
     const imageslogins = [
         imgLoginStudent,
         imgLoginParant
-    ]
-    
-    function ChangeView(values, action) {
-        switch (action.actiontype) {
-            case 'increment':
-                return { value: 1 }
+    ];
 
-            case 'decrement':
-                return { value: 0 }
+    // Estado para alternar entre Estudante (0) e Encarregado (1)
+    const [loginView, setLoginView] = useState(0);
 
+    // react-hook-form
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-            default:
-                break;
-        }
-
-    }
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    // Função que será chamada ao enviar o formulário
     function LoginEffect(data) {
-        console.log(data);
-
-
+        console.log("Dados do Login:", data);
+        // Aqui você pode fazer a integração com API de login
     }
-    const [indexloginviews, setindexloginviews] = useReducer(ChangeView, { value: 0 })
+
     return (
-        <>
-            <div className={style.ContainerLoginPublic}>
-                <div className={style.CardLoginPublic}>
-                    <form onSubmit={handleSubmit(LoginEffect)}>
-                        <div>
-                            <img src={favicon} alt="" width={40} />
-                            <h1>Login</h1>
-                            <small>Instituito Politecnico do Maiombe</small>
-                        </div>
-                        <div>
-                            <input type="text" placeholder="E-mail" {...register("email", {
-                                required: "E-mail é um campo Obrigatório"
-                            })} />
-                            {
-                                errors && (
+        <div className={style.ContainerLoginPublic}>
+            <div className={style.CardLoginPublic}>
 
-                                    <p className={style.errorRequiredInput}>{errors.email?.message}</p>
-                                )
-                            }
-                        </div>
-                        <div>
-                            <input type="text" placeholder="Palavra-Passe" {...register("password" ,{
-                                required: "Senha é um campo Obrigatório"
-                            })} />
-                            {
-                                errors && (
-
-                                    <p className={style.errorRequiredInput}>{errors.password?.message}</p>
-                                )
-                            }
-                        </div>
-                        <div>
-                            <Link to={''} className={style.forgotPassword}><small >Esqueceu a Senha?</small></Link>
-                        </div>
-                        <div>
-                            <button>Iniciar Sessão</button>
-                        </div>
-                        <div>
-
-                            {
-                                indexloginviews.value == 0 ? (
-
-                                    <button onClick={() => setindexloginviews({ actiontype: 'increment' })}
-                                        className={style.btnChangeViewLogin} >Sou Encarregado</button>
-                                ) : (
-                                    <button onClick={() => setindexloginviews({ actiontype: 'decrement' })}
-                                        className={style.btnChangeViewLogin}>Sou Estudante</button>
-                                )
-                            }
-
-                        </div>
-                    </form>
-                    <div className={style.description}>
-                        <div>
-                            <h1><strong>Bem vindo ao Portal</strong>  do {indexloginviews.value==0?(<span>Estundate</span>):(<span>Encarregado</span>)}</h1>
-                            <img src={imageslogins[indexloginviews.value]} alt="" />
-                        </div>
+                {/* Formulário de login */}
+                <form onSubmit={handleSubmit(LoginEffect)}>
+                    {/* Cabeçalho */}
+                    <div className={style.header}>
+                        <img src={favicon} alt="favicon" width={40} />
+                        <h1>Login</h1>
+                        <small>Instituto Politécnico do Maiombe</small>
                     </div>
 
-                </div>
-            </div>
+                    {/* Campo E-mail */}
+                    <div className={style.inputGroup}>
+                        <input 
+                            type="email" 
+                            placeholder="E-mail" 
+                            {...register("email", { required: "E-mail é um campo obrigatório" })} 
+                        />
+                        {errors.email && <p className={style.errorRequiredInput}>{errors.email.message}</p>}
+                    </div>
 
-        </>
-    )
+                    {/* Campo Senha */}
+                    <div className={style.inputGroup}>
+                        <input 
+                            type="password" 
+                            placeholder="Palavra-Passe" 
+                            {...register("password", { required: "Senha é um campo obrigatório" })} 
+                        />
+                        {errors.password && <p className={style.errorRequiredInput}>{errors.password.message}</p>}
+                    </div>
+
+                    {/* Link esqueci a senha */}
+                    <div className={style.forgotPasswordDiv}>
+                        <Link to="" className={style.forgotPassword}><small>Esqueceu a Senha?</small></Link>
+                    </div>
+
+                    {/* Botão de login */}
+                    <div className={style.buttonDiv}>
+                        <button type="submit">Iniciar Sessão</button>
+                    </div>
+
+                    {/* Alternar entre Estudante e Encarregado */}
+                    <div className={style.changeViewDiv}>
+                        <button 
+                            type="button"
+                            onClick={() => setLoginView(loginView === 0 ? 1 : 0)}
+                            className={style.btnChangeViewLogin}
+                        >
+                            {loginView === 0 ? "Sou Encarregado" : "Sou Estudante"}
+                        </button>
+                    </div>
+                </form>
+
+                {/* Descrição e imagem */}
+                <div className={style.description}>
+                    <div>
+                        <h1>
+                            <strong>Bem-vindo ao Portal</strong> do {loginView === 0 ? "Estudante" : "Encarregado"}
+                        </h1>
+                        <img src={imageslogins[loginView]} alt="Imagem de Login" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    );
 }
