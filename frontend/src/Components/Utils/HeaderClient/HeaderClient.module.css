@@ -1,0 +1,33 @@
+
+.HeaderClient {
+    background-color: var(    --bg-blue-client);
+    display: flex;
+    color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #cccccc;
+}
+
+.HeaderClient .LogoSchool {
+    display: flex;
+    align-items: center;
+}
+.HeaderClient .LogoSchool img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.HeaderClient .DataUser{
+    display: flex;
+    align-items: center;
+}
+.HeaderClient .DataUser>div{
+    margin: 0px 5px;
+}
+.HeaderClient .DataUser .img{
+    background-color: #424958;
+    padding: 8px;
+    border-radius: 50%;
+}

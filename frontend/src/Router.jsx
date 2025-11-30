@@ -7,6 +7,7 @@ import DashboardsStudents from './Pages/Client/Students/Dashboards/DashboardsStu
 import LIbrary from './Pages/Public/LIbrary/LIbrary'
 import AuthPublic from './Pages/Public/AuthPublic/AuthPublic'
 import DashboardEncarregado from './Pages/Client/Parents/Dashboards/DashboardEncarregado'
+import Users from './Pages/Admin/Users/Users'
 const Routers=()=>{
     return (
         <>
@@ -16,7 +17,7 @@ const Routers=()=>{
                  * Router for admin side
                  */}
                  <Route  path='/admin/dashboards'exact element={<Dashboards/>}/>
-                 <Route  path='/admin/users'exact element={''}/>
+                 <Route  path='/admin/users'exact element={<Users/>}/>
                  <Route  path='/admin/asks'exact element={''}/>
                  <Route  path='/admin/auth'exact element={<AuthAdmin/>}/>
                  <Route  path='/admin/history'exact element={''}/>

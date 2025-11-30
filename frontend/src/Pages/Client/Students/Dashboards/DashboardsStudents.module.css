@@ -1,0 +1,7 @@
+@import url(../../../../assets/includes/includes.includes.css); 
+.ContainerDashboardAluno{
+    background-color: var(--fundo-login);
+    height: 100vh;
+    width: 100vw;
+    padding: 10px;
+}

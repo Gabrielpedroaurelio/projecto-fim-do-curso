@@ -16,7 +16,7 @@ FORMULARIO: ADMINISTRATIVO
                |               | 
                |_[PAINEL_ENCARREGADO]
                                     |_[DASHBOARDS]
-                                    |_[MEUS_EDUCANDO]
+                                    |_[MEUS_EDUCANDO] 
                                     |_[PERFIL]
                                     |_[DEFINIÇÕES]
                                     |_[AÇÇÕES_DOS_FILHOS]

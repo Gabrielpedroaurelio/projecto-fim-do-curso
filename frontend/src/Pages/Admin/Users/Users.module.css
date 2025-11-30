@@ -1,0 +1,95 @@
+.ContainerGeneralUsers {
+    margin-left: 55px;
+}
+
+.ContainerGeneralUsers .cardsResumes {
+    display: grid;
+    gap: 10px;
+    width: 96%;
+    margin: auto;
+
+
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume {
+    border-radius: 6px;
+    width: 90%;
+    height: 100px;
+    padding: 10px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin: auto;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 75% 25%;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(1) {
+    background-color: #f1e6ff;
+
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(2) {
+    background-color: #e4f5ff;
+
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(3) {
+    background-color: #ffefe7;
+
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(4) {
+    background-color: #ebfdee;
+
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume .content {
+
+    padding: 5px 10px;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume .content span {
+    color: #777777;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume .content h3 {
+    font-size: 15pt;
+    color: #181818;
+    font-weight: 700;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(1) .icon {
+    color: #a879f2;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(2) .icon {
+    color: #73c5fd;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(3) .icon {
+    color: #ff9b6c;
+}
+
+.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(4) .icon {
+    color: #60d274;
+}
+
+@media screen and (min-width:410px)  {
+    .ContainerGeneralUsers .cardsResumes {
+        background-color: rebeccapurple;
+        grid-template-columns: repeat(2, 1fr);
+
+
+    }
+
+}
+/*
+@media screen and (min-width:900px) {
+    .ContainerGeneralUsers .cardsResumes {
+        grid-template-columns: repeat(4, 1fr);
+
+
+    }
+
+}*/

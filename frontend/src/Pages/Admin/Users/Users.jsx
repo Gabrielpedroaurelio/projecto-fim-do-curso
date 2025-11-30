@@ -1,21 +1,16 @@
-import MenuNavBarAdmin from "../../../Components/Utils/MenuNavBarAdmin/MenuNavBarAdmin";
-import SearchBarAdmin from "../../../Components/Utils/SearchBarAdmin/SearchBarAdmin";
-import style from './Dashboards.module.css'
-/* 
-Importação dos icons */
-import {FaUserTie,FaUserGraduate,FaUserGroup,FaRegMoneyBill1, FaFile} from 'react-icons/fa6'
-import {MdRequestPage} from 'react-icons/md'
-export default function Dashboards() {
+import { FaUserGraduate, FaUserGroup, FaFile } from 'react-icons/fa6'
+import { MdRequestPage } from 'react-icons/md'
+import MenuNavBarAdmin from '../../../Components/Utils/MenuNavBarAdmin/MenuNavBarAdmin'
+import SearchBarAdmin from '../../../Components/Utils/SearchBarAdmin/SearchBarAdmin'
+
+import style from './Users.module.css'
+export default function Users() {
     return (
-        < >
-   
+        <>
             <MenuNavBarAdmin />
-                <SearchBarAdmin/>
-            <main className={style.ContainerGeneral}>
-            <h1>Dashboards Administrador</h1>
-            <small>Olá! Gabriel Pedro Aurelio</small>
-             
-                <div className={style.cardsResumes}>
+            <SearchBarAdmin />
+            <main className={style.ContainerGeneralUsers}>
+                  <div className={style.cardsResumes}>
                     <div className={style.cardResume}>
                         <div className={style.content}>
                             <span>Estudantes</span>
@@ -53,10 +48,7 @@ export default function Dashboards() {
                         </div>
                     </div>
                 </div>
-                <div className="CardCharts"></div>
             </main>
-
-
         </>
     )
-} 
+}
