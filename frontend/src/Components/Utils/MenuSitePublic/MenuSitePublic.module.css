@@ -1,7 +1,7 @@
 @import url(../../../assets/includes/includes.includes.css);
 
 .headerMenu {
-    background-color: rgb(255, 255, 255);
+    background-color:var(--color-blue-950);
     box-shadow: 0px 0px 10px var(--color-gray-400);
     display: flex;
     align-items: center;
@@ -9,7 +9,25 @@
     padding: 10px;
     z-index: 3;
 }
-
+.headerMenu .logo{
+    display: flex;
+    
+}
+.headerMenu .logo .img{
+    width: 50px;
+    
+}
+.headerMenu .logo .img img{
+    width: 80%;
+   margin:10px auto; 
+   
+}
+.headerMenu .logo .TitleSchool{
+    display: grid;
+    border-left: 2px solid var(--color-gray-400);
+    text-align: center;
+    color: #fff;
+}
 .headerMenu .menu {}
 
 .headerMenu .menu .btnMenu {
@@ -30,7 +48,7 @@
 .headerMenu .menu nav a {
     display: flex;
     align-items: center;
-    color: #4b4b4b;
+    color: #ffffff;
     font-size: 10pt;
 
     margin: 3px auto;
@@ -48,9 +66,10 @@
 
 }
 
-.headerMenu .menu nav span:last-child a {
-    background-color: #12b989;
+.headerMenu .menu nav a:last-child {
+    background-color: transparent;
     color: #fff;
+    border: 1px solid #12b989;
     padding: 5px 10px;
     border-radius: 5px;
 }
