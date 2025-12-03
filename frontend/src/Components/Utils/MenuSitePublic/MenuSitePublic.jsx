@@ -1,10 +1,13 @@
 import { MdMenu, MdHome, MdSchool, MdLogin } from 'react-icons/md'
-import { FaUser } from 'react-icons/fa6'
+import { FaUser,FaHouse, FaBook,  FaArrowRightToBracket } from 'react-icons/fa6'
+
 import favicon from '../../../assets/images/favicon.ico'
 import styles from './MenuSitePublic.module.css'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 export default function MenuSitePublic() {
-    const usuarioLogado = true// so para teste
+    const usuarioLogado = false// so para teste
+    const [toggleMenu,setToggleMenu]=useState(false)
     return (
         <>
             <header className={styles.headerMenu}>
@@ -18,27 +21,27 @@ export default function MenuSitePublic() {
                     </div>
                 </div>
                 <div className={styles.menu}>
-                    <div className={styles.btn}></div>
-                    <nav>
-                        <a href="">
-                            <span><MdHome/></span>
+                    <div className={styles.btnMenu}> <MdMenu size={40} onClick={()=>setToggleMenu(!toggleMenu)}/></div>
+                    <nav className={` ${toggleMenu?styles.menuExpandir:styles.menuEncolher}`}>
+                        <Link to="/">
+                            <span><FaHouse size={20}/></span>
                             <span className={styles.text}>HOME</span>
-                        </a>
-                        <a href="">
-                            <span><MdSchool/></span>
+                        </Link>
+                        <Link to="/public/library">
+                            <span><FaBook size={20}/></span>
                             <span className={styles.text}>BIBLIOTECA</span>
-                        </a>
+                        </Link>
                         {
                         usuarioLogado?(
-                       <a href="">
-                            <span><FaUser/></span>
+                       <Link to="">
+                            <span><FaUser size={20}/></span>
                             <span className={styles.text}>MINHA CONTA</span>
-                        </a>
+                        </Link>
                         ):(
-                        <a href="">
-                            <span><MdLogin/></span>
+                        <Link to="">
+                            <span><FaArrowRightToBracket size={20}/></span>
                             <span className={styles.text}>LOGIN</span>
-                        </a>
+                        </Link>
                         )
                       }
                     </nav>

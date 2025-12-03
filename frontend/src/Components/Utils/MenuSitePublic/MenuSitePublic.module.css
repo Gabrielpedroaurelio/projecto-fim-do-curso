@@ -1,60 +1,102 @@
 @import url(../../../assets/includes/includes.includes.css);
 
 .headerMenu {
-    background-color:var(--color-blue-950);
-    box-shadow: 0px 0px 10px var(--color-gray-400);
+    background-color: var(--color-blue-950);
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
     z-index: 3;
+    position: sticky;
+    top: 0px;
 }
-.headerMenu .logo{
+
+.headerMenu .logo {
     display: flex;
-    
+    align-items: center;
+
 }
-.headerMenu .logo .img{
-    width: 50px;
-    
+
+.headerMenu .logo .img {
+    width: 100px;
+    padding: 4px;
 }
-.headerMenu .logo .img img{
-    width: 80%;
-   margin:10px auto; 
-   
+
+.headerMenu .logo .img img {
+    width: 140px;
+
 }
-.headerMenu .logo .TitleSchool{
+
+.headerMenu .logo .TitleSchool {
     display: grid;
     border-left: 2px solid var(--color-gray-400);
     text-align: center;
     color: #fff;
+    padding: 5px;
 }
+
 .headerMenu .menu {}
 
 .headerMenu .menu .btnMenu {
     cursor: pointer;
+    color: #fff;
 }
 
-.headerMenu .menu .btnMenu svg {
-    border: 1px solid #12b989;
-    border-radius: 4px;
-    color: #12b989;
-}
+.headerMenu .menu .btnMenu svg {}
 
 .headerMenu .menu nav {
-    display: flex;
+
+    overflow: hidden;
+    position: fixed;
+    top: 98px;
+    left: 0px;
+    width: 180px;
+    height: 100vh;
+    background-color: #fff;
+    transition: all .5s linear;
+}
+
+.headerMenu .menu .menuExpandir {
+    width: 180px;
+
+}
+
+.headerMenu .menu .menuEncolher {
+    width: 0px;
 
 }
 
 .headerMenu .menu nav a {
     display: flex;
     align-items: center;
-    color: #ffffff;
+    color: var(--color-blue-950);
     font-size: 10pt;
 
     margin: 3px auto;
-    padding: 5px 10px;
+    padding: 10px;
+    transition: all .3s ease-in-out;
 
 
+}
+
+.headerMenu .menu .menuExpandir a {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.headerMenu .menu .menuEncolher a {
+    opacity: 0;
+    transform: translateX(-10px);
+
+}
+
+.headerMenu .menu nav a svg {
+    transition: all .3s linear;
+}
+
+.headerMenu .menu nav a:hover svg {
+    transform: rotateZ(45deg);
 }
 
 .headerMenu .menu nav a:hover {
@@ -62,14 +104,69 @@
 }
 
 .headerMenu .menu nav a span {
-    margin-left: 5px;
+    margin-left: 10px;
 
 }
 
-.headerMenu .menu nav a:last-child {
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #12b989;
-    padding: 5px 10px;
-    border-radius: 5px;
+.headerMenu .menu nav a:last-child {}
+
+@media screen and (min-width:700px) {
+    .headerMenu {
+    
+    }
+
+    .headerMenu .menu .btnMenu {
+        display: none;
+    }
+
+    .headerMenu .menu nav {
+        display: flex;
+        position: relative;
+        top: 0px;
+        height: max-content;
+        background-color: transparent;
+        transition: all 0s linear;
+
+    }
+
+    .headerMenu .menu nav a {
+        display: flex;
+        align-items: center;
+        color: #ffffff;
+        font-size: 10pt;
+        margin: 3px auto;
+        padding: 5px 10px;
+
+
+    }
+
+    .headerMenu .menu .menuExpandir {
+        width: max-content;
+
+    }
+
+    .headerMenu .menu .menuEncolher {
+        width: max-content;
+        
+    }
+    .headerMenu .menu .menuEncolher a{
+        opacity: 1;
+    }
+
+    .headerMenu .menu nav a:hover {
+        color: #12b989;
+    }
+
+    .headerMenu .menu nav a span {
+        margin-left: 5px;
+
+    }
+
+    .headerMenu .menu nav a:last-child {
+        background-color: transparent;
+        color: #fff;
+        border: 1px solid #12b989;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
 }
