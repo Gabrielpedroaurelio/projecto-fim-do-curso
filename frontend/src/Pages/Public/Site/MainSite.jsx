@@ -4,8 +4,8 @@ import img_escola01 from '../../../assets/images/escola01.jpg'
 import { BiInfoCircle } from 'react-icons/bi'
 import img_escola02 from '../../../assets/images/escola02.jpg'
 
-import { FaBookOpen, FaDiscord, FaFacebook, FaInstagram, FaSchool, FaTelegram, FaTwitter, FaWhatsapp, FaYoutube,FaBrain,FaComputer, FaCalculator, FaChartGantt,FaNetworkWired } from 'react-icons/fa6'
-import {AiOutlineBulb, AiOutlineRead, AiOutlineSketch, AiTwotoneBulb} from 'react-icons/ai'
+import { FaBookOpen, FaDiscord, FaFacebook, FaInstagram, FaSchool, FaTelegram, FaTwitter, FaWhatsapp, FaYoutube, FaBrain, FaComputer, FaCalculator, FaChartGantt, FaNetworkWired } from 'react-icons/fa6'
+import { AiOutlineBulb, AiOutlineRead, AiOutlineSketch, AiTwotoneBulb } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
 export default function MainSite({ }) {
     return (
@@ -50,6 +50,7 @@ export default function MainSite({ }) {
                     </div>
                 </div>
                 <div className={style.OurValues}>
+                    <h1 className={style.title}>NOSSOS VALORES</h1>
                     <div>
                         <span className={style.icon}><AiOutlineBulb size={40} /></span>
                         <span className={style.txt}>INOVAÇÃO</span>
@@ -65,29 +66,32 @@ export default function MainSite({ }) {
 
                 </div>
                 <div className={style.OurCourse}>
-                    <div className={style.Course}>
-                        <div>
-                            <FaComputer size={50} />
+                    <h1 className={style.title}>NOSSOS CURSOS</h1>
+                    <div>
+                        <div className={style.Course}>
+                            <div>
+                                <FaComputer size={50} />
+                            </div>
+                            <h3>INFRMATICA DE GESTÃO</h3>
                         </div>
-                        <h3>INFRMATICA DE GESTÃO</h3>
-                    </div>
-                    <div className={style.Course}>
-                        <div>
-                            <FaNetworkWired size={50} />
+                        <div className={style.Course}>
+                            <div>
+                                <FaNetworkWired size={50} />
+                            </div>
+                            <h3>INFORMÁTICA</h3>
                         </div>
-                        <h3>INFORMÁTICA</h3>
-                    </div>
-                    <div className={style.Course}>
-                        <div>
-                            <FaChartGantt size={50} />
+                        <div className={style.Course}>
+                            <div>
+                                <FaChartGantt size={50} />
+                            </div>
+                            <h3>GESTÃO EMPRESARIAL</h3>
                         </div>
-                        <h3>GESTÃO EMPRESARIAL</h3>
-                    </div>
-                    <div className={style.Course}>
-                        <div>
-                            <FaCalculator size={50} />
+                        <div className={style.Course}>
+                            <div>
+                                <FaCalculator size={50} />
+                            </div>
+                            <h3>CONTABILIDADE E GESTÃO</h3>
                         </div>
-                        <h3>CONTABILIDADE E GESTÃO</h3>
                     </div>
                 </div>
                 <div className={style.more}>
@@ -101,14 +105,17 @@ export default function MainSite({ }) {
                         </div>
                     </div>
                     <div className={style.infraestrutura}>
+                        <h1 className={style.title}>NOSSAS INSFRAESTRUTURAS</h1>
                         <div>
-                            <img src={img_escola01} alt="" />
-                        </div>
-                        <div>
-                            <img src={img_escola01} alt="" />
-                        </div>
-                        <div>
-                            <img src={img_escola01} alt="" />
+                            <div>
+                                <img src={img_escola01} alt="" />
+                            </div>
+                            <div>
+                                <img src={img_escola01} alt="" />
+                            </div>
+                            <div>
+                                <img src={img_escola01} alt="" />
+                            </div>
                         </div>
                     </div>
 
