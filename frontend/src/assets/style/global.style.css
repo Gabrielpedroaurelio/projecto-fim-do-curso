@@ -1,0 +1,25 @@
+:root{
+    /*
+        CORES DO PAINEL DO ALUNO
+    */
+    --bg-whiteblue:#e5eaee;
+    --bg-whitecards:#feffff;
+    --bg-bluedestaque:#3198da;
+    --bg-blueheader:#1b2945;
+    --txt-title:#222940;
+    /*
+    CORES DO PAINEL DO ENCARREGADO
+    */
+    --bg-gray:#dae0e4;
+    --bg-graylittleplus:#dfe1e6;
+    /*
+    TONS DE CINZA
+    */
+    --c1:#cacbcb8f;
+    --c2:#bec0bf;
+    --c3:#b6b3b1;
+    --c4:#dddcdd;
+    --c5:#d0c6ba;
+    --c6:#b2b3af;
+    --c7:#72726f;
+}

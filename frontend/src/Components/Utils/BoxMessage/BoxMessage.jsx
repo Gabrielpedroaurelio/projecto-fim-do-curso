@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import  './BoxMessage.css'
-export default function BoxMessage({msm,valueQuestion, setController}) {
+export default function BoxMessage({msm, setController}) {
     return (
 
         <div className="card-logaout">

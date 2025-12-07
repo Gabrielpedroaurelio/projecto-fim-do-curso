@@ -1,90 +1,107 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { Link } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
 import style from './MenuNavBarAdmin.module.css'
 import BoxMessage from '../BoxMessage/BoxMessage';
-import { MdChevronRight, MdChevronLeft, MdSettings, MdHistory, MdLogout, MdOutlineRequestPage, MdOutlineDescription, MdOutlineGroup, MdOutlineChatBubbleOutline, MdOutlineInsertChartOutlined } from "react-icons/md";
+
+import { BiDockLeft, BiDockRight, BiHistory, BiLogIn, BiLogOut, BiHomeAlt2 } from 'react-icons/bi';
+import { BsFolder, BsFolder2Open, BsHouse, BsLayoutSidebar, BsPeople } from 'react-icons/bs'
+import { CiSettings, CiFileOn, CiLogout } from 'react-icons/ci'
+import { DiAtom } from 'react-icons/di'
+import { FaFile, FaCodePullRequest } from 'react-icons/fa6';
+
 export default function MenuNavBarAdmin() {
-    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(false)
+    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(true)
     const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
-    
+  
     return (
         <>
         {
             toggleBoxMessage&&(
-
-                <BoxMessage msm={'Tem certeza que deseja sair?'} setController={settoggleBoxMessage}/>
+                <BoxMessage msm={"Tem Certeza Que Deseja Sair"} setController={settoggleBoxMessage}/>
             )
         }
-            <div className={style.NavMenu + ` ${toggleMenuNavBar ? style.NavMenuExtends : ''}`}>
-                <div className={style.headerNavMenu}>
-                    <div className={style.faviconInstitute}>
-                        <div className={style.img}>
-                            <img src={favicon} alt="" width={40} />
-                        </div>
+            <div className={style.containerMenu+ ` ${toggleMenuNavBar?style.extends:style.shinks}`}>
+                <div className={style.header}>
+                    <div className={style.favicon}>
+                        <img src={favicon} alt="" width={40} />
+                        <span className={style.title_favicon}>IPM</span>
                     </div>
-                    <div className={style.btnExtends}>
-                        <button onClick={() => settoggleMenuNavBar((prev) => prev = !toggleMenuNavBar)}>
-                            {
-                                toggleMenuNavBar ? (
-                                    <MdChevronLeft size={25} />
-                                ) : (
-                                    <MdChevronRight size={25} />
-                                )
-                            }
+                    <div className={style.BtnToggleMenu}>
+                        <button onClick={()=>settoggleMenuNavBar(!toggleMenuNavBar)}>
+                            <BiDockLeft size={25}/>
                         </button>
                     </div>
                 </div>
-                <span className={style.separatorMenu}>Main</span>
+                <div className={style.menu}>
+                    <h4>Menu</h4>
+                    <nav>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <BsHouse />
+                         
+                            </span>
+                            <span className={style.txt}>Dashboards</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <CiFileOn/>
+                            </span>
+                            <span className={style.txt}>Solicitações</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <DiAtom />
+                            </span>
+                            <span className={style.txt}>Yasmin</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <BsFolder />
+                            </span>
+                            <span className={style.txt}>Documentos</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <BsPeople />
+                            </span>
+                            <span className={style.txt}>Usuarios</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <BiHistory />
+                            </span>
+                            <span className={style.txt}>Histórico</span>
+                        </Link>
+                        <Link to={''}>
+                            <span className={style.icon}>
+                                <CiSettings />
+                            </span>
+                            <span className={style.txt}>Definições</span>
+                        </Link>
 
-                <div className={style.bodyNavMenu}>
-                    <Link to="">
-                        <MdOutlineInsertChartOutlined size={20} />
-                        <span className={style.text}>Dashboards</span>
-                    </Link>
-                    <Link to="">
-                        <MdOutlineGroup size={20} />
-                        <span className={style.text}>Usuarios</span>
-                    </Link>
-                    <Link to="">
-                        <MdOutlineRequestPage size={20} />
-                        <span className={style.text}>Solicitações</span>
-                    </Link>
-                    <Link to="">
-                        <MdOutlineChatBubbleOutline size={20} />
-                        <span className={style.text}>Yasmin</span>
-                    </Link>
-                    <Link to="">
-                        <MdOutlineDescription size={20} />
-                        <span className={style.text}>Documentos</span>
-                    </Link>
-                    <Link to="">
-                        <MdHistory size={20} />
-                        <span className={style.text}>Históricos</span>
-                    </Link>
-                    <Link to="">
-                        <MdSettings size={20} />
-                        <span className={style.text}>Definições</span>
-                    </Link>
-
+                    </nav>
                 </div>
-                <div className={style.footerNavMenu}>
-                    <Link to="">
-                        <div className={style.img}>
-                            <img src={favicon} alt="" width={30} />
-                        </div>
-                        <div className={style.datasUserLogined}>
-                            <span>Gabriel Pedro Aurelio</span>
-                            <span>gabrielpedroaurelio@gmail.com</span>
-                        </div>
+                <div className={style.usercontroller}>
+                    <div>
+                        <img src={favicon} alt="" width={30} />
+                    </div>
+                    <div>
+                        <strong>Gabriel Pedro Aurélio</strong>
+                        <span>gabrielpedroaurelio@gmail</span>
+                    </div>
+                </div>
+                <div className={style.menu}>
+                  <nav>
+                      <Link to={''} onClick={()=>settoggleBoxMessage((prev)=>prev=!prev)}>
+                        <span className={style.icon}>
+                            <CiLogout/>
+                        </span>
+                        <span className={style.txt}>Sair</span>
                     </Link>
-                    <Link  onClick={()=>settoggleBoxMessage((prev)=>prev=!prev)}>
-                        <MdLogout />
-                        <span className={style.text}>Sair</span>
-                    </Link>
+                  </nav>
                 </div>
             </div>
-
 
         </>
     )

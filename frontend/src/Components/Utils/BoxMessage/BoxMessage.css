@@ -18,7 +18,7 @@
 
 }
 .card-logaout .card{
-    background-color:#ffffff00;
+    background-color:#ffffff;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     display: grid;
@@ -28,7 +28,7 @@
     height: 100px;
     padding: 10px;
     z-index: 1;
-    color: #ffffff;
+    color: #000000;
 
 }
 .card-logaout .card .option{
@@ -45,7 +45,7 @@
     align-items: center;
     border-radius: 5px;
     justify-content: center;
-    color: #ffffff;
+    color: #000000;
     text-decoration: none;
     
 }

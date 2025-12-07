@@ -1,227 +1,153 @@
 @import url(../../../assets/includes/includes.includes.css);
- 
-.NavMenu {
-position: fixed;
- 
-    box-shadow: 0px 0px 5px #d8d8d8;
-    background-color: #fafdff;
-overflow: hidden;
+@import url(../../../assets/style/global.style.css);
+
+.containerMenu {
+    background-color: #fffbff;
+    width: 150px;
     height: 100vh;
-    overflow-y: scroll;
+    overflow: hidden;
+    position: fixed;
     transition: all .5s ease-in-out;
-    width: 50px;
-
-
+    box-shadow: 0px 0px 10px var(--c4);
+    overflow-y: auto;
 }
 
-.NavMenu::-webkit-scrollbar {
+.containerMenu::-webkit-scrollbar {
     width: 5px;
     height: 5px;
 }
 
-.NavMenu::-webkit-scrollbar-track {
+.containerMenu::-webkit-scrollbar-track {
     background-color: transparent;
 }
 
-.NavMenu::-webkit-scrollbar-thumb {
+.containerMenu::-webkit-scrollbar-thumb {
     background-color: #c5c5c5af;
     border-radius: 10px;
 }
 
-.NavMenu::-webkit-scrollbar-thumb:hover {
+.containerMenu::-webkit-scrollbar-thumb:hover {
     background-color: #7c7c7c;
-    cursor: pointer;
 }
 
-.NavMenu .headerNavMenu {
+.extends {
+    width: 150px;
+}
 
+.shinks {
+    width: 50px;
+}
+
+.containerMenu * {
+    color: var(--color-gray-600);
+}
+
+.containerMenu .header {
+    background-color: #fff;
     display: flex;
+    height: 50px;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    position: relative;
-    flex-wrap: wrap;
-}
-
-.NavMenu .headerNavMenu .faviconInstitute {
-    padding: 5px;
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-
-.NavMenu .headerNavMenu .btnExtends {
-    background-color: #ffffff;
-    box-shadow: 0px 0px 10px #c5c5c5;
-    padding: 0px 2px;
-    color: #7c7c7c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 5px;
-  
-
-}
-
-.NavMenu .separatorMenu {
-    color: #7c7c7c;
-    font-weight: 500;
-    font-size: 14px;
-    padding-left: 10px;
-    width: 80%;
-    margin: auto;
-    
-    border-bottom: 1px solid #7c7c7c;
-    display: none;
-}
-
-.NavMenu .bodyNavMenu {
-    margin-top: 10px;
-}
-
-.NavMenu .bodyNavMenu a {
-
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 10pt;
- width: 90%;
-    margin: auto;
     padding: 10px;
-    color: #616161;
-    transition: all .2s ease-in-out;
-    cursor: pointer;
+}
+
+.containerMenu .header .favicon {
     display: flex;
     align-items: center;
-    border-radius: 5px;
-
 
 }
 
-.NavMenu .bodyNavMenu a:hover {
-     background-color: #dbdbdbaf;
-      color: #0f0f0f;
-
+.containerMenu .header .favicon>span {
+    margin-left: 5px;
 }
 
-.NavMenu .bodyNavMenu a svg {
-    margin: auto;
-}
-
-.NavMenu .bodyNavMenu .text {
+.shinks .header .favicon>span {
     display: none;
-    transition: all .5s ease-in-out;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 10pt;
-    font-weight: 500;
 }
 
-.NavMenu .footerNavMenu {
-    
+.containerMenu .header .BtnToggleMenu button {
+    cursor: pointer;
 }
-.NavMenu .footerNavMenu a:first-child{
+
+.containerMenu .menu {
+    background-color: #fff;
+}
+
+.shinks .menu h4 {
+    display: none;
+}
+
+.containerMenu .menu h4 {
+    font-weight: 500;
+    width: 90%;
+    margin: 5px auto;
+}
+
+.containerMenu .menu>nav {}
+
+.containerMenu .menu>nav a {
+    width: 90%;
+    margin: 5px auto;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    transition: all .5s ease-in-out;
+    border-radius: 4px;
+}
+
+.containerMenu .menu>nav a:hover {
+    background-color: #e6e8e7;
+}
+
+
+
+.containerMenu .menu>nav a span {
+
+    transition: all .5s ease-in-out;
+}
+
+.containerMenu .menu>nav a .icon {}
+
+.shinks .menu>nav a .icon {
+    margin: auto;
+    padding: 8px 2px;
+}
+
+.shinks .menu>nav a .txt {
+    display: none;
+}
+
+.containerMenu .menu>nav a .txt {
+    margin-left: 5px;
+    font-weight: 400;
+    font-size: 10pt;
+}
+
+.containerMenu .usercontroller {
     display: flex;
     align-items: center;
     width: 90%;
-    margin: auto;
-    padding: 5px;
-    border-radius: 5px;
-    overflow: hidden;
+    margin: 10px auto;
 }
-.NavMenu .footerNavMenu a:first-child:hover{
-       background-color: #dbdbdbaf;
-      color: #0f0f0f;
-}
-.NavMenu .footerNavMenu a:first-child .img{
-    width: 30px;
-    overflow: hidden;
-    border-radius: 15px;
-    flex-grow: 0;
+
+.containerMenu .usercontroller>div:first-child {
     flex-shrink: 0;
-    height: 30px;
-    margin: auto;
-    
-}
-.NavMenu .footerNavMenu a:first-child .datasUserLogined
-{
-    font-size: 8px;
-    display: none;
-    
-}
-.NavMenu .footerNavMenu a:first-child .datasUserLogined> span{
-    display: block;
-    padding-left: 5px;
-    
-}
-.NavMenu .footerNavMenu a:first-child .datasUserLogined> span:first-child{
-    font-weight: 500;
-}
-    .NavMenu .footerNavMenu a:first-child .datasUserLogined> span:last-child{
-        font-size: 8px;
-        color: #7c7c7c;
-        font-weight: 500;
-    }
-.NavMenu .footerNavMenu a:last-child{
-    color: #0f0f0f;
-    display: flex;
-    align-items: center;
-    background-color: #ffffff;
-    margin: auto;
-width: 90%;
-    padding: 10px;
-    border-radius: 5px;
-    
-    
-    
-}.NavMenu .footerNavMenu a:last-child:hover{
-     background-color: #dbdbdbaf;
-      color: #0f0f0f;
-}
-.NavMenu .footerNavMenu a:last-child svg{
-    margin: auto;
-}
-.NavMenu .footerNavMenu a:last-child .text{
-    display: none;
-    padding-left: 10px;
-}
-
-
-
-
-/*
-SETTINGS MENUEXTENDS
-*/
-.NavMenuExtends .separatorMenu{
-    display: block;
-}
-.NavMenuExtends {
-    width: 150px;
-}.NavMenuExtends .bodyNavMenu a svg {
-    margin: 0px;
-}
-
-.NavMenuExtends .bodyNavMenu .text {
-    display: inline-block;
-    margin-left: 10px;
-}
-.NavMenuExtends .footerNavMenu a:first-child .img{
-    width: 30px;
-    overflow: hidden;
-    border-radius: 15px;
     flex-grow: 0;
-    flex-shrink: 0;
+    width: 30px;
     height: 30px;
-    margin: 0px;
-    
+    overflow: hidden;
+    border-radius: 50%;
 }
-.NavMenuExtends .footerNavMenu a:first-child .datasUserLogined
-{
-    font-size: 8px;
-    display: block;
-    
+.shinks .usercontroller>div:first-child {
+    margin: auto;
 }
 
-.NavMenuExtends .footerNavMenu a:last-child svg{
-    margin: 0px;
+.shinks .usercontroller>div:last-child {
+    display: none;
 }
-.NavMenuExtends .footerNavMenu a:last-child .text{
-    display: block;
+
+.containerMenu .usercontroller>div {
+    margin-left: 4px;
+    font-size: 7px;
+
 }
