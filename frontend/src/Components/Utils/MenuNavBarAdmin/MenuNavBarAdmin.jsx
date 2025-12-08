@@ -11,7 +11,7 @@ import { DiAtom } from 'react-icons/di'
 import { FaFile, FaCodePullRequest } from 'react-icons/fa6';
 
 export default function MenuNavBarAdmin() {
-    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(true)
+    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(false)
     const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
   
     return (
@@ -36,7 +36,7 @@ export default function MenuNavBarAdmin() {
                 <div className={style.menu}>
                     <h4>Menu</h4>
                     <nav>
-                        <Link to={''}>
+                        <Link to={'/admin/dashboards'}>
                             <span className={style.icon}>
                                 <BsHouse />
                          
@@ -55,7 +55,7 @@ export default function MenuNavBarAdmin() {
                             </span>
                             <span className={style.txt}>Yasmin</span>
                         </Link>
-                        <Link to={''}>
+                        <Link to={'/admin/documents'}>
                             <span className={style.icon}>
                                 <BsFolder />
                             </span>

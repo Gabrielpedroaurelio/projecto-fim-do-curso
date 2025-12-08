@@ -1,0 +1,51 @@
+.card {
+    width: 200px;
+    height: 120px;
+    border-radius: 8px;
+    border: .5px solid var(--c5);
+    background-color: var(--white);
+    box-sizing: border-box;
+    padding: 10px;
+    display: grid;
+    margin: 5px;
+    grid-template-rows: 20px 60px 20px;
+}
+
+.card .title {
+    color: var(--c6);
+    font-size: 12pt;
+
+}
+.card .resume {
+    font-size: 18pt;
+    font-weight: 600;
+}
+.card .currently {
+ 
+}
+.card .currently>div>span{
+    
+    display: flex;
+    align-items: center;
+    width: 50%;
+        
+    height: 100%;
+}
+.card .currently>div>span:first-child{
+    float: left;
+}
+.card .currently>div>span:last-child{
+    float: right;
+    color: blue;
+    justify-content: flex-end;
+}
+.card .currently>div{}
+.addrecent{
+    background-color: var(--color-green-100);
+    padding: 5px;
+    font-size: 10px;
+    color: var(--color-green-900);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,96 @@
+.headercard {
+
+    display: grid;
+    align-items: center;
+    grid-template-columns: 40% 60%;
+    width: calc(100% - 50px);
+    background-color: var(--white);
+    height: 40px;
+}
+
+.headercard .cardtitle {
+    width: 100%;
+
+}
+
+.headercard .controllers {
+    display: flex;
+    align-items: center;
+}
+
+.headercard .controllers .cardsearchBar {
+    width: 380px;
+    padding: 5px 10px;
+    height: 30px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    color: var(--c3);
+    background-color: var(--white);
+    margin-right: 10px;
+    border: 1px solid var(--c4);
+}
+
+.headercard .controllers .cardsearchBar input[type="search"] {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 5px;
+    margin-left: 5px;
+    font-size: 10pt;
+    background-color: transparent;
+}
+
+.headercard .controllers .cardTheme {
+    width: 100px;
+    background-color: var(--c4);
+    display: grid;
+    grid-template-columns: 49% 49%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.headercard .controllers .cardTheme button {
+    background-color: var(--white);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.headercard .controllers .cardNotification {
+    width: 60px;
+    padding: 5px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-blue-500);
+
+}
+
+.headercard .controllers .cardProfile {
+    background-color: var(--c5);
+    border-radius: 5px;
+    padding:1px 5px;
+}
+
+.headercard .controllers .cardProfile>div {
+    display: flex;
+    align-items: center;
+}
+
+.headercard .controllers .cardProfile>div img {
+    width: 30px;
+    height: 30px;
+    margin-right: 6px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border-radius: 50%;
+    background-color: aliceblue;
+}
+
+.headercard .controllers .cardProfile>div div {
+    font-size: 10px;
+    display: grid;
+}

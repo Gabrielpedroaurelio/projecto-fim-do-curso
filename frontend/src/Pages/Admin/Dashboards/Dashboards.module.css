@@ -1,0 +1,145 @@
+@import url(../../../assets/includes/includes.includes.css);
+@import url(../../../assets/style/global.style.css);
+
+.Container {
+    background-color: var(--white);
+    width: 100vw;
+    margin-left: 50px;
+    width: 100vw;
+    padding: 3px;
+}
+
+.Container .ContainerContent {
+    width: calc(100% - 50px);
+    height: 100px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.Container .ContainerContent .Content {}
+
+.Container .ContainerContent .Content h2 {
+    font-size: 18pt;
+}
+
+.Container .ContainerContent .Content span {
+    color: var(--color-gray-700);
+    font-size: 12pt;
+}
+
+.Container .ContainerContent .cardExportData {
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+
+.Container .ContainerContent .cardExportData span {
+    color: var(--color-gray-700);
+}
+
+.Container .ContainerContent .cardExportData div {
+    display: flex;
+    margin-left: 5px;
+}
+
+.Container .ContainerContent .cardExportData div button {
+    color: var(--white);
+    display: flex;
+    margin: 2px;
+    align-items: center;
+    background-color: var(--bg-bluedestaque);
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 5px;
+    width: 50px;
+}
+
+.Container .Cards {
+    width: 98%;
+
+    display: flex;
+
+
+}
+
+.Container .Charts {
+
+    width: 95%;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 60% 40%;
+    box-sizing: border-box;
+
+    padding: 15px;
+}
+
+.Container .Charts .CardChart {
+    box-sizing: border-box;
+    background-color: var(--white);
+    border-radius: 5px;
+    height: 300px;
+    box-shadow: 0px 0px 7px var(--c2);
+}
+
+.Container .ContainerActivityRecents {
+    background-color: var(--white);
+    width: 94%;
+    margin: 10px 10px 10px 10px;
+    height: 150px;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.Container .ContainerActivityRecents h2 {
+    font-size: 14pt;
+    font-weight: 500;
+}
+
+.Container .ContainerActivityRecents .tableactividade {
+
+    margin-left: 10px;
+}
+
+.Container .ContainerActivityRecents .tableactividade .header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
+.Container .ContainerActivityRecents .tableactividade .header span {
+    font-size: 12px;
+    font-weight: 500;
+
+}
+
+.Container .ContainerActivityRecents .tableactividade .bodytable {
+    display: grid;
+    height: 100px;
+    overflow-y: auto;
+
+}
+
+.Container .ContainerActivityRecents .tableactividade .bodytable div {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.Container .ContainerActivityRecents .tableactividade .bodytable span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-gray-700);
+
+}
+
+.Container .ContainerActivityRecents .tableactividade {}
+
+.Container .ContainerActivityRecents {}
+
+.Container .ContainerActivityRecents {}
+
+.Container .ContainerActivityRecents {}

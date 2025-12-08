@@ -39,9 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apis.apps.ApisConfig',
+    'corsheaders',# para permitir requisições
 ]
-
+# CONFIGURAÇÃO DO CORS PARA PERMITIR HOSTS
+CORS_ALLOWED_ORIGINS=[
+    'http://localhost:3573',
+]
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',# para permitir requisições
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
