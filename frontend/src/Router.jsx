@@ -8,7 +8,8 @@ import LIbrary from './Pages/Public/LIbrary/LIbrary'
 import AuthPublic from './Pages/Public/AuthPublic/AuthPublic'
 import DashboardEncarregado from './Pages/Client/Parents/Dashboards/DashboardEncarregado'
 import Users from './Pages/Admin/Users/Users'
-import Documents from './Pages/Admin/Documents/Documents'
+import Documents from './Pages/Admin/Documents/Documents' 
+import DocumentsCliente from './Pages/Client/Students/DocumentsCliente/DocumentsCliente' 
 const Routers=()=>{
     return (
         <>
@@ -29,8 +30,8 @@ const Routers=()=>{
                  * Router for clients site
                  */}
                  <Route  path='/client/student'exact element={<DashboardsStudents/>}/>
-                 <Route  path='/client/student'exact element={<DashboardsStudents/>}/>
-                 <Route  path='/client/parents'exact element={<DashboardEncarregado/>}/>
+                 <Route  path='/client/student/documents' exact element={<DocumentsCliente/>}/>
+                 <Route  path='/client/dashboards'exact element={<DashboardsStudents/>}/>
                  
                 {/**
                  * Router for public

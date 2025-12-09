@@ -1,6 +1,50 @@
+.NavBarMenuClient {
+    background-color: var(--bg-blue-client);
+    margin: 10px 0px;
+    border-radius: 5px;
+    padding: 5px;
+    position: fixed;
+    width: 50px;
+    transition: width .4s ease-in-out;
+}
 
-.NavBarMenuClient{
-background-color: var(--bg-blue-client);
-width: 200px;
- 
+.extendsMenu {
+    width: 200px;
+
+}
+
+.NavBarMenuClient .btnExpandir {
+    color: #fff;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+.NavBarMenuClient .btnExpandir span{
+    cursor: pointer;
+}
+
+.NavBarMenuClient a {
+    color: var(--white);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    width: 90%;
+   
+    margin: 10px auto;
+
+}
+.NavBarMenuClient a span:nth-child(1) {}
+
+.extendsMenu a span:nth-child(1) {
+    margin-left: 20px;
+}
+
+.NavBarMenuClient a span:nth-child(2) {
+    display: none;
+    font-size: 10pt;
+}
+
+.extendsMenu a span:nth-child(2) {
+    margin-left: 10px;
+    display: block;
 }

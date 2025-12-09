@@ -1,7 +1,164 @@
-@import url(../../../../assets/includes/includes.includes.css); 
-.ContainerDashboardAluno{
-    background-color: var(--fundo-login);
+@import url(../../../../assets/includes/includes.includes.css);
+@import url(../../../../assets/style/global.style.css);
+
+.ContainerDashboardAluno {
+    background-color: var(--fundo-blue);
     height: 100vh;
     width: 100vw;
     padding: 10px;
+}
+
+.containerGeneral {
+    margin-left: 50px;
+}
+
+.containerGeneral>div {
+
+    height: 500px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    margin: auto;
+    max-width: 1200px;
+
+
+
+}
+
+.containerGeneral>div>div {
+    background-color: var(--fundo-ciano);
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #e6e6e6;
+
+}
+
+.containerGeneral>div>div:first-child {
+
+    grid-area: 1/1/3/3;
+    padding: 10px;
+}
+
+.containerGeneral>div>div:first-child h1 {
+    color: var(--color-blue-950);
+    font-weight: 600;
+    text-align: center;
+    margin: 10px auto;
+
+}
+
+.containerGeneral>div>div .cardsDocumentos {
+    width: 70%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+}
+
+.containerGeneral>div>div .cardsDocumentos>a {
+    width: 150px;
+    margin: auto;
+    height: 150px;
+    display: inline-block;
+
+}
+
+.containerGeneral>div>div .cardsDocumentos>a svg {
+    border: 3px solid var(--color-blue-600);
+    color: var(--color-blue-600);
+    padding: 10px;
+    width: 70px;
+    margin: auto;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.containerGeneral>div>div .cardsDocumentos>a span:last-child {
+    text-align: center;
+    display: inline-block;
+    color: var(--color-blue-950);
+    font-weight: 400;
+    font-size: 10pt;
+    width: 100%;
+}
+
+.containerGeneral>div>div {}
+
+.containerGeneral div h3 {
+    color: var(--color-blue-950);
+    font-weight: 600;
+    text-align: center;
+    margin: 5px auto;
+}
+
+.containerGeneral>div>div {}
+
+.containerGeneral>div>div .tableNotas {
+    font-size: 10px;
+    color: var(--color-blue-950);
+    font-weight: 600;
+    display: grid;
+    height: 70px;
+    overflow: hidden;
+}
+
+.containerGeneral>div>div .tableNotas .header {
+    padding: 0px 5px;
+    margin: 0%;
+    display: grid;
+    background-color: var(--fundo-blue);
+
+    grid-template-columns: 70% 20%;
+    align-items: center;
+
+
+
+
+}
+
+.containerGeneral>div>div .tableNotas .body {
+    height: 100%;
+    display: grid;
+    align-items: center;
+
+    overflow-y: auto;
+}
+
+.containerGeneral>div>div .tableNotas .body .DataNota {
+    padding: 0px 5px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 70% 30%;
+
+
+}
+
+.containerGeneral .cardNoticiasRecentes {}
+
+.containerGeneral .cardNoticiasRecentes ul {
+    margin: auto;
+    width: 80%;
+    height: 70px;
+
+}
+
+.containerGeneral .cardNoticiasRecentes ul li::before {
+    content: " ";
+    position: absolute;
+    top: 40%;
+    left: -10px;
+    width: 4px;
+    height: 4px;
+    border:1px solid  var(--color-green-600);
+border-radius: 50%;
+
+}
+
+.containerGeneral .cardNoticiasRecentes ul li {
+    font-size: 10px;
+    position: relative;
+    display: block;
+    color: var(--color-blue-950);
+
 }
