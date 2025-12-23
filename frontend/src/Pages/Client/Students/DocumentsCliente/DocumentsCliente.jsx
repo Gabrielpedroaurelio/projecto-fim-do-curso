@@ -9,18 +9,18 @@ export default function DocumentsCliente() {
     return (
 
         <>
-        
-            <HeaderClient/>
-            <MenuClient>
-                <Link to="/client/student/dashboards/">
-                    <span><BsHouse /></span>
-                    <span>Dashboads</span>
-                </Link>
-                <Link to='documents/'>
-                    <span><BsFolder /></span>
-                    <span>Documentos</span>
-                </Link>
-            </MenuClient>
+
+            <HeaderClient />
+          <MenuClient>
+        <Link to="/client/student/">
+          <span><BsHouse /></span>
+          <span>Dashboads</span>
+        </Link>
+        <Link to='/client/student/documents/'>
+          <span><BsFolder /></span>
+          <span>Documentos</span>
+        </Link>
+      </MenuClient>
 
         </>
     )

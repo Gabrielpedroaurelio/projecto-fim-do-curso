@@ -1,13 +1,38 @@
 import Cards from "../../../Components/Elements/Cards/Cards";
 import Header from "../../../Components/Elements/Header/Header";
 import MenuNavBarAdmin from "../../../Components/Utils/MenuNavBarAdmin/MenuNavBarAdmin";
-
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+} from 'recharts';
 import style from './Dashboards.module.css'
 /* 
 Importação dos icons */
 import { FaUserTie, FaUserGraduate, FaUserGroup, FaRegMoneyBill1, FaFile } from 'react-icons/fa6'
 import { AiOutlineFilePdf, AiOutlineFileExcel, AiOutlineFileWord } from 'react-icons/ai'
 import { MdRequestPage } from 'react-icons/md'
+const performanceData = [
+    { subject: 'Vendas', A: 120, fullMark: 150 },
+    { subject: 'Campanha', A: 98, fullMark: 150 },
+    { subject: 'Referral', A: 86, fullMark: 150 },
+    { subject: 'Satisfação', A: 99, fullMark: 150 },
+    { subject: 'Retenção', A: 85, fullMark: 150 },
+    { subject: 'Novos', A: 65, fullMark: 150 },
+];
+const revenueData = [
+    { name: 'Jan', value: 4000 },
+    { name: 'Fev', value: 3000 },
+    { name: 'Mar', value: 2000 },
+    { name: 'Abr', value: 2780 },
+    { name: 'Mai', value: 1890 },
+    { name: 'Jun', value: 2390 },
+    { name: 'Jul', value: 3490 },
+    { name: 'Ago', value: 4000 },
+    { name: 'Set', value: 3000 },
+    { name: 'Out', value: 4500 },
+    { name: 'Nov', value: 3800 },
+    { name: 'Dez', value: 4200 },
+];
 
 export default function Dashboards() {
     return (
@@ -77,11 +102,45 @@ export default function Dashboards() {
                     <div className={style.CardChart}>
                         <h3>Arrecadação Mensal com Declarações</h3>
                         <h2>189.400,00Kz</h2>
-                        <div className={style.chart}></div>
+                        <div className={"h-[300px]"}>
+                              <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={revenueData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+                                <XAxis dataKey="name" stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} />
+                                <YAxis stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `Kz ${value}`} />
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '8px' }}
+                                    itemStyle={{ color: '#fff' }}
+                                    cursor={{ fill: '#ffffff05' }}
+                                />
+                                <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]} barSize={30} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                        </div>
                     </div>
                     <div className={style.CardChart}>
                         <h3>Desempenho Operacional</h3>
-                        <div className={style.chart}></div>
+                        <div className={"h-[300px]"}>
+                                <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart outerRadius={90} data={performanceData}>
+                                <PolarGrid stroke="#ffffff20" />
+                                <PolarAngleAxis dataKey="subject" tick={{ fill: '#a1a1aa', fontSize: 10 }} />
+                                <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="transparent" />
+                                <Radar
+                                    name="Performance"
+                                    dataKey="A"
+                                    stroke="#8b5cf6"
+                                    strokeWidth={2}
+                                    fill="#8b5cf6"
+                                    fillOpacity={0.3}
+                                />
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#18181b', border: '1px solid #27272a' }}
+                                    itemStyle={{ color: '#fff' }}
+                                />
+                            </RadarChart>
+                        </ResponsiveContainer>
+                        </div>
                     </div>
                 </div>
                 <div className={style.ContainerActivityRecents}>

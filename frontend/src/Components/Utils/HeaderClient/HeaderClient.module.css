@@ -1,12 +1,15 @@
 
 .HeaderClient {
-    background-color: var(    --bg-blue-client);
+    background-color: #ffffff;
+    position: sticky;
+    top: 0px;
+    width: 100vw;
     display: flex;
-    color: #fff;
+    color: #151515;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-radius: 3px;
+   
     box-shadow: 0px 0px 5px #cccccc;
 }
 
@@ -30,4 +33,6 @@
     background-color: #424958;
     padding: 8px;
     border-radius: 50%;
+    cursor: pointer;
+    color: #ffffff;
 }

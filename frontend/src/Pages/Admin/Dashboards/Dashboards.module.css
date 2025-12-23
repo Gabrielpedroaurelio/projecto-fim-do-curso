@@ -3,10 +3,11 @@
 
 .Container {
     background-color: #f8fafb;
-    width: calc(100vw - 250px);
-    margin-left: 250px;
+    width: 100%;
+    margin-left: 25px;
     min-height: 100vh;
-    padding: 20px;
+    padding:0px 20px;
+ 
 }
 
 .Container .ContainerContent {
@@ -53,9 +54,9 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    padding: 8px 12px;
+    padding: 5px 9px;
     border-radius: 8px;
-    font-size: 0.75rem;
+    font-size: 10px;
     font-weight: 600;
     transition: all 0.2s ease;
     cursor: pointer;

@@ -1,10 +1,11 @@
 .NavBarMenuClient {
-    background-color: var(--bg-blue-client);
-    margin: 10px 0px;
-    border-radius: 5px;
+    background-color: #fff;
     padding: 5px;
     position: fixed;
     width: 50px;
+    height: 100%;
+    position: fixed;
+    
     transition: width .4s ease-in-out;
 }
 
@@ -14,28 +15,38 @@
 }
 
 .NavBarMenuClient .btnExpandir {
-    color: #fff;
+    color: #1f1f1f;
     display: grid;
     justify-content: center;
     align-items: center;
 }
-.NavBarMenuClient .btnExpandir span{
+
+.NavBarMenuClient .btnExpandir span {
     cursor: pointer;
 }
 
 .NavBarMenuClient a {
-    color: var(--white);
+    color: #1f1f1f;
     padding: 5px;
     display: flex;
     align-items: center;
     width: 90%;
-   
+
+
     margin: 10px auto;
 
 }
-.NavBarMenuClient a span:nth-child(1) {}
+
+.NavBarMenuClient a:hover {
+    background-color: #c1dfda71;
+}
+
+.NavBarMenuClient a span:nth-child(1) {
+    margin: auto;
+}
 
 .extendsMenu a span:nth-child(1) {
+    margin: 0px;
     margin-left: 20px;
 }
 
