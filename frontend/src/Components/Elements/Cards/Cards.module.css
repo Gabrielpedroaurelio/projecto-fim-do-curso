@@ -1,51 +1,64 @@
 .card {
-    width: 200px;
-    height: 120px;
-    border-radius: 8px;
-    border: .5px solid var(--c5);
-    background-color: var(--white);
-    box-sizing: border-box;
-    padding: 10px;
-    display: grid;
-    margin: 5px;
-    grid-template-rows: 20px 60px 20px;
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card .title {
-    color: var(--c6);
-    font-size: 12pt;
-
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
-.card .resume {
-    font-size: 18pt;
+
+.card .title h3 {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.card .resume h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 4px 0;
+}
+
+.card .currently {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.card .currently>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.addrecent {
+    background-color: #f0fdf4;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    color: #15803d;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     font-weight: 600;
 }
-.card .currently {
- 
+
+.card .currently a {
+    color: #94a3b8;
+    transition: color 0.2s ease;
 }
-.card .currently>div>span{
-    
-    display: flex;
-    align-items: center;
-    width: 50%;
-        
-    height: 100%;
-}
-.card .currently>div>span:first-child{
-    float: left;
-}
-.card .currently>div>span:last-child{
-    float: right;
-    color: blue;
-    justify-content: flex-end;
-}
-.card .currently>div{}
-.addrecent{
-    background-color: var(--color-green-100);
-    padding: 5px;
-    font-size: 10px;
-    color: var(--color-green-900);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
+
+.card .currently a:hover {
+    color: #00a3ff;
 }

@@ -8,23 +8,14 @@ Importação dos icons */
 import { FaUserTie, FaUserGraduate, FaUserGroup, FaRegMoneyBill1, FaFile } from 'react-icons/fa6'
 import { AiOutlineFilePdf, AiOutlineFileExcel, AiOutlineFileWord } from 'react-icons/ai'
 import { MdRequestPage } from 'react-icons/md'
-const datas = {
-    title: '',
-    resume: '',
-    currently: {
-        data_resume: '',
-        linkToResume: '',
 
-    },
-
-}
 export default function Dashboards() {
     return (
         < >
 
             <MenuNavBarAdmin />
             <main className={style.Container} >
-                <Header titlepage={"Dashbords"} />
+                <Header titlepage={"Gerenciamento Certificado!"} />
                 <div className={style.ContainerContent}>
                     <div className={style.Content}>
                         <h2>Gerenciamento Certificado!</h2>
@@ -94,7 +85,7 @@ export default function Dashboards() {
                     </div>
                 </div>
                 <div className={style.ContainerActivityRecents}>
-                    <h2>Actividades Recentes</h2>
+                    <h2>Atividades Recentes</h2>
                     <div className={style.tableactividade}>
                         <div className={style.header}>
                             <span>Usuário</span>
@@ -107,56 +98,56 @@ export default function Dashboards() {
                             <div>
                                 <span>Gabriel Pedro</span>
                                 <span>Declaração de Matricula</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>2.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Helena Da Cruz</span>
                                 <span>Declaração da 10º Classe</span>
-                                <span>Pendente</span>
+                                <span className={style.statusPendente}>Pendente</span>
                                 <span>2025-12-12</span>
                                 <span>4.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Shelcia Domingos</span>
                                 <span>Certificado de Conclusão</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>8.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Raul</span>
                                 <span>Boletim do III Trimeste</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>500,00 Kz</span>
                             </div>
                             <div>
                                 <span>Gabriel Pedro</span>
                                 <span>Declaração de Matricula</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>2.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Helena Da Cruz</span>
                                 <span>Declaração da 10º Classe</span>
-                                <span>Pendente</span>
+                                <span className={style.statusPendente}>Pendente</span>
                                 <span>2025-12-12</span>
                                 <span>4.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Shelcia Domingos</span>
                                 <span>Certificado de Conclusão</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>8.000,00 Kz</span>
                             </div>
                             <div>
                                 <span>Raul</span>
                                 <span>Boletim do III Trimeste</span>
-                                <span>Concluido</span>
+                                <span className={style.statusConcluido}>Concluido</span>
                                 <span>2025-12-09</span>
                                 <span>500,00 Kz</span>
                             </div>

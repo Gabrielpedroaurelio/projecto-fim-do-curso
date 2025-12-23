@@ -184,15 +184,15 @@ SIMPLE_JWT = {
 UNFOLD = {
     "SITE_TITLE": "Sistema de Gestão de Declarações",
     "SITE_HEADER": "Gestão de Declarações",
-    "SITE_URL": "/",
+    "SITE_URL": "localhost:5173",
     "SITE_SYMBOL": "school", # Símbolo do Material Symbols
     "SHOW_HISTORY": True, # Mostra botão de histórico
     "SHOW_VIEW_ON_SITE": True, # Mostra botão ver no site
     "THEME": "dark", # Tema padrão dark
     
     "SITE_ICON": {
-        "light": lambda request: static("icon-light.svg"),
-        "dark": lambda request: static("icon-dark.svg"),
+        "light": lambda request: static("image/favicon.ico"),
+        "dark": lambda request: static("image/favicon.ico"),
     },
     
     # SIDEBAR
