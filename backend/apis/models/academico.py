@@ -1,14 +1,14 @@
 from django.db import models
 from .base import BaseModel
 from .usuarios import Funcionario
-
+import datetime
 
 class Sala(BaseModel):
     """Salas de aula"""
     id_sala = models.AutoField(primary_key=True)
     numero_sala = models.SmallIntegerField(verbose_name='Número da Sala')
     capacidade_alunos = models.IntegerField(verbose_name='Capacidade')
-    img_path = models.JSONField(default=list, verbose_name='Imagens')
+    img_path = models.ImageField(upload_to="image/academico/sala/", verbose_name='Imagem da Sala')
     
     class Meta:
         db_table = 'sala'
@@ -115,7 +115,7 @@ class Curso(BaseModel):
         blank=True,
         verbose_name='Área de Formação'
     )
-    duracao_meses = models.IntegerField(null=True, blank=True, verbose_name='Duração (meses)')
+    duracao = models.IntegerField(null=True, blank=True, verbose_name='Duração (Anos)',default=4)
     id_responsavel = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -167,12 +167,12 @@ class Periodo(models.Model):
 class Turma(BaseModel):
     """Turmas de alunos"""
     id_turma = models.AutoField(primary_key=True)
-    codigo_turma = models.CharField(max_length=50, unique=True, verbose_name='Código da Turma')
     id_sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Sala')
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Curso')
     id_classe = models.ForeignKey(Classe, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Classe')
     id_periodo = models.ForeignKey(Periodo, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Período')
-    ano = models.SmallIntegerField(null=True, blank=True, verbose_name='Ano')
+    ano = models.CharField(null=True, blank=True, verbose_name='Ano',default=f"{str(datetime.date.year)}")
+    codigo_turma = models.CharField(max_length=50, unique=True, verbose_name='Código da Turma',default=f'Este campo será preenchido automaticamente')
     id_responsavel = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,

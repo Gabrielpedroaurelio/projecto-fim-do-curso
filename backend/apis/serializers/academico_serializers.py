@@ -62,7 +62,7 @@ class CursoSerializer(serializers.ModelSerializer):
         model = Curso
         fields = [
             'id_curso', 'nome_curso', 'id_area_formacao', 'area_formacao_nome',
-            'duracao_meses', 'id_responsavel', 'responsavel_nome',
+            'duracao', 'id_responsavel', 'responsavel_nome',
             'criado_em', 'atualizado_em'
         ]
         read_only_fields = ['id_curso', 'criado_em', 'atualizado_em']

@@ -4,7 +4,7 @@ Django settings for core project.
 
 from pathlib import Path
 from datetime import timedelta
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -133,6 +133,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR,STATIC_URL)
+]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
@@ -182,6 +185,8 @@ SIMPLE_JWT = {
 # =============================================================================
 
 UNFOLD = {
+    # DASHBOARD
+    "DASHBOARD_CALLBACK": "apis.admin.dashboard_callback",
     "SITE_TITLE": "Sistema de Gestão de Declarações",
     "SITE_HEADER": "Gestão de Declarações",
     "SITE_URL": "localhost:5173",
@@ -384,7 +389,7 @@ UNFOLD = {
             ],
         },
     ],
-    
+
     # EXTENSIONS
     "EXTENSIONS": {
         "modeltranslation": {
@@ -396,10 +401,9 @@ UNFOLD = {
     },
     
     # THEME
-    "THEME": "auto",  # light, dark, auto
+    #"THEME": "auto",  # light, dark, auto
     
-    # DASHBOARD
-    "DASHBOARD_CALLBACK": "apis.admin.dashboard_callback",
+   
 }
 
 # Import static helper

@@ -29,7 +29,7 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
     queryset = Funcionario.objects.select_related('id_cargo').all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['status_funcionario', 'id_cargo', 'genero']
+    #filterset_fields = ['status_funcionario', 'id_cargo', 'genero']
     search_fields = ['nome_completo', 'email', 'codigo_identificacao']
     ordering_fields = ['nome_completo', 'data_admissao', 'criado_em']
     ordering = ['nome_completo']
@@ -101,6 +101,6 @@ class CargoFuncionarioViewSet(viewsets.ModelViewSet):
     serializer_class = CargoFuncionarioSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['id_funcionario', 'id_cargo']
+    #filterset_fields = ['id_funcionario', 'id_cargo']
     ordering_fields = ['data_inicio', 'data_fim']
     ordering = ['-data_inicio']

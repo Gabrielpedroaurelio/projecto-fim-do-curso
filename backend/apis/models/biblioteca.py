@@ -30,7 +30,7 @@ class Livro(models.Model):
         related_name='livros_gerenciados',
         verbose_name='Responsável'
     )
-    caminho_arquivo = models.FileField(upload_to="static/library/books/",null=False, blank=False, verbose_name='Arquivo em PDF')
+    caminho_arquivo = models.FileField(upload_to="documentos/library/books/",null=False, blank=False, verbose_name='Arquivo em PDF')
     id_categoria = models.ForeignKey(
         Categoria,
         on_delete=models.SET_NULL,

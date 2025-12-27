@@ -51,7 +51,7 @@ class SeccaoViewSet(viewsets.ModelViewSet):
     serializer_class = SeccaoSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['id_departamento']
+    #filterset_fields = ['id_departamento']
     search_fields = ['nome_seccao']
 
 
@@ -72,9 +72,9 @@ class CursoViewSet(viewsets.ModelViewSet):
     ).all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id_area_formacao']
+    #filterset_fields = ['id_area_formacao']
     search_fields = ['nome_curso']
-    ordering_fields = ['nome_curso', 'duracao_meses']
+    ordering_fields = ['nome_curso', 'duracao']
     ordering = ['nome_curso']
     
     def get_serializer_class(self):
@@ -121,7 +121,7 @@ class TurmaViewSet(viewsets.ModelViewSet):
     ).all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id_curso', 'id_classe', 'id_periodo', 'ano']
+    #filterset_fields = ['id_curso', 'id_classe', 'id_periodo', 'ano']
     search_fields = ['codigo_turma']
     ordering_fields = ['codigo_turma', 'ano']
     ordering = ['codigo_turma']
@@ -163,3 +163,4 @@ class TurmaViewSet(viewsets.ModelViewSet):
             'alunos_por_status': list(alunos_por_status),
             'alunos_por_genero': list(alunos_por_genero)
         })
+        

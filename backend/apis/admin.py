@@ -29,11 +29,10 @@ from apis.models import (
 # =============================================================================
 # DASHBOARD CALLBACK - Gráficos e Estatísticas
 # =============================================================================
-
+ 
 def dashboard_callback(request, context):
-    """
-    Callback para adicionar dados ao dashboard com visual premium
-    """
+    from django.db.models import Count, Avg, Sum
+    
     # Estatísticas gerais
     total_alunos = Aluno.objects.filter(status_aluno='Activo').count()
     total_funcionarios = Funcionario.objects.filter(status_funcionario='Activo').count()
@@ -41,58 +40,88 @@ def dashboard_callback(request, context):
     total_cursos = Curso.objects.count()
     
     # Solicitações pendentes
-    solicitacoes_pendentes = SolicitacaoDocumento.objects.filter(
-        status_solicitacao='pendente'
-    ).count()
+    solicitacoes_pendentes = SolicitacaoDocumento.objects.filter(status_solicitacao='pendente').count()
     
     # Faturas pendentes
     faturas_pendentes = Fatura.objects.filter(status='pendente').count()
-    total_pendente = Fatura.objects.filter(status='pendente').aggregate(
-        total=Sum('total')
-    )['total'] or 0
+    total_pendente = Fatura.objects.filter(status='pendente').aggregate(total=Sum('total'))['total'] or 0
     
     # Média geral de notas
     media_geral = Nota.objects.aggregate(media=Avg('valor'))['media'] or 0
-    
-    # Online stats
-    alunos_online = Aluno.objects.filter(is_online=True).count()
-    func_online = Funcionario.objects.filter(is_online=True).count()
-    
+
+  # Alunos por curso
+    alunos_por_curso = Aluno.objects.values('id_turma__id_curso__nome_curso').annotate(total=Count('id_aluno'))
+    labels_cursos = [x['id_turma__id_curso__nome_curso'] for x in alunos_por_curso]
+    data_cursos = [x['total'] for x in alunos_por_curso]
+
+    # Média por turma
+    media_por_turma = Nota.objects.values('id_aluno__id_turma__codigo_turma').annotate(media=Avg('valor'))
+    labels_turmas = [x['id_aluno__id_turma__codigo_turma'] for x in media_por_turma]
+    data_medias = [x['media'] for x in media_por_turma]
+
+    # KPIs do dashboard
     context.update({
-        'kpis': [
+        "kpis": [
             {
                 'title': 'Comunidade Escolar',
                 'metric': f"{total_alunos + total_funcionarios}",
-                'footer': f'<strong>{alunos_online + func_online}</strong> usuários online no momento',
+                'footer': f"{total_alunos + total_funcionarios} usuários",
                 'icon': 'diversity_3',
                 'color': 'primary',
             },
             {
                 'title': 'Desempenho Académico',
                 'metric': f"{media_geral:.1f}",
-                'footer': 'Média global baseada em todas as avaliações',
+                'footer': 'Média geral das avaliações',
                 'icon': 'trending_up',
                 'color': 'success' if media_geral >= 10 else 'danger',
             },
             {
                 'title': 'Pendências de Documentação',
                 'metric': solicitacoes_pendentes,
-                'footer': 'Solicitações aguardando revisão da diretoria',
+                'footer': 'Solicitações pendentes',
                 'icon': 'description',
                 'color': 'warning' if solicitacoes_pendentes > 0 else 'success',
             },
             {
                 'title': 'Saúde Financeira',
                 'metric': f"{total_pendente:,.2f} Kz",
-                'footer': f'{faturas_pendentes} faturas pendentes de liquidação',
+                'footer': f'{faturas_pendentes} faturas pendentes',
                 'icon': 'account_balance_wallet',
                 'color': 'info',
             },
         ],
+        # Dados para gráficos no Unfold
+        "charts": [
+            {
+                "title": "Alunos por Curso",
+                "type": "bar",
+                "labels": labels_cursos,
+                "datasets": [
+                    {
+                        "label": "Alunos",
+                        "data": data_cursos,
+                        "backgroundColor": "rgba(16, 185, 129, 0.7)"
+                    }
+                ]
+            },
+            {
+                "title": "Média de Notas por Turma",
+                "type": "line",
+                "labels": labels_turmas,
+                "datasets": [
+                    {
+                        "label": "Média",
+                        "data": data_medias,
+                        "borderColor": "rgba(52, 211, 153, 1)",
+                        "fill": False
+                    }
+                ]
+            }
+        ]
     })
     
     return context
-
 
 # =============================================================================
 # ADMIN CLASSES PERSONALIZADAS
@@ -270,7 +299,7 @@ class TurmaAdmin(ModelAdmin):
 
 @admin.register(Curso)
 class CursoAdmin(ModelAdmin):
-    list_display = ['id_curso', 'nome_curso', 'area_badge', 'duracao_meses', 'total_turmas']
+    list_display = ['id_curso', 'nome_curso', 'area_badge', 'duracao', 'total_turmas']
     list_filter = ['id_area_formacao']
     search_fields = ['nome_curso']
     
