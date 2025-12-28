@@ -1,4 +1,4 @@
-import style from './AuthAdmin.module.css'
+import style from './AuthGeneral.module.css'
 import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
@@ -6,10 +6,8 @@ import { createRecord, escapeHtml } from '../../../Services/ModelServices';
 import fundo_login from '../../../assets/images/backgroundlogin.png'
 import { useEffect } from 'react';
 
-export default function AuthAdmin() {
+export default function AuthGeneral({ url, destination }) {
     const { register, handleSubmit, formState: { errors } } = useForm()
-
-    const url = ''
 
     function onSubmit(data) {
 
@@ -23,6 +21,7 @@ export default function AuthAdmin() {
 
         async () => {
             const result = await createRecord(url, data)
+            if(result.success) navigator(destination)
             console.log(result);
         }
 
@@ -78,7 +77,7 @@ export default function AuthAdmin() {
 
 
                             <div className={style.forgotPassword}>
-                                <small>  <Link to='/admin/dashboards'>Esqueceu a Senha?</Link></small>
+                                <small>  <Link to='/admin/dashboards'>Esqueceu a senha?</Link></small>
                             </div>
                             <div className={style.inputController}>
                                 <button type='submit'>Iniciar Sessão</button>
