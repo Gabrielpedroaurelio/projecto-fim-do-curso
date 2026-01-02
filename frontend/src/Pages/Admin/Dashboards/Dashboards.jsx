@@ -1,23 +1,21 @@
-import { useState } from 'react';
+import style from './Dashboards.module.css'
+import '../../../assets/style/global.style.css'
+import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
+import Header from '../../../Components/Elements/Header/Header'
+import Cards from '../../../Components/Elements/Cards/Cards'
+import { FaCircleCheck, FaFileInvoice, FaMagnifyingGlass, FaUserGraduate } from 'react-icons/fa6'
+import { RiBillLine } from 'react-icons/ri'
+
+// IMPORTAÇ~OES PARA OS GRAFICOS
+
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
-import style from './Dashboards.module.css';
-import {
-    FaUserGraduate,
-    FaFileInvoice,
-    FaSpinner,
-    FaCircleCheck,
-    FaMagnifyingGlass,
-    FaBell,
-    FaRegMoon,
-    FaGear
-} from 'react-icons/fa6';
-import { BiSolidDashboard } from "react-icons/bi";
-import { BsBoxSeam, BsCart3 } from "react-icons/bs";
-import { FiMessageSquare, FiTrendingUp } from "react-icons/fi";
-import { RiBillLine } from "react-icons/ri";
+
+/*
+DADOS FICTICIOS PARA OS GRAFICOS
+*/
 
 const performanceData = [
     { subject: 'Vendas', A: 120, fullMark: 150 },
@@ -41,161 +39,61 @@ const revenueData = [
     { name: 'Nov', value: 3800 },
     { name: 'Dez', value: 4200 },
 ];
+const activities_recently = [
+    {
+        id: 1,
+        Nome: "Gabriel Aurelio",
+        Curso: "Infromaticatica",
+        Descrição: "Solicitação",
+        TIPO: "Declaração",
+        Data: "2026-01-05",
+        Status: "Concluido",
 
+    },
+    {
+        id: 2,
+        Nome: "Gabriel Aurelio",
+        Curso: "Infromaticatica",
+        Descrição: "Solicitação",
+        TIPO: "Declaração",
+        Data: "2026-01-05",
+        Status: "Concluido",
+
+    },
+    {
+        id: 3,
+        Nome: "Gabriel Aurelio",
+        Curso: "Infromaticatica",
+        Descrição: "Solicitação",
+        TIPO: "Declaração",
+        Data: "2026-01-05",
+        Status: "Concluido",
+
+    },
+    {
+        id: 4,
+        Nome: "Gabriel Aurelio",
+        Curso: "Infromaticatica",
+        Descrição: "Solicitação",
+        TIPO: "Declaração",
+        Data: "2026-01-05",
+        Status: "Concluido",
+
+    },
+]
+// FIM DOS DADOS PARA O GRAFICO
 export default function Dashboards() {
     return (
-        <div className={style.DashboardContainer}>
-            {/* Sidebar Section */}
-            <aside className={style.Sidebar}>
-                <div className={style.Logo}>
-                    <div className={style.LogoIcon}>+</div>
-                    <h2>Gestão Escolar</h2>
+        <div className={'ContainerGeneral'}>
+            <NavBarMenu />
+            <main className={'ContainerMain'}>
+                <Header text1={"Resumo"} text2={"Dashboard"} />
+                <div className={style.GridCards}>
+                    <Cards icon={<FaFileInvoice />} title={"Total Solicitações"} value={"8,456"} value_percentual={22.2} />
+                    <Cards icon={<FaCircleCheck />} value_percentual={"104.5"} title={"Declarações Emitidas"} value={"4,450"} />
+                    <Cards icon={<FaUserGraduate />} title={"Novos Alunos"} value_percentual={12.3} value={"34,567"} />
+                    <Cards icon={<RiBillLine />} title={"Receita Total"} value={"Kz 80,768"} value_percentual={14.8} />
                 </div>
-
-                <div className={style.MenuSection}>
-                    <h3>Menu</h3>
-                    <ul>
-                        <li className={style.Active}>
-                            <BiSolidDashboard />
-                            <span>Visão Geral</span>
-                        </li>
-                        <li>
-                            <BsCart3 />
-                            <span>Solicitações</span>
-                        </li>
-                        <li>
-                            <FiMessageSquare />
-                            <span>Mensagens</span>
-                            <span className={style.Badge}>1</span>
-                        </li>
-                        <li>
-                            <FiTrendingUp />
-                            <span>Relatórios</span>
-                        </li>
-                        <li>
-                            <RiBillLine />
-                            <span>Pagamentos</span>
-                        </li>
-                        <li>
-                            <FaUserGraduate />
-                            <span>Alunos</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div className={style.MenuSection}>
-                    <h3>Canais</h3>
-                    <ul>
-                        <li><BsBoxSeam /> Integrações</li>
-                        <li><FaFileInvoice /> Documentos</li>
-                        <li><FaCircleCheck /> Descontos</li>
-                    </ul>
-                </div>
-
-                <div className={style.MenuSection}>
-                    <ul>
-                        <li><FaGear /> Configurações</li>
-                        <li> Ajuda</li>
-                        <li> Ferramentas</li>
-                    </ul>
-                </div>
-                <div className={style.UserProfileMini}>
-                    <div className={style.Avatar}>GP</div>
-                    <div className={style.Info}>
-                        <h4>Gabriel Pedro</h4>
-                        <span>admin@escola.com</span>
-                    </div>
-                </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className={style.MainContent}>
-                {/* Header */}
-                <header className={style.Header}>
-                    <div className={style.Breadcrumbs}>
-                        Dashboard / <span>Visão Geral</span>
-                    </div>
-
-                    <div className={style.HeaderActions}>
-                        <div className={style.SearchBar}>
-                            <FaMagnifyingGlass />
-                            <input type="text" placeholder="Pesquisar..." />
-                        </div>
-                        <div className={style.ActionIcons}>
-                            <button className={style.IconButton}><FaRegMoon /></button>
-                            <button className={style.IconButton}><FaBell /></button>
-                        </div>
-                        <div className={style.UserProfileHeader}>
-                            <div className={style.AvatarSmall}>GP</div>
-                            <div className={style.InfoSmall}>
-                                <h4>Gabriel Pedro</h4>
-                                <span>Admin</span>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-
-                {/* Dashboard Widgets */}
-                <div className={style.StatsRow}>
-                    <div className={style.HeaderRow}>
-                        <div>
-                            <h1>Visão Geral das Declarações</h1>
-                            <span>Dados atualizados hoje</span>
-                        </div>
-                        <div className={style.FilterActions}>
-                            <button className={style.FilterBtn}>Filtrar</button>
-                            <button className={style.ImportBtn}>Exportar</button>
-                        </div>
-                    </div>
-
-                    <div className={style.GridCards}>
-                        <div className={style.StatCard}>
-                            <div className={style.CardHeader}>
-                                <span>Total Solicitações</span>
-                                <FaFileInvoice />
-                            </div>
-                            <h2>8,456</h2>
-                            <div className={style.TrendUp}>
-                                <span>+22.2%</span> vs mês passado
-                            </div>
-                        </div>
-
-                        <div className={style.StatCard}>
-                            <div className={style.CardHeader}>
-                                <span>Declarações Emitidas</span>
-                                <FaCircleCheck />
-                            </div>
-                            <h2>4,450</h2>
-                            <div className={style.TrendUp}>
-                                <span>+104.5%</span> vs mês passado
-                            </div>
-                        </div>
-
-                        <div className={style.StatCard}>
-                            <div className={style.CardHeader}>
-                                <span>Novos Alunos</span>
-                                <FaUserGraduate />
-                            </div>
-                            <h2>34,567</h2>
-                            <div className={style.TrendUp}>
-                                <span>+12.3%</span> vs mês passado
-                            </div>
-                        </div>
-
-                        <div className={style.StatCard}>
-                            <div className={style.CardHeader}>
-                                <span>Receita Total</span>
-                                <RiBillLine />
-                            </div>
-                            <h2>Kz 80,768</h2>
-                            <div className={style.TrendUp}>
-                                <span>+14.8%</span> vs mês passado
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Charts Section */}
                 <div className={style.ChartsRow}>
                     <div className={style.RevenueChart}>
                         <div className={style.ChartHeader}>
@@ -249,8 +147,6 @@ export default function Dashboards() {
                         </div>
                     </div>
                 </div>
-
-                {/* Recent Activity Table */}
                 <div className={style.RecentActivity}>
                     <div className={style.TableHeaderAction}>
                         <h3>Atividades Recentes</h3>
@@ -265,58 +161,42 @@ export default function Dashboards() {
                             <thead>
                                 <tr>
                                     <th>Nome</th>
-                                    <th>Escola/Curso</th>
-                                    <th>Origem</th>
-                                    <th>Localização</th>
+                                    <th>Curso</th>
+                                    <th>Descrição </th>
+                                    <th>Tipo Documento</th>
                                     <th>Data</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-                                            <span>Martinho Pedro</span>
-                                        </div>
-                                    </td>
-                                    <td>Ciências Físicas</td>
-                                    <td>Sistema</td>
-                                    <td>Luanda</td>
-                                    <td>2025-09-02</td>
-                                    <td><span className={style.StatusBadgeBlue}>Novo Aluno</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-                                            <span>Emília Dinis</span>
-                                        </div>
-                                    </td>
-                                    <td>Informática</td>
-                                    <td>Secretaria</td>
-                                    <td>Benguela</td>
-                                    <td>2025-08-10</td>
-                                    <td><span className={style.StatusBadgeGreen}>Matriculado</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-                                            <span>João da Silva</span>
-                                        </div>
-                                    </td>
-                                    <td>Jurídicas</td>
-                                    <td>Online</td>
-                                    <td>Huíla</td>
-                                    <td>2025-08-10</td>
-                                    <td><span className={style.StatusBadgeGreen}>Deferido</span></td>
-                                </tr>
+
+
+                                {
+                                    activities_recently.map((activity) => (
+                                        <tr key={activity.id}>
+                                            <td>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-full bg-gray-200"></div>
+                                                    <span>{activity.Nome}</span>
+                                                </div>
+                                            </td>
+                                            <td>{activity.Curso}</td>
+                                            <td>{activity.Descrição}</td>
+                                            <td>{activity.TIPO}</td>
+                                            <td>2025-09-02</td>
+                                            <td><span className={style.StatusBadgeBlue}>{activity.Status}</span></td>
+                                        </tr>
+
+                                    ))
+                                }
+        
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </main>
+
         </div>
-    );
+    )
 }
