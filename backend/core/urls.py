@@ -7,6 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('dashboard-academico/', include('apis.urls_dashboard')), # Prefix único para evitar conflitos com o /admin/
     path('admin/', admin.site.urls),
     path('api/v1/', include('apis.urls')),
     path('auth/', include('rest_framework.urls')),

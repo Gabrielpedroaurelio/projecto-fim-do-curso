@@ -185,15 +185,14 @@ SIMPLE_JWT = {
 # =============================================================================
 
 UNFOLD = {
-    # DASHBOARD
-    "DASHBOARD_CALLBACK": "apis.admin.dashboard_callback",
+ 
     "SITE_TITLE": "Sistema de Gestão de Declarações",
     "SITE_HEADER": "Gestão de Declarações",
     "SITE_URL": "localhost:5173",
     "SITE_SYMBOL": "school", # Símbolo do Material Symbols
     "SHOW_HISTORY": True, # Mostra botão de histórico
     "SHOW_VIEW_ON_SITE": True, # Mostra botão ver no site
-    "THEME": "dark", # Tema padrão dark
+    #"THEME": "dark", # Tema padrão dark
     
     "SITE_ICON": {
         "light": lambda request: static("image/favicon.ico"),
@@ -210,9 +209,14 @@ UNFOLD = {
                 "separator": True,
                 "items": [
                     {
+                        "title": "Dashboards",
+                        "icon": "dashboard",
+                        "link": lambda request: "/dashboard-academico/",
+                    },
+                    {
                         "title": "Visão Geral",
                         "icon": "dashboard",
-                        "link": lambda request: "/admin/",
+                        "link": lambda request: "/admin",
                     },
                 ],
             },
@@ -402,7 +406,8 @@ UNFOLD = {
     
     # THEME
     #"THEME": "auto",  # light, dark, auto
-    
+    # DASHBOARD
+    "DASHBOARD_CALLBACK": "apis.dashboard.dashboard_callback",
    
 }
 
