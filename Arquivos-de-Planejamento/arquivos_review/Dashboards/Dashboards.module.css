@@ -1,0 +1,609 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Global Reset/Setup for Dashboard Component */
+.DashboardContainer {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f1f5f9;
+    /* Light gray background like the image outer edge */
+    font-family: 'Outfit', sans-serif;
+    color: #1e293b;
+    padding: 16px;
+    box-sizing: border-box;
+    gap: 16px;
+    position: relative;
+    width: 100%;
+}
+
+/* --- Sidebar --- */
+.Sidebar {
+    width: 250px;
+    min-width: 250px;
+    /* Prevent shrink */
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    /* Fixing the sticky behavior */
+    height: calc(100vh - 32px);
+    position: sticky;
+    top: 16px;
+    z-index: 10;
+    /* Allow scroll inside sidebar if needed */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.02), 0 2px 4px -2px rgb(0 0 0 / 0.02);
+}
+
+/* Custom Scrollbar for Sidebar */
+.Sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.Sidebar::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0;
+    border-radius: 4px;
+}
+
+.Logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.LogoIcon {
+    width: 32px;
+    height: 32px;
+    background-color: #0ea5e9;
+    /* Blue brand color */
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+.Logo h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    /* Slate 900 */
+    letter-spacing: -0.5px;
+}
+
+.MenuSection h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    /* Slate 400 */
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.MenuSection ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+}
+
+.MenuSection li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #64748b;
+    /* Slate 500 */
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.MenuSection li:hover {
+    background-color: #f8fafc;
+    /* Slate 50 */
+    color: #334155;
+    /* Slate 700 */
+}
+
+.MenuSection li.Active {
+    background-color: #f1f5f9;
+    /* Slate 100 */
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.MenuSection li svg {
+    font-size: 1.1rem;
+}
+
+.Badge {
+    background-color: #0ea5e9;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: auto;
+}
+
+.UserProfileMini {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+}
+
+.Avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    /* Slight square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #475569;
+}
+
+
+/* --- Main Content Area --- */
+.MainContent {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.02), 0 2px 4px -2px rgb(0 0 0 / 0.02);
+}
+
+/* Header */
+.Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Breadcrumbs {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.Breadcrumbs span {
+    color: #0ea5e9;
+    font-weight: 600;
+}
+
+.HeaderActions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.SearchBar {
+    background-color: #f8fafc;
+    padding: 10px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 250px;
+}
+
+.SearchBar svg {
+    color: #94a3b8;
+}
+
+.SearchBar input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    color: #334155;
+    width: 100%;
+}
+
+.ActionIcons {
+    display: flex;
+    gap: 12px;
+}
+
+.IconButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.IconButton:hover {
+    border-color: #cbd5e1;
+    color: #334155;
+}
+
+.UserProfileHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 12px;
+    border-left: 1px solid #e2e8f0;
+}
+
+.AvatarSmall {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-image: url('https://i.pravatar.cc/150?u=a042581f4e29026704d');
+    /* Placeholder */
+    background-size: cover;
+}
+
+.InfoSmall h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.InfoSmall span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+
+/* Stats Row */
+.HeaderRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+}
+
+.HeaderRow h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.HeaderRow span {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.FilterActions {
+    display: flex;
+    gap: 12px;
+}
+
+.FilterBtn {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.ImportBtn {
+    background-color: #0ea5e9;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.2);
+}
+
+
+.GridCards {
+    display: grid;
+    /* Use grid for 4 columns */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.StatCard {
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.CardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.CardHeader svg {
+    font-size: 1.2rem;
+}
+
+.StatCard h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.TrendUp {
+    font-size: 0.8rem;
+    color: #64748b;
+    background-color: #f8fafc;
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.TrendUp span {
+    color: #10b981;
+    /* Green */
+    font-weight: 700;
+}
+
+/* Charts */
+.ChartsRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.RevenueChart,
+.PerformanceChart {
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.ChartHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.ChartHeader h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.ChartHeader h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.DateTabs {
+    background-color: #f8fafc;
+    padding: 4px;
+    border-radius: 10px;
+    display: flex;
+    gap: 4px;
+}
+
+.DateTabs button {
+    border: none;
+    background: transparent;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.DateTabs button.Active {
+    background-color: white;
+    color: #0f172a;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+
+/* Table */
+.RecentActivity {
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.TableHeaderAction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.TableHeaderAction h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.SearchBarSmall {
+    background-color: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 200px;
+}
+
+.SearchBarSmall input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.TableContainer {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+td {
+    padding: 16px;
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.StatusBadgeBlue {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.StatusBadgeGreen {
+    background-color: #f0fdf4;
+    color: #15803d;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .GridCards {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2x2 grid */
+    }
+
+    .ChartsRow {
+        grid-template-columns: 1fr;
+        /* Stack charts */
+    }
+
+    .RecentActivity {
+        overflow-x: hidden;
+    }
+
+    .TableContainer {
+        overflow-x: auto;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .DashboardContainer {
+        flex-direction: column;
+        padding: 10px;
+        min-height: auto;
+    }
+
+    .Sidebar {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        position: relative;
+        top: 0;
+        margin-bottom: 20px;
+        box-shadow: none;
+        border: 1px solid #f1f5f9;
+    }
+
+    .MainContent {
+        width: 100%;
+        padding: 16px;
+        height: auto;
+        overflow: visible;
+        box-shadow: none;
+        border: 1px solid #f1f5f9;
+    }
+
+    .Header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .HeaderActions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .SearchBar {
+        width: 100%;
+        order: 1;
+    }
+
+    .ActionIcons {
+        order: 2;
+    }
+
+    .UserProfileHeader {
+        order: 3;
+    }
+
+    .GridCards {
+        grid-template-columns: 1fr;
+        /* 1 column */
+    }
+
+    .HeaderRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}

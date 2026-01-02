@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-ollama
+python-dotenv
+requests
+pypdf
+pydantic
+python-multipart
+fpdf2
