@@ -1,0 +1,28 @@
+.cardDocument {
+    background-color: #ffffff;
+    border: 1px solid #ecf4fc;
+    width: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    transition: all .5s ease-in-out;
+    flex-direction: column;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.02);
+    gap: 16px;
+    margin: 10px 5px;
+}
+
+.cardDocument:hover {
+
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ecf4fc;
+}
+
+.cardDocument button {
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--green-emarald);
+}

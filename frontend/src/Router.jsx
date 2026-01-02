@@ -2,20 +2,23 @@ import { BrowserRouter as BRouter, Route, Routes } from 'react-router-dom'
 // importing of views for routers
 import MainSite from './Pages/Public/Site/MainSite'
 import Dashboards from './Pages/Admin/Dashboards/Dashboards'
-import Documents from './Pages/Admin/Certificado/Certificado'
 import AuthParent from './Pages/Client/Parents/AuthParent'
 import AuthStudent from './Pages/Client/Students/AuthStudent'
 import AuthAdmin from './Pages/Admin/Auth/AuthAdmin'
 import LIbrary from './Pages/Public/LIbrary/LIbrary'
+// estudantes
 import DashboardsStudents from './Pages/Client/Students/Dashboards/DashboardsStudents'
 import DocumentsCliente from './Pages/Client/Students/DocumentsCliente/DocumentsCliente'
-import DashboardEncarregado from './Pages/Client/Parents/Dashboards/DashboardEncarregado'
+import AskStudent from './Pages/Client/Students/AskStudent/AskStudent'
 import Settings from './Pages/Admin/Settings/Settings'
 import Accounts from './Pages/Admin/Accounts/Accounts'
 import Histories from './Pages/Admin/Histories/Histories'
-
-
-
+// parent
+import Children from './Pages/Client/Parents/Children/Children'
+import ChildrenActions from './Pages/Client/Parents/ChildrenActions/ChildrenActions'
+import DashboardEncarregado from './Pages/Client/Parents/Dashboards/DashboardEncarregado'
+import Documentos from './Pages/Client/Parents/Documentos/Documentos'
+import SolicitacaoParent  from './Pages/Client/Parents/SolicitacaoParent/SolicitacaoParent'
 //import Asks from './Pages/Admin'
 import Encarregado from './Pages/Admin/Encarregado/Encarregado'
 import Estudantes from './Pages/Admin/Estudantes/Estudantes'
@@ -48,12 +51,14 @@ const Routers = () => {
                     {/***ALUNO** */}{/* */}
                     <Route path='/student/dashboard' element={<DashboardsStudents/>}></Route>{/* */}
                     <Route path='/student/document' element={<DocumentsCliente/>}></Route>{/* */}
-                    <Route path='/student/ask' element={"/student/library"}></Route>{/* */}
+                    <Route path='/student/ask' element={<AskStudent/>}></Route>{/* */}
                     <Route path='/student/auth' element={<AuthStudent/>}></Route>{/* */}
                     {/***ENCARREGADO** */}{/* */}
                     <Route path='/parent/dashboard' element={<DashboardEncarregado/>}></Route>{/* */}
-                    <Route path='/parent/children' element={"/parent/children"}></Route>{/* */}
-                    <Route path='/parent/ask' element={"/parent/ask"}></Route>{/* */}
+                    <Route path='/parent/children' element={<Children/>}></Route>{/* */}
+                    <Route path='/parent/ask' element={<SolicitacaoParent/>}></Route>{/* */}
+                    <Route path='/parent/document' element={<Documentos/>}></Route>{/* */}
+                    <Route path='/parent/actionstudent' element={<ChildrenActions/>}></Route>{/* */}
                     <Route path='/parent/auth' element={<AuthParent/>}></Route>{/* */}
                     {/***PUBLICO** */}{/* */}
                     <Route path='/' index element={<MainSite/>}></Route>{/* */}

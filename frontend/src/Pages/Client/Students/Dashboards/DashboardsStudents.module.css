@@ -1,354 +1,40 @@
 @import url(../../../../assets/includes/includes.includes.css);
 @import url(../../../../assets/style/global.style.css);
 
-.ContainerDashboardAluno {
-    background-color: var(--fundo-blue);
-    height: 100%;
-    width: 100vw;
-
-}
-
-.containerGeneral {
-    margin-left: 50px;
-
-
-}
-
-
-.containerGeneral>div {
-    display: grid;
-    gap: 10px;
-    padding: 10px;
-    margin: auto;
-    max-width: 1200px;
-
-
-}
-
-.containerGeneral>div>div {
-    background-color: var(--fundo-ciano);
-    border-radius: 5px;
-    padding: 10px;
-    box-sizing: border-box;
-    box-shadow: 0px 0px 10px #e6e6e6;
-
-}
-
-.containerGeneral>div .cardTypeDocuments {
-    display: grid;
-}
-
-.containerGeneral>div .cardTypeDocuments .cardsDocumentos {
+.gridCards {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
+    overflow-x: scroll;
+    width: 98%;
+    margin: auto;
+}
+.gridCards::-webkit-scrollbar{
+width: 1px;    
+}
+.gridCards >*{
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
-.containerGeneral>div>div:first-child h1 {
-    color: var(--color-blue-950);
+.cardChart {
+
+    padding: 10px 5px;
+}
+
+.cardChart h1 {
+    font-size: 15pt;
+    color: black;
     font-weight: 600;
-    text-align: center;
+}
+
+.cardChart .chart {
+    border: 1px solid #f1f5f9;
+    background-color: #ffffff;
+  
     margin: auto;
-
 }
-
-.containerGeneral>div .cardTypeDocuments .cardsDocumentos a {
-    margin: auto;
-    width: 100px;
-    margin: auto;
-    height: 100px;
-
-
+.cardDocuments h2{
+    font-size: 18pt;
+    color: #222222;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-left: 20px;
 }
-
-.containerGeneral>div .cardTypeDocuments .cardsDocumentos>a svg {
-    border: 3px solid var(--color-blue-600);
-    color: var(--color-blue-600);
-    padding: 10px;
-    width: 70px;
-    margin: auto;
-    height: 70px;
-    border-radius: 50%;
-}
-
-.containerGeneral>div>.cardTypeDocuments .cardsDocumentos>a span:last-child {
-    text-align: center;
-    display: inline-block;
-    color: var(--color-blue-950);
-    font-weight: 400;
-    font-size: 10pt;
-    width: 100%;
-}
-
-.containerGeneral div h3 {
-    color: var(--color-gray-600);
-    font-weight: 600;
-    text-align: center;
-    margin: 5px auto;
-}
-
-.containerGeneral>div>div .tableNotas {
-    color: #181818b8;
-    font-weight: 600;
-    height: 150px;
-
-
-
-}
-
-.containerGeneral>div>div .tableNotas .header {
-    padding: 0px 5px;
-    margin: 0%;
-    display: grid;
-    height: 30px;
-
-
-    grid-template-columns: 70% 20%;
-    align-items: center;
-
-
-
-
-}
-
-.containerGeneral>div>div .tableNotas .body {
-    height: 120px;
-    display: grid;
-    align-items: center;
-
-    overflow-y: auto;
-}
-
-.containerGeneral>div>div .tableNotas .body .DataNota {
-    padding: 0px 5px;
-    display: grid;
-    align-items: center;
-    grid-template-columns: 70% 30%;
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.containerGeneral>div>div .tableNotas .body .DataNota>span>span {
-    width: 50px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-
-}
-
-.containerGeneral>div>div .tableNotas .body .DataNota .rightvalue {
-    background-color: var(--color-green-100);
-    color: var(--color-green-600);
-    padding: 5px;
-}
-
-.containerGeneral>div>div .tableNotas .body .DataNota .leftvalue {
-    background-color: var(--color-red-100);
-    color: var(--color-red-600);
-    padding: 5px;
-}
-
-.containerGeneral .cardNoticiasRecentes {}
-
-.containerGeneral .cardNoticiasRecentes ul {
-    margin: auto;
-    width: 80%;
-    height: 100px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding-left: 10px;
-
-}
-
-.containerGeneral .cardNoticiasRecentes ul li::before {
-    content: " ";
-    position: absolute;
-    top: 40%;
-    left: -10px;
-    width: 4px;
-    height: 4px;
-    border: 1px solid var(--color-green-600);
-    border-radius: 50%;
-
-}
-
-.containerGeneral .cardNoticiasRecentes ul li {
-    font-size: 12px;
-    position: relative;
-    display: block;
-    color: #181818d8;
-
-}
-
-@media screen and (min-width:764px) {
-    .ContainerDashboardAluno {
-    background-color: var(--fundo-blue);
-    height: max-content;
-    width: 100vw;
-
-}
-    .containerGeneral>div {
-        height: 500px;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(4, 1fr);
-
-
-
-    }
-
-    .containerGeneral>div>div:first-child {
-
-        grid-area: 1/1/3/3;
-        padding: 10px;
-        height: 200px;
-    }
-}
-
-/*
-.containerGeneral>div {
-    height: 500px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-
-
-
-}
-
-.containerGeneral>div>div {
-    background-color: var(--fundo-ciano);
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px #e6e6e6;
-
-}
-
-.containerGeneral>div>div:first-child {
-
-    grid-area: 1/1/3/3;
-    padding: 10px;
-}
-
-.containerGeneral>div>div:first-child h1 {
-    color: var(--color-blue-950);
-    font-weight: 600;
-    text-align: center;
-    margin: 10px auto;
-
-}
-
-.containerGeneral>div>div .cardsDocumentos {
-    width: 70%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-
-}
-
-.containerGeneral>div>div .cardsDocumentos>a {
-    width: 150px;
-    margin: auto;
-    height: 150px;
-    display: inline-block;
-
-}
-
-.containerGeneral>div>div .cardsDocumentos>a svg {
-    border: 3px solid var(--color-blue-600);
-    color: var(--color-blue-600);
-    padding: 10px;
-    width: 70px;
-    margin: auto;
-    height: 70px;
-    border-radius: 50%;
-}
-
-.containerGeneral>div>div .cardsDocumentos>a span:last-child {
-    text-align: center;
-    display: inline-block;
-    color: var(--color-blue-950);
-    font-weight: 400;
-    font-size: 10pt;
-    width: 100%;
-}
-
-.containerGeneral>div>div {}
-
-.containerGeneral div h3 {
-    color: var(--color-blue-950);
-    font-weight: 600;
-    text-align: center;
-    margin: 5px auto;
-}
-
-.containerGeneral>div>div {}
-
-.containerGeneral>div>div .tableNotas {
-    font-size: 10px;
-    color: var(--color-blue-950);
-    font-weight: 600;
-    display: grid;
-    height: 70px;
-    overflow: hidden;
-}
-
-.containerGeneral>div>div .tableNotas .header {
-    padding: 0px 5px;
-    margin: 0%;
-    display: grid;
-    background-color: var(--fundo-blue);
-
-    grid-template-columns: 70% 20%;
-    align-items: center;
-
-
-
-
-}
-
-.containerGeneral>div>div .tableNotas .body {
-    height: 100%;
-    display: grid;
-    align-items: center;
-
-    overflow-y: auto;
-}
-
-.containerGeneral>div>div .tableNotas .body .DataNota {
-    padding: 0px 5px;
-    display: grid;
-    align-items: center;
-    grid-template-columns: 70% 30%;
-
-
-}
-
-.containerGeneral .cardNoticiasRecentes {}
-
-.containerGeneral .cardNoticiasRecentes ul {
-    margin: auto;
-    width: 80%;
-    height: 70px;
-
-}
-
-.containerGeneral .cardNoticiasRecentes ul li::before {
-    content: " ";
-    position: absolute;
-    top: 40%;
-    left: -10px;
-    width: 4px;
-    height: 4px;
-    border: 1px solid var(--color-green-600);
-    border-radius: 50%;
-
-}
-
-.containerGeneral .cardNoticiasRecentes ul li {
-    font-size: 10px;
-    position: relative;
-    display: block;
-    color: var(--color-blue-950);
-
-}*/

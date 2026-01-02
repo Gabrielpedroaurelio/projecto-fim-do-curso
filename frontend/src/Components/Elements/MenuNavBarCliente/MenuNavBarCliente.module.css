@@ -2,13 +2,13 @@
 @import url(../../../assets/style/global.style.css);
 
 .containerMenu {
-    background-color: #fffbff;
+    background-color: #ffffff;
     width: 150px;
     height: 100vh;
     overflow: hidden;
     position: fixed;
     transition: all .5s ease-in-out;
-    box-shadow: 0px 0px 10px var(--c4);
+    box-shadow: 0px 0px 2px #99b1d2;
     overflow-y: auto;
     z-index: 1000;
 }

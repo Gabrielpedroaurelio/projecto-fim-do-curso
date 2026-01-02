@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './DocumentsCliente.module.css';
+import style from './ChildrenActions.module.css';
 
 // padrão para todas as paginas
 import '../../../../assets/style/global.style.css'
@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Cards from '../../../../Components/Elements/Cards/Cards'
 
-const DocumentsCliente = () => {
+const ChildrenActions = () => {
 
 
   return (
     < div className='containelGeralclient'>
-      <MenuNavBarCliente user={'student'}></MenuNavBarCliente>
+      <MenuNavBarCliente user={'parent'}></MenuNavBarCliente>
       <main className='containelMainclient'>
        
 
@@ -21,4 +21,4 @@ const DocumentsCliente = () => {
   );
 };
 
-export default DocumentsCliente;
+export default ChildrenActions;

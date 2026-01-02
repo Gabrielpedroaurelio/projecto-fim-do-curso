@@ -1,5 +1,5 @@
 import style from './Boletim.module.css'
-import MenuNavBarAdmin from '../../../Components/Utils/MenuNavBarAdmin/MenuNavBarAdmin'
+
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 export default function Boletim() {
@@ -7,7 +7,7 @@ export default function Boletim() {
         <div className={style.ContainerGeneral}>
             <NavBarMenu />
             <main className={style.ContainerMain}>
-                <Header  text1={"Documentos"} text2={"Boletim"}/>
+                <Header text1={"Documentos"} text2={"Boletim"} />
 
             </main>
 
