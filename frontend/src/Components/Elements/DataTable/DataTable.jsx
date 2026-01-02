@@ -1,0 +1,207 @@
+import { useState } from 'react';
+import style from './DataTable.module.css';
+import { FaMagnifyingGlass, FaPencil, FaTrash } from 'react-icons/fa6';
+import { IoFilterSharp } from 'react-icons/io5';
+
+export default function DataTable({
+    title = "Students List",
+    data = [],
+    columns = [],
+    onAdd,
+    onEdit,
+    onDelete,
+    searchPlaceholder = "Search by name or roll"
+}) {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const [filterDays, setFilterDays] = useState(30);
+
+    // Filter data based on search term
+    const filteredData = data.filter(item => {
+        const searchLower = searchTerm.toLowerCase();
+        return columns.some(col => {
+            const value = item[col.key];
+            return value && value.toString().toLowerCase().includes(searchLower);
+        });
+    });
+
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    return (
+        <div className={style.DataTableContainer}>
+            <div className={style.TableHeader}>
+                <div className={style.TitleSection}>
+                    <h2>{title}</h2>
+                    <p>Home / {title.split(' ')[0]}</p>
+                </div>
+                {onAdd && (
+                    <button className={style.AddButton} onClick={onAdd}>
+                        + Add {title.split(' ')[0]}
+                    </button>
+                )}
+            </div>
+
+            <div className={style.TableCard}>
+                <div className={style.TableControls}>
+                    <h3>{title.split(' ')[0]} Information</h3>
+                    <div className={style.ControlsRight}>
+                        <div className={style.SearchBox}>
+                            <FaMagnifyingGlass />
+                            <input
+                                type="text"
+                                placeholder={searchPlaceholder}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <div className={style.FilterDropdown}>
+                            <IoFilterSharp />
+                            <select value={filterDays} onChange={(e) => setFilterDays(e.target.value)}>
+                                <option value={7}>Last 7 days</option>
+                                <option value={30}>Last 30 days</option>
+                                <option value={90}>Last 90 days</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={style.TableWrapper}>
+                    <table className={style.Table}>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" />
+                                </th>
+                                {columns.map((col, index) => (
+                                    <th key={index}>{col.label}</th>
+                                ))}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems.length > 0 ? (
+                                currentItems.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            <input type="checkbox" />
+                                        </td>
+                                        {columns.map((col, colIndex) => (
+                                            <td key={colIndex}>
+                                                {col.key === 'name' && item.avatar ? (
+                                                    <div className={style.NameCell}>
+                                                        <img src={item.avatar} alt={item[col.key]} />
+                                                        <span>{item[col.key]}</span>
+                                                    </div>
+                                                ) : col.key === 'name' && item.initials ? (
+                                                    <div className={style.NameCell}>
+                                                        <div className={style.Avatar}>{item.initials}</div>
+                                                        <span>{item[col.key]}</span>
+                                                    </div>
+                                                ) : (
+                                                    item[col.key]
+                                                )}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <div className={style.ActionButtons}>
+                                                {onEdit && (
+                                                    <button
+                                                        className={style.EditBtn}
+                                                        onClick={() => onEdit(item)}
+                                                        title="Edit"
+                                                    >
+                                                        <FaPencil />
+                                                    </button>
+                                                )}
+                                                {onDelete && (
+                                                    <button
+                                                        className={style.DeleteBtn}
+                                                        onClick={() => onDelete(item)}
+                                                        title="Delete"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={columns.length + 2} className={style.EmptyState}>
+                                        No data found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className={style.TableFooter}>
+                    <div className={style.Pagination}>
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={style.PageArrow}
+                        >
+                            ‹
+                        </button>
+
+                        {[...Array(Math.min(5, totalPages))].map((_, index) => {
+                            let pageNumber;
+                            if (totalPages <= 5) {
+                                pageNumber = index + 1;
+                            } else if (currentPage <= 3) {
+                                pageNumber = index + 1;
+                            } else if (currentPage >= totalPages - 2) {
+                                pageNumber = totalPages - 4 + index;
+                            } else {
+                                pageNumber = currentPage - 2 + index;
+                            }
+
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(pageNumber)}
+                                    className={currentPage === pageNumber ? style.ActivePage : ''}
+                                >
+                                    {pageNumber}
+                                </button>
+                            );
+                        })}
+
+                        {totalPages > 5 && (
+                            <>
+                                <span className={style.Ellipsis}>...</span>
+                                <button onClick={() => handlePageChange(totalPages)}>
+                                    {totalPages}
+                                </button>
+                            </>
+                        )}
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={style.PageArrow}
+                        >
+                            ›
+                        </button>
+                    </div>
+
+                    <div className={style.PerPageSelector}>
+                        <span>{itemsPerPage} / page</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

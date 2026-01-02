@@ -1,8 +1,6 @@
-
-
 .resourceCard {
     background-color: white;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #e2e8f0;
@@ -114,7 +112,7 @@
     max-width: 96%;
     min-width: 500px;
     margin: 10px auto 30px auto;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
 
     padding: 20px;
@@ -142,19 +140,19 @@
     background-color: #eaf6ff;
     padding: 3px 5px;
     margin: 5px;
-    cursor:pointer;
-    border-radius: 5px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
     font-weight: 600;
-    
+
 }
+
 .BooksByCategory .containerCategory button.is_selected {
     background-color: #002aff;
     color: #fff;
 }
 
 .BooksByCategory>div>.listEBooks {
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
-    
+
 }
- 

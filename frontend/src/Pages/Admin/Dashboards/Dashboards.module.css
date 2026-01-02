@@ -1,107 +1,140 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 .GridCards {
     display: grid;
-    /* Use grid for 4 columns */
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 /* Charts */
 .ChartsRow {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
 }
 
 .RevenueChart,
 .PerformanceChart {
-    border: 1px solid #f1f5f9;
-    border-radius: 16px;
-    padding: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.RevenueChart:hover,
+.PerformanceChart:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-indigo);
 }
 
 .ChartHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    margin-bottom: 1.5rem;
 }
 
 .ChartHeader h3 {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 4px;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
 }
 
 .ChartHeader h2 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--accent-indigo);
+    letter-spacing: -0.025em;
 }
 
 .DateTabs {
-    background-color: #f8fafc;
-    padding: 4px;
-    border-radius: 10px;
+    background-color: rgba(15, 23, 42, 0.05);
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
     display: flex;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .DateTabs button {
     border: none;
     background: transparent;
-    padding: 6px 12px;
-    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: #64748b;
-    border-radius: 8px;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
     cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.DateTabs button:hover {
+    color: var(--text-main);
 }
 
 .DateTabs button.Active {
     background-color: white;
-    color: #0f172a;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Table */
 .RecentActivity {
-    border: 1px solid #f1f5f9;
-    border-radius: 16px;
-    padding: 24px;
-    margin-top: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin-top: 2rem;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-md);
 }
 
 .TableHeaderAction {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
 }
 
 .TableHeaderAction h3 {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-main);
 }
 
 .SearchBarSmall {
-    background-color: #f8fafc;
-    padding: 8px 12px;
-    border-radius: 8px;
+    background-color: rgba(15, 23, 42, 0.03);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
-    gap: 8px;
-    width: 200px;
+    gap: 0.75rem;
+    width: 260px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.SearchBarSmall:focus-within {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.SearchBarSmall svg {
+    color: var(--text-muted);
 }
 
 .SearchBarSmall input {
     border: none;
     background: transparent;
     outline: none;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     width: 100%;
+    color: var(--text-main);
 }
 
 .TableContainer {
@@ -116,51 +149,57 @@ table {
 
 th {
     text-align: left;
-    color: #64748b;
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 12px 16px;
-    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--border-color);
 }
 
 td {
-    padding: 16px;
-    color: #334155;
-    font-size: 0.9rem;
+    padding: 1.25rem;
+    color: var(--text-main);
+    font-size: 0.9375rem;
     font-weight: 500;
-    border-bottom: 1px solid #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-fast);
+}
+
+tr:hover td {
+    background-color: rgba(79, 70, 229, 0.02);
 }
 
 .StatusBadgeBlue {
-    background-color: #eff6ff;
+    background-color: rgba(59, 130, 246, 0.1);
     color: #3b82f6;
-    padding: 4px 10px;
-    border-radius: 20px;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-sm);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .StatusBadgeGreen {
-    background-color: #f0fdf4;
-    color: #15803d;
-    padding: 4px 10px;
-    border-radius: 20px;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-sm);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* --- RESPONSIVE MEDIA QUERIES --- */
 
-/* Tablet (max-width: 1024px) */
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
     .GridCards {
         grid-template-columns: repeat(2, 1fr);
-        /* 2x2 grid */
     }
+}
 
+@media (max-width: 1024px) {
     .ChartsRow {
         grid-template-columns: 1fr;
-        /* Stack charts */
     }
 
     .RecentActivity {
@@ -172,68 +211,18 @@ td {
     }
 }
 
-/* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
-    .DashboardContainer {
-        flex-direction: column;
-        padding: 10px;
-        min-height: auto;
-    }
-
-    .Sidebar {
-        width: 100%;
-        min-width: 0;
-        height: auto;
-        position: relative;
-        top: 0;
-        margin-bottom: 20px;
-        box-shadow: none;
-        border: 1px solid #f1f5f9;
-    }
-
-    .MainContent {
-        width: 100%;
-        padding: 16px;
-        height: auto;
-        overflow: visible;
-        box-shadow: none;
-        border: 1px solid #f1f5f9;
-    }
-
-    .Header {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
-
-    .HeaderActions {
-        width: 100%;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .SearchBar {
-        width: 100%;
-        order: 1;
-    }
-
-    .ActionIcons {
-        order: 2;
-    }
-
-    .UserProfileHeader {
-        order: 3;
-    }
-
     .GridCards {
         grid-template-columns: 1fr;
-        /* 1 column */
     }
 
-    .HeaderRow {
+    .SearchBarSmall {
+        width: 100%;
+    }
+
+    .TableHeaderAction {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 1rem;
     }
 }

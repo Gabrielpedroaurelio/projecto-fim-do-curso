@@ -63,11 +63,11 @@
     gap: 12px;
 }
 
-.SubscribeForm input {
-    padding: 12px;
-    background-color: rgba(255, 255, 255, 0.05);
+.SubscribeFor.EmailInput {
+    padding: 0.75rem 1.25rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
     color: white;
     outline: none;
 }
@@ -80,7 +80,7 @@
     background: var(--green-primay);
     border: none;
     padding: 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     color: white;
     font-weight: 600;
     cursor: pointer;

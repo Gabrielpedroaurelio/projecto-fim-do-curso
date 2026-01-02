@@ -36,14 +36,14 @@
 .Grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: var(--radius-sm);
 }
 
 .Card {
     background-color: var(--bg-page);
     /* Inner card slight contrast */
-    padding: 30px;
-    border-radius: 16px;
+    padding: 2.5rem;
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-soft);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid var(--border-color);
@@ -61,7 +61,7 @@
     width: 60px;
     height: 60px;
     background-color: var(--green-soft);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;

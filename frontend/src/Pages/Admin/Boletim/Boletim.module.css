@@ -1,4 +1,418 @@
-.ContainerMain{
-    background-color: rebeccapurple;  
-    margin-left: 250px;
+/* Container */
+.BoletimContainer {
+    padding: 2rem;
+    max-width: 1400px;
+}
+
+/* Tabs Navigation */
+.TabsContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.TabButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.TabButton:hover {
+    color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.05);
+}
+
+.TabActive {
+    color: #0ea5e9 !important;
+    border-bottom-color: #0ea5e9 !important;
+    background: rgba(14, 165, 233, 0.08);
+}
+
+.TabIcon {
+    font-size: 1.1rem;
+}
+
+/* Content Card */
+.ContentCard {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.ContentCard:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+/* Card Header */
+.CardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
+}
+
+.HeaderLeft h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+}
+
+.Subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.CreateButton {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+.CreateButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+}
+
+/* Models Grid */
+.ModelsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.ModelCard {
+    position: relative;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.ModelCard:hover {
+    border-color: #0ea5e9;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
+    transform: translateY(-4px);
+}
+
+.ActiveBadge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.35rem 0.75rem;
+    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ModelIcon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(0, 163, 255, 0.1) 100%);
+    border-radius: var(--radius-sm);
+    color: #0ea5e9;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.ModelCard h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+}
+
+.ModelCard p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.ModelMeta {
+    font-size: 0.813rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.ModelActions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ModelActions button {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.875rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.BtnEdit {
+    background: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9;
+}
+
+.BtnEdit:hover {
+    background: #0ea5e9;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+.BtnActivate {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.BtnActivate:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.BtnDuplicate {
+    padding: 0.5rem 0.75rem;
+    background: rgba(148, 163, 184, 0.1);
+    color: #64748b;
+}
+
+.BtnDuplicate:hover {
+    background: #64748b;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.BtnDelete {
+    padding: 0.5rem 0.75rem;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.BtnDelete:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Table */
+.TableWrapper {
+    overflow-x: auto;
+    padding: 0 2rem 2rem;
+}
+
+.Table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.Table thead tr {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.Table th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.Table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.Table tbody tr:hover {
+    background: rgba(14, 165, 233, 0.03);
+}
+
+.Table td {
+    padding: 1.25rem 1.5rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.StudentCell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.Avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+}
+
+/* Status Badges */
+.StatusBadge {
+    display: inline-flex;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.813rem;
+    font-weight: 600;
+}
+
+.StatusFinished {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.StatusDraft {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Action Buttons */
+.ActionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ActionButtons button {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.ViewBtn {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.ViewBtn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.DownloadBtn {
+    background: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9;
+}
+
+.DownloadBtn:hover {
+    background: #0ea5e9;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .ModelsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .CardHeader {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .CreateButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .BoletimContainer {
+        padding: 1rem;
+    }
+
+    .ModelsGrid {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+
+    .TabButton {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .Table {
+        font-size: 0.875rem;
+    }
+
+    .Table th,
+    .Table td {
+        padding: 0.875rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .HeaderLeft h3 {
+        font-size: 1.25rem;
+    }
+
+    .TabsContainer {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .TabsContainer::-webkit-scrollbar {
+        display: none;
+    }
+
+    .TabButton {
+        white-space: nowrap;
+    }
 }

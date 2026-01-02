@@ -1,159 +1,253 @@
-@import url(../../../assets/includes/includes.includes.css);
 @import url(../../../assets/style/global.style.css);
 
 .containerMenu {
-    background-color: #ffffff;
-    width: 150px;
+    background-color: var(--bg-sidebar);
+    width: 250px;
     height: 100vh;
-    overflow: hidden;
     position: fixed;
-    transition: all .5s ease-in-out;
-    box-shadow: 0px 0px 2px #99b1d2;
-    overflow-y: auto;
+    top: 0;
+    left: 0;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    border-right: 1px solid var(--border-color);
+}
+
+/* Glass-morphism for dark mode */
+body.dark-mode .containerMenu {
+    background-color: rgba(20, 24, 34, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .containerMenu::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 4px;
 }
 
 .containerMenu::-webkit-scrollbar-track {
-    background-color: transparent;
+    background: transparent;
 }
 
 .containerMenu::-webkit-scrollbar-thumb {
-    background-color: #c5c5c5af;
-    border-radius: 10px;
-}
-
-.containerMenu::-webkit-scrollbar-thumb:hover {
-    background-color: #7c7c7c;
+    background: var(--border-color);
+    border-radius: 4px;
 }
 
 .extends {
-    width: 150px;
+    width: 250px;
 }
 
 .shinks {
-    width: 50px;
+    width: 80px;
+    padding: 24px 16px;
 }
 
-.containerMenu * {
-    color: var(--color-gray-600);
-}
-
-.containerMenu .header {
-    background-color: #fff;
+.header {
     display: flex;
-    height: 50px;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    margin-bottom: 32px;
 }
 
-.containerMenu .header .favicon {
+.favicon {
     display: flex;
     align-items: center;
-
+    gap: 12px;
 }
 
-.containerMenu .header .favicon>span {
-    margin-left: 5px;
+.favicon img {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-input);
 }
 
-.shinks .header .favicon>span {
+.title_favicon {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.shinks .title_favicon {
     display: none;
 }
 
-.containerMenu .header .BtnToggleMenu button {
+.BtnToggleMenu button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
 }
 
-.containerMenu .menu {
-    background-color: #fff;
+.BtnToggleMenu button:hover {
+    background-color: var(--bg-input);
+    color: var(--text-main);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    padding-left: 12px;
 }
 
 .shinks .menu h4 {
     display: none;
 }
 
-.containerMenu .menu h4 {
+.menu nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.menu nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
     font-weight: 500;
-    width: 90%;
-    margin: 5px auto;
+    transition: all 0.2s ease;
 }
 
-.containerMenu .menu>nav {}
+.menu nav a:hover {
+    background-color: var(--bg-input);
+    color: #0ea5e9;
+}
 
-.containerMenu .menu>nav a {
-    width: 90%;
-    margin: 5px auto;
+.menu nav a.active {
+    background-color: var(--bg-input);
+    color: #0ea5e9;
+    font-weight: 600;
+}
+
+.icon {
     display: flex;
     align-items: center;
-    padding: 5px;
-    transition: all .5s ease-in-out;
-    border-radius: 4px;
-}
-
-.containerMenu .menu>nav a:hover {
-    background-color: #e6e8e7;
-}
-
-
-
-.containerMenu .menu>nav a span {
-
-    transition: all .5s ease-in-out;
-}
-
-.containerMenu .menu>nav a .icon {
-    padding: 8px 2px;
-    margin: 0px;
-
-}
-
-.shinks .menu>nav a .icon {
-    margin: auto;
-    padding: 8px 2px;
-}
-
-.shinks .menu>nav a .txt {
-    display: none;
-}
-
-.containerMenu .menu>nav a .txt {
-    margin-left: 5px;
-    font-weight: 400;
-    font-size: 10pt;
-}
-
-.containerMenu .usercontroller {
-    display: flex;
-    align-items: center;
-    width: 90%;
-    margin: 10px auto;
-}
-
-.containerMenu .usercontroller>div:first-child {
+    justify-content: center;
+    font-size: 1.25rem;
     flex-shrink: 0;
-    flex-grow: 0;
-    width: 30px;
-    height: 30px;
-    overflow: hidden;
-    border-radius: 50%;
 }
 
-.shinks .usercontroller>div:first-child {
-    margin: auto;
+.shinks .menu nav a {
+    padding: 12px;
+    justify-content: center;
 }
 
-.shinks .usercontroller>div:last-child {
+.shinks .menu nav a .txt {
     display: none;
 }
 
-.containerMenu .usercontroller>div {
-    margin-left: 4px;
-    font-size: 7px;
+.usercontroller {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--bg-input);
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    transition: all 0.3s;
+}
 
+.usercontroller img {
+    border-radius: var(--radius-sm);
+    background-color: var(--border-color);
+}
+
+.shinks .usercontroller {
+    padding: 8px;
+    justify-content: center;
+}
+
+.shinks .usercontroller div:last-child {
+    display: none;
+}
+
+.usercontroller div:last-child {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .containerMenu {
+        left: -100%;
+        width: 280px !important;
+        box-shadow: none;
+    }
+
+    .containerMenu.mobileOpen {
+        left: 0;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .extends,
+    .shinks {
+        width: 280px !important;
+    }
+
+    /* Floating toggle button for mobile if not included in Header */
+    .mobileToggle {
+        display: flex !important;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: #0ea5e9;
+        color: white;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        box-shadow: var(--shadow-hover);
+        border: none;
+        font-size: 1.5rem;
+    }
+}
+
+.mobileToggle {
+    display: none;
+}
+
+.usercontroller strong {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.usercontroller span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

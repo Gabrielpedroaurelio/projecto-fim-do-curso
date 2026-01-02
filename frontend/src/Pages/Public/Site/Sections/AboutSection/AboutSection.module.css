@@ -29,12 +29,12 @@
 
 .FloatingBadge {
     position: absolute;
-    bottom: 30px;
-    right: -20px;
+    bottom: var(--radius-md);
+    right: calc(-1 * var(--radius-sm));
     background: var(--bg-card);
     /* Adapts to dark */
-    padding: 20px;
-    border-radius: 16px;
+    padding: var(--radius-sm);
+    border-radius: var(--radius-sm);
     box-shadow: var(--shadow-soft);
     display: flex;
     align-items: center;

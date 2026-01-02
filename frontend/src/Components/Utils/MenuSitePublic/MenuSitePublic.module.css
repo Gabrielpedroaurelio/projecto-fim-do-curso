@@ -62,6 +62,7 @@
     color: rgb(0, 0, 0);
     display: block;
 }
+
 /* Mobile Navigation */
 .nav {
     position: fixed;
@@ -76,13 +77,14 @@
     flex-direction: column;
     padding: 20px;
     gap: 10px;
-    
-}
-.nav .btnClose{
 
-display: flex;
-justify-content: flex-end;
-color: var(--green-dark);
+}
+
+.nav .btnClose {
+
+    display: flex;
+    justify-content: flex-end;
+    color: var(--green-dark);
 }
 
 .menuExpandir .nav {
@@ -91,20 +93,20 @@ color: var(--green-dark);
 
 .navLink {
     display: flex;
-    
+
     align-items: center;
     gap: 12px;
     color: var(--green-dark);
     font-size: 1rem;
-   
+
     padding: 16px;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     transition: background-color 0.2s;
 }
 
 .navLink:hover {
-  
+
     color: var(--green-forest);
 }
 
@@ -125,9 +127,11 @@ color: var(--green-dark);
         padding: 0;
         gap: 8px;
     }
-.nav .btnClose{
-    display: none;
-}
+
+    .nav .btnClose {
+        display: none;
+    }
+
     .navLink {
         color: rgba(0, 0, 0, 0.9);
         font-size: 0.9rem;
@@ -143,7 +147,7 @@ color: var(--green-dark);
         background-color: var(--green-primay);
         color: rgb(255, 255, 255);
         padding: 8px 24px;
-        border-radius: 30px;
+        border-radius: var(--radius-sm);
         margin-left: 10px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }

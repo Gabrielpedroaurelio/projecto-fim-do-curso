@@ -1,50 +1,157 @@
-@import url(../../../../assets/includes/includes.includes.css);
+@import url(../../../../assets/style/global.style.css);
 
-.ContainerDashboardEncarregados {
-    background-color: var(--fundo-login);
-    height: 100vh;
-    width: 100vw;
-
+.container {
+    padding: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    animation: fadeIn 0.8s ease-out;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-
-.containerGeneral {
-    margin-left: 50px;
-    
-    
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-
-.containerGeneral>div {
-    display: grid;
-    gap: 10px;
-    padding: 10px;
-    margin: auto;
- 
-    max-width: 900px;
-
-
+.header {
+    margin-bottom: 3.5rem;
 }
 
-.ContainerDashboardEncarregados .containerGeneral .charts {
-    background-color: var(--bs-light);
-    border-radius: 5px;
-    padding: 10px;
+.header h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.ContainerDashboardEncarregados .containerGeneral .mychildren  {
- 
+.header p {
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    font-size: 1.2rem;
+    max-width: 600px;
+    line-height: 1.6;
 }
-.ContainerDashboardEncarregados .containerGeneral .mychildren .gridChildren {
+
+.tableContainer {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    overflow-x: auto;
+    backdrop-filter: blur(10px);
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+}
+
+.table th {
+    padding: 1.5rem 2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-input);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table td {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    vertical-align: middle;
+    font-size: 1rem;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr {
+    transition: all 0.3s;
+}
+
+.table tr:hover {
+    background-color: var(--bg-input);
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.statusReady {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.statusPending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.actionBtn {
+    width: 40px;
+    height: 40px;
+    background: var(--green-primay);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
     display: flex;
-    flex-wrap: wrap;
-    justify-content: baseline;
-    
-} 
-.ContainerDashboardEncarregados .containerGeneral .recentactivity{
-    background-color: var(--bs-light);
-    border-radius: 5px;
-    height: 178px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.1rem;
+}
 
+.actionBtn:hover {
+    transform: translateY(-4px);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.viewBtn {
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.viewBtn:hover {
+    background: var(--text-main);
+    color: var(--bg-card);
+    border-color: var(--text-main);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    .header h1 {
+        font-size: 2.25rem;
+    }
 }

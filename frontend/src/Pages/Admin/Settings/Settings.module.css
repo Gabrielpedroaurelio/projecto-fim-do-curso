@@ -12,7 +12,7 @@
 }
 
 .ContainerGeneralUsers .cardsResumes .cardResume {
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     width: 90%;
     height: 100px;
     padding: 10px;
@@ -75,7 +75,7 @@
     color: #60d274;
 }
 
-@media screen and (min-width:410px)  {
+@media screen and (min-width:410px) {
     .ContainerGeneralUsers .cardsResumes {
         background-color: rebeccapurple;
         grid-template-columns: repeat(2, 1fr);
@@ -84,6 +84,7 @@
     }
 
 }
+
 /*
 @media screen and (min-width:900px) {
     .ContainerGeneralUsers .cardsResumes {

@@ -1,32 +1,43 @@
-
 /* --- Sidebar --- */
 .Sidebar {
 
     width: 250px;
-    height: 100vh ;
+    height: 100vh;
     position: fixed;
     top: 0px;
     left: 0px;
     z-index: 10;
-    
-    background-color: #ffffff;
+
+    background-color: var(--bg-sidebar);
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 32px;
     overflow-y: auto;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.152), 0 2px 4px -2px rgb(0 0 0 / 0.02);
-  
+    box-shadow: var(--shadow-soft);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-right: 1px solid var(--border-color);
+
 }
 
+/* Dark mode glass effect for sidebar */
+body.dark-mode .Sidebar {
+    background-color: rgba(20, 24, 34, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
 
 .Sidebar::-webkit-scrollbar {
     width: 4px;
 }
 
 .Sidebar::-webkit-scrollbar-thumb {
-    background-color: #e2e8f0;
+    background-color: var(--border-color);
     border-radius: 4px;
+}
+
+body.dark-mode .Sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.3);
 }
 
 .Sidebar .Logo {
@@ -41,7 +52,7 @@
     height: 32px;
     background-color: #0ea5e9;
     /* Blue brand color */
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     color: white;
     display: flex;
     align-items: center;
@@ -53,16 +64,14 @@
 .Sidebar .Logo h2 {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #0f172a;
-    /* Slate 900 */
+    color: var(--text-main);
     letter-spacing: -0.5px;
 }
 
 .Sidebar .MenuSection h3 {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: #94a3b8;
-    /* Slate 400 */
+    color: var(--text-muted);
     font-weight: 600;
     margin-bottom: 16px;
     letter-spacing: 0.5px;
@@ -76,14 +85,13 @@
     padding: 0;
 }
 
-.Sidebar .MenuSection li a{
+.Sidebar .MenuSection li a {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    border-radius: 12px;
-    color: #64748b;
-    /* Slate 500 */
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
@@ -91,16 +99,13 @@
 }
 
 .Sidebar .MenuSection li a:hover {
-    background-color: #f8fafc;
-    /* Slate 50 */
-    color: #334155;
-    /* Slate 700 */
+    background-color: var(--bg-input);
+    color: var(--text-main);
 }
 
 .Sidebar .MenuSection li.Active {
-    background-color: #f1f5f9;
-    /* Slate 100 */
-    color: #0f172a;
+    background-color: var(--bg-input);
+    color: var(--text-main);
     font-weight: 600;
 }
 
@@ -113,7 +118,7 @@
     color: white;
     font-size: 0.7rem;
     padding: 2px 6px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     margin-left: auto;
 }
 
@@ -123,20 +128,18 @@
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background-color: #f8fafc;
-    border-radius: 12px;
+    background-color: var(--bg-input);
+    border-radius: var(--radius-md);
 }
 
 .Sidebar .Avatar {
     width: 36px;
     height: 36px;
-    background-color: #e2e8f0;
-    border-radius: 10px;
-    /* Slight square */
+    background-color: var(--border-color);
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    color: #475569;
+    color: var(--text-muted);
 }
-

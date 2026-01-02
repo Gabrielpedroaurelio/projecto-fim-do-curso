@@ -23,45 +23,63 @@
     --green-forest: #065f46;
     --green-accent: #34d399;
 
-    /* SERMANTIC VARIABLES (Light Mode Default) */
+    /* SEMANTIC VARIABLES (Light Mode Default) */
     --bg-page: #f8fafc;
     --bg-card: #ffffff;
     --bg-header: var(--green-forest);
     --bg-input: #f8fafc;
+    --bg-sidebar: #ffffff;
     --border-color: #e2e8f0;
 
     --text-main: #0f172a;
     --text-muted: #64748b;
     --text-inverted: #ffffff;
 
-    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --radius-sm: 5px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Dark Mode Overrides */
+/* Dark Mode Overrides - Premium Sophisticated Dark Theme */
 body.dark-mode {
-    --bg-page: #020617;
-    /* Very dark slate/blue */
-    --bg-card: #0f172a;
-    /* Dark slate */
-    --bg-header: #020617;
-    /* Darker header */
-    --bg-input: #1e293b;
-    --border-color: #1e293b;
+    /* Backgrounds - Deep, layered sophistication */
+    --bg-page: #0b0f19;
+    /* Rich dark navy-black with slight blue tint */
+    --bg-card: #141822;
+    /* Slightly elevated dark slate with warmth */
+    --bg-header: #0b0f19;
+    /* Matches page for seamless integration */
+    --bg-input: #1a1f2e;
+    /* Lighter input with subtle blue undertone */
+    --bg-sidebar: #141822;
+    /* Sidebar elevation matches cards */
+    --border-color: #1f2937;
+    /* Soft, barely-there borders */
 
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-inverted: #f1f5f9;
+    /* Text - Optimized for readability and hierarchy */
+    --text-main: #e8edf4;
+    /* Bright, crisp white with blue tint */
+    --text-muted: #9ca3af;
+    /* Warm gray for secondary text */
+    --text-inverted: #0f172a;
+    /* For bright buttons/badges */
 
-    --green-dark: #ffffff;
-    /* Make dark text white in dark mode */
-    --green-soft: #1e293b;
-    /* Turn soft backgrounds dark */
-    --green-mint: #334155;
-    /* Darker mint */
+    /* Adjusted tones for dark mode harmony */
+    --green-dark: #e8edf4;
+    /* Light text color */
+    --green-soft: #1a1f2e;
+    /* Subtle background variation */
+    --green-mint: #1f2937;
+    /* Darker accent tone */
 
-    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    /* Premium shadows - Depth and dimension */
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.5),
+        0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -70,27 +88,48 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.ContainerGeneral,.containelGeralclient {
-
+.ContainerGeneral,
+.containelGeralclient {
     height: 100vh;
     width: 100vw;
-    background-color: #f1f5f9;
-    /* Light gray background like the image outer edge */
+    background-color: var(--bg-page);
+    /* Use CSS variable */
     font-family: 'Outfit', sans-serif;
-    color: #1e293b;
-
+    color: var(--text-main);
+    /* Use CSS variable */
     box-sizing: border-box;
-
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    animation: globalFadeIn 0.6s ease-out forwards;
 }
 
 .ContainerMain {
- 
     margin-left: 250px;
+    transition: margin-left 0.3s ease;
 }
 
 .containelMainclient {
- 
-    margin-left: 50px;
-    padding: 10px;
+    margin-left: 250px;
+    padding: 0;
+    /* Header handles its own padding */
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjust for shrunken sidebar if needed - although students use extends mostly */
+body:has(.shinks) .containelMainclient {
+    margin-left: 80px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+    .ContainerMain,
+    .containelMainclient {
+        margin-left: 0 !important;
+        padding-top: 60px;
+        /* Space for fixed mobile header if needed */
+    }
 }

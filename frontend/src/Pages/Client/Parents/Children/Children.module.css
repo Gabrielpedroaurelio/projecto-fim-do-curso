@@ -1,50 +1,152 @@
-@import url(../../../../assets/includes/includes.includes.css);
+@import url(../../../../assets/style/global.style.css);
 
-.ContainerDashboardEncarregados {
-    background-color: var(--fundo-login);
-    height: 100vh;
-    width: 100vw;
-
-}
-
-
-
-.containerGeneral {
-    margin-left: 50px;
-    
-    
-}
-
-
-.containerGeneral>div {
-    display: grid;
-    gap: 10px;
-    padding: 10px;
-    margin: auto;
- 
-    max-width: 900px;
-
-
-}
-
-.ContainerDashboardEncarregados .containerGeneral .charts {
-    background-color: var(--bs-light);
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.ContainerDashboardEncarregados .containerGeneral .mychildren  {
- 
-}
-.ContainerDashboardEncarregados .containerGeneral .mychildren .gridChildren {
+.childrenContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: baseline;
-    
-} 
-.ContainerDashboardEncarregados .containerGeneral .recentactivity{
-    background-color: var(--bs-light);
-    border-radius: 5px;
-    height: 178px;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
 
+.sectionHeader {
+    margin-bottom: 0.5rem;
+}
+
+.sectionHeader h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.sectionHeader p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    max-width: 700px;
+}
+
+.childrenGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.childCard {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+}
+
+.childCard:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--green-primay);
+    transform: translateY(-4px);
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--green-primay);
+    border: 2px solid var(--border-color);
+}
+
+.info {
+    text-align: center;
+}
+
+.info h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.info p {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.5rem;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.statValue {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.statLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.actions {
+    width: 100%;
+}
+
+.btnAction {
+    width: 100%;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-page);
+    color: var(--text-main);
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.childCard:hover .btnAction {
+    background: var(--green-primay);
+    color: white;
+    border-color: var(--green-primay);
+}
+
+@media (max-width: 768px) {
+    .childrenContainer {
+        padding: 1rem;
+    }
+
+    .childrenGrid {
+        grid-template-columns: 1fr;
+    }
 }

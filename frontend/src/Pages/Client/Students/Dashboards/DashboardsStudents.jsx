@@ -1,74 +1,139 @@
 import React from 'react';
 import style from './DashboardsStudents.module.css';
-// padrão para todas as paginas
 import '../../../../assets/style/global.style.css'
-import { Link } from 'react-router-dom'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
+import Header from '../../../../Components/Elements/Header/Header'
 import Cards from '../../../../Components/Elements/Cards/Cards'
-import { RiBillLine } from 'react-icons/ri'
+import { RiBillLine, RiCalendarCheckLine, RiBookOpenLine, RiNotification3Line } from 'react-icons/ri'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 import CardsDocments from '../../../../Components/Elements/CardsDocuments/CardsDocuments';
-//dados ficticios para o grafico
-const revenueData = [
-  { name: 'Mat', value: 9 },
-  { name: 'PT', value: 15 },
-  { name: 'TLP', value: 20 },
-  { name: 'TREI', value: 19 },
-  { name: 'Port', value: 15 },
-  { name: 'Ing', value: 18 },
-  { name: 'Fisica', value: 15 },
-  { name: 'Eletro', value: 14 },
-  { name: 'BD', value: 20 },
-  { name: 'Vida', value: 18 },
-  { name: 'Empreend', value: 18 },
-  { name: 'FAI', value: 10 },
+
+const performanceData = [
+  { subject: 'Matemática', value: 14, fullMark: 20 },
+  { subject: 'Português', value: 16, fullMark: 20 },
+  { subject: 'TLP', value: 18, fullMark: 20 },
+  { subject: 'TREI', value: 15, fullMark: 20 },
+  { subject: 'Inglês', value: 17, fullMark: 20 },
+  { subject: 'Física', value: 12, fullMark: 20 },
 ];
+
+const attendanceData = [
+  { name: 'Seg', status: 100 },
+  { name: 'Ter', status: 80 },
+  { name: 'Qua', status: 100 },
+  { name: 'Qui', status: 90 },
+  { name: 'Sex', status: 100 },
+];
+
 const DashboardsStudents = () => {
-
-
   return (
-    < div className='containelGeralclient'>
-      <MenuNavBarCliente user={'student'}></MenuNavBarCliente>
+    <div className='containelGeralclient'>
+      <MenuNavBarCliente user={'student'} />
       <main className='containelMainclient'>
-        <div className={style.gridCards}>
+        <Header text1="Estudante" text2="Dashboard" />
+        <div className={style.dashboardContainer}>
+          <header className={style.welcomeSection}>
+            <h1>Bem-vindo de volta, Gabriel! 👋</h1>
+            <p>Seu progresso acadêmico está excelente hoje.</p>
+          </header>
 
-          <Cards icon={<RiBillLine />} title={"Total Solicitações"} value={"Kz 80,768"} value_percentual={54.8}  />
-          <Cards icon={<RiBillLine />} title={"Resumo do Trimestre"} value={"Média 14.6"} value_percentual={6.8} />
-          <Cards icon={<RiBillLine />} title={"Faltas"} value={"5"} value_percentual={58} />
-          <Cards icon={<RiBillLine />} title={""} value={"5"} value_percentual={58} />
-
-        </div>
-        <div className={style.cardDocuments}>
-          <h2>Solicitar Documentos</h2>
           <div className={style.gridCards}>
-       
-              <CardsDocments text={"Declaraçao"} icon={<RiBillLine/>}/>
-              <CardsDocments text={"Certificado"} icon={<RiBillLine/>}/>
-              <CardsDocments text={"Boletim"} icon={<RiBillLine/>}/>
-        
+            <Cards
+              icon={<RiBillLine />}
+              title="Solicitações"
+              value="3 Ativas"
+              value_percentual={12}
+            />
+            <Cards
+              icon={<RiBookOpenLine />}
+              title="Média Geral"
+              value="15.4"
+              value_percentual={5.2}
+            />
+            <Cards
+              icon={<RiCalendarCheckLine />}
+              title="Presença"
+              value="94%"
+              value_percentual={2.1}
+            />
+            <Cards
+              icon={<RiNotification3Line />}
+              title="Notificações"
+              value="5 Novas"
+              value_percentual={10}
+            />
           </div>
-        </div>
-        <div className={style.cardChart}>
-          <h1>Grafico de Comparação</h1>
-          <div className={`h-[300px] w-[90%] ${style.chart}`}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                <XAxis dataKey="name" stroke="#a1a1aa" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#a1a1aa" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffffff', border: '1px solid #00b5b8ff', borderRadius: '8px' }}
-                  itemStyle={{ color: '#000000ff' }}
-                  cursor={{ fill: '#ffffffff' }}
-                />
-                <Bar dataKey="value" fill="#2277ffff" radius={[4, 4, 0, 0]} barSize={30} />
-              </BarChart>
-            </ResponsiveContainer>
 
+          <div className={style.chartsGrid}>
+            <div className={style.cardChart}>
+              <div className={style.sectionHeader}>
+                <h2>Frequência Semanal</h2>
+              </div>
+              <div className={style.chartContainer}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={attendanceData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                    <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}% `} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px',
+                        boxShadow: 'var(--shadow-soft)'
+                      }}
+                      itemStyle={{ color: 'var(--text-main)' }}
+                      cursor={{ fill: 'var(--bg-page)', opacity: 0.4 }}
+                    />
+                    <Bar dataKey="status" fill="var(--green-primay)" radius={[6, 6, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className={style.cardChart}>
+              <div className={style.sectionHeader}>
+                <h2>Desempenho por Disciplina</h2>
+              </div>
+              <div className={style.chartContainer}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performanceData}>
+                    <PolarGrid stroke="var(--border-color)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 10 }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 20]} tick={false} axisLine={false} />
+                    <Radar
+                      name="Nota"
+                      dataKey="value"
+                      stroke="var(--green-primay)"
+                      fill="var(--green-primay)"
+                      fillOpacity={0.6}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px'
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
+
+          <section className={style.cardDocuments}>
+            <div className={style.sectionHeader}>
+              <h2>Acesso Rápido</h2>
+            </div>
+            <div className={style.gridCards}>
+              <CardsDocments text="Declaração" icon={<RiBillLine />} url="/student/ask" />
+              <CardsDocments text="Certificado" icon={<RiBillLine />} url="/student/ask" />
+              <CardsDocments text="Boletim" icon={<RiBillLine />} url="/student/document" />
+            </div>
+          </section>
         </div>
       </main>
     </div>
