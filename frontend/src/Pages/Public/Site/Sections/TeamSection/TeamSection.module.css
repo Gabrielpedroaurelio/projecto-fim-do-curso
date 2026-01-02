@@ -1,0 +1,67 @@
+.TeamSection {
+    padding: 80px 5%;
+    background-color: var(--bg-page);
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.Header {
+    margin-bottom: 60px;
+}
+
+.Title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.TeamGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.TeamCard {
+    background: transparent;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.TeamCard:hover {
+    transform: translateY(-5px);
+}
+
+.ImageWrapper {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    /* Circular images */
+    overflow: hidden;
+    border: 4px solid var(--green-mint);
+    box-shadow: var(--shadow-soft);
+}
+
+.ProfileImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.TeamCard h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.TeamCard span {
+    font-size: 0.9rem;
+    color: var(--green-primay);
+    font-weight: 500;
+}

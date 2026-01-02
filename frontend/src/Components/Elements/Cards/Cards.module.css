@@ -1,64 +1,45 @@
-.card {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 24px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+.StatCard {
+    background-color: #ffffff;
     border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.02);
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    gap: 16px;
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-.card .title h3 {
-    font-size: 0.9rem;
+.CardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     color: #64748b;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
-.card .resume h2 {
-    font-size: 1.75rem;
+.CardHeader svg {
+    font-size: 1.2rem;
+}
+
+.StatCard h2 {
+    font-size: 1.8rem;
     font-weight: 700;
-    color: #1a1a1a;
-    margin: 4px 0;
+    color: #0f172a;
 }
 
-.card .currently {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-}
-
-.card .currently>div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.addrecent {
-    background-color: #f0fdf4;
+.TrendUp {
+    font-size: 0.8rem;
+    color: #64748b;
+    background-color: #f8fafc;
     padding: 4px 8px;
-    font-size: 0.75rem;
-    color: #15803d;
     border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 600;
+    width: fit-content;
 }
 
-.card .currently a {
-    color: #94a3b8;
-    transition: color 0.2s ease;
-}
-
-.card .currently a:hover {
-    color: #00a3ff;
+.TrendUp span {
+    color: #10b981;
+    /* Green */
+    font-weight: 700;
 }

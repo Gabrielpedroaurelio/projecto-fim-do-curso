@@ -1,82 +1,63 @@
-import { MdMenu, MdHome, MdSchool, MdLogin } from 'react-icons/md'
-import { FaUser,FaHouse, FaBook,  FaArrowRightToBracket } from 'react-icons/fa6'
-
+import {MdClose } from 'react-icons/md'
+import { FaUser } from 'react-icons/fa6'
 import favicon from '../../../assets/images/favicon.ico'
+import { BsHouse,BsFolder, BsMenuButton } from 'react-icons/bs'
+import { CiLogin } from 'react-icons/ci' 
+import {CgMenuRight} from 'react-icons/cg'
 import styles from './MenuSitePublic.module.css'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+ 
+
 export default function MenuSitePublic() {
-    const usuarioLogado = false// so para teste
-    const [toggleMenu,setToggleMenu]=useState(false)
+    const usuarioLogado = false
+    const [toggleMenu, setToggleMenu] = useState(false)
+   
+
     return (
-        <>
-            <header className={styles.headerMenu}>
-                <div className={styles.logo}>
-                    <div className={styles.img}>
-                        <img src={favicon} alt="" width={30} />
-                    </div>
-              
-                    <div className={styles.TitleSchool}>
-                        <h1>INSTITUTO POLITÉCNICO <br /> DO MAIOMBE</h1>
-                    </div>
+        <header className={`${styles.headerMenu} ${toggleMenu ? styles.menuExpandir : ''}`}>
+            <div className={styles.logo}>
+                <div className={styles.img}>
+                    <img src={favicon} alt="Logo" />
                 </div>
-                <div className={styles.menu}>
-                    <div className={styles.btnMenu}> <MdMenu size={40} onClick={()=>setToggleMenu(!toggleMenu)}/></div>
-                    <nav className={` ${toggleMenu?styles.menuExpandir:styles.menuEncolher}`}>
-                        <Link to="/">
-                            <span><FaHouse size={20}/></span>
-                            <span className={styles.text}>HOME</span>
-                        </Link>
-                        <Link to="/public/library">
-                            <span><FaBook size={20}/></span>
-                            <span className={styles.text}>BIBLIOTECA</span>
-                        </Link>
-                        {
-                        usuarioLogado?(
-                       <Link to="">
-                            <span><FaUser size={20}/></span>
-                            <span className={styles.text}>MINHA CONTA</span>
-                        </Link>
-                        ):(
-                        <Link to="">
-                            <span><FaArrowRightToBracket size={20}/></span>
-                            <span className={styles.text}>LOGIN</span>
-                        </Link>
-                        )
-                      }
-                    </nav>
+                <div className={styles.TitleSchool}>
+                    <h1>INSTITUTO POLITÉCNICO <br /> DO MAIOMBE</h1>
                 </div>
-            </header>
+            </div>
 
+            <div className={styles.menu}>
+                <div className={styles.btnMenu} onClick={() => setToggleMenu(!toggleMenu)}>
+                    <CgMenuRight size={32} />
+                </div>
 
+                <nav className={styles.nav}>
+                    <span className={styles.btnClose} onClick={() => setToggleMenu(!toggleMenu)}>
+                        <MdClose size={32}/>
+                    </span>
+                    <Link to="/public/site" className={styles.navLink}>
+                        <BsHouse size={20} />
+                        <span>HOME</span>
+                    </Link>
 
-        </>
+                    <Link to="/public/library" className={styles.navLink}>
+                        <BsFolder size={20} />
+                        <span>BIBLIOTECA</span>
+                    </Link>
+
+                    {usuarioLogado ? (
+                        <Link to="#" className={styles.navLink}>
+                            <FaUser size={20} />
+                            <span>MINHA CONTA</span>
+                        </Link>
+                    ) : (
+                        <Link to="/public/auth" className={styles.navLink}>
+                            <CiLogin size={20} />
+                            <span>LOGIN</span>
+                        </Link>
+                    )}
+
+                </nav>
+            </div>
+        </header>
     )
 }
-
-
-
-/*
- {
-                        usuarioLogado?(
-                              <span>
-
-                            <Link to="/client/student">
-                                <FaUser size={20} />
-                                <span>Minha Conta</span>
-                            </Link>
-                        </span>
-                        ):(
-                              <span>
-
-                            <Link to="/public/auth">
-                                <MdLogin size={20} />
-                                <span>Entrar</span>
-                            </Link>
-                        </span>
-                        )
-                      }
-                      
-
-
-*/

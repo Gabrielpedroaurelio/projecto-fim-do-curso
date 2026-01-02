@@ -1,0 +1,112 @@
+.FooterSection {
+    background-color: var(--green-forest);
+    color: white;
+    padding: 80px 5% 40px;
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.TopRow {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    margin-bottom: 60px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 60px;
+}
+
+.Col h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--green-mint);
+}
+
+.Col h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.Description {
+    color: #e2e8f0;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.LinksList {
+    list-style: none;
+    padding: 0;
+}
+
+.LinksList li {
+    margin-bottom: 12px;
+}
+
+.LinksList a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.LinksList a:hover {
+    color: var(--green-accent);
+}
+
+.SubscribeForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.SubscribeForm input {
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    outline: none;
+}
+
+.SubscribeForm input:focus {
+    border-color: var(--green-accent);
+}
+
+.SubscribeBtn {
+    background: var(--green-primay);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.SubscribeBtn:hover {
+    background: var(--green-dark);
+}
+
+.BottomRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+    .TopRow {
+        grid-template-columns: 1fr;
+    }
+
+    .BottomRow {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}

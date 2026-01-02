@@ -1,0 +1,72 @@
+.ProcessSection {
+    padding: 80px 5%;
+    background-color: var(--bg-card);
+    /* Card Background for contrast */
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.Header {
+    margin-bottom: 60px;
+}
+
+.SubTitle {
+    color: var(--green-primay);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.Title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.StepsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    position: relative;
+}
+
+.StepCard {
+    text-align: left;
+    padding: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.StepNumber {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--green-soft);
+    opacity: 0.4;
+    line-height: 1;
+    position: absolute;
+    top: 0;
+    left: 10px;
+    z-index: -1;
+}
+
+.StepCard h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+.StepCard p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}

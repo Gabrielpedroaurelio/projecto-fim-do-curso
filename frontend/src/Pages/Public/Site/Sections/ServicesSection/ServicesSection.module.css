@@ -1,0 +1,103 @@
+.ServicesSection {
+    padding: 80px 5%;
+    background-color: var(--bg-card);
+    /* Semantic BG */
+    transition: background-color 0.3s;
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.Header {
+    margin-bottom: 50px;
+    max-width: 600px;
+}
+
+.SubTitle {
+    color: var(--green-primay);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.Title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    /* Semantic Text */
+    line-height: 1.2;
+}
+
+.Grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.Card {
+    background-color: var(--bg-page);
+    /* Inner card slight contrast */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.Card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.IconBox {
+    width: 60px;
+    height: 60px;
+    background-color: var(--green-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-size: 1.8rem;
+    color: var(--green-dark);
+    opacity: 0.9;
+}
+
+.Card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.Card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.LearnMore {
+    margin-top: auto;
+    color: var(--green-primay);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+}
+
+.LearnMore:hover {
+    gap: 10px;
+    color: var(--green-accent);
+}

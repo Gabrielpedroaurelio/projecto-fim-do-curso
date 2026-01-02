@@ -1,0 +1,120 @@
+.InfrastructureSection {
+    padding: 80px 5%;
+    background-color: #064e3b;
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+/* Background texture/overlay if needed */
+.OverlayPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
+    opacity: 0.6;
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.TextContent h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.TextContent p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #d1fae5;
+    margin-bottom: 30px;
+}
+
+.FacilitiesGrid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.FacilityItem {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.FacilityItem h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.FacilityItem p {
+    font-size: 0.9rem;
+    margin: 0;
+    color: #e2e8f0;
+}
+
+.LibraryBtn {
+    background: white;
+    color: #064e3b;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s;
+}
+
+.LibraryBtn:hover {
+    transform: translateY(-2px);
+    background-color: #6ee7b7;
+}
+
+.ImageGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.ImageGrid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    aspect-ratio: 4/3;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.ImageGrid img:nth-child(2) {
+    transform: translateY(30px);
+    /* Staggered effect */
+}
+
+@media (max-width: 900px) {
+    .Container {
+        grid-template-columns: 1fr;
+    }
+
+    .ImageGrid {
+        order: -1;
+    }
+}

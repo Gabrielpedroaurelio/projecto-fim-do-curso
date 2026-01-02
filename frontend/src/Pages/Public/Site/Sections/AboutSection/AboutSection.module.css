@@ -1,0 +1,166 @@
+.AboutSection {
+    padding: 80px 5%;
+    background-color: var(--bg-page);
+    /* Semantic BG */
+}
+
+.Container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.ImageCol {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.MainImage {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    display: block;
+    box-shadow: var(--shadow-hover);
+}
+
+.FloatingBadge {
+    position: absolute;
+    bottom: 30px;
+    right: -20px;
+    background: var(--bg-card);
+    /* Adapts to dark */
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 250px;
+    border: 1px solid var(--border-color);
+}
+
+.BadgeIcon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--green-primay);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.BadgeText h4 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.BadgeText span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+
+.TextCol {
+    padding-right: 20px;
+}
+
+.SubTitle {
+    color: var(--green-primay);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.Title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.Description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.CheckList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+}
+
+.CheckList li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.CheckIcon {
+    color: var(--green-forest);
+    background-color: var(--green-mint);
+    padding: 4px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.CheckList strong {
+    color: var(--text-main);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.CheckList p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.BtnSecondary {
+    background: var(--green-primay);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.BtnSecondary:hover {
+    background: var(--green-dark);
+}
+
+@media (max-width: 900px) {
+    .Container {
+        grid-template-columns: 1fr;
+    }
+
+    .FloatingBadge {
+        right: 0;
+        bottom: 0;
+        position: relative;
+        margin-top: -30px;
+        margin-left: auto;
+    }
+}

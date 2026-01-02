@@ -1,56 +1,44 @@
-import { FaMagnifyingGlass } from "react-icons/fa6"
-import { FaUser, FaBell } from "react-icons/fa6"
-import { CiBellOn } from "react-icons/ci"
-import style from './Header.module.css'
-import { useState } from "react"
-export default function Header({ titlepage, usuario, controllerBarSearch }) {
-    const [hasNotification,setHasNotification]=useState(false)
-    return (
+import {
+    FaUserGraduate,
+    FaFileInvoice,
+    FaSpinner,
+    FaCircleCheck,
+    FaMagnifyingGlass,
+    FaBell,
+    FaRegMoon,
+    FaGear
+} from 'react-icons/fa6';
+import { BiSolidDashboard } from "react-icons/bi";
+import { BsBoxSeam, BsCart3 } from "react-icons/bs";
+import { FiMessageSquare, FiTrendingUp } from "react-icons/fi";
+import { RiBillLine } from "react-icons/ri";
 
-        <>
-            <header className={style.headercard}>
-                <div className={style.cardtitle}>
-                    <h2>{titlepage}</h2>
-                </div>
-                <div className={style.controllers}>
-                    <div className={style.cardsearchBar}>
-                        <FaMagnifyingGlass />
-                        <input type="search" name="" id="" placeholder="Pesquisar..." />
+import style from './Header.module.css'
+export default function Header({text1,text2}){
+    return(
+           <header className={style.Header}>
+                    <div className={style.Breadcrumbs}>
+                        {text1} / <span>{text2}</span>
                     </div>
-                    <div className={style.cardTheme}>
-                        <button>Claro</button>
-                        <button>Escuro</button>
-                    </div>
-                    <div className={style.cardNotification}>
-                        <button>
-                            {
-                                hasNotification?(
-                                    <FaBell size={25}/>
-                                ):(
-                                    <CiBellOn size={30}/>
-                                )
-                            }
-                        </button>
-                        {
-                            // area para colocar o painel de notificações
-                        }
-                    </div>
-                    <div className={style.cardProfile}>
-                        <div>
-                            <img src="" alt="" />
-                            <div>
-                                <span>Gabriel Pedro Aurelio</span>
-                                <small>gabrielpedroaurelio@gmail.com</small>
+
+                    <div className={style.HeaderActions}>
+                        <div className={style.SearchBar}>
+                            <FaMagnifyingGlass />
+                            <input type="text" placeholder="Pesquisar..." />
+                        </div>
+                        <div className={style.ActionIcons}>
+                            <button className={style.IconButton}><FaRegMoon /></button>
+                            <button className={style.IconButton}><FaBell /></button>
+                        </div>
+                        <div className={style.UserProfileHeader}>
+                            <div className={style.AvatarSmall}>GP</div>
+                            <div className={style.InfoSmall}>
+                                <h4>Gabriel Pedro</h4>
+                                <span>Admin</span>
                             </div>
                         </div>
-                        {
-                            // area para colocar o painel de notificações
-                        }
                     </div>
-                </div>
+                </header>
 
-            </header>
-
-        </>
     )
 }

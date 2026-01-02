@@ -1,0 +1,142 @@
+
+/* --- Sidebar --- */
+.Sidebar {
+
+    width: 250px;
+    height: 100vh ;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+    
+    background-color: #ffffff;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.152), 0 2px 4px -2px rgb(0 0 0 / 0.02);
+  
+}
+
+
+.Sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.Sidebar::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0;
+    border-radius: 4px;
+}
+
+.Sidebar .Logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.Sidebar .LogoIcon {
+    width: 32px;
+    height: 32px;
+    background-color: #0ea5e9;
+    /* Blue brand color */
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+.Sidebar .Logo h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    /* Slate 900 */
+    letter-spacing: -0.5px;
+}
+
+.Sidebar .MenuSection h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    /* Slate 400 */
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.Sidebar .MenuSection ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+}
+
+.Sidebar .MenuSection li a{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #64748b;
+    /* Slate 500 */
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.Sidebar .MenuSection li a:hover {
+    background-color: #f8fafc;
+    /* Slate 50 */
+    color: #334155;
+    /* Slate 700 */
+}
+
+.Sidebar .MenuSection li.Active {
+    background-color: #f1f5f9;
+    /* Slate 100 */
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.Sidebar .MenuSection li a svg {
+    font-size: 1.1rem;
+}
+
+.Sidebar .Badge {
+    background-color: #0ea5e9;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: auto;
+}
+
+.Sidebar .UserProfileMini {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+}
+
+.Sidebar .Avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    /* Slight square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #475569;
+}
+

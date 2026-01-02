@@ -1,28 +1,90 @@
-:root{
-    /*
-        CORES DO PAINEL DO ALUNO
-    */
-    --bg-whiteblue:#e5eaee;
-    --bg-whitecards:#feffff;
-    --bg-bluedestaque:#3198da;
-    --bg-blueheader:#1b2945;
-    --txt-title:#222940;
-    /*
-    CORES DO PAINEL DO ENCARREGADO
-    */
-    --bg-gray:#dae0e4;
-    --bg-graylittleplus:#dfe1e6;
-    /*
-    TONS DE CINZA
-    */
-    --fundo-blue:#e1e7eb;
-    --fundo-ciano:#feffff;
-    --white:#fffbff;
-    --c1:#cacbcb8f;
-    --c2:#bec0bf;
-    --c3:#b6b3b1;
-    --c4:#dddcdd;
-    --c5:#ebebeb;
-    --c6:#030303;
-    --c7:#72726f;
+:root {
+    --fundo-login: #e0e0e0;
+
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+
+    /* Base Palette (Green) */
+    --green-primay: #10b981;
+    --green-soft: #6ee7b7;
+    --green-dark: #064e3b;
+    --green-emarald: #10b981;
+    --green-mint: #d1fae5;
+    --green-forest: #065f46;
+    --green-accent: #34d399;
+
+    /* SERMANTIC VARIABLES (Light Mode Default) */
+    --bg-page: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-header: var(--green-forest);
+    --bg-input: #f8fafc;
+    --border-color: #e2e8f0;
+
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-inverted: #ffffff;
+
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+    --bg-page: #020617;
+    /* Very dark slate/blue */
+    --bg-card: #0f172a;
+    /* Dark slate */
+    --bg-header: #020617;
+    /* Darker header */
+    --bg-input: #1e293b;
+    --border-color: #1e293b;
+
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --text-inverted: #f1f5f9;
+
+    --green-dark: #ffffff;
+    /* Make dark text white in dark mode */
+    --green-soft: #1e293b;
+    /* Turn soft backgrounds dark */
+    --green-mint: #334155;
+    /* Darker mint */
+
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ContainerGeneral {
+
+    height: 100vh;
+    width: 100vw;
+    background-color: #f1f5f9;
+    /* Light gray background like the image outer edge */
+    font-family: 'Outfit', sans-serif;
+    color: #1e293b;
+
+    box-sizing: border-box;
+
+    position: relative;
+}
+
+.ContainerMain {
+ 
+    margin-left: 250px;
 }

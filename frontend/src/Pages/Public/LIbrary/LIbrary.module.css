@@ -1,219 +1,186 @@
 @import url(../../../assets/includes/includes.includes.css);
 
-body {
-    height: 100vh;
-    overflow-x: hidden;
-}
-
+/* Semantic Theming for Library */
 .body {
-    background-color: var(--fundo-login);
-    height: 100%;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    min-height: 100%;
     width: 100%;
-    padding: 0px;
-
+    padding: 8px 0 48px 0;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .recommendedBooks {
-    background-color: #fff;
-   width: 96%;
-  
-    margin: 10px auto 30px auto;
-    border-radius: 5px;
+    background-color: var(--bg-card);
+    width: 96%;
+    margin: 12px auto 28px auto;
+    border-radius: 10px;
     overflow: hidden;
-
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
 }
 
 .recommendedBooks>div:first-child {
-
     display: flex;
     justify-content: space-between;
-    padding: 5px 10px;
+    padding: 12px 16px;
+    background-color: var(--green-soft);
+    /* This becomes dark in dark mode */
 }
 
 .recommendedBooks>div:first-child h3 {
     font-weight: 700;
-
+    color: var(--green-dark);
+    /* White in dark mode */
 }
 
 .recommendedBooks>div:first-child span {
-    color: #002aff;
-    background-color: #c9e6ff;
+    color: var(--green-forest);
+    background-color: var(--bg-card);
     display: flex;
     align-items: center;
     border-radius: 5px;
     font-size: 10pt;
     font-weight: 700;
-    padding: 2px 5px;
-
+    padding: 2px 8px;
 }
-
-.resourceGrid::-webkit-scrollbar {}
 
 .resourceGrid {
     display: flex;
-
-    padding: 10px;
+    padding: 20px;
     width: 100%;
-    overflow: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     margin-bottom: 20px;
+    gap: 16px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
 }
 
-.resourceCard {
-    background-color: white;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 200px;
-    height: 250px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: 200px;
-    margin: 5px;
-
-
+/* Ensure children snap */
+.resourceGrid>* {
+    scroll-snap-align: start;
 }
 
-.resourceCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+/* Custom scrollbar for recommended books strip */
+.resourceGrid {
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: var(--green-primay) transparent;
 }
 
-.resourceImage {
-    position: relative;
-    height: 120px;
-    background-color: #e2e8f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-color);
-    font-size: 3rem;
-
-    background-size: cover;
+.resourceGrid::-webkit-scrollbar {
+    height: 10px;
 }
 
-.resourceImage object {
-    height: 100%;
-    overflow: hidden;
+.resourceGrid::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
 }
 
-.resourceImage .mirror {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: #0000000c;
-
+.resourceGrid::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--green-mint), var(--green-primay));
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
 }
 
-.resourceInfo {
-    padding: 1rem;
+.resourceGrid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, var(--green-primay), var(--green-dark));
 }
-
-.resourceTitle {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--dark-color);
-}
-
-.resourceAuthor {
-    font-size: 8pt;
-    color: #a9a9a9;
-    font-weight: 500;
-    font-family: Arial, Helvetica, sans-serif;
-
-    margin-bottom: 1rem;
-}
-
-.resourceFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0.75rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.resourceActions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 50px;
-    color: #a9a9a9;
-
-}
-
-
-.resourceType {
-    font-size: 0.75rem;
-    color: var(--gray-color);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.actionBtn {
-    background: none;
-    border: none;
-    color: var(--gray-color);
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.actionBbtn:hover {
-    color: var(--primary-color);
-}
-
 
 .BooksByCategory {
-    background-color: #fff;
+    background-color: var(--bg-card);
     max-width: 96%;
-    min-width: 500px;
-    margin: 10px auto 30px auto;
-    border-radius: 5px;
+    margin: 12px auto 30px auto;
+    border-radius: 10px;
     overflow: hidden;
-
-    padding: 20px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
 }
-
-.BooksByCategory>div {}
 
 .BooksByCategory>div h3 {
     font-size: 14pt;
-    font-weight: 500;
-    color: #00112f;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 .BooksByCategory .containerCategory {
     display: flex;
-
     overflow-x: scroll;
-
-
+    margin-top: 10px;
 }
 
 .BooksByCategory .containerCategory button {
-    font-size: 12px;
-    color: #00112f;
-    background-color: #eaf6ff;
-    padding: 3px 5px;
-    margin: 5px;
-    cursor:pointer;
-    border-radius: 5px;
+    font-size: 13px;
+    color: var(--text-main);
+    background-color: var(--bg-input);
+    padding: 8px 16px;
+    margin: 6px 6px 6px 0;
+    cursor: pointer;
+    border-radius: 999px;
     font-weight: 600;
-    
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
 }
+
+.BooksByCategory .containerCategory button:hover {
+    background-color: var(--green-soft);
+    color: var(--green-dark);
+}
+
 .BooksByCategory .containerCategory button.is_selected {
-    background-color: #002aff;
+    background-color: var(--green-primay);
     color: #fff;
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.06);
+    border-color: var(--green-primay);
 }
 
 .BooksByCategory>div>.listEBooks {
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
-    
+    margin-top: 16px;
+    gap: 16px;
 }
- 
+
+@media (max-width: 900px) {
+
+    .recommendedBooks,
+    .BooksByCategory {
+        width: 96%;
+        margin: 10px auto
+    }
+
+    .resourceGrid {
+        padding: 8px
+    }
+
+    .containerCategory {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch
+    }
+
+    .listEBooks {
+        justify-content: center
+    }
+}
+
+@media (max-width: 480px) {
+    .resourceGrid {
+        gap: 8px
+    }
+
+    .containerCategory {
+        padding: 8px 0
+    }
+
+    .recommendedBooks>div:first-child h3,
+    .BooksByCategory>div h3 {
+        font-size: 16px
+    }
+
+    .listEBooks {
+        gap: 10px
+    }
+}

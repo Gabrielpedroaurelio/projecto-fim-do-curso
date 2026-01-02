@@ -1,172 +1,155 @@
 @import url(../../../assets/includes/includes.includes.css);
 
 .headerMenu {
-    background-color: var(--color-blue-950);
-
+    /* background-color: var(--green-forest);
+    /* Always solid green for consistency */
+    background-color: aliceblue;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    z-index: 3;
+    padding: 10px 5%;
+    z-index: 50;
     position: sticky;
-    top: 0px;
+    top: 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.headerMenu .logo {
+.logo {
     display: flex;
     align-items: center;
-
+    gap: 16px;
 }
 
-.headerMenu .logo .img {
-    width: 100px;
-    padding: 4px;
-}
-
-.headerMenu .logo .img img {
-    width: 140px;
-
-}
-
-.headerMenu .logo .TitleSchool {
-    display: grid;
-    border-left: 2px solid var(--color-gray-400);
-    text-align: center;
-    color: #fff;
+.img {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 50%;
     padding: 5px;
-}
-
-.headerMenu .menu {}
-
-.headerMenu .menu .btnMenu {
-    cursor: pointer;
-    color: #fff;
-}
-
-.headerMenu .menu .btnMenu svg {}
-
-.headerMenu .menu nav {
-
-    overflow: hidden;
-    position: fixed;
-    top: 98px;
-    left: 0px;
-    width: 180px;
-    height: 100vh;
-    background-color: #fff;
-    transition: all .5s linear;
-}
-
-.headerMenu .menu .menuExpandir {
-    width: 180px;
-
-}
-
-.headerMenu .menu .menuEncolher {
-    width: 0px;
-
-}
-
-.headerMenu .menu nav a {
     display: flex;
     align-items: center;
-    color: var(--color-blue-950);
-    font-size: 10pt;
-
-    margin: 3px auto;
-    padding: 10px;
-    transition: all .3s ease-in-out;
-
-
+    justify-content: center;
 }
 
-.headerMenu .menu .menuExpandir a {
-    opacity: 1;
-    transform: translateX(0px);
+.img img {
+    width: 100%;
+    height: auto;
 }
 
-.headerMenu .menu .menuEncolher a {
-    opacity: 0;
-    transform: translateX(-10px);
-
+.TitleSchool {
+    border-left: 2px solid rgba(0, 0, 0, 0.351);
+    padding-left: 5px;
 }
 
-.headerMenu .menu nav a svg {
-    transition: all .3s linear;
+.TitleSchool h1 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: rgb(0, 0, 0);
+    margin: 0;
+    text-align: left;
+    letter-spacing: 0.5px;
 }
 
-.headerMenu .menu nav a:hover svg {
-    transform: rotateZ(45deg);
+
+.menu {
+    display: flex;
+    align-items: center;
 }
 
-.headerMenu .menu nav a:hover {
-    color: #12b989;
+.btnMenu {
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    display: block;
 }
-
-.headerMenu .menu nav a span {
-    margin-left: 10px;
-
-}
-
-.headerMenu .menu nav a:last-child {}
-
-@media screen and (min-width:700px) {
-    .headerMenu {
+/* Mobile Navigation */
+.nav {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
     
-    }
+}
+.nav .btnClose{
 
-    .headerMenu .menu .btnMenu {
+display: flex;
+justify-content: flex-end;
+color: var(--green-dark);
+}
+
+.menuExpandir .nav {
+    transform: translateX(0);
+}
+
+.navLink {
+    display: flex;
+    
+    align-items: center;
+    gap: 12px;
+    color: var(--green-dark);
+    font-size: 1rem;
+   
+    padding: 16px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  
+    color: var(--green-forest);
+}
+
+
+/* Desktop Navigation */
+@media screen and (min-width: 900px) {
+    .btnMenu {
         display: none;
     }
 
-    .headerMenu .menu nav {
-        display: flex;
-        position: relative;
-        top: 0px;
-        height: max-content;
+    .nav {
+        position: static;
+        width: auto;
+        height: auto;
         background-color: transparent;
-        transition: all 0s linear;
-
+        transform: none;
+        flex-direction: row;
+        padding: 0;
+        gap: 8px;
+    }
+.nav .btnClose{
+    display: none;
+}
+    .navLink {
+        color: rgba(0, 0, 0, 0.9);
+        font-size: 0.9rem;
+        padding: 8px 16px;
     }
 
-    .headerMenu .menu nav a {
-        display: flex;
-        align-items: center;
-        color: #ffffff;
-        font-size: 10pt;
-        margin: 3px auto;
-        padding: 5px 10px;
-
-
+    .navLink:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: rgb(77, 77, 77);
     }
 
-    .headerMenu .menu .menuExpandir {
-        width: max-content;
-
+    .navLink:last-child {
+        background-color: var(--green-primay);
+        color: rgb(255, 255, 255);
+        padding: 8px 24px;
+        border-radius: 30px;
+        margin-left: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    .headerMenu .menu .menuEncolher {
-        width: max-content;
-        
-    }
-    .headerMenu .menu .menuEncolher a{
-        opacity: 1;
-    }
-
-    .headerMenu .menu nav a:hover {
-        color: #12b989;
-    }
-
-    .headerMenu .menu nav a span {
-        margin-left: 5px;
-
-    }
-
-    .headerMenu .menu nav a:last-child {
-        background-color: transparent;
-        color: #fff;
-        border: 1px solid #12b989;
-        padding: 5px 10px;
-        border-radius: 5px;
+    .navLink:last-child:hover {
+        background-color: var(--green-accent);
+        transform: translateY(-2px);
     }
 }

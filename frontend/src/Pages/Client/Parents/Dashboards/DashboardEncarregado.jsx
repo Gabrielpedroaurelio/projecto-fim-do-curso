@@ -13,8 +13,7 @@ import { BsFolder, BsFolder2Open, BsHouse, BsLayoutSidebar, BsPeople } from 'rea
 import { CiSettings, CiFileOn, CiLogout } from 'react-icons/ci'
 import { DiAtom } from 'react-icons/di'
 import { FaFile, FaCodePullRequest } from 'react-icons/fa6';
-import CardEntidade from '../../../../Components/Elements/CardEntidade/CardEntidade';
-
+ 
 const DashboardsEncarregado = () => {
 
 
@@ -46,8 +45,7 @@ const DashboardsEncarregado = () => {
           <div className={style.mychildren}>
             <h1>Meus Educandos</h1>
             <div className={style.gridChildren}>
-              <CardEntidade />
-              <CardEntidade />
+ 
 
             </div>
           </div>
