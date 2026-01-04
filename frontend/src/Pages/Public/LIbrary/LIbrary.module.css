@@ -2,56 +2,53 @@
 
 /* Semantic Theming for Library */
 .body {
-    background-color: var(--bg-page);
-    color: var(--text-main);
+    background-color: transparent;
+    /* Content sits on top of Aurora */
+    color: #e3e3e3;
     min-height: 100%;
     width: 100%;
-    padding: 8px 0 48px 0;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 0 0 64px 0;
+    /* Removed top padding to sit flush with menu if needed, controlled by margins */
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
 }
 
+/* CAROUSEL SECTION (Full Bleed) */
 .recommendedBooks {
-    background-color: var(--bg-card);
-    width: 96%;
-    margin: 12px auto 28px auto;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-soft);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    width: 100%;
+    margin: 40px 0 24px 0;
+    border: none;
+    box-shadow: none;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
-.recommendedBooks>div:first-child {
+.sectionHeader {
     display: flex;
     justify-content: space-between;
-    padding: 12px 16px;
-    background-color: var(--green-soft);
-    /* This becomes dark in dark mode */
+    padding: 0 5%;
+    /* Align with content centering roughly */
+    background: transparent;
+    border: none;
+    margin-bottom: 8px;
 }
 
-.recommendedBooks>div:first-child h3 {
+.sectionHeader h3 {
     font-weight: 700;
-    color: var(--green-dark);
-    /* White in dark mode */
-}
-
-.recommendedBooks>div:first-child span {
-    color: var(--green-forest);
-    background-color: var(--bg-card);
-    display: flex;
-    align-items: center;
-    border-radius: var(--radius-sm);
-    font-size: 10pt;
-    font-weight: 700;
-    padding: 2px 8px;
+    color: #f8fafc;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
 }
 
 .resourceGrid {
     display: flex;
-    padding: 20px;
+    padding: 32px 5%;
+    /* Horizontal padding for start/end items */
     width: 100%;
     overflow-x: auto;
-    margin-bottom: 20px;
-    gap: 16px;
+    gap: 24px;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -60,17 +57,17 @@
 /* Ensure children snap */
 .resourceGrid>* {
     scroll-snap-align: start;
+    flex-shrink: 0;
 }
 
 /* Custom scrollbar for recommended books strip */
 .resourceGrid {
     scrollbar-width: thin;
-    /* Firefox */
-    scrollbar-color: var(--green-primay) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
 .resourceGrid::-webkit-scrollbar {
-    height: 10px;
+    height: 6px;
 }
 
 .resourceGrid::-webkit-scrollbar-track {
@@ -79,108 +76,148 @@
 }
 
 .resourceGrid::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--green-mint), var(--green-primay));
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 999px;
-    border: 3px solid transparent;
-    background-clip: padding-box;
 }
 
 .resourceGrid::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, var(--green-primay), var(--green-dark));
+    background: rgba(255, 255, 255, 0.4);
 }
 
+/* CATEGORIES SECTION (Centered Container) */
+/* CATEGORIES SECTION (Transparent) */
 .BooksByCategory {
-    background-color: var(--bg-card);
-    max-width: 96%;
-    margin: 12px auto 30px auto;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    padding: 16px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-soft);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto 40px auto;
+    border-radius: 0;
+    overflow: visible;
+    padding: 0 32px;
+    border: none;
+    box-shadow: none;
 }
 
 .BooksByCategory>div h3 {
-    font-size: 14pt;
-    font-weight: 600;
-    color: var(--text-main);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .BooksByCategory .containerCategory {
     display: flex;
-    overflow-x: scroll;
-    margin-top: 10px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    gap: 12px;
+    scrollbar-width: none;
+    /* Hide scrollbar for cleaner look */
+    animation: fadeInUp 0.6s ease-out 0.1s forwards;
+    opacity: 0;
+}
+
+.BooksByCategory .containerCategory::-webkit-scrollbar {
+    display: none;
 }
 
 .BooksByCategory .containerCategory button {
-    font-size: 13px;
-    color: var(--text-main);
-    background-color: var(--bg-input);
-    padding: 8px 16px;
-    margin: 6px 6px 6px 0;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 10px 20px;
     cursor: pointer;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    border: 1px solid var(--border-color);
-    transition: all 0.2s;
+    border-radius: 9999px;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
 }
 
 .BooksByCategory .containerCategory button:hover {
-    background-color: var(--green-soft);
-    color: var(--green-dark);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
 }
 
 .BooksByCategory .containerCategory button.is_selected {
-    background-color: var(--green-primay);
-    color: #fff;
-    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.06);
-    border-color: var(--green-primay);
+    background-color: #0ea5e9;
+    /* Sky Blue Accent kept as requested by general theme, but container is neutral */
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    border-color: #0ea5e9;
+    font-weight: 600;
 }
 
 .BooksByCategory>div>.listEBooks {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 16px;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    margin-top: 32px;
+    gap: 24px;
+    justify-items: center;
+    /* Center items in their grid cells */
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+/* Entrance Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 900px) {
 
     .recommendedBooks,
     .BooksByCategory {
-        width: 96%;
-        margin: 10px auto
+        border-left: none;
+        border-right: none;
+        width: 100%;
+        border-radius: 0;
+        margin-bottom: 24px;
+    }
+
+    .BooksByCategory {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0 16px;
+    }
+
+    .sectionHeader {
+        padding: 16px 20px;
     }
 
     .resourceGrid {
-        padding: 8px
-    }
-
-    .containerCategory {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch
+        padding: 24px 20px;
     }
 
     .listEBooks {
-        justify-content: center
+        justify-content: center;
     }
 }
 
 @media (max-width: 480px) {
     .resourceGrid {
-        gap: 8px
+        gap: 16px;
     }
 
-    .containerCategory {
-        padding: 8px 0
-    }
-
-    .recommendedBooks>div:first-child h3,
+    .sectionHeader h3,
     .BooksByCategory>div h3 {
-        font-size: 16px
+        font-size: 1.25rem;
     }
 
     .listEBooks {
-        gap: 10px
+        gap: 16px;
     }
 }

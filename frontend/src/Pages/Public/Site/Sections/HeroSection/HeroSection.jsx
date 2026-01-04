@@ -1,55 +1,47 @@
 import style from './HeroSection.module.css';
-import bgImage from '../../../../../assets/images/glenn-carstens-peters-npxXWgQ33ZQ-unsplash2.jpg'; // Using a school image
-import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa6';
 
 export default function HeroSection() {
     return (
-        <section className={style.HeroSection}>
-            {/* Separate div for background to allow transform without affecting content */}
-            <div
-                className={style.HeroBackground}
-                style={{ backgroundImage: `url(${bgImage})` }}
-            ></div>
-
-            <div className={style.Overlay}></div>
-
-            <div className={style.Container}>
-                {/* Left Content */}
-                <div className={style.Content}>
-                    <h1>Transforme o seu Futuro Profissional Conosco</h1>
-                    <p>
-                        No Instituto Politécnico do Maiombe, oferecemos excelência educacional
-                        com cursos práticos projetados para impulsionar a sua carreira no mercado de trabalho.
-                    </p>
-             
+        <section className={style.hero}>
+            <div className={style.container}>
+                <div className={style.badge}>
+                    <span>Nova era de excelência educacional</span>
                 </div>
 
-                {/* Right Form 
-                <div className={style.FormCard}>
-                    <h3>Solicite Informações</h3>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <div className={style.InputGroup}>
-                            <input type="text" placeholder="Nome Completo" />
-                        </div>
-                        <div className={style.InputGroup}>
-                            <input type="email" placeholder="Seu Email" />
-                        </div>
-                        <div className={style.InputGroup}>
-                            <input type="tel" placeholder="Telefone" />
-                        </div>
-                        <div className={style.InputGroup}>
-                            <select>
-                                <option>Selecione o Curso</option>
-                                <option>Informática de Gestão</option>
-                                <option>Contabilidade</option>
-                                <option>Gestão de Empresas</option>
-                                <option>Informática</option>
-                            </select>
-                        </div>
-                        <button type="submit" className={style.SubmitBtn}>Enviar Solicitação</button>
-                    </form>
+                <h1 className={style.title}>
+                    Transforme o seu <br />
+                    <span className={style.gradientText}>Futuro Profissional</span>
+                </h1>
+
+                <p className={style.description}>
+                    No Instituto Politécnico do Maiombe, oferecemos excelência educacional com cursos projetados
+                    para impulsionar a sua carreira no mercado global de trabalho.
+                </p>
+
+                <div className={style.ctaGroup}>
+                    <button className={style.primaryBtn}>
+                        Explorar Cursos
+                        <FaArrowRight />
+                    </button>
+                    <button className={style.secondaryBtn}>
+                        Saber mais
+                    </button>
                 </div>
-                */}
+            </div>
+
+            <div className={style.visualElement}>
+                <div className={style.glowCircle}></div>
+                <div className={style.floatingCard}>
+                    <div className={style.cardHeader}>
+                        <div className={style.dot}></div>
+                        <div className={style.line}></div>
+                    </div>
+                    <div className={style.cardBody}>
+                        <div className={style.skeletonLine}></div>
+                        <div className={style.skeletonLineShort}></div>
+                    </div>
+                </div>
             </div>
         </section>
     );

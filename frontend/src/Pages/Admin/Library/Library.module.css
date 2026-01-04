@@ -1,0 +1,366 @@
+@import url(../../../assets/style/global.style.css);
+
+.LibraryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+}
+
+.SearchBox {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+}
+
+.SearchIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.SearchBox input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-main);
+    transition: all 0.3s ease;
+}
+
+.SearchBox input:focus {
+    border-color: var(--green-emarald);
+    box-shadow: 0 0 0 2px rgba(138, 180, 248, 0.1);
+    outline: none;
+}
+
+.AddButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--green-emarald);
+    color: var(--text-inverted);
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+.AddButton:hover {
+    background: #7aa3f7;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Book Grid */
+.BookGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.BookCard {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+}
+
+.BookCard:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(138, 180, 248, 0.3);
+}
+
+.BookCover {
+    position: relative;
+    aspect-ratio: 5/7;
+    overflow: hidden;
+}
+
+.BookCover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.BookCard:hover .BookCover img {
+    transform: scale(1.1);
+}
+
+.BookBadge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.BookInfo {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.BookInfo h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.Author {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.BookMeta {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.BookMeta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Modal */
+.ModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.ModalContent {
+    background: var(--bg-card);
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalAppear {
+    from {
+        transform: translateY(20px) scale(0.98);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.ModalHeader {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+}
+
+.ModalHeader h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.CloseBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.CloseBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.BookForm {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.BookForm::-webkit-scrollbar {
+    width: 6px;
+}
+
+.BookForm::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+.FormGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.InputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.InputGroupFull {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.InputGroupSplit {
+    grid-column: span 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.InputGroup label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.InputGroup input,
+.InputGroup select,
+.InputGroup textarea {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.InputGroup input:focus,
+.InputGroup select:focus,
+.InputGroup textarea:focus {
+    border-color: var(--green-emarald);
+    background: var(--bg-card);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.1);
+}
+
+.InputGroup input[type="file"] {
+    background: transparent;
+    border: 2px dashed var(--border-color);
+    padding: 1.5rem;
+    cursor: pointer;
+}
+
+.InputGroup input[type="file"]:hover {
+    border-color: var(--green-emarald);
+    background: rgba(138, 180, 248, 0.05);
+}
+
+.FormActions {
+    padding: 1.5rem 2rem;
+    background: var(--bg-input);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.CancelBtn {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.CancelBtn:hover {
+    background: var(--border-color);
+}
+
+.SubmitBtn {
+    padding: 0.75rem 2rem;
+    background: var(--green-emarald);
+    color: var(--text-inverted);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.SubmitBtn:hover {
+    background: #7aa3f7;
+    transform: translateY(-1px);
+}
+
+.SubmitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 640px) {
+    .FormGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .InputGroupFull,
+    .InputGroupSplit {
+        grid-column: span 1;
+    }
+}

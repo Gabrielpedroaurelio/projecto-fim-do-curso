@@ -3,7 +3,7 @@ import style from './AskStudent.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiSendPlaneFill, RiCheckLine, RiErrorWarningLine } from 'react-icons/ri';
+import { RiSendPlaneLine, RiCheckLine, RiErrorWarningLine } from 'react-icons/ri';
 
 const AskStudent = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -71,7 +71,7 @@ const AskStudent = () => {
                   </>
                 ) : (
                   <>
-                    <RiSendPlaneFill />
+                    <RiSendPlaneLine />
                     Enviar Solicitação
                   </>
                 )}

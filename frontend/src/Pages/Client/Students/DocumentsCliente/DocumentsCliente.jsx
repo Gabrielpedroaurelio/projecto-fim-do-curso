@@ -3,7 +3,7 @@ import style from './DocumentsCliente.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiFileList3Line, RiDownloadLine, RiEyeLine } from 'react-icons/ri';
+import { RiFileList3Line, RiDownload2Line, RiEyeLine } from 'react-icons/ri';
 
 const dummyDocuments = [
   { id: 1, type: 'Declaração de Matrícula', date: '2023-11-20', status: 'Pronto', color: 'statusReady' },
@@ -55,7 +55,7 @@ const DocumentsCliente = () => {
                         </button>
                         {doc.status === 'Pronto' && (
                           <button className={style.actionBtn} title="Baixar">
-                            <RiDownloadLine />
+                            <RiDownload2Line />
                           </button>
                         )}
                       </div>

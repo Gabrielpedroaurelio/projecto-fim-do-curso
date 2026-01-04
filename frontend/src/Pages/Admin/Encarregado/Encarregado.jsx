@@ -65,8 +65,8 @@ const columns = [
     { label: "ID", key: "roll" },
     { label: "Endereço", key: "address" },
     { label: "Relação", key: "class" },
-    { label: "Data de Nascimento", key: "dob" },
     { label: "Telefone", key: "phone" },
+    { label: "Estado", key: "status" },
 ];
 
 export default function Encarregado() {
@@ -75,15 +75,6 @@ export default function Encarregado() {
         // Implement add guardian logic
     };
 
-    const handleEdit = (guardian) => {
-        console.log("Edit guardian:", guardian);
-        // Implement edit guardian logic
-    };
-
-    const handleDelete = (guardian) => {
-        console.log("Delete guardian:", guardian);
-        // Implement delete guardian logic
-    };
 
     return (
         <div className="ContainerGeneral">
@@ -91,11 +82,13 @@ export default function Encarregado() {
             <main className="ContainerMain">
                 <DataTable
                     title="Encarregados List"
-                    data={guardiansData}
+                    data={guardiansData.map(g => ({
+                        ...g,
+                        status: Math.random() > 0.5 ? 'online' : 'offline',
+                        lastSeen: 'Ontem às 18:00'
+                    }))}
                     columns={columns}
                     onAdd={handleAdd}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
                     searchPlaceholder="Pesquisar por nome ou ID"
                 />
             </main>

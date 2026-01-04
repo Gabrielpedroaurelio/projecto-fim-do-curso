@@ -1,460 +1,75 @@
-:root {
-	--primary: #0f8b57;
-	/* green accent */
-	--primary-dark: #0b6b46;
-	--muted-bg: #f7fbf9;
-	--card-bg: #ffffff;
-	--text: #0b2b3b;
+/* Main Layout Container */
+.layoutContainer {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #131314;
+    /* Deep Charcoal */
+    color: #e3e3e3;
+    transition: background-color 0.3s ease;
 }
 
-/* Reset small elements */
-* {
-	box-sizing: border-box
+/* Background Effects Container */
+.backgroundWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.homepage {
-	padding: 18px
+/* Main Content Area */
+.mainContent {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    /* transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+    /* Sidebar padding compensation */
+    /*margin-left: 280px;*/
+    padding: 2rem;
 }
 
-/* Full-bleed hero */
-.heroFull {
-	background-size: cover;
-	background-position: center;
-	padding: 64px 18px;
-	border-radius: 0;
-	position: relative;
-	color: #fff
+.mainContent.expanded {
+    margin-left: 80px;
+    /* Collapsed sidebar width */
 }
 
-.heroInner {
-	max-width: 1100px;
-	margin: 0 auto;
-	display: grid;
-	grid-template-columns: 1fr 340px;
-	align-items: start;
-	gap: 24px
+/* Hero Content Area */
+.heroContent {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80vh;
+    animation: fadeIn 0.8s ease-out;
 }
 
-.heroFull:before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(180deg, rgba(2, 6, 23, 0.35), rgba(2, 6, 23, 0.55));
-	z-index: 0
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .mainContent {
+        margin-left: 0 !important;
+        padding: 1rem;
+    }
 }
 
-.heroInner>* {
-	position: relative;
-	z-index: 1
-}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-.leftCol h1 {
-	font-size: 44px;
-	margin: 0 0 12px;
-	line-height: 1.02
-}
-
-.leftCol p {
-	color: rgba(255, 255, 255, 0.94);
-	max-width: 580px;
-	font-size: 18px
-}
-
-.heroButtons {
-	display: flex;
-	gap: 12px;
-	margin-top: 18px
-}
-
-.btnGhost {
-	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	color: #fff;
-	padding: 10px 14px;
-	border-radius: var(--radius-md);
-	text-decoration: none
-}
-
-.rightCol {
-	display: flex;
-	justify-content: flex-end;
-	align-items: start
-}
-
-.floatCard {
-	width: 100%;
-	max-width: 320px;
-	background: var(--card-bg);
-	padding: 18px;
-	border-radius: var(--radius-md);
-	box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
-	transform: translateY(-60px)
-}
-
-.floatCard h3 {
-	margin: 0 0 8px;
-	color: var(--text)
-}
-
-.floatCard input,
-.floatCard select {
-	width: 100%;
-	padding: 10px;
-	border-radius: var(--radius-md);
-	border: 1px solid #e6eef2;
-	margin-bottom: 8px
-}
-
-.floatCard .btnPrimary {
-	width: 100%;
-	display: block
-}
-
-.formNote {
-	font-size: 13px;
-	color: #6b7280;
-	margin-top: 8px
-}
-
-/* Content area two columns */
-.contentTwoCol {
-	max-width: 1100px;
-	margin: 32px auto;
-	display: grid;
-	grid-template-columns: 2fr 360px;
-	gap: 24px;
-	padding: 0 12px
-}
-
-.panelLarge {
-	background: var(--card-bg);
-	padding: 18px;
-	border-radius: var(--radius-md);
-	box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06)
-}
-
-.cardsRow {
-	display: flex;
-	gap: 12px;
-	margin-top: 12px
-}
-
-.smallCard {
-	flex: 1;
-	background: var(--card-bg);
-	padding: 12px;
-	border-radius: var(--radius-sm);
-	box-shadow: 0 6px 20px rgba(2, 6, 23, 0.04)
-}
-
-.storiesGrid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 12px;
-	margin-top: 16px
-}
-
-.story img {
-	width: 100%;
-	height: 140px;
-	object-fit: cover;
-	border-radius: var(--radius-md)
-}
-
-/* New left column blocks */
-.thumbsRow {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 12px;
-	margin-top: 18px
-}
-
-.thumb {
-	position: relative;
-	border-radius: var(--radius-md);
-	overflow: hidden
-}
-
-.thumb img {
-	width: 100%;
-	height: 140px;
-	object-fit: cover;
-	display: block
-}
-
-.thumbCaption {
-	position: absolute;
-	left: 12px;
-	bottom: 12px;
-	color: #fff;
-	text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45)
-}
-
-.wideBanner {
-	margin-top: 18px;
-	background-size: cover;
-	background-position: center;
-	border-radius: var(--radius-md);
-	overflow: hidden;
-	min-height: 160px
-}
-
-.wideBannerInner {
-	background: linear-gradient(90deg, rgba(2, 6, 23, 0.24), rgba(2, 6, 23, 0.52));
-	padding: 28px;
-	display: flex;
-	align-items: center;
-	height: 100%
-}
-
-.wideBannerInner h3 {
-	color: #fff;
-	margin: 0;
-	font-size: 20px
-}
-
-.processGrid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 12px;
-	margin-top: 18px
-}
-
-.processItem {
-	background: var(--card-bg);
-	padding: 18px;
-	border-radius: var(--radius-sm);
-	box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
-	text-align: center
-}
-
-.processItem strong {
-	display: block;
-	font-size: 20px;
-	color: var(--primary);
-	margin-bottom: 8px
-}
-
-.storiesGrid3 {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 14px;
-	margin-top: 18px
-}
-
-
-.rightAside {
-	display: flex;
-	flex-direction: column;
-	gap: 12px
-}
-
-.asideCard {
-	background: var(--card-bg);
-	padding: 12px;
-	border-radius: 10px;
-	box-shadow: 0 8px 20px rgba(2, 6, 23, 0.04)
-}
-
-.teamStrip {
-	max-width: 1100px;
-	margin: 26px auto;
-	padding: 0 12px
-}
-
-.teamRow {
-	display: flex;
-	gap: 12px;
-	overflow: auto;
-	padding: 8px 4px
-}
-
-.person {
-	background: var(--card-bg);
-	padding: 12px;
-	border-radius: var(--radius-md);
-	text-align: center;
-	width: 140px;
-	flex: 0 0 140px
-}
-
-.person img {
-	width: 84px;
-	height: 84px;
-	object-fit: cover;
-	border-radius: 50%;
-	margin: 0 auto
-}
-
-.person h5 {
-	margin: 8px 0 4px
-}
-
-.person small {
-	display: block;
-	color: #6b7280
-}
-
-/* Right aside lists */
-.benefitsList {
-	list-style: none;
-	padding: 0;
-	margin: 8px 0 0;
-	display: flex;
-	flex-direction: column;
-	gap: 8px
-}
-
-.benefitsList li {
-	display: flex;
-	gap: 8px;
-	align-items: center;
-	color: #0b2b3b
-}
-
-.benefitsList svg {
-	color: var(--primary)
-}
-
-.eventList {
-	padding-left: 18px;
-	margin: 8px 0 10px;
-	color: #475467
-}
-
-.eventList li {
-	margin-bottom: 6px
-}
-
-/* Stories card overlay style */
-.story {
-	position: relative;
-	overflow: hidden;
-	border-radius: var(--radius-md)
-}
-
-.story::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(180deg, transparent, rgba(2, 6, 23, 0.35));
-	opacity: 0.9
-}
-
-.story h4 {
-	position: relative;
-	z-index: 2;
-	padding: 12px;
-	color: #fff;
-	margin: 0
-}
-
-.story p {
-	position: relative;
-	z-index: 2;
-	padding: 0 12px 12px;
-	color: #fff
-}
-
-/* Footer columns and links */
-.footerDark {
-	background: var(--primary-dark);
-	color: #fff;
-	padding: 36px 18px;
-	border-radius: 0;
-	margin-top: 32px
-}
-
-.footerWrap {
-	max-width: 1100px;
-	margin: 0 auto;
-	display: flex;
-	gap: 24px;
-	justify-content: space-between
-}
-
-.footerCol a {
-	color: rgba(255, 255, 255, 0.9);
-	text-decoration: none
-}
-
-.footerCol ul {
-	list-style: none;
-	padding: 0;
-	margin: 8px 0 0
-}
-
-.footerCol li {
-	margin-bottom: 6px
-}
-
-@media screen and (max-width:980px) {
-	.heroInner {
-		grid-template-columns: 1fr
-	}
-
-	.contentTwoCol {
-		grid-template-columns: 1fr
-	}
-
-	.teamRow {
-		overflow: auto
-	}
-
-	.footerWrap {
-		flex-direction: column;
-		gap: 12px
-	}
-}
-
-.teamStrip {
-	max-width: 1200px;
-	margin: 26px auto;
-	padding: 0 12px
-}
-
-.teamRow {
-	display: flex;
-	gap: 12px
-}
-
-.person {
-	background: var(--card-bg);
-	padding: 12px;
-	border-radius: 8px;
-	text-align: center;
-	width: 160px
-}
-
-.person img {
-	width: 100%;
-	height: 100px;
-	object-fit: cover;
-	border-radius: 50%
-}
-
-.footerDark {
-	background: var(--primary-dark);
-	color: #fff;
-	padding: 32px 18px;
-	border-radius: 0;
-	margin-top: 32px
-}
-
-.footerCol {
-	max-width: 480px
-}
-
-@media screen and (max-width:980px) {
-	.heroInner {
-		grid-template-columns: 1fr
-	}
-
-	.contentTwoCol {
-		grid-template-columns: 1fr
-	}
-
-	.teamRow {
-		overflow: auto
-	}
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

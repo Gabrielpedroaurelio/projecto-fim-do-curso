@@ -3,7 +3,7 @@ import style from './Grades.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiLineChartLine, RiArrowUpSLine, RiArrowDownSLine } from 'react-icons/ri';
+import { RiLineChartLine, RiArrowUpSLine, RiArrowDownSLine, RiMedalLine, RiExpandDiagonalLine } from 'react-icons/ri';
 
 const gradesData = [
     { subject: 'Matemática', q1: 15, q2: 14, q3: 16, avg: 15.0, status: 'Aprovado' },
@@ -29,19 +29,28 @@ const Grades = () => {
 
                     <div className={style.statsGrid}>
                         <div className={style.statCard}>
-                            <span className={style.statLabel}>Média Geral</span>
+                            <div className={style.statHeader}>
+                                <span className={style.statLabel}>Média Geral</span>
+                                <RiLineChartLine />
+                            </div>
                             <div className={style.statValue}>15.4</div>
                             <span className={`${style.statChange} ${style.positive}`}>
                                 <RiArrowUpSLine /> +0.5 este trimestre
                             </span>
                         </div>
                         <div className={style.statCard}>
-                            <span className={style.statLabel}>Melhor Disciplina</span>
+                            <div className={style.statHeader}>
+                                <span className={style.statLabel}>Melhor Disciplina</span>
+                                <RiMedalLine />
+                            </div>
                             <div className={style.statValue}>TLP</div>
                             <span className={style.subjectBadge}>18.3 / 20</span>
                         </div>
                         <div className={style.statCard}>
-                            <span className={style.statLabel}>Status Acadêmico</span>
+                            <div className={style.statHeader}>
+                                <span className={style.statLabel}>Status Acadêmico</span>
+                                <RiExpandDiagonalLine />
+                            </div>
                             <div className={`${style.statValue} ${style.statusOk}`}>Ótimo</div>
                             <span className={style.statSubtext}>Reserva: 100%</span>
                         </div>

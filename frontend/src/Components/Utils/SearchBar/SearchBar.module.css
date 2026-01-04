@@ -6,45 +6,59 @@
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 540px;
-    margin: 12px auto;
-    padding: 8px 12px;
-    background-color: #ffffff;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(31, 41, 35, 0.06);
-    gap: 8px;
+    max-width: 600px;
+    margin: 24px auto 32px auto;
+    padding: 12px 20px;
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 9999px;
+    /* Pill shape */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .SearchBar svg {
-    color: var(--neon, #16a34a);
+    color: #94a3b8;
     min-width: 20px;
+    font-size: 1.1rem;
+    transition: color 0.3s;
 }
 
 .SearchBar input {
-    color: #153a33;
+    color: #f8fafc;
     width: 100%;
-    font-size: 14px;
+    font-size: 1rem;
     outline: none;
     background: transparent;
     border: none;
-    padding-left: 6px;
+    padding-left: 4px;
+    font-weight: 500;
 }
 
 .SearchBar input::placeholder {
-    color: #7b8f86;
+    color: #64748b;
 }
 
 @media (max-width:640px) {
     .SearchBar {
-        max-width: 92%;
-        padding: 8px;
+        max-width: 100%;
+        padding: 10px 16px;
     }
 }
 
 /* Focus / subtle glow */
 .SearchBar:focus-within {
-    box-shadow: 0 10px 26px rgba(16, 185, 129, 0.06);
+    background: rgba(30, 41, 59, 0.8);
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
     transform: translateY(-1px);
+}
+
+.SearchBar:focus-within svg {
+    color: #0ea5e9;
 }
 
 .SearchBar input:focus {

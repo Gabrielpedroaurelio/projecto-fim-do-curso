@@ -1,6 +1,6 @@
 /* DataTable Container */
 .DataTableContainer {
-    padding: 2rem;
+    padding: 0;
     width: 100%;
 }
 
@@ -15,17 +15,18 @@
 .TitleSection h2 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-main);
     margin-bottom: 0.25rem;
+    letter-spacing: -0.025em;
 }
 
 .TitleSection p {
     font-size: 0.875rem;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .AddButton {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -33,21 +34,25 @@
     font-size: 0.9375rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.2);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
 }
 
 .AddButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 12px -2px rgba(14, 165, 233, 0.3);
+    box-shadow: var(--shadow-lg);
 }
 
-/* Table Card */
+/* Table Card - Glassmorphism */
 .TableCard {
-    background: white;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
+    transition: box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 /* Table Controls */
@@ -56,13 +61,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .TableControls h3 {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--text-main);
 }
 
 .ControlsRight {
@@ -75,22 +80,23 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: rgba(15, 23, 42, 0.03);
+    /* Subtle dark mode compatible bg */
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.625rem 1rem;
     min-width: 280px;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .SearchBox:focus-within {
-    border-color: #0ea5e9;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
 }
 
 .SearchBox svg {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 0.875rem;
 }
 
@@ -99,32 +105,32 @@
     background: transparent;
     outline: none;
     font-size: 0.875rem;
-    color: #0f172a;
+    color: var(--text-main);
     width: 100%;
 }
 
 .SearchBox input::placeholder {
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .FilterDropdown {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.625rem 1rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .FilterDropdown:hover {
-    border-color: #0ea5e9;
+    border-color: var(--primary);
 }
 
 .FilterDropdown svg {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.875rem;
 }
 
@@ -133,7 +139,7 @@
     background: transparent;
     outline: none;
     font-size: 0.875rem;
-    color: #0f172a;
+    color: var(--text-main);
     cursor: pointer;
     font-weight: 500;
 }
@@ -149,7 +155,7 @@
 }
 
 .Table thead {
-    background: #f8fafc;
+    background: rgba(15, 23, 42, 0.02);
 }
 
 .Table th {
@@ -157,10 +163,10 @@
     padding: 1rem 1.5rem;
     font-size: 0.75rem;
     font-weight: 700;
-    color: #64748b;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .Table th:first-child {
@@ -173,18 +179,19 @@
 }
 
 .Table tbody tr {
-    transition: background-color 0.15s ease;
+    transition: background-color var(--transition-fast);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .Table tbody tr:hover {
-    background: #f8fafc;
+    background: rgba(14, 165, 233, 0.04);
+    /* Subtle Blue tint */
 }
 
 .Table td {
     padding: 1rem 1.5rem;
     font-size: 0.875rem;
-    color: #334155;
-    border-bottom: 1px solid #e2e8f0;
+    color: var(--text-main);
 }
 
 .Table td:last-child {
@@ -203,19 +210,87 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--bg-card);
+    box-shadow: var(--shadow-sm);
 }
 
 .Avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
     font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Status with Tooltip */
+.StatusWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.StatusDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.Online {
+    background-color: var(--secondary);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.Offline {
+    background-color: var(--text-muted);
+}
+
+.StatusText {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.StatusTooltip {
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-main);
+    color: var(--bg-card);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-fast);
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+}
+
+.StatusTooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--text-main);
+}
+
+.StatusWrapper:hover .StatusTooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: 150%;
 }
 
 /* Action Buttons */
@@ -235,27 +310,27 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     font-size: 0.875rem;
 }
 
 .EditBtn {
-    background: #f0f9ff;
-    color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--primary);
 }
 
 .EditBtn:hover {
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
 }
 
 .DeleteBtn {
-    background: #fef2f2;
-    color: #ef4444;
+    background: rgba(244, 63, 94, 0.1);
+    color: var(--accent-rose);
 }
 
 .DeleteBtn:hover {
-    background: #ef4444;
+    background: var(--accent-rose);
     color: white;
 }
 
@@ -263,7 +338,7 @@
 .EmptyState {
     text-align: center;
     padding: 3rem 1rem !important;
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 0.9375rem;
 }
 
@@ -273,7 +348,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 2rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border-color);
 }
 
 /* Pagination */
@@ -286,22 +361,22 @@
 .Pagination button {
     min-width: 36px;
     height: 36px;
-    border: 1px solid #e2e8f0;
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
     border-radius: var(--radius-sm);
     font-size: 0.875rem;
     font-weight: 500;
-    color: #64748b;
+    color: var(--text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .Pagination button:hover:not(:disabled) {
-    border-color: #0ea5e9;
-    color: #0ea5e9;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .Pagination button:disabled {
@@ -310,7 +385,7 @@
 }
 
 .Pagination .ActivePage {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white;
     border-color: transparent;
 }
@@ -320,13 +395,13 @@
 }
 
 .Ellipsis {
-    color: #94a3b8;
+    color: var(--text-muted);
     padding: 0 0.25rem;
 }
 
 .PerPageSelector {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 /* Responsive Design */
@@ -349,7 +424,7 @@
 
 @media (max-width: 768px) {
     .DataTableContainer {
-        padding: 1rem;
+        padding: 0;
     }
 
     .TableHeader {

@@ -6,9 +6,9 @@
 }
 
 :root {
-    /* Admin Color Palette - Professional Indigo/Slate */
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
+    /* Admin Color Palette - Professional Blue/Sky */
+    --primary: #0ea5e9;
+    --primary-hover: #0284c7;
     --secondary: #10b981;
     --secondary-hover: #059669;
     --bg-main: #f8fafc;
@@ -18,7 +18,8 @@
     --border-color: #e2e8f0;
 
     /* Accents */
-    --accent-indigo: #6366f1;
+    --accent-indigo: #0ea5e9;
+    /* Renamed visually to Blue but kept var name for compatibility */
     --accent-emerald: #10b981;
     --accent-rose: #f43f5e;
     --accent-amber: #f59e0b;
@@ -32,14 +33,22 @@
     /* Transitions */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Border Radii */
+    --radius-sm: 5px;
+    --radius-md: 5px;
+    --radius-lg: 5px;
 }
 
 body.dark-mode {
-    --bg-main: #0f172a;
-    --bg-card: rgba(30, 41, 59, 0.7);
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border-color: #1e293b;
+    --bg-main: #131314;
+    --bg-card: #1e1f20;
+    --text-main: #e3e3e3;
+    --text-muted: #c4c7c5;
+    --border-color: #444746;
+    --accent-indigo: #8ab4f8;
+    /* Already blue-ish, but ensuring it matches Google Blue */
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);

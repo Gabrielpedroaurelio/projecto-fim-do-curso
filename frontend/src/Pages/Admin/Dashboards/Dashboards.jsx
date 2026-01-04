@@ -107,7 +107,7 @@ export default function Dashboards() {
                                 <button>Anual</button>
                             </div>
                         </div>
-                        <div className="h-[300px] w-full mt-4">
+                        <div className="h-[150px] w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={revenueData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -117,7 +117,19 @@ export default function Dashboards() {
                                         cursor={{ fill: '#f8fafc' }}
                                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                     />
-                                    <Bar dataKey="value" fill="#0ea5e9" radius={[4, 4, 4, 4]} barSize={20} />
+                                    <Bar
+                                        dataKey="value"
+                                        fill="url(#colorRevenue)"
+                                        radius={[4, 4, 0, 0]}
+                                        barSize={20}
+                                        animationDuration={1500}
+                                    />
+                                    <defs>
+                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#0ea5e9" stopOpacity={1} />
+                                            <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0.6} />
+                                        </linearGradient>
+                                    </defs>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -127,9 +139,9 @@ export default function Dashboards() {
                         <div className={style.ChartHeader}>
                             <h3>Desempenho Operacional</h3>
                         </div>
-                        <div className="h-[300px] w-full flex items-center justify-center">
+                        <div className="h-[150px] w-full flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart outerRadius={90} data={performanceData}>
+                                <RadarChart outerRadius={60} data={performanceData}>
                                     <PolarGrid stroke="#e2e8f0" />
                                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11 }} />
                                     <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="transparent" />
@@ -189,7 +201,7 @@ export default function Dashboards() {
 
                                     ))
                                 }
-        
+
 
                             </tbody>
                         </table>

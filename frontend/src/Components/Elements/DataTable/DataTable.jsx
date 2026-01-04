@@ -84,7 +84,7 @@ export default function DataTable({
                                 {columns.map((col, index) => (
                                     <th key={index}>{col.label}</th>
                                 ))}
-                                <th>Action</th>
+                                {(onEdit || onDelete) && <th>Action</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -106,33 +106,46 @@ export default function DataTable({
                                                         <div className={style.Avatar}>{item.initials}</div>
                                                         <span>{item[col.key]}</span>
                                                     </div>
+                                                ) : col.key === 'status' ? (
+                                                    <div className={style.StatusWrapper}>
+                                                        <span className={`${style.StatusDot} ${item.status === 'online' ? style.Online : style.Offline}`}></span>
+                                                        <span className={style.StatusText}>
+                                                            {item.status === 'online' ? 'Online' : 'Offline'}
+                                                        </span>
+                                                        <div className={style.StatusTooltip}>
+                                                            {item.status === 'online' ? 'Online desde: ' : 'Visto por último: '}
+                                                            {item.lastSeen || 'N/A'}
+                                                        </div>
+                                                    </div>
                                                 ) : (
                                                     item[col.key]
                                                 )}
                                             </td>
                                         ))}
-                                        <td>
-                                            <div className={style.ActionButtons}>
-                                                {onEdit && (
-                                                    <button
-                                                        className={style.EditBtn}
-                                                        onClick={() => onEdit(item)}
-                                                        title="Edit"
-                                                    >
-                                                        <FaPencil />
-                                                    </button>
-                                                )}
-                                                {onDelete && (
-                                                    <button
-                                                        className={style.DeleteBtn}
-                                                        onClick={() => onDelete(item)}
-                                                        title="Delete"
-                                                    >
-                                                        <FaTrash />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
+                                        {(onEdit || onDelete) ? (
+                                            <td>
+                                                <div className={style.ActionButtons}>
+                                                    {onEdit && (
+                                                        <button
+                                                            className={style.EditBtn}
+                                                            onClick={() => onEdit(item)}
+                                                            title="Edit"
+                                                        >
+                                                            <FaPencil />
+                                                        </button>
+                                                    )}
+                                                    {onDelete && (
+                                                        <button
+                                                            className={style.DeleteBtn}
+                                                            onClick={() => onDelete(item)}
+                                                            title="Delete"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        ) : null}
                                     </tr>
                                 ))
                             ) : (

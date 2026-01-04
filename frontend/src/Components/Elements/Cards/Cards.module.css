@@ -1,15 +1,26 @@
+@import url(../../../assets/style/global.style.css);
+
 .StatCard {
     background: var(--bg-card);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 1.75rem;
-    box-shadow: var(--shadow-md);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    gap: 0.5rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 200px;
+    /* Reduced min-width */
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.StatCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(14, 165, 233, 0.4);
 }
 
 .CardHeader {
@@ -17,37 +28,44 @@
     justify-content: space-between;
     align-items: center;
     color: var(--text-muted);
-    font-size: 0.875rem;
-    font-weight: 600;
+}
+
+.CardHeader span {
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.025em;
+    letter-spacing: 0.05em;
 }
 
 .CardHeader svg {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    color: #0ea5e9;
+    padding: 8px;
+    background: rgba(14, 165, 233, 0.1);
+    border-radius: var(--radius-sm);
 }
 
 .StatCard h2 {
-    font-size: 2.25rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--text-main);
     letter-spacing: -0.025em;
+    margin: 0;
 }
 
 .TrendUp {
-    font-size: 0.8125rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    background-color: rgba(16, 185, 129, 0.05);
-    padding: 0.4rem 0.75rem;
-    border-radius: 0.5rem;
-    width: fit-content;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 8px;
+    font-weight: 500;
 }
 
 .TrendUp span {
     color: #10b981;
-    /* Green */
-    font-weight: 700;
+    font-weight: 800;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
 }

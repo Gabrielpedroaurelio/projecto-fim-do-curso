@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import style from './Solicitacao.module.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
@@ -27,6 +27,11 @@ export default function Solicitacao() {
     const [activeTab, setActiveTab] = useState('boletim')
     const [searchTerm, setSearchTerm] = useState('')
     const [filterDays, setFilterDays] = useState(30)
+
+    // Reset page when tab or filters change
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [activeTab, searchTerm, filterDays])
     const [showModal, setShowModal] = useState(false)
     const [formData, setFormData] = useState({
         tipoDocumento: '',
@@ -72,9 +77,6 @@ export default function Solicitacao() {
         setShowModal(false)
     }
 
-    const handleEditTemplate = () => {
-        console.log(`Editar modelo de ${activeTab}`)
-    }
 
     const handleView = (item) => {
         console.log('Visualizar:', item)
@@ -98,7 +100,53 @@ export default function Solicitacao() {
         return statusClasses[status] || style.StatusDefault
     }
 
-    const currentData = requestsData[activeTab] || []
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage] = useState(10)
+
+    // Generate large mock data if needed
+    const generateMockData = (baseData, count) => {
+        const result = []
+        for (let i = 0; i < count; i++) {
+            const item = baseData[i % baseData.length]
+            // Randomize dates within last 90 days
+            const date = new Date()
+            date.setDate(date.getDate() - Math.floor(Math.random() * 95))
+            result.push({
+                ...item,
+                id: i + 1,
+                date: date.toISOString().split('T')[0],
+                student: `${item.student} ${i + 1}`
+            })
+        }
+        return result
+    }
+
+    const currentTabBaseData = requestsData[activeTab] || []
+    const expandedData = generateMockData(currentTabBaseData, 200)
+
+    // Filtering logic
+    const filteredData = expandedData.filter(item => {
+        const matchesSearch = item.student.toLowerCase().includes(searchTerm.toLowerCase())
+
+        const itemDate = new Date(item.date)
+        const diffTime = Math.abs(new Date() - itemDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        const matchesFilter = diffDays <= filterDays
+
+        return matchesSearch && matchesFilter
+    })
+
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage
+    const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem)
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page)
+        }
+    }
 
     return (
         <div className="ContainerGeneral">
@@ -130,10 +178,6 @@ export default function Solicitacao() {
                                 <p className={style.Subtitle}>Gerir e acompanhar solicitações de documentos</p>
                             </div>
                             <div className={style.HeaderActions}>
-                                <button className={style.TemplateButton} onClick={handleEditTemplate}>
-                                    <FaPencil />
-                                    Editar Modelo
-                                </button>
                                 <button className={style.RequestButton} onClick={handleRequest}>
                                     + Nova Solicitação
                                 </button>
@@ -253,14 +297,40 @@ export default function Solicitacao() {
                         {/* Pagination */}
                         <div className={style.TableFooter}>
                             <div className={style.Pagination}>
-                                <button className={style.PageArrow}>‹</button>
-                                <button className={style.ActivePage}>1</button>
-                                <button>2</button>
-                                <button>3</button>
-                                <button className={style.PageArrow}>›</button>
+                                <button
+                                    className={style.PageArrow}
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    ‹
+                                </button>
+                                {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                                    let pageNum = currentPage <= 3 ? i + 1 :
+                                        currentPage >= totalPages - 2 ? totalPages - 4 + i :
+                                            currentPage - 2 + i;
+                                    if (pageNum < 1) pageNum = i + 1;
+                                    if (pageNum > totalPages) return null;
+
+                                    return (
+                                        <button
+                                            key={i}
+                                            className={currentPage === pageNum ? style.ActivePage : ''}
+                                            onClick={() => handlePageChange(pageNum)}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    )
+                                })}
+                                <button
+                                    className={style.PageArrow}
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    ›
+                                </button>
                             </div>
                             <div className={style.ResultsInfo}>
-                                Mostrando {currentData.length} de {currentData.length} resultados
+                                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, filteredData.length)} de {filteredData.length} resultados
                             </div>
                         </div>
                     </div>

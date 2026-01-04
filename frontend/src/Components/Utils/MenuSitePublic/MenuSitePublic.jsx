@@ -1,63 +1,80 @@
-import {MdClose } from 'react-icons/md'
-import { FaUser } from 'react-icons/fa6'
-import favicon from '../../../assets/images/favicon.ico'
-import { BsHouse,BsFolder, BsMenuButton } from 'react-icons/bs'
-import { CiLogin } from 'react-icons/ci' 
-import {CgMenuRight} from 'react-icons/cg'
-import styles from './MenuSitePublic.module.css'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
- 
+import { MdClose } from 'react-icons/md';
+import { FaUser } from 'react-icons/fa6';
+import favicon from '../../../assets/images/favicon.ico';
+import { CgMenuRight } from 'react-icons/cg';
+import styles from './MenuSitePublic.module.css';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function MenuSitePublic() {
-    const usuarioLogado = false
-    const [toggleMenu, setToggleMenu] = useState(false)
-   
+    const usuarioLogado = false;
+    const [toggleMenu, setToggleMenu] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 20) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
-        <header className={`${styles.headerMenu} ${toggleMenu ? styles.menuExpandir : ''}`}>
+        <header className={`${styles.headerMenu} ${scrolled ? styles.scrolled : ''} ${toggleMenu ? styles.menuExpandir : ''}`}>
             <div className={styles.logo}>
-                <div className={styles.img}>
-                    <img src={favicon} alt="Logo" />
-                </div>
-                <div className={styles.TitleSchool}>
-                    <h1>INSTITUTO POLITÉCNICO <br /> DO MAIOMBE</h1>
-                </div>
+                <Link to="/" className={styles.logoLink}>
+                    <img src={favicon} alt="Logo" className={styles.favicon} />
+                    <div className={styles.titleContainer}>
+                        <span className={styles.schoolName}>IP MAIOMBE</span>
+                    </div>
+                </Link>
             </div>
 
             <div className={styles.menu}>
-                <div className={styles.btnMenu} onClick={() => setToggleMenu(!toggleMenu)}>
-                    <CgMenuRight size={32} />
-                </div>
+                <button className={styles.btnMenu} onClick={() => setToggleMenu(!toggleMenu)}>
+                    <CgMenuRight size={28} />
+                </button>
 
                 <nav className={styles.nav}>
-                    <span className={styles.btnClose} onClick={() => setToggleMenu(!toggleMenu)}>
-                        <MdClose size={32}/>
-                    </span>
-                    <Link to="/public/site" className={styles.navLink}>
-                        <BsHouse size={20} />
-                        <span>HOME</span>
-                    </Link>
+                    <div className={styles.mobileNavHeader}>
+                        <img src={favicon} alt="Logo" className={styles.favicon} />
+                        <button className={styles.btnClose} onClick={() => setToggleMenu(false)}>
+                            <MdClose size={32} />
+                        </button>
+                    </div>
 
-                    <Link to="/public/library" className={styles.navLink}>
-                        <BsFolder size={20} />
-                        <span>BIBLIOTECA</span>
-                    </Link>
+                    <ul className={styles.navList}>
+                        <li>
+                            <Link to="/public/site" className={styles.navLink} onClick={() => setToggleMenu(false)}>Início</Link>
+                        </li>
+                        <li>
+                            <Link to="/public/library" className={styles.navLink} onClick={() => setToggleMenu(false)}>Biblioteca</Link>
+                        </li>
+                        <li>
+                            <Link to="/public/site#sobre" className={styles.navLink} onClick={() => setToggleMenu(false)}>Sobre nós</Link>
+                        </li>
+                    </ul>
 
-                    {usuarioLogado ? (
-                        <Link to="#" className={styles.navLink}>
-                            <FaUser size={20} />
-                            <span>MINHA CONTA</span>
-                        </Link>
-                    ) : (
-                        <Link to="/public/auth" className={styles.navLink}>
-                            <CiLogin size={20} />
-                            <span>LOGIN</span>
-                        </Link>
-                    )}
-
+                    <div className={styles.navActions}>
+                        {usuarioLogado ? (
+                            <Link to="/student/dashboard" className={styles.loginBtn}>
+                                <FaUser />
+                                <span>Portal</span>
+                            </Link>
+                        ) : (
+                            <Link to="/student/auth" className={styles.loginBtn}>
+                                Entrar
+                            </Link>
+                        )}
+                    </div>
                 </nav>
             </div>
+            {toggleMenu && <div className={styles.overlay} onClick={() => setToggleMenu(false)} />}
         </header>
-    )
+    );
 }

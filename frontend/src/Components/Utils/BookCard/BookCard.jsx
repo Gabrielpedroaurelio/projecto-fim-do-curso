@@ -1,38 +1,39 @@
 import React, { useState } from 'react';
 import styles from './BookCard.module.css';
-import { FaEye, FaCartPlus } from 'react-icons/fa6';
+import { IoEyeOutline } from 'react-icons/io5';
+import { MdOutlineFileDownload } from 'react-icons/md';
 
-function getInitials(title = ''){
-  return title.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+function getInitials(title = '') {
+  return title.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
 }
 
-function svgDataUrl(title){
+function svgDataUrl(title) {
   const initials = getInitials(title) || 'LB';
   const bg = '#f0fbf7';
-  const fg = '#14683a';
+  const fg = '#282831ff';
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'><rect width='100%' height='100%' fill='${bg}' rx='18'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Segoe UI, system-ui, Arial' font-size='140' fill='${fg}' font-weight='700'>${initials}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-export default function BookCard({book, onView, onAdd}){
+export default function BookCard({ book, onView, onAdd }) {
   const [loaded, setLoaded] = useState(false);
   const cover = book.cover || svgDataUrl(book.title);
 
   // Preload cover image to ensure it appears even if the <img> is delayed
-  React.useEffect(()=>{
+  React.useEffect(() => {
     let cancelled = false;
-    if(cover){
+    if (cover) {
       const img = new Image();
       img.src = cover;
-      img.onload = ()=>{ if(!cancelled) setLoaded(true); };
-      img.onerror = ()=>{ if(!cancelled) setLoaded(true); };
+      img.onload = () => { if (!cancelled) setLoaded(true); };
+      img.onerror = () => { if (!cancelled) setLoaded(true); };
     }
     // fallback: if nothing loads in 3s, stop showing skeleton
-    const t = setTimeout(()=>{ if(!cancelled) setLoaded(true); }, 3000);
-    return ()=>{ cancelled = true; clearTimeout(t); };
+    const t = setTimeout(() => { if (!cancelled) setLoaded(true); }, 3000);
+    return () => { cancelled = true; clearTimeout(t); };
   }, [cover]);
 
-  function handleImgError(e){
+  function handleImgError(e) {
     e.currentTarget.src = svgDataUrl(book.title);
     setLoaded(true);
   }
@@ -43,12 +44,12 @@ export default function BookCard({book, onView, onAdd}){
         {!loaded && <div className={styles.skeleton} aria-hidden />}
 
         {book.pdf ? (
-          <object data={book.pdf} type="application/pdf" className={styles.object} onLoad={()=>setLoaded(true)} aria-label={`${book.title} PDF`}>
+          <object data={book.pdf} type="application/pdf" className={styles.object} onLoad={() => setLoaded(true)} aria-label={`${book.title} PDF`}>
             {/* fallback will be img if object cannot render */}
-            <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={()=>setLoaded(true)} onError={handleImgError} />
+            <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={() => setLoaded(true)} onError={handleImgError} />
           </object>
         ) : (
-          <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={()=>setLoaded(true)} onError={handleImgError} />
+          <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={() => setLoaded(true)} onError={handleImgError} />
         )}
 
         {book.recommended && <span className={styles.badge}>Recomendado</span>}
@@ -62,8 +63,8 @@ export default function BookCard({book, onView, onAdd}){
         <div className={styles.footer}>
           <span className={styles.category}>{book.category}</span>
           <div className={styles.actions}>
-            <button aria-label={`Ver ${book.title}`} className={styles.actionBtn} onClick={()=>onView?.(book)}><FaEye size={14} /></button>
-            <button aria-label={`Adicionar ${book.title}`} className={styles.actionBtn} onClick={()=>onAdd?.(book)}><FaCartPlus size={16} /></button>
+            <button aria-label={`Ver ${book.title}`} className={styles.actionBtn} onClick={() => onView?.(book)}><IoEyeOutline size={18} /></button>
+            <button aria-label={`Baixar ${book.title}`} className={styles.actionBtn} onClick={() => onAdd?.(book)}><MdOutlineFileDownload size={20} /></button>
           </div>
         </div>
       </div>

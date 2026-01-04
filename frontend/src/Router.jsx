@@ -27,10 +27,13 @@ import Encarregado from './Pages/Admin/Encarregado/Encarregado'
 import Estudantes from './Pages/Admin/Estudantes/Estudantes'
 import Funcionario from './Pages/Admin/Funcionario/Funcionario'
 import Solicitacao from './Pages/Admin/Solicitacao/Solicitacao'
+import LibraryAdmin from './Pages/Admin/Library/Library'
 // documents
 import Certificado from './Pages/Admin/Certificado/Certificado'
 import Boletim from './Pages/Admin/Boletim/Boletim'
 import Declaracao from './Pages/Admin/Declaracao/Declaracao'
+import YasminChat from './Pages/YasminAI/YasminChat'
+
 const Routers = () => {
     return (
         <>
@@ -46,11 +49,14 @@ const Routers = () => {
                     <Route path='/admin/certificado' element={<Certificado />}></Route>{/* dashboards e geração de certificado*/}
                     <Route path='/admin/boletim' element={<Boletim />}></Route>{/* dashboards e geração de boletim*/}
                     <Route path='/admin/ask' element={<Solicitacao />}></Route>{/* lista solicitações*/}
+                    <Route path='/admin/library' element={<LibraryAdmin />}></Route>{/* biblioteca admin */}
                     <Route path='/admin/history' element={<Histories />}></Route>{/* lista de login*/}
                     <Route path='/admin/setting' element={<Settings />}></Route>{/* */}
                     <Route path='/admin/auth' element={<AuthAdmin />}></Route>{/*  */}
                     <Route path='/agent/account' element={<Accounts />}></Route>{/* */}
-                    <Route path='/agent/yasmin' element={"/agent/yasmin"}></Route>{/* */}
+                    <Route path='/admin/yasmin' element={<YasminChat />}></Route>{/* Yasmin Admin */}
+                    <Route path='/agent/yasmin' element={<YasminChat />}></Route>{/* Backward compat if needed */}
+
                     {/***ALUNO** */}{/* */}
                     <Route path='/student/dashboard' element={<DashboardsStudents />}></Route>{/* */}
                     <Route path='/student/document' element={<DocumentsCliente />}></Route>{/* */}
@@ -59,6 +65,8 @@ const Routers = () => {
                     <Route path='/student/schedule' element={<Schedule />}></Route>{/* */}
                     <Route path='/student/attendance' element={<Attendance />}></Route>{/* */}
                     <Route path='/student/auth' element={<AuthStudent />}></Route>{/* */}
+                    <Route path='/student/yasmin' element={<YasminChat />}></Route>{/* Yasmin Student */}
+
                     {/***ENCARREGADO** */}{/* */}
                     <Route path='/parent/dashboard' element={<DashboardEncarregado />}></Route>{/* */}
                     <Route path='/parent/children' element={<Children />}></Route>{/* */}
@@ -66,6 +74,7 @@ const Routers = () => {
                     <Route path='/parent/document' element={<Documentos />}></Route>{/* */}
                     <Route path='/parent/actionstudent' element={<ChildrenActions />}></Route>{/* */}
                     <Route path='/parent/auth' element={<AuthParent />}></Route>{/* */}
+                    <Route path='/parent/yasmin' element={<YasminChat />}></Route>{/* Yasmin Parent */}
                     {/***PUBLICO** */}{/* */}
                     <Route path='/' index element={<MainSite />}></Route>{/* */}
                     <Route path='/public/site' element={<MainSite />}></Route>{/* */}

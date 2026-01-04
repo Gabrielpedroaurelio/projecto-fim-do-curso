@@ -1,0 +1,76 @@
+.auroraContainer {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #131314;
+    overflow-x: hidden;
+    color: #e3e3e3;
+}
+
+.auroraWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    filter: blur(100px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.auroraItem {
+    position: absolute;
+    border-radius: 50%;
+    animation: move 20s infinite alternate;
+}
+
+.aurora1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(138, 180, 248, 0.3) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+}
+
+.aurora2 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(162, 115, 255, 0.2) 0%, transparent 70%);
+    bottom: -200px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.aurora3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(25, 211, 141, 0.15) 0%, transparent 70%);
+    top: 30%;
+    right: 10%;
+    animation-delay: -10s;
+}
+
+.aurora4 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(138, 180, 248, 0.2) 0%, transparent 70%);
+    bottom: 20%;
+    left: 10%;
+    animation-delay: -15s;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes move {
+    from {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    to {
+        transform: translate(100px, 50px) rotate(45deg);
+    }
+}

@@ -3,37 +3,48 @@ import { Link, useLocation } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
 import style from './MenuNavBarCliente.module.css'
 import BoxMessage from '../../Utils/BoxMessage/BoxMessage';
+import { FaAtom } from 'react-icons/fa6';
 
-import { BiDockLeft } from 'react-icons/bi';
-import { BsDownload, BsFileEarmarkText, BsFolder, BsHouse, BsPeople, BsChatDots } from 'react-icons/bs'
-import { CiFileOn, CiLogout } from 'react-icons/ci'
-import { DiAtom } from 'react-icons/di'
-import { RiLineChartLine, RiCalendar2Line, RiUserFollowLine, RiHistoryLine } from 'react-icons/ri';
+import {
+    RiHome4Line,
+    RiBarChartLine,
+    RiCalendarLine,
+    RiUserSearchLine,
+    RiFileTextLine,
+    RiFolderLine,
+    RiLogoutBoxLine,
+    RiMenuFoldLine,
+    RiMenuUnfoldLine,
+    RiTeamLine,
+    RiFileEditLine,
+    RiDownload2Line,
+    RiChat3Line,
+    RiLayoutLeftLine
+} from 'react-icons/ri';
 
 export default function MenuNavBarCliente({ user }) {
     const [toggleMenuNavBar, settoggleMenuNavBar] = useState(false)
     const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
-    const [mobileOpen, setMobileOpen] = useState(false)
     const location = useLocation()
 
     const isActive = (path) => location.pathname === path ? style.active : ''
 
     const studentLinks = [
-        { to: '/student/dashboard', icon: <BsHouse />, label: 'Dashboards' },
-        { to: '/student/grades', icon: <RiLineChartLine />, label: 'Minhas Notas' },
-        { to: '/student/schedule', icon: <RiCalendar2Line />, label: 'Horários' },
-        { to: '/student/attendance', icon: <RiUserFollowLine />, label: 'Presenças' },
-        { to: '/student/ask', icon: <CiFileOn />, label: 'Solicitações' },
-        { to: '/student/document', icon: <BsFolder />, label: 'Documentos' },
-        { to: '/student/yasmin', icon: <DiAtom />, label: 'Yasmin' },
+        { to: '/student/dashboard', icon: <RiHome4Line />, label: 'Dashboards' },
+        { to: '/student/grades', icon: <RiBarChartLine />, label: 'Minhas Notas' },
+        { to: '/student/schedule', icon: <RiCalendarLine />, label: 'Horários' },
+        { to: '/student/attendance', icon: <RiUserSearchLine />, label: 'Presenças' },
+        { to: '/student/ask', icon: <RiFileTextLine />, label: 'Solicitações' },
+        { to: '/student/document', icon: <RiFolderLine />, label: 'Documentos' },
+        { to: '/student/yasmin', icon: <FaAtom />, label: 'Yasmin' },
     ]
 
     const parentLinks = [
-        { to: '/parent/dashboard', icon: <BsHouse />, label: 'Dashboard' },
-        { to: '/parent/children', icon: <BsPeople />, label: 'Meus Educandos' },
-        { to: '/parent/ask', icon: <BsFileEarmarkText />, label: 'Solicitações' },
-        { to: '/parent/document', icon: <BsDownload />, label: 'Documentos' },
-        { to: '/parent/yasmin', icon: <BsChatDots />, label: 'Yasmin AI' },
+        { to: '/parent/dashboard', icon: <RiHome4Line />, label: 'Dashboard' },
+        { to: '/parent/children', icon: <RiTeamLine />, label: 'Meus Educandos' },
+        { to: '/parent/ask', icon: <RiFileEditLine />, label: 'Solicitações' },
+        { to: '/parent/document', icon: <RiDownload2Line />, label: 'Documentos' },
+        { to: '/parent/yasmin', icon: <FaAtom />, label: 'Yasmin AI' },
     ];
 
     const links = user === 'student' ? studentLinks : parentLinks
@@ -44,11 +55,7 @@ export default function MenuNavBarCliente({ user }) {
                 <BoxMessage msm={"Tem Certeza Que Deseja Sair"} setController={settoggleBoxMessage} />
             )}
 
-            <button className={style.mobileToggle} onClick={() => setMobileOpen(!mobileOpen)}>
-                <BiDockLeft />
-            </button>
-
-            <div className={`${style.containerMenu} ${toggleMenuNavBar ? style.extends : style.shinks} ${mobileOpen ? style.mobileOpen : ''}`}>
+            <div className={`${style.containerMenu} ${toggleMenuNavBar ? style.extends : style.shinks}`}>
                 <div className={style.header}>
                     <div className={style.favicon}>
                         <img src={favicon} alt="Logo" />
@@ -56,7 +63,7 @@ export default function MenuNavBarCliente({ user }) {
                     </div>
                     <div className={style.BtnToggleMenu}>
                         <button onClick={() => settoggleMenuNavBar(!toggleMenuNavBar)}>
-                            <BiDockLeft size={25} />
+                            <RiLayoutLeftLine size={25} />
                         </button>
                     </div>
                 </div>
@@ -87,7 +94,7 @@ export default function MenuNavBarCliente({ user }) {
                     <nav>
                         <Link to={'#'} onClick={(e) => { e.preventDefault(); settoggleBoxMessage(true) }}>
                             <span className={style.icon}>
-                                <CiLogout />
+                                <RiLogoutBoxLine />
                             </span>
                             <span className={style.txt}>Sair</span>
                         </Link>

@@ -1,4 +1,4 @@
-import { GetRequest, PostRequest, PutRequest, DeleteRequest } from './resquests';
+import { GetRequest, PostRequest, PutRequest, DeleteRequest } from './requests';
 
 
 export async function createRecord(url, data) {

@@ -56,8 +56,8 @@ const columns = [
     { label: "ID", key: "roll" },
     { label: "Endereço", key: "address" },
     { label: "Cargo", key: "class" },
-    { label: "Data de Nascimento", key: "dob" },
     { label: "Telefone", key: "phone" },
+    { label: "Estado", key: "status" },
 ];
 
 export default function Funcionario() {
@@ -66,15 +66,6 @@ export default function Funcionario() {
         // Implement add employee logic
     };
 
-    const handleEdit = (employee) => {
-        console.log("Edit employee:", employee);
-        // Implement edit employee logic
-    };
-
-    const handleDelete = (employee) => {
-        console.log("Delete employee:", employee);
-        // Implement delete employee logic
-    };
 
     return (
         <div className="ContainerGeneral">
@@ -82,11 +73,13 @@ export default function Funcionario() {
             <main className="ContainerMain">
                 <DataTable
                     title="Funcionários List"
-                    data={employeesData}
+                    data={employeesData.map(e => ({
+                        ...e,
+                        status: Math.random() > 0.5 ? 'online' : 'offline',
+                        lastSeen: 'Há 2 horas'
+                    }))}
                     columns={columns}
                     onAdd={handleAdd}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
                     searchPlaceholder="Pesquisar por nome ou ID"
                 />
             </main>

@@ -3,7 +3,7 @@ import style from './Schedule.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiCalendar2Line, RiTimeLine, RiMapPin2Line } from 'react-icons/ri';
+import { RiCalendar2Line, RiTimeLine, RiMapPin2Line, RiBook3Line } from 'react-icons/ri';
 
 const scheduleData = [
     { time: '08:00 - 08:50', mon: 'Matemática', tue: 'Física', wed: 'TLP', thu: 'Português', fri: 'Inglês' },

@@ -31,7 +31,7 @@
 
 .gridCards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
     width: 100%;
 }
@@ -47,7 +47,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 2rem;
+    padding: 1.25rem 1rem;
     box-shadow: var(--shadow-soft);
     transition: all 0.3s ease;
 }
@@ -71,7 +71,7 @@
 }
 
 .chartContainer {
-    height: 350px;
+    height: 150px;
     width: 100%;
 }
 
@@ -97,6 +97,6 @@
     }
 
     .chartContainer {
-        height: 280px;
+        height: 130px;
     }
 }

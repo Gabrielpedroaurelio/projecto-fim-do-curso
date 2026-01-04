@@ -36,50 +36,37 @@
     --text-inverted: #ffffff;
 
     --radius-sm: 5px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    --radius-md: 5px;
+    --radius-lg: 5px;
 
     --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
     --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Dark Mode Overrides - Premium Sophisticated Dark Theme */
+/* Dark Mode Overrides - Google AI Studio (Gemini) Aesthetic */
 body.dark-mode {
-    /* Backgrounds - Deep, layered sophistication */
-    --bg-page: #0b0f19;
-    /* Rich dark navy-black with slight blue tint */
-    --bg-card: #141822;
-    /* Slightly elevated dark slate with warmth */
-    --bg-header: #0b0f19;
-    /* Matches page for seamless integration */
-    --bg-input: #1a1f2e;
-    /* Lighter input with subtle blue undertone */
-    --bg-sidebar: #141822;
-    /* Sidebar elevation matches cards */
-    --border-color: #1f2937;
-    /* Soft, barely-there borders */
+    /* Backgrounds - Deep neutral grey-black */
+    --bg-page: #131314;
+    --bg-card: #1e1f20;
+    --bg-header: #131314;
+    --bg-input: #0b0b0b;
+    --bg-sidebar: #1e1f20;
+    --border-color: #444746;
 
-    /* Text - Optimized for readability and hierarchy */
-    --text-main: #e8edf4;
-    /* Bright, crisp white with blue tint */
-    --text-muted: #9ca3af;
-    /* Warm gray for secondary text */
-    --text-inverted: #0f172a;
-    /* For bright buttons/badges */
+    /* Text - Crisp and professional */
+    --text-main: #e3e3e3;
+    --text-muted: #c4c7c5;
+    --text-inverted: #131314;
 
-    /* Adjusted tones for dark mode harmony */
-    --green-dark: #e8edf4;
-    /* Light text color */
-    --green-soft: #1a1f2e;
-    /* Subtle background variation */
-    --green-mint: #1f2937;
-    /* Darker accent tone */
+    /* Accent & Brand - Soft AI Blue */
+    --green-primay: #8ab4f8;
+    --green-soft: #1e1f20;
+    --green-mint: #3c4043;
+    --green-emarald: #8ab4f8;
 
-    /* Premium shadows - Depth and dimension */
-    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.4),
-        0 2px 6px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.5),
-        0 10px 20px rgba(0, 0, 0, 0.4);
+    /* Premium shadows for deep theme */
+    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 body {
@@ -104,15 +91,17 @@ body {
 }
 
 .ContainerMain {
-    margin-left: 250px;
-    transition: margin-left 0.3s ease;
+    margin-left: 230px;
+    padding: 0 2.5rem 2rem;
+    transition: all 0.3s ease;
+    min-height: 100vh;
 }
 
 .containelMainclient {
-    margin-left: 250px;
-    padding: 0;
-    /* Header handles its own padding */
-    transition: margin-left 0.3s ease;
+    margin-left: 52px;
+    /* Reduced from 250px used */
+    padding: 0 2rem 2rem;
+    transition: all 0.3s ease;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -123,13 +112,24 @@ body:has(.shinks) .containelMainclient {
     margin-left: 80px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
+/* Responsive Adjustments - Unified 1024px Breakpoint */
+@media (max-width: 1024px) {
 
     .ContainerMain,
     .containelMainclient {
         margin-left: 0 !important;
-        padding-top: 60px;
-        /* Space for fixed mobile header if needed */
+        padding: 5.5rem 1.25rem 2rem;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    body.sidebar-open .Sidebar,
+    body.sidebar-open [class*="containerMenu"] {
+        transform: translateX(0);
+        left: 0;
+        visibility: visible;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
     }
 }

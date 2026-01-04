@@ -74,8 +74,8 @@ const columns = [
     { label: "Roll", key: "roll" },
     { label: "Address", key: "address" },
     { label: "Class", key: "class" },
-    { label: "Date of Birth", key: "dob" },
     { label: "Phone", key: "phone" },
+    { label: "Estado", key: "status" },
 ];
 
 export default function Estudantes() {
@@ -84,15 +84,6 @@ export default function Estudantes() {
         // Implement add student logic
     };
 
-    const handleEdit = (student) => {
-        console.log("Edit student:", student);
-        // Implement edit student logic
-    };
-
-    const handleDelete = (student) => {
-        console.log("Delete student:", student);
-        // Implement delete student logic
-    };
 
     return (
         <div className="ContainerGeneral">
@@ -100,11 +91,13 @@ export default function Estudantes() {
             <main className="ContainerMain">
                 <DataTable
                     title="Students List"
-                    data={studentsData}
+                    data={studentsData.map(s => ({
+                        ...s,
+                        status: Math.random() > 0.5 ? 'online' : 'offline',
+                        lastSeen: 'Há 5 minutos'
+                    }))}
                     columns={columns}
                     onAdd={handleAdd}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
                     searchPlaceholder="Search by name or roll"
                 />
             </main>

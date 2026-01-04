@@ -1,19 +1,12 @@
 import { useState, useEffect } from 'react'
 import {
-    FaUserGraduate,
-    FaFileInvoice,
-    FaSpinner,
-    FaCircleCheck,
-    FaMagnifyingGlass,
-    FaBell,
-    FaRegMoon,
-    FaSun,
-    FaGear
-} from 'react-icons/fa6';
-import { BiSolidDashboard } from "react-icons/bi";
-import { BsBoxSeam, BsCart3 } from "react-icons/bs";
-import { FiMessageSquare, FiTrendingUp } from "react-icons/fi";
-import { RiBillLine } from "react-icons/ri";
+    RiSearchLine,
+    RiNotification3Line,
+    RiSunLine,
+    RiMoonLine,
+    RiMenu4Line,
+    RiCloseLine
+} from "react-icons/ri";
 
 import style from './Header.module.css'
 
@@ -34,6 +27,17 @@ export default function Header({ text1, text2 }) {
         }
     }, [])
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+    // Sync body class with sidebar state
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.body.classList.add('sidebar-open')
+        } else {
+            document.body.classList.remove('sidebar-open')
+        }
+    }, [isSidebarOpen])
+
     // Toggle theme function
     const toggleTheme = () => {
         const newTheme = !isDarkMode
@@ -50,20 +54,28 @@ export default function Header({ text1, text2 }) {
 
     return (
         <header className={style.Header}>
-            <div className={style.Breadcrumbs}>
-                {text1} / <span>{text2}</span>
+            <div className={style.HeaderLeftMobile}>
+                <button
+                    className={style.MenuToggle}
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                >
+                    {isSidebarOpen ? <RiCloseLine /> : <RiMenu4Line />}
+                </button>
+                <div className={style.Breadcrumbs}>
+                    {text1} / <span>{text2}</span>
+                </div>
             </div>
 
             <div className={style.HeaderActions}>
                 <div className={style.SearchBar}>
-                    <FaMagnifyingGlass />
+                    <RiSearchLine />
                     <input type="text" placeholder="Pesquisar..." />
                 </div>
                 <div className={style.ActionIcons}>
                     <button className={style.IconButton} onClick={toggleTheme} title={isDarkMode ? 'Modo Claro' : 'Modo Escuro'}>
-                        {isDarkMode ? <FaSun /> : <FaRegMoon />}
+                        {isDarkMode ? <RiSunLine /> : <RiMoonLine />}
                     </button>
-                    <button className={style.IconButton}><FaBell /></button>
+                    <button className={style.IconButton}><RiNotification3Line /></button>
                 </div>
                 <div className={style.UserProfileHeader}>
                     <div className={style.AvatarSmall}>GP</div>

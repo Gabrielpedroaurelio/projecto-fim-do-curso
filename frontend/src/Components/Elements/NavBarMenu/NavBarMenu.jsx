@@ -40,7 +40,7 @@ export default function NavBarMenu() {
                             </Link>
                         </li>
                         <li>
-                            <Link>
+                            <Link to={"/admin/library"}>
                                 <BsFolder />
                                 <span>Biblioteca</span>
                             </Link>
