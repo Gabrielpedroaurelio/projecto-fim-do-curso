@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 from .base import BaseModel
 from .academico import Turma
 
@@ -49,6 +50,12 @@ class Aluno(BaseModel):
     
     def __str__(self):
         return f"{self.nome_completo} - {self.numero_matricula}"
+
+    def save(self, *args, **kwargs):
+        # Se a senha não estiver criptografada
+        if self.senha_hash and not self.senha_hash.startswith('pbkdf2_sha256$'):
+            self.senha_hash = make_password(self.senha_hash)
+        super(Aluno, self).save(*args, **kwargs)
 
 
 class AlunoEncarregado(models.Model):

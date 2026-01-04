@@ -1,5 +1,6 @@
 from django.db import models
 from .base import BaseModel
+from django.contrib.auth.hashers import make_password
 
 
 class Cargo(BaseModel):
@@ -63,6 +64,12 @@ class Funcionario(BaseModel):
     def __str__(self):
         return f"{self.nome_completo} - {self.codigo_identificacao}"
 
+    def save(self, *args, **kwargs):
+        # Se a senha não estiver criptografada (não começa com o prefixo padrão do Django)
+        if self.senha_hash and not self.senha_hash.startswith('pbkdf2_sha256$'):
+            self.senha_hash = make_password(self.senha_hash)
+        super(Funcionario, self).save(*args, **kwargs)
+
 
 class Encarregado(BaseModel):
     """Responsáveis pelos alunos (Pais/Tutores)"""
@@ -90,6 +97,12 @@ class Encarregado(BaseModel):
     
     def __str__(self):
         return self.nome_completo
+
+    def save(self, *args, **kwargs):
+        # Se a senha não estiver criptografada
+        if self.senha_hash and not self.senha_hash.startswith('pbkdf2_sha256$'):
+            self.senha_hash = make_password(self.senha_hash)
+        super(Encarregado, self).save(*args, **kwargs)
 
 
 class CargoFuncionario(models.Model):

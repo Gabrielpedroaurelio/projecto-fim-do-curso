@@ -172,7 +172,7 @@ class Turma(BaseModel):
     id_classe = models.ForeignKey(Classe, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Classe')
     id_periodo = models.ForeignKey(Periodo, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Período')
     ano = models.CharField(null=True, blank=True, verbose_name='Ano',default=f"{str(datetime.date.year)}")
-    codigo_turma = models.CharField(max_length=50, unique=True, verbose_name='Código da Turma',default=f'Este campo será preenchido automaticamente')
+    codigo_turma = models.CharField(max_length=50, unique=True, verbose_name='Código da Turma')
     id_responsavel = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -188,5 +188,17 @@ class Turma(BaseModel):
         verbose_name_plural = 'Turmas'
         ordering = ['codigo_turma']
     
+    def save(self, *args, **kwargs):
+        if self.id_sala and self.id_curso and self.id_classe and self.id_periodo and self.ano:
+            sala = str(self.id_sala.numero_sala)
+            curso = self.id_curso.nome_curso[:2].upper()
+            classe = str(self.id_classe.nivel)
+            periodo = self.id_periodo.periodo[0].upper()
+            ano = str(self.ano)[-2:]
+            
+            self.codigo_turma = f"{sala}{curso}{classe}{periodo}{ano}"
+            
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.codigo_turma
