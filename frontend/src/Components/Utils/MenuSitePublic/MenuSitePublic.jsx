@@ -30,7 +30,7 @@ export default function MenuSitePublic() {
                 <Link to="/" className={styles.logoLink}>
                     <img src={favicon} alt="Logo" className={styles.favicon} />
                     <div className={styles.titleContainer}>
-                        <span className={styles.schoolName}>IP MAIOMBE</span>
+                        <span className={styles.schoolName}>Instituto Politécnico <br />Do Maiombe</span>
                     </div>
                 </Link>
             </div>
@@ -56,7 +56,7 @@ export default function MenuSitePublic() {
                             <Link to="/public/library" className={styles.navLink} onClick={() => setToggleMenu(false)}>Biblioteca</Link>
                         </li>
                         <li>
-                            <Link to="/public/site#sobre" className={styles.navLink} onClick={() => setToggleMenu(false)}>Sobre nós</Link>
+                            <Link to="/parent/auth" className={styles.navLink} onClick={() => setToggleMenu(false)}>Entrar Como Encarregado</Link>
                         </li>
                     </ul>
 
@@ -68,7 +68,7 @@ export default function MenuSitePublic() {
                             </Link>
                         ) : (
                             <Link to="/student/auth" className={styles.loginBtn}>
-                                Entrar
+                                Entrar Como Aluno
                             </Link>
                         )}
                     </div>

@@ -1,34 +1,33 @@
 import style from './AuthGeneral.module.css'
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
-import { createRecord, escapeHtml } from '../../../Services/ModelServices';
 import fundo_login from '../../../assets/images/backgroundlogin.png'
-import { useEffect } from 'react';
+import { useAuth } from '../../../Context/AuthContext';
+import { useState } from 'react';
 
-export default function AuthGeneral({ url, destination }) {
-    const { register, handleSubmit, formState: { errors } } = useForm()
+export default function AuthGeneral({ userType = 'aluno', destination = '/student/dashboard' }) {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const [loginError, setLoginError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    function onSubmit(data) {
+    async function onSubmit(data) {
+        setIsSubmitting(true);
+        setLoginError('');
+        const { email, password } = data;
 
-        const { email, password } = data
-        data = {
-            email: escapeHtml(email),
-            password: escapeHtml(password),
+        const result = await login(email, password, userType);
+
+        if (result.success) {
+            navigate(destination);
+        } else {
+            setLoginError(result.message || "Erro ao iniciar sessão.");
         }
-        console.log(data);
-
-
-        async () => {
-            const result = await createRecord(url, data)
-            if(result.success) navigator(destination)
-            console.log(result);
-        }
-
-
-
-
+        setIsSubmitting(false);
     }
+
     return (
         <>
             <div className={style.containerForm}>
@@ -40,13 +39,11 @@ export default function AuthGeneral({ url, destination }) {
                             </div>
                             <div className={style.mensage}>
                                 <h1>Olá,<br /> Bem-Vindo de Volta</h1>
-                                <small className=' text-gray-400'>Oi, bem-vindo de volta ao nosso sistema</small>
+                                <small className=' text-gray-400'>Oi, bem-vindo de volta ao nosso sistema ({userType === 'funcionario' ? 'Admin' : userType})</small>
                             </div>
 
                         </div>
-                        <form onSubmit={
-                            handleSubmit(onSubmit)
-                        }>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={style.inputController}>
 
                                 <input type="text" placeholder='E-mail'  {...register("email", {
@@ -74,13 +71,15 @@ export default function AuthGeneral({ url, destination }) {
                                 }
                             </div>
 
-
+                            {loginError && <p className="text-red-500 text-sm mb-2">{loginError}</p>}
 
                             <div className={style.forgotPassword}>
                                 <small>  <Link to='/admin/dashboards'>Esqueceu a senha?</Link></small>
                             </div>
                             <div className={style.inputController}>
-                                <button type='submit'>Iniciar Sessão</button>
+                                <button type='submit' disabled={isSubmitting}>
+                                    {isSubmitting ? 'A entrar...' : 'Iniciar Sessão'}
+                                </button>
                             </div>
                         </form>
                     </div>

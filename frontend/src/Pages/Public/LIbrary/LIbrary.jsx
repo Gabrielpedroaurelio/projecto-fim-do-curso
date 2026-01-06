@@ -17,7 +17,7 @@ const initialBooks = [
   { id: 6, title: 'CSS Secrets', author: 'Lea Verou', category: 'Tecnologia', recommended: false, cover: 'https://picsum.photos/seed/css/600/800' },
   { id: 7, title: 'Learning React', author: 'React Team', category: 'Tecnologia', recommended: true, cover: 'https://picsum.photos/seed/react/600/800' },
   { id: 8, title: 'Modern Physics', author: 'Phys Author', category: 'Educação', recommended: false, cover: 'https://picsum.photos/seed/physics/600/800' },
-  { id: 9, title: 'Mountains & Rivers', author: 'Geo Author', category: 'Geografia', recommended: false, cover: 'https://picsum.photos/seed/mountains/600/800' }
+  { id: 9, title: 'Mountains & Rivers', author: 'Geo Author', category: 'Geografia', recommended: true, cover: 'https://picsum.photos/seed/mountains/600/800' }
 ]
 
 const allCategories = ['Todas', 'Tecnologia', 'Fantasia', 'Educação', 'Geografia']

@@ -1,5 +1,5 @@
 import style from './ServicesSection.module.css';
-import { FaComputer, FaCalculator, FaUsers } from "react-icons/fa6";
+import { FaComputer, FaCalculator,FaNetworkWired } from "react-icons/fa6";
 import { BsGraphUpArrow } from "react-icons/bs";
 
 const courses = [
@@ -24,7 +24,7 @@ const courses = [
     {
         title: "Informática",
         description: "Fundamentos sólidos de tecnologia, programação e suporte técnico.",
-        icon: <FaUsers />,
+        icon: <FaNetworkWired />,
         glowColor: "rgba(138, 180, 248, 0.4)"
     }
 ];
@@ -46,9 +46,10 @@ export default function ServicesSection() {
                             </div>
                             <h3 className={style.cardTitle}>{course.title}</h3>
                             <p className={style.cardDescription}>{course.description}</p>
-                            <div className={style.cardFooter}>
+                          {/*  <div className={style.cardFooter}>
                                 <button className={style.learnMore}>Saiba mais</button>
                             </div>
+                            */}
                         </div>
                     ))}
                 </div>

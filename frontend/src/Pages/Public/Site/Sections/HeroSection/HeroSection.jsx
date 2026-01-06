@@ -21,12 +21,10 @@ export default function HeroSection() {
 
                 <div className={style.ctaGroup}>
                     <button className={style.primaryBtn}>
-                        Explorar Cursos
+                        Explorar Biblioteca
                         <FaArrowRight />
                     </button>
-                    <button className={style.secondaryBtn}>
-                        Saber mais
-                    </button>
+           
                 </div>
             </div>
 

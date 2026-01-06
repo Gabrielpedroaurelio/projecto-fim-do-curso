@@ -117,6 +117,7 @@
     /* Hide scrollbar for cleaner look */
     animation: fadeInUp 0.6s ease-out 0.1s forwards;
     opacity: 0;
+    padding-top: 10px;
 }
 
 .BooksByCategory .containerCategory::-webkit-scrollbar {
@@ -153,8 +154,9 @@
 }
 
 .BooksByCategory>div>.listEBooks {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));*/
+    flex-wrap: wrap;
     margin-top: 32px;
     gap: 24px;
     justify-items: center;

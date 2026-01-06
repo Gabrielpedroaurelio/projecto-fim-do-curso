@@ -6,11 +6,11 @@ export default function FooterSection() {
             <div className={style.Container}>
                 <div className={style.TopRow}>
                     <div className={style.Col}>
-                        <h3>IPM. <br />Maiombe</h3>
+                        <h3>Instituto Politécnico <br />Do Maiombe</h3>
                         <p className={style.Description}>
                             Excelência no ensino e formação profissional. Preparando o futuro de Angola, hoje.
                         </p>
-                        <p className={style.Description}>Tel: +244 912 345 678<br />Email: geral@ipm.edu.ao</p>
+                        <p className={style.Description}>Tel: +244 934 519 321<br />Email: ipm@gmail.com</p>
                     </div>
  
 
