@@ -161,38 +161,7 @@ body.dark-mode .containerMenu {
     display: none;
 }
 
-.usercontroller {
-    margin-top: auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background-color: var(--bg-input);
-    border-radius: var(--radius-md);
-    margin-bottom: 16px;
-    transition: all 0.3s;
-}
-
-.usercontroller img {
-    border-radius: var(--radius-sm);
-    background-color: var(--border-color);
-}
-
-.shinks .usercontroller {
-    padding: 8px;
-    justify-content: center;
-}
-
-.shinks .usercontroller div:last-child {
-    display: none;
-}
-
-.usercontroller div:last-child {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
+ 
 @media (max-width: 1024px) {
     .containerMenu {
         left: -100%;
@@ -215,21 +184,4 @@ body.dark-mode .containerMenu {
 
 .mobileToggle {
     display: none;
-}
-
-.usercontroller strong {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.usercontroller span {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+} 

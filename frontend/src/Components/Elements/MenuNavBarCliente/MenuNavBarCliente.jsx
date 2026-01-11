@@ -79,7 +79,9 @@ export default function MenuNavBarCliente({ user }) {
                         ))}
                     </nav>
                 </div>
+                {
 
+                /*
                 <div className={style.usercontroller}>
                     <div>
                         <img src={favicon} alt="Avatar" width={30} />
@@ -89,7 +91,7 @@ export default function MenuNavBarCliente({ user }) {
                         <span>gabrielpedroaurelio@gmail</span>
                     </div>
                 </div>
-
+                */}
                 <div className={style.menu}>
                     <nav>
                         <Link to={'#'} onClick={(e) => { e.preventDefault(); settoggleBoxMessage(true) }}>

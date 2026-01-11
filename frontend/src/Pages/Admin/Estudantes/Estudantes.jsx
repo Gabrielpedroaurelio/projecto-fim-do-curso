@@ -90,7 +90,7 @@ export default function Estudantes() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <DataTable
-                    title="Students List"
+                    title="Lista de Estudantes"
                     data={studentsData.map(s => ({
                         ...s,
                         status: Math.random() > 0.5 ? 'online' : 'offline',

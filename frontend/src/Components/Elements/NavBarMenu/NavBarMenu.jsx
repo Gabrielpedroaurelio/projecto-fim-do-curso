@@ -11,6 +11,7 @@ import { BsCart3, BsFolder, BsHouse, BsPeople } from "react-icons/bs";
 import { FiTrendingUp } from "react-icons/fi";
 import { RiBillLine } from "react-icons/ri";
 import { CiFileOn, CiSettings } from 'react-icons/ci';
+import favicon from '../../../assets/images/favicon.ico'
 
 export default function NavBarMenu() {
 
@@ -19,8 +20,8 @@ export default function NavBarMenu() {
         <>
             <aside className={style.Sidebar}>
                 <div className={style.Logo}>
-                    <div className={style.LogoIcon}><FaAtom /></div>
-                    <h2>Gestão Escolar</h2>
+                    <div className={style.LogoIcon}><img src={favicon} alt="" /></div>
+                    <h2>Gestão de Declarações</h2>
                 </div>
 
                 <div className={style.MenuSection}>
@@ -109,13 +110,7 @@ export default function NavBarMenu() {
 
                     </ul >
                 </div >
-                <div className={style.UserProfileMini}>
-                    <div className={style.Avatar}>GP</div>
-                    <div className={style.Info}>
-                        <h4>Gabriel Pedro</h4>
-                        <span>admin@escola.com</span>
-                    </div>
-                </div>
+           
             </aside >
 
 

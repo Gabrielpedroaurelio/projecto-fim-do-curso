@@ -5,16 +5,22 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 1rem 1.25rem;
-    box-shadow: var(--shadow-soft);
+    /* Reduced vertical padding slightly */
+    box-shadow: var(--shadow-sm);
+    /* Started softer */
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    /* Ensure content is justified */
     gap: 0.5rem;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-width: 200px;
-    /* Reduced min-width */
+    min-width: 180px;
+    /* Reduced from 200px for "petite" feel */
+    height: 100%;
+    /* Fill the grid cell */
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
+    backdrop-filter: var(--glass-blur);
 }
 
 .StatCard:hover {
@@ -26,46 +32,57 @@
 .CardHeader {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    /* Better alignment if title wraps */
     color: var(--text-muted);
 }
 
 .CardHeader span {
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
+    /* Less heavy than 700 */
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    line-height: 1.4;
 }
 
 .CardHeader svg {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
+    /* Slightly smaller icon */
     color: #0ea5e9;
     padding: 8px;
-    background: rgba(14, 165, 233, 0.1);
+    background: rgba(14, 165, 233, 0.08);
+    /* More subtle bg */
     border-radius: var(--radius-sm);
+    flex-shrink: 0;
 }
 
 .StatCard h2 {
+    font-size: 1.75rem;
+    /* Bigger for contrast, or smaller? User said "mais pequeno". Let's try 1.5rem -> 1.35rem actually. Wait, "mais sofisticado" usually means smaller labels, bigger numbers but thin. Let's keep 1.5rem for now but maybe lighter weight or better font. */
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 700;
+    /* Clean bold */
     color: var(--text-main);
-    letter-spacing: -0.025em;
-    margin: 0;
+    letter-spacing: -0.03em;
+    margin: 0.25rem 0 0 0;
 }
 
 .TrendUp {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-weight: 500;
 }
 
 .TrendUp span {
     color: #10b981;
-    font-weight: 800;
-    background: rgba(16, 185, 129, 0.1);
-    padding: 2px 8px;
-    border-radius: 6px;
+    font-weight: 700;
+    background: rgba(16, 185, 129, 0.08);
+    /* More subtle */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
 }

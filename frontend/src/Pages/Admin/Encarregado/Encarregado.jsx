@@ -81,7 +81,7 @@ export default function Encarregado() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <DataTable
-                    title="Encarregados List"
+                    title="Lista de Encarregados"
                     data={guardiansData.map(g => ({
                         ...g,
                         status: Math.random() > 0.5 ? 'online' : 'offline',

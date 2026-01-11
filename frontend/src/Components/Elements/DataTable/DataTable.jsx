@@ -45,7 +45,7 @@ export default function DataTable({
                 </div>
                 {onAdd && (
                     <button className={style.AddButton} onClick={onAdd}>
-                        + Add {title.split(' ')[0]}
+                        Exportar {title.split(' ')[2]}
                     </button>
                 )}
             </div>
@@ -79,7 +79,7 @@ export default function DataTable({
                         <thead>
                             <tr>
                                 <th>
-                                    <input type="checkbox" />
+                                
                                 </th>
                                 {columns.map((col, index) => (
                                     <th key={index}>{col.label}</th>
@@ -92,7 +92,7 @@ export default function DataTable({
                                 currentItems.map((item, index) => (
                                     <tr key={index}>
                                         <td>
-                                            <input type="checkbox" />
+                                         
                                         </td>
                                         {columns.map((col, colIndex) => (
                                             <td key={colIndex}>

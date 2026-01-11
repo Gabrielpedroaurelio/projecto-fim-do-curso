@@ -112,7 +112,7 @@ export default function YasminChat() {
                     {messages.length === 0 ? (
                         <div className={style.emptyState}>
                             <div className={style.logoLarge}>
-                                <FaAtom size={64} color="#4285f4" />
+                                <FaAtom size={64} />
                             </div>
                             <div className={style.greeting}>
                                 <h2>Olá, Humano</h2>

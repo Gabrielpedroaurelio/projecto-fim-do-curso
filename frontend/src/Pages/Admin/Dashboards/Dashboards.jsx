@@ -43,7 +43,7 @@ const activities_recently = [
     {
         id: 1,
         Nome: "Gabriel Aurelio",
-        Curso: "Infromaticatica",
+        Curso: "Informatica de Gestão",
         Descrição: "Solicitação",
         TIPO: "Declaração",
         Data: "2026-01-05",
@@ -52,18 +52,18 @@ const activities_recently = [
     },
     {
         id: 2,
-        Nome: "Gabriel Aurelio",
-        Curso: "Infromaticatica",
+        Nome: "Aguinaldo Arnaldo",
+        Curso: "Informatica de Gestao",
         Descrição: "Solicitação",
         TIPO: "Declaração",
         Data: "2026-01-05",
-        Status: "Concluido",
+        Status: "Concluid",
 
     },
     {
         id: 3,
-        Nome: "Gabriel Aurelio",
-        Curso: "Infromaticatica",
+        Nome: "Leonel Antonio",
+        Curso: "Informatica",
         Descrição: "Solicitação",
         TIPO: "Declaração",
         Data: "2026-01-05",
@@ -72,8 +72,8 @@ const activities_recently = [
     },
     {
         id: 4,
-        Nome: "Gabriel Aurelio",
-        Curso: "Infromaticatica",
+        Nome: "Ernesto Buka",
+        Curso: "Informatica",
         Descrição: "Solicitação",
         TIPO: "Declaração",
         Data: "2026-01-05",

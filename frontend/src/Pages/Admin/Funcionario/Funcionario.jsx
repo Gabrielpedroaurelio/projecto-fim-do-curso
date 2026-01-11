@@ -72,7 +72,7 @@ export default function Funcionario() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <DataTable
-                    title="Funcionários List"
+                    title="Lista de Funcionários"
                     data={employeesData.map(e => ({
                         ...e,
                         status: Math.random() > 0.5 ? 'online' : 'offline',
