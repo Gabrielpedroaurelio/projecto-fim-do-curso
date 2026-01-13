@@ -42,9 +42,9 @@ export default function Solicitacao() {
     })
 
     const tabs = [
-        { id: 'boletim', label: 'Boletim', icon: '📋' },
-        { id: 'declaracao', label: 'Declaração', icon: '📄' },
-        { id: 'certificado', label: 'Certificado', icon: '🎓' }
+        { id: 'boletim', label: 'Boletim', icon: '' },
+        { id: 'declaracao', label: 'Declaração', icon: '' },
+        { id: 'certificado', label: 'Certificado', icon: '' }
     ]
 
     const handleRequest = () => {
@@ -152,7 +152,7 @@ export default function Solicitacao() {
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
-                <Header text1={"Documentos"} text2={"Solicitações"} />
+                <Header text1={"Documentos"} text2={"Solicitações"} onSearch={setSearchTerm} />
 
                 <div className={style.SolicitacaoContainer}>
                     {/* Tabs Navigation */}
@@ -211,7 +211,7 @@ export default function Solicitacao() {
                                 <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" />
+
                                         </th>
                                         <th>Estudante</th>
                                         {activeTab === 'boletim' && <th>Classe</th>}
@@ -229,7 +229,7 @@ export default function Solicitacao() {
                                         currentData.map((item) => (
                                             <tr key={item.id}>
                                                 <td>
-                                                    <input type="checkbox" />
+
                                                 </td>
                                                 <td>
                                                     <div className={style.StudentCell}>
@@ -386,9 +386,7 @@ export default function Solicitacao() {
                                             required
                                         >
                                             <option value="">Selecione</option>
-                                            <option value="7ª Classe">7ª Classe</option>
-                                            <option value="8ª Classe">8ª Classe</option>
-                                            <option value="9ª Classe">9ª Classe</option>
+
                                             <option value="10ª Classe">10ª Classe</option>
                                             <option value="11ª Classe">11ª Classe</option>
                                             <option value="12ª Classe">12ª Classe</option>
@@ -406,10 +404,10 @@ export default function Solicitacao() {
                                             required
                                         >
                                             <option value="">Selecione</option>
-                                            <option value="Ciências">Ciências</option>
-                                            <option value="Letras">Letras</option>
-                                            <option value="Ensino Médio">Ensino Médio</option>
-                                            <option value="Técnico">Técnico</option>
+                                            <option value="Informática de Gestão">Informática de Gestão</option>
+                                            <option value="Contabilidade de Gestão">Contabilidade de Gestão</option>
+                                            <option value="Gestão Empresarial">Gestão Empresarial</option>
+                                            <option value="Informática">Informática</option>
                                         </select>
                                     </div>
                                 </div>

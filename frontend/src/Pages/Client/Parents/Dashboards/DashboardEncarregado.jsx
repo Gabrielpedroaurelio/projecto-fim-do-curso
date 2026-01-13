@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './DashboardEncarregado.module.css';
 
 // padrão para todas as paginas
@@ -9,9 +9,10 @@ import Cards from '../../../../Components/Elements/Cards/Cards'
 import CardsDocments from '../../../../Components/Elements/CardsDocuments/CardsDocuments';
 import { RiUser3Line, RiBillLine, RiCalendarCheckLine, RiNotification3Line, RiFileList3Line } from 'react-icons/ri'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const childrenPerformance = [
   { name: 'Jan', media: 14.5 },
@@ -23,6 +24,26 @@ const childrenPerformance = [
 ];
 
 const DashboardEncarregado = () => {
+  const { user } = useAuth();
+  const [educandos, setEducandos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEducandos = async () => {
+      try {
+        if (user?.id) {
+          const response = await api.get(`/encarregados/${user.id}/educandos/`);
+          setEducandos(response.data);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar educandos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEducandos();
+  }, [user]);
+
   return (
     <div className='containelGeralclient'>
       <MenuNavBarCliente user={'parent'} />
@@ -31,7 +52,7 @@ const DashboardEncarregado = () => {
 
         <div className={style.dashboardContainer}>
           <header className={style.welcomeSection}>
-            <h1>Bem-vindo, Sr. Gabriel</h1>
+            <h1>Bem-vindo, Sr(a). {user?.nome?.split(' ')[0] || 'Encarregado'}</h1>
             <p>Acompanhe o percurso académico e as notificações dos seus educandos de forma centralizada.</p>
           </header>
 
@@ -39,7 +60,7 @@ const DashboardEncarregado = () => {
             <Cards
               icon={<RiUser3Line />}
               title="Educandos Ativos"
-              value="02 Alunos"
+              value={loading ? "..." : `${String(educandos.length).padStart(2, '0')} Alunos`}
               value_percentual={0}
             />
             <Cards
@@ -105,3 +126,5 @@ const DashboardEncarregado = () => {
 };
 
 export default DashboardEncarregado;
+
+

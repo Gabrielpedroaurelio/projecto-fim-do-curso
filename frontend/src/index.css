@@ -5,8 +5,8 @@
     /* Admin Color Palette - Professional Blue/Sky */
     --primary: #0ea5e9;
     --primary-hover: #0284c7;
-    --secondary: #10b981;
-    --secondary-hover: #059669;
+    --secondary: #6366f1;
+    --secondary-hover: #4f46e5;
     --bg-main: #f8fafc;
     --bg-card: rgba(255, 255, 255, 0.9);
     /* Slightly more opaque for cleanliness */
@@ -16,7 +16,7 @@
 
     /* Accents */
     --accent-indigo: #0ea5e9;
-    --accent-emerald: #10b981;
+    --accent-emerald: #0ea5e9;
     --accent-rose: #f43f5e;
     --accent-amber: #f59e0b;
 

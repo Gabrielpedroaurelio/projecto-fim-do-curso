@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import style from './Dashboards.module.css'
 import '../../../assets/style/global.style.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
@@ -7,16 +8,12 @@ import { FaCircleCheck, FaFileInvoice, FaMagnifyingGlass, FaUserGraduate } from 
 import { RiBillLine } from 'react-icons/ri'
 
 // IMPORTAÇ~OES PARA OS GRAFICOS
-
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 
-/*
-DADOS FICTICIOS PARA OS GRAFICOS
-*/
-
+/* DADOS FICTICIOS */
 const performanceData = [
     { subject: 'Vendas', A: 120, fullMark: 150 },
     { subject: 'Campanha', A: 98, fullMark: 150 },
@@ -40,59 +37,31 @@ const revenueData = [
     { name: 'Dez', value: 4200 },
 ];
 const activities_recently = [
-    {
-        id: 1,
-        Nome: "Gabriel Aurelio",
-        Curso: "Informatica de Gestão",
-        Descrição: "Solicitação",
-        TIPO: "Declaração",
-        Data: "2026-01-05",
-        Status: "Concluido",
-
-    },
-    {
-        id: 2,
-        Nome: "Aguinaldo Arnaldo",
-        Curso: "Informatica de Gestao",
-        Descrição: "Solicitação",
-        TIPO: "Declaração",
-        Data: "2026-01-05",
-        Status: "Concluid",
-
-    },
-    {
-        id: 3,
-        Nome: "Leonel Antonio",
-        Curso: "Informatica",
-        Descrição: "Solicitação",
-        TIPO: "Declaração",
-        Data: "2026-01-05",
-        Status: "Concluido",
-
-    },
-    {
-        id: 4,
-        Nome: "Ernesto Buka",
-        Curso: "Informatica",
-        Descrição: "Solicitação",
-        TIPO: "Declaração",
-        Data: "2026-01-05",
-        Status: "Concluido",
-
-    },
+    { id: 1, Nome: "Gabriel Aurelio", Curso: "Informatica de Gestão", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
+    { id: 2, Nome: "Aguinaldo Arnaldo", Curso: "Informatica de Gestao", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
+    { id: 3, Nome: "Leonel Antonio", Curso: "Informatica", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
+    { id: 4, Nome: "Ernesto Buka", Curso: "Informatica", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
 ]
-// FIM DOS DADOS PARA O GRAFICO
+
 export default function Dashboards() {
+    const [searchTerm, setSearchTerm] = useState('')
+
+    const filteredActivities = activities_recently.filter(activity =>
+        activity.Nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.Curso.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.TIPO.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
     return (
         <div className={'ContainerGeneral'}>
             <NavBarMenu />
             <main className={'ContainerMain'}>
-                <Header text1={"Resumo"} text2={"Dashboard"} />
+                <Header text1={"Resumo"} text2={"Dashboard"} onSearch={setSearchTerm} />
                 <div className={style.GridCards}>
-                    <Cards icon={<FaFileInvoice />} title={"Total Solicitações"} value={"8,456"} value_percentual={22.2} />
-                    <Cards icon={<FaCircleCheck />} value_percentual={"104.5"} title={"Declarações Emitidas"} value={"4,450"} />
-                    <Cards icon={<FaUserGraduate />} title={"Novos Alunos"} value_percentual={12.3} value={"34,567"} />
-                    <Cards icon={<RiBillLine />} title={"Receita Total"} value={"Kz 80,768"} value_percentual={14.8} />
+                    <Cards icon={<FaFileInvoice size={40} />} title={"Total Solicitações"} value={"8,456"} value_percentual={22.2} />
+                    <Cards icon={<FaCircleCheck size={40} />} value_percentual={"104.5"} title={"Declarações Emitidas"} value={"4,450"} />
+                    <Cards icon={<FaUserGraduate size={40} />} title={"Novos Alunos"} value_percentual={12.3} value={"34,567"} />
+                    <Cards icon={<RiBillLine size={40} />} title={"Receita Total"} value={"Kz 80,768"} value_percentual={14.8} />
                 </div>
                 <div className={style.ChartsRow}>
                     <div className={style.RevenueChart}>
@@ -110,24 +79,31 @@ export default function Dashboards() {
                         <div className="h-[150px] w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={revenueData}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
                                     <Tooltip
-                                        cursor={{ fill: '#f8fafc' }}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        cursor={{ fill: 'var(--bg-input)' }}
+                                        contentStyle={{
+                                            borderRadius: '12px',
+                                            border: '1px solid var(--border-color)',
+                                            backgroundColor: 'var(--bg-card)',
+                                            color: 'var(--text-main)',
+                                            boxShadow: 'var(--shadow-hover)'
+                                        }}
+                                        itemStyle={{ color: 'var(--primary)' }}
                                     />
                                     <Bar
                                         dataKey="value"
                                         fill="url(#colorRevenue)"
-                                        radius={[4, 4, 0, 0]}
+                                        radius={[6, 6, 0, 0]}
                                         barSize={20}
                                         animationDuration={1500}
                                     />
                                     <defs>
                                         <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#0ea5e9" stopOpacity={1} />
-                                            <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0.6} />
+                                            <stop offset="0%" stopColor="var(--primary)" stopOpacity={1} />
+                                            <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.6} />
                                         </linearGradient>
                                     </defs>
                                 </BarChart>
@@ -142,18 +118,25 @@ export default function Dashboards() {
                         <div className="h-[150px] w-full flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart outerRadius={60} data={performanceData}>
-                                    <PolarGrid stroke="#e2e8f0" />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 11 }} />
+                                    <PolarGrid stroke="var(--border-color)" />
+                                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
                                     <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="transparent" />
                                     <Radar
                                         name="Desempenho"
                                         dataKey="A"
-                                        stroke="#0ea5e9"
+                                        stroke="var(--primary)"
                                         strokeWidth={2}
-                                        fill="#0ea5e9"
+                                        fill="var(--primary)"
                                         fillOpacity={0.2}
                                     />
-                                    <Tooltip />
+                                    <Tooltip
+                                        contentStyle={{
+                                            borderRadius: '12px',
+                                            border: '1px solid var(--border-color)',
+                                            backgroundColor: 'var(--bg-card)',
+                                            color: 'var(--text-main)'
+                                        }}
+                                    />
                                 </RadarChart>
                             </ResponsiveContainer>
                         </div>
@@ -164,7 +147,12 @@ export default function Dashboards() {
                         <h3>Atividades Recentes</h3>
                         <div className={style.SearchBarSmall}>
                             <FaMagnifyingGlass />
-                            <input type="text" placeholder="Pesquisar..." />
+                            <input
+                                type="text"
+                                placeholder="Pesquisar..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
                         </div>
                     </div>
 
@@ -181,34 +169,33 @@ export default function Dashboards() {
                                 </tr>
                             </thead>
                             <tbody>
-
-
-                                {
-                                    activities_recently.map((activity) => (
-                                        <tr key={activity.id}>
-                                            <td>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-                                                    <span>{activity.Nome}</span>
-                                                </div>
-                                            </td>
-                                            <td>{activity.Curso}</td>
-                                            <td>{activity.Descrição}</td>
-                                            <td>{activity.TIPO}</td>
-                                            <td>2025-09-02</td>
-                                            <td><span className={style.StatusBadgeBlue}>{activity.Status}</span></td>
-                                        </tr>
-
-                                    ))
-                                }
-
-
+                                {filteredActivities.map((activity) => (
+                                    <tr key={activity.id}>
+                                        <td>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-8 h-8 rounded-full bg-gray-200"></div>
+                                                <span>{activity.Nome}</span>
+                                            </div>
+                                        </td>
+                                        <td>{activity.Curso}</td>
+                                        <td>{activity.Descrição}</td>
+                                        <td>{activity.TIPO}</td>
+                                        <td>2025-09-02</td>
+                                        <td><span className={style.StatusBadgeBlue}>{activity.Status}</span></td>
+                                    </tr>
+                                ))}
+                                {filteredActivities.length === 0 && (
+                                    <tr>
+                                        <td colSpan="6" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                                            Nenhum resultado encontrado para "{searchTerm}"
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </main>
-
         </div>
     )
 }

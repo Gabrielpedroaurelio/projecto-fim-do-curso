@@ -49,7 +49,7 @@ const AskStudent = () => {
                   <option value="matriz">Declaração de Matrícula</option>
                   <option value="boletim">Boletim Trimestral</option>
                   <option value="certificado">Certificado de Habilitações</option>
-                  <option value="transferencia">Guia de Transferência</option>
+             
                 </select>
               </div>
 

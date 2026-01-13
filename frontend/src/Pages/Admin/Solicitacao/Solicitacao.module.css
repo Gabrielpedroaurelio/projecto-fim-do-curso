@@ -9,7 +9,7 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .TabButton {
@@ -62,7 +62,7 @@
     justify-content: space-between;
     align-items: flex-start;
     padding: 2rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
     background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
 }
 
@@ -89,8 +89,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: white;
-    border: 2px solid #0ea5e9;
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
     border-radius: var(--radius-md);
     color: #0ea5e9;
     font-weight: 600;
@@ -110,7 +110,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border: none;
     border-radius: var(--radius-md);
     color: white;
@@ -175,7 +175,7 @@
     align-items: center;
     gap: 0.5rem;
     background: var(--bg-input);
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.75rem 1rem;
     cursor: pointer;
@@ -211,8 +211,8 @@
 }
 
 .Table thead tr {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-bottom: 2px solid #e2e8f0;
+    background: var(--bg-input);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .Table th {
@@ -226,7 +226,7 @@
 }
 
 .Table tbody tr {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.2s ease;
 }
 
@@ -250,7 +250,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
     display: flex;
     align-items: center;
@@ -272,8 +272,8 @@
 }
 
 .StatusApproved {
-    background: #d1fae5;
-    color: #065f46;
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--primary);
 }
 
 .StatusPending {
@@ -399,8 +399,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    border-top: 1px solid #e2e8f0;
-    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-input);
 }
 
 .Pagination {
@@ -477,7 +477,8 @@
 }
 
 .ModalContent {
-    background: white;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     max-width: 600px;
@@ -613,7 +614,7 @@
 .SubmitButton {
     flex: 1;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border: none;
     border-radius: var(--radius-md);
     color: white;

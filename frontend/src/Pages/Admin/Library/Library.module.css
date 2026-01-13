@@ -33,7 +33,7 @@
 }
 
 .SearchBox input:focus {
-    border-color: var(--green-emarald);
+    border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(138, 180, 248, 0.1);
     outline: none;
 }
@@ -43,7 +43,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: var(--green-emarald);
+    background: var(--primary);
     color: var(--text-inverted);
     border-radius: var(--radius-md);
     border: none;
@@ -290,7 +290,7 @@
 .InputGroup input:focus,
 .InputGroup select:focus,
 .InputGroup textarea:focus {
-    border-color: var(--green-emarald);
+    border-color: var(--primary);
     background: var(--bg-card);
     outline: none;
     box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.1);
@@ -304,7 +304,7 @@
 }
 
 .InputGroup input[type="file"]:hover {
-    border-color: var(--green-emarald);
+    border-color: var(--primary);
     background: rgba(138, 180, 248, 0.05);
 }
 
@@ -334,7 +334,7 @@
 
 .SubmitBtn {
     padding: 0.75rem 2rem;
-    background: var(--green-emarald);
+    background: var(--primary);
     color: var(--text-inverted);
     border: none;
     border-radius: var(--radius-sm);
@@ -344,7 +344,7 @@
 }
 
 .SubmitBtn:hover {
-    background: #7aa3f7;
+    background: var(--primary-dark);
     transform: translateY(-1px);
 }
 

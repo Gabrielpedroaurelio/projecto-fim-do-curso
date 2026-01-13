@@ -1,63 +1,17 @@
+import { useState } from 'react'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import DataTable from '../../../Components/Elements/DataTable/DataTable'
+import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 
 // Sample data - replace with real data from API
 const guardiansData = [
-    {
-        name: "António Manuel",
-        initials: "AM",
-        roll: "#P01",
-        address: "Luanda, Talatona",
-        class: "Pai",
-        dob: "20/05/1975",
-        phone: "+244 912345678"
-    },
-    {
-        name: "Isabel Fernandes",
-        initials: "IF",
-        roll: "#P02",
-        address: "Luanda, Viana",
-        class: "Mãe",
-        dob: "14/08/1980",
-        phone: "+244 923456789"
-    },
-    {
-        name: "Francisco Neto",
-        initials: "FN",
-        roll: "#P03",
-        address: "Benguela, Centro",
-        class: "Pai",
-        dob: "30/01/1978",
-        phone: "+244 934567890"
-    },
-    {
-        name: "Beatriz Alves",
-        initials: "BA",
-        roll: "#P04",
-        address: "Huambo, Cidade Alta",
-        class: "Mãe",
-        dob: "12/11/1983",
-        phone: "+244 945678901"
-    },
-    {
-        name: "Miguel Rodrigues",
-        initials: "MR",
-        roll: "#P05",
-        address: "Luanda, Kilamba",
-        class: "Tutor",
-        dob: "25/06/1972",
-        phone: "+244 956789012"
-    },
-    {
-        name: "Sofia Carvalho",
-        initials: "SC",
-        roll: "#P06",
-        address: "Luanda, Morro Bento",
-        class: "Mãe",
-        dob: "08/03/1985",
-        phone: "+244 967890123"
-    },
+    { name: "António Manuel", initials: "AM", roll: "#P01", address: "Luanda, Talatona", class: "Pai", dob: "20/05/1975", phone: "+244 912345678" },
+    { name: "Isabel Fernandes", initials: "IF", roll: "#P02", address: "Luanda, Viana", class: "Mãe", dob: "14/08/1980", phone: "+244 923456789" },
+    { name: "Francisco Neto", initials: "FN", roll: "#P03", address: "Benguela, Centro", class: "Pai", dob: "30/01/1978", phone: "+244 934567890" },
+    { name: "Beatriz Alves", initials: "BA", roll: "#P04", address: "Huambo, Cidade Alta", class: "Mãe", dob: "12/11/1983", phone: "+244 945678901" },
+    { name: "Miguel Rodrigues", initials: "MR", roll: "#P05", address: "Luanda, Kilamba", class: "Tutor", dob: "25/06/1972", phone: "+244 956789012" },
+    { name: "Sofia Carvalho", initials: "SC", roll: "#P06", address: "Luanda, Morro Bento", class: "Mãe", dob: "08/03/1985", phone: "+244 967890123" },
 ];
 
 const columns = [
@@ -70,18 +24,20 @@ const columns = [
 ];
 
 export default function Encarregado() {
+    const [searchTerm, setSearchTerm] = useState('')
+
     const handleAdd = () => {
         console.log("Add guardian clicked");
-        // Implement add guardian logic
     };
-
 
     return (
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
+                <Header text1={"Administração"} text2={"Lista de Encarregados"} onSearch={setSearchTerm} />
                 <DataTable
                     title="Lista de Encarregados"
+                    externalSearchTerm={searchTerm}
                     data={guardiansData.map(g => ({
                         ...g,
                         status: Math.random() > 0.5 ? 'online' : 'offline',

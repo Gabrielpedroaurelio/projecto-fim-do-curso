@@ -121,7 +121,7 @@ body.dark-mode .Sidebar::-webkit-scrollbar-thumb {
     margin-left: auto;
 }
 
- 
+
 
 @media (max-width: 1024px) {
     .Sidebar {
@@ -131,5 +131,11 @@ body.dark-mode .Sidebar::-webkit-scrollbar-thumb {
         z-index: 1001;
         /* Above everything on mobile */
         transition: transform 0.3s ease, visibility 0.3s;
+    }
+
+    :global(body.sidebar-open) .Sidebar {
+        transform: translateX(0);
+        visibility: visible;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
     }
 }

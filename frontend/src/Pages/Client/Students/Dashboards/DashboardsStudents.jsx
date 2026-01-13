@@ -43,32 +43,32 @@ const DashboardsStudents = () => {
         <Header text1="Estudante" text2="Dashboard" />
         <div className={`${style.dashboardContainer} ${isLoaded ? style.loaded : ''}`}>
           <header className={style.welcomeSection}>
-            <h1>Bem-vindo de volta, Gabriel! 👋</h1>
-            <p>Seu progresso acadêmico está excelente hoje.</p>
+            <h1>Bem-vindo de volta, [Aluno logado]</h1>
+            <p>Acompanhe seu progresso acadêmico.</p>
           </header>
 
           <div className={style.scrollWrapper}>
             <div className={style.gridCards}>
               <Cards
-                icon={<RiLineChartLine />}
+                icon={<RiLineChartLine size={30} />}
                 title="Média Geral"
                 value="15.8"
                 value_percentual={4.2}
               />
               <Cards
-                icon={<RiPieChartLine />}
+                icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value="96.5%"
                 value_percentual={1.5}
               />
               <Cards
-                icon={<RiArticleLine />}
+                icon={<RiArticleLine size={30} />}
                 title="Provas Agendadas"
                 value="2 Próximas"
                 value_percentual={0}
               />
               <Cards
-                icon={<RiFileList3Line />}
+                icon={<RiFileList3Line size={30} />}
                 title="Trabalhos"
                 value="4 Pendentes"
                 value_percentual={20}
@@ -140,13 +140,13 @@ const DashboardsStudents = () => {
             </div>
             <div className={style.quickAccessGrid}>
               <div className={style.revealItem}>
-                <CardsDocments text="Declaração" icon={<RiFileList3Line />} url="/student/ask" />
+                <CardsDocments text="Declaração" icon={<RiFileList3Line size={50} />} url="/student/ask" />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Certificado" icon={<RiShieldUserLine />} url="/student/ask" />
+                <CardsDocments text="Certificado" icon={<RiShieldUserLine size={50} />} url="/student/ask" />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Boletim" icon={<RiCalendarEventLine />} url="/student/document" />
+                <CardsDocments text="Boletim" icon={<RiCalendarEventLine size={50} />} url="/student/document" />
               </div>
             </div>
           </section>

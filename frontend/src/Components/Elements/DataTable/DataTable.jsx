@@ -10,16 +10,19 @@ export default function DataTable({
     onAdd,
     onEdit,
     onDelete,
-    searchPlaceholder = "Search by name or roll"
+    searchPlaceholder = "Search by name or roll",
+    externalSearchTerm = ""
 }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const [filterDays, setFilterDays] = useState(30);
 
+    const activeSearchTerm = externalSearchTerm || searchTerm;
+
     // Filter data based on search term
     const filteredData = data.filter(item => {
-        const searchLower = searchTerm.toLowerCase();
+        const searchLower = activeSearchTerm.toLowerCase();
         return columns.some(col => {
             const value = item[col.key];
             return value && value.toString().toLowerCase().includes(searchLower);
@@ -59,7 +62,7 @@ export default function DataTable({
                             <input
                                 type="text"
                                 placeholder={searchPlaceholder}
-                                value={searchTerm}
+                                value={activeSearchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
@@ -79,7 +82,7 @@ export default function DataTable({
                         <thead>
                             <tr>
                                 <th>
-                                
+
                                 </th>
                                 {columns.map((col, index) => (
                                     <th key={index}>{col.label}</th>
@@ -92,7 +95,7 @@ export default function DataTable({
                                 currentItems.map((item, index) => (
                                     <tr key={index}>
                                         <td>
-                                         
+
                                         </td>
                                         {columns.map((col, colIndex) => (
                                             <td key={colIndex}>

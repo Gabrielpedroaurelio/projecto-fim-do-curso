@@ -131,6 +131,12 @@ body.dark-mode .Header {
     gap: 12px;
 }
 
+.NotificationWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .IconButton {
     width: 40px;
     height: 40px;
@@ -143,44 +149,325 @@ body.dark-mode .Header {
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
 }
 
-.IconButton:hover {
-    border-color: #0ea5e9;
-    color: #0ea5e9;
+.IconButton:hover,
+.IconButton.Active {
+    border-color: var(--primary);
+    color: var(--primary);
     background: rgba(14, 165, 233, 0.1);
+}
+
+.Badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    background-color: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.NotificationDropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 320px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-hover);
+    z-index: 1100;
+    overflow: hidden;
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.DropdownHeader {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.DropdownHeader h3 {
+    font-size: 1rem;
+    color: var(--text-main);
+    font-weight: 700;
+    margin: 0;
+}
+
+.DropdownHeader span {
+    font-size: 0.75rem;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.NotificationList {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Custom Scrollbar for list */
+.NotificationList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.NotificationList::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+.NotificationItem {
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.NotificationItem:hover {
+    background-color: var(--bg-input);
+}
+
+.NotifIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.NotifIcon.success {
+    background-color: rgba(14, 165, 233, 0.1);
+    color: var(--primary);
+}
+
+.NotifIcon.warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.NotifIcon.info {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+}
+
+.NotifContent h4 {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.NotifContent p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.NotifTime {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.DropdownFooter {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background-color: var(--bg-input);
+    cursor: pointer;
+    border-top: 1px solid var(--border-color);
+    font-weight: 500;
+}
+
+.ProfileWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .UserProfileHeader {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding-left: 12px;
+    padding: 4px 8px;
+    padding-left: 16px;
     border-left: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+}
+
+.UserProfileHeader:hover,
+.UserProfileHeader.Active {
+    background-color: var(--bg-input);
 }
 
 .AvatarSmall {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #0ea5e9;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-image: url('https://i.pravatar.cc/150?u=a042581f4e29026704d');
-    background-size: cover;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    overflow: hidden;
+}
+
+.AvatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .InfoSmall h4 {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text-main);
+    margin: 0;
 }
 
 .InfoSmall span {
     font-size: 0.75rem;
     color: var(--text-muted);
+}
+
+/* Profile Dropdown */
+.ProfileDropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 280px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-hover);
+    z-index: 1100;
+    overflow: hidden;
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ProfileHeader {
+    padding: 20px;
+    background-color: var(--bg-input);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.AvatarLarge {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.2);
+    overflow: hidden;
+}
+
+.AvatarImageLarge {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ProfileInfo h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 4px 0;
+}
+
+.ProfileInfo span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.ProfileMenu {
+    padding: 8px;
+}
+
+.MenuItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: none;
+    background: none;
+    color: var(--text-main);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.MenuItem svg {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.MenuItem:hover {
+    background-color: var(--bg-input);
+    color: var(--primary);
+}
+
+.MenuItem:hover svg {
+    color: var(--primary);
+}
+
+.Divider {
+    margin: 8px 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.Logout {
+    color: #ef4444 !important;
+}
+
+.Logout:hover {
+    background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+.Logout svg {
+    color: #ef4444 !important;
 }

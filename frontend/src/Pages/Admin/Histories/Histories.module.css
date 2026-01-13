@@ -1,96 +1,234 @@
-.ContainerGeneralUsers {
-    margin-left: 55px;
+.HistoryContainer {
+    padding: 24px;
+    animation: fadeIn 0.4s ease-out;
 }
 
-.ContainerGeneralUsers .cardsResumes {
-    display: grid;
-    gap: 10px;
-    width: 96%;
-    margin: auto;
-
-
+.TableCard {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume {
-    border-radius: var(--radius-sm);
-    width: 90%;
-    height: 100px;
-    padding: 10px;
-    flex-shrink: 0;
-    flex-grow: 0;
-    margin: auto;
-    display: grid;
+.CardHeader {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    grid-template-columns: 75% 25%;
+    gap: 20px;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(1) {
-    background-color: #f1e6ff;
-
+.HeaderLeft h3 {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    margin-bottom: 4px;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(2) {
-    background-color: #e4f5ff;
-
+.HeaderLeft p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(3) {
-    background-color: #ffefe7;
-
+.SearchBox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 350px;
+    transition: border-color 0.2s;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(4) {
-    background-color: #ebfdee;
-
+.SearchBox:focus-within {
+    border-color: #0ea5e9;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume .content {
-
-    padding: 5px 10px;
+.SearchBox svg {
+    color: var(--text-muted);
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume .content span {
-    color: #777777;
+.SearchBox input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-main);
+    width: 100%;
+    font-size: 0.9rem;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume .content h3 {
-    font-size: 15pt;
-    color: #181818;
+/* Table Styles */
+.TableWrapper {
+    overflow-x: auto;
+}
+
+.Table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.Table th {
+    background-color: var(--bg-input);
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
     font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(1) .icon {
-    color: #a879f2;
+.Table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-main);
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(2) .icon {
-    color: #73c5fd;
+.Table tr:hover td {
+    background-color: rgba(14, 165, 233, 0.02);
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(3) .icon {
-    color: #ff9b6c;
+.UserCell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.ContainerGeneralUsers .cardsResumes .cardResume:nth-child(4) .icon {
-    color: #60d274;
+.Avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #0ea5e9;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
-@media screen and (min-width:410px) {
-    .ContainerGeneralUsers .cardsResumes {
-        background-color: rebeccapurple;
-        grid-template-columns: repeat(2, 1fr);
+.UserInfo {
+    display: flex;
+    flex-direction: column;
+}
 
+.UserName {
+    font-weight: 600;
+    color: var(--text-main);
+}
 
+.UserRole {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.StatusActive {
+    color: var(--primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.StatusActive svg {
+    font-size: 1.5rem;
+}
+
+.IpCode {
+    background-color: var(--bg-input);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color);
+}
+
+.DeviceCell,
+.BrowserCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+}
+
+.DeviceCell svg,
+.BrowserCell svg {
+    font-size: 1rem;
+    color: #0ea5e9;
+}
+
+.EmptyState {
+    padding: 40px !important;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Footer Section */
+.TableFooter {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background-color: var(--bg-input);
+}
+
+.Pagination {
+    display: flex;
+    gap: 8px;
+}
+
+.Pagination button {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.Pagination button:hover:not(:disabled) {
+    border-color: #0ea5e9;
+    color: #0ea5e9;
+}
+
+.Pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ActivePage {
+    background-color: #0ea5e9 !important;
+    color: white !important;
+    border-color: #0ea5e9 !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/*
-@media screen and (min-width:900px) {
-    .ContainerGeneralUsers .cardsResumes {
-        grid-template-columns: repeat(4, 1fr);
-
-
+@media (max-width: 1024px) {
+    .CardHeader {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-}*/
+    .SearchBox {
+        width: 100%;
+    }
+}

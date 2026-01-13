@@ -23,6 +23,18 @@ const documentsData = [
 
 export default function Declaracao() {
     const [activeTab, setActiveTab] = useState('modelos')
+    const [searchTerm, setSearchTerm] = useState('')
+
+    const filteredDocuments = documentsData.filter(doc =>
+        doc.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.class.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    const filteredTemplates = templatesData.filter(template =>
+        template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     const tabs = [
         { id: 'modelos', label: 'Modelos de Declaração', icon: <FaFileAlt /> },
@@ -61,7 +73,7 @@ export default function Declaracao() {
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
-                <Header text1={"Documentos"} text2={"Declarações"} />
+                <Header text1={"Documentos"} text2={"Declarações"} onSearch={setSearchTerm} />
 
                 <div className={style.DeclaracaoContainer}>
                     {/* Tabs Navigation */}
@@ -95,7 +107,7 @@ export default function Declaracao() {
 
                                 {/* Models Grid */}
                                 <div className={style.ModelsGrid}>
-                                    {templatesData.map(model => (
+                                    {filteredTemplates.map(model => (
                                         <div key={model.id} className={style.ModelCard}>
                                             {model.isActive && (
                                                 <span className={style.ActiveBadge}>✓ Ativo</span>
@@ -142,6 +154,9 @@ export default function Declaracao() {
                                             </div>
                                         </div>
                                     ))}
+                                    {filteredTemplates.length === 0 && (
+                                        <p className={style.EmptyState}>Nenhum modelo encontrado para "{searchTerm}"</p>
+                                    )}
                                 </div>
                             </>
                         ) : (
@@ -168,7 +183,7 @@ export default function Declaracao() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {documentsData.map(doc => (
+                                            {filteredDocuments.map(doc => (
                                                 <tr key={doc.id}>
                                                     <td>
                                                         <div className={style.StudentCell}>
@@ -206,6 +221,13 @@ export default function Declaracao() {
                                                     </td>
                                                 </tr>
                                             ))}
+                                            {filteredDocuments.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="6" className={style.EmptyState}>
+                                                        Nenhuma declaração encontrada para "{searchTerm}"
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

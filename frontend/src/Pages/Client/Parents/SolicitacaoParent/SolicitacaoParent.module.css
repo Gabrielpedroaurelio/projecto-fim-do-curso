@@ -12,10 +12,11 @@
 }
 
 .formContainer {
-    padding: 3rem 2.5rem;
+    padding: 3rem 0rem;
     max-width: 900px;
     margin: 3rem auto;
-    width: 100%;
+    width: 96%;
+   
 }
 
 .cardForm {
@@ -126,13 +127,13 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 20px rgba(16, 174, 185, 0.2);
     margin-top: 1rem;
 }
 
 .submitBtn:hover:not(:disabled) {
     transform: translateY(-4px);
-    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 15px 30px rgba(16, 148, 185, 0.3);
     filter: brightness(1.1);
 }
 

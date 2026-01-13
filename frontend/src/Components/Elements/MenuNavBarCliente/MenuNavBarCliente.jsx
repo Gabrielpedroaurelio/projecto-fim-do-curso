@@ -23,7 +23,7 @@ import {
 } from 'react-icons/ri';
 
 export default function MenuNavBarCliente({ user }) {
-    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(false)
+    const [toggleMenuNavBar, settoggleMenuNavBar] = useState(true)
     const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
     const location = useLocation()
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './SolicitacaoParent.module.css';
 
 // padrão para todas as paginas
@@ -6,26 +6,53 @@ import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { RiSendPlaneFill, RiCheckLine, RiUser3Line, RiFileList3Line, RiInformationLine } from 'react-icons/ri';
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const SolicitacaoParent = () => {
+  const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [educandos, setEducandos] = useState([]);
   const [formData, setFormData] = useState({
     childId: '',
     docType: '',
     reason: '',
   });
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchKids = async () => {
+      try {
+        if (user?.id) {
+          const response = await api.get(`/encarregados/${user.id}/educandos/`);
+          setEducandos(response.data);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar educandos:", error);
+      }
+    };
+    fetchKids();
+  }, [user]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.docType || !formData.childId) return;
 
     setLoading(true);
-    // Simulating API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await api.post('/solicitacaodocumento/', {
+        id_aluno: formData.childId,
+        id_encarregado: user.id,
+        tipo_documento: formData.docType,
+        // A descrição/motivo pode ser enviada se o backend aceitar (verificar se existe campo no model)
+      });
       setSubmitted(true);
-    }, 1500);
+    } catch (error) {
+      console.error("Erro ao enviar solicitação:", error);
+      alert("Ocorreu um erro ao enviar a solicitação.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -57,8 +84,11 @@ const SolicitacaoParent = () => {
                     onChange={(e) => setFormData({ ...formData, childId: e.target.value })}
                   >
                     <option value="">Escolha um aluno...</option>
-                    <option value="1">Ana Bela Gabriel</option>
-                    <option value="2">João Pedro Gabriel</option>
+                    {educandos.map((kid) => (
+                      <option key={kid.id_aluno} value={kid.id_aluno}>
+                        {kid.nome_completo}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -70,12 +100,10 @@ const SolicitacaoParent = () => {
                     value={formData.docType}
                     onChange={(e) => setFormData({ ...formData, docType: e.target.value })}
                   >
-                    <option value="">Selecione o serviço...</option>
-                    <option value="matriz">Declaração de Matrícula</option>
-                    <option value="boletim">Cópia de Boletim Trimestral</option>
-                    <option value="certificado">Certificado de Habilitações</option>
-                    <option value="reclamacao">Reclamação de Nota</option>
-                    <option value="reuniao">Agendamento de Reunião</option>
+                    <option value="">Selecione o Documento...</option>
+                    <option value="DECLARAÇÃO DE MATRÍCULA">Declaração de Matrícula</option>
+                    <option value="BOLETIM TRIMESTRAL">Boletim Trimestral</option>
+                    <option value="CERTIFICADO DE HABILITAÇÕES">Certificado de Habilitações</option>
                   </select>
                 </div>
 
@@ -92,7 +120,7 @@ const SolicitacaoParent = () => {
                 <button type="submit" className={style.submitBtn} disabled={loading}>
                   {loading ? (
                     <div className="flex items-center gap-2">
-                      Aguarde...
+                      Enviando...
                     </div>
                   ) : (
                     <>
@@ -124,3 +152,4 @@ const SolicitacaoParent = () => {
 };
 
 export default SolicitacaoParent;
+

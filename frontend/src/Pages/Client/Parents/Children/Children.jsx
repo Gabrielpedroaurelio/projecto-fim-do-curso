@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './Children.module.css';
 
 // padrão para todas as paginas
@@ -6,30 +6,31 @@ import '../../../../assets/style/global.style.css'
 import { Link } from 'react-router-dom'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiUser3Line, RiEyeLine, RiArrowRightSLine } from 'react-icons/ri'
-
-const childrenData = [
-  {
-    id: 1,
-    name: "Ana Bela Gabriel",
-    grade: "10ª Classe",
-    turma: "A",
-    media: 15.4,
-    frequencia: "92%",
-    status: "Ativo"
-  },
-  {
-    id: 2,
-    name: "João Pedro Gabriel",
-    grade: "8ª Classe",
-    turma: "B",
-    media: 14.2,
-    frequencia: "85%",
-    status: "Ativo"
-  }
-];
+import { RiUser3Line, RiArrowRightSLine } from 'react-icons/ri'
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const Children = () => {
+  const { user } = useAuth();
+  const [childrenData, setChildrenData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        if (user?.id) {
+          const response = await api.get(`/encarregados/${user.id}/educandos/`);
+          setChildrenData(response.data);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar educandos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChildren();
+  }, [user]);
+
   return (
     <div className='containelGeralclient'>
       <MenuNavBarCliente user={'parent'} />
@@ -43,39 +44,52 @@ const Children = () => {
           </header>
 
           <div className={style.childrenGrid}>
-            {childrenData.map((child) => (
-              <Link to="/parent/actionstudent" key={child.id} className={style.childCard}>
-                <div className={style.avatar}>
-                  <RiUser3Line />
-                </div>
-
-                <div className={style.info}>
-                  <h3>{child.name}</h3>
-                  <p>{child.grade} - Turma {child.turma}</p>
-                </div>
-
-                <div className={style.stats}>
-                  <div className={style.statItem}>
-                    <span className={style.statValue}>{child.media}</span>
-                    <span className={style.statLabel}>Média</span>
+            {loading ? (
+              <p>Carregando educandos...</p>
+            ) : childrenData.length > 0 ? (
+              childrenData.map((child) => (
+                <Link to="/parent/actionstudent" key={child.id_aluno} className={style.childCard}>
+                  <div className={style.avatar}>
+                    {child.img_path ? (
+                      <img src={child.img_path} alt={child.nome_completo} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                    ) : (
+                      <RiUser3Line />
+                    )}
                   </div>
-                  <div className={style.statItem}>
-                    <span className={style.statValue}>{child.frequencia}</span>
-                    <span className={style.statLabel}>Presença</span>
-                  </div>
-                  <div className={style.statItem}>
-                    <span className={style.statValue}>{child.status}</span>
-                    <span className={style.statLabel}>Status</span>
-                  </div>
-                </div>
 
-                <div className={style.actions}>
-                  <button className={style.btnAction}>
-                    Ver Detalhes <RiArrowRightSLine />
-                  </button>
-                </div>
-              </Link>
-            ))}
+                  <div className={style.info}>
+                    <h3>{child.nome_completo}</h3>
+                    <p>{child.classe_nivel || 'Classe N/A'} - {child.curso_nome || 'Curso N/A'}</p>
+                    <small className="text-gray-400">Turma: {child.turma_codigo || 'N/A'}</small>
+                  </div>
+
+                  <div className={style.stats}>
+                    <div className={style.statItem}>
+                      <span className={style.statValue}>---</span>
+                      <span className={style.statLabel}>Média</span>
+                    </div>
+                    <div className={style.statItem}>
+                      <span className={style.statValue}>---</span>
+                      <span className={style.statLabel}>Presença</span>
+                    </div>
+                    <div className={style.statItem}>
+                      <span className={`${style.statValue} ${child.status_aluno === 'Activo' ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {child.status_aluno}
+                      </span>
+                      <span className={style.statLabel}>Status</span>
+                    </div>
+                  </div>
+
+                  <div className={style.actions}>
+                    <button className={style.btnAction}>
+                      Ver Detalhes <RiArrowRightSLine />
+                    </button>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <p>Nenhum educando vinculado a este encarregado.</p>
+            )}
           </div>
         </div>
       </main>
@@ -84,3 +98,4 @@ const Children = () => {
 };
 
 export default Children;
+

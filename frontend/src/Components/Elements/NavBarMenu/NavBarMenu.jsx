@@ -5,6 +5,7 @@ import {
     FaAtom,
 
     FaFile,
+    FaClockRotateLeft
 } from 'react-icons/fa6';
 import { Link } from 'react-router-dom'
 import { BsCart3, BsFolder, BsHouse, BsPeople } from "react-icons/bs";
@@ -74,6 +75,12 @@ export default function NavBarMenu() {
                                 <span>Alunos</span>
                             </Link>
                         </li>
+                        <li>
+                            <Link to={"/admin/turmas"}>
+                                <BsPeople />
+                                <span>Turmas</span>
+                            </Link>
+                        </li>
                     </ul>
                 </div>
 
@@ -103,6 +110,11 @@ export default function NavBarMenu() {
                 <div className={style.MenuSection}>
                     <ul>
                         <li>
+                            <Link to={"/admin/history"}>
+                                <FaClockRotateLeft /> Histórico
+                            </Link>
+                        </li>
+                        <li>
                             <Link to={"/admin/setting"}>
                                 <CiSettings /> Configurações
                             </Link>
@@ -110,7 +122,7 @@ export default function NavBarMenu() {
 
                     </ul >
                 </div >
-           
+
             </aside >
 
 

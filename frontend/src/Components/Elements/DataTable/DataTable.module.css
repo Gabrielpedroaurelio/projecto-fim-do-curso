@@ -80,7 +80,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: rgba(15, 23, 42, 0.03);
+    background: var(--bg-input);
     /* Subtle dark mode compatible bg */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
@@ -117,7 +117,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(15, 23, 42, 0.03);
+    background: var(--bg-input);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.625rem 1rem;
@@ -155,7 +155,7 @@
 }
 
 .Table thead {
-    background: rgba(15, 23, 42, 0.02);
+    background: var(--bg-input);
 }
 
 .Table th {
@@ -245,8 +245,8 @@
 }
 
 .Online {
-    background-color: var(--secondary);
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    background-color: var(--primary);
+    box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
 }
 
 .Offline {
