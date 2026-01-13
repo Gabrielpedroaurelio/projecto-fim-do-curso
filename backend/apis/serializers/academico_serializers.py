@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apis.models import (
     Sala, Classe, Departamento, Seccao, AreaFormacao,
-    Curso, Periodo, Turma
+    Curso, Periodo, Turma, Horario
 )
 
 
@@ -115,3 +115,18 @@ class TurmaListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turma
         fields = ['id_turma', 'codigo_turma', 'curso_nome', 'classe_nivel', 'periodo_nome', 'ano']
+
+
+class HorarioSerializer(serializers.ModelSerializer):
+    """Serializer para Horário"""
+    disciplina_nome = serializers.CharField(source='id_disciplina.nome', read_only=True)
+    professor_nome = serializers.CharField(source='id_professor.nome_completo', read_only=True)
+    
+    class Meta:
+        model = Horario
+        fields = [
+            'id_horario', 'id_turma', 'id_disciplina', 'disciplina_nome',
+            'id_professor', 'professor_nome', 'dia_semana',
+            'hora_inicio', 'hora_fim', 'criado_em', 'atualizado_em'
+        ]
+        read_only_fields = ['id_horario', 'criado_em', 'atualizado_em']

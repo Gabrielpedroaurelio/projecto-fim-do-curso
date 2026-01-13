@@ -45,15 +45,35 @@ class HistoricoSerializer(serializers.ModelSerializer):
 
 class HistoricoLoginSerializer(serializers.ModelSerializer):
     """Serializer para HistoricoLogin"""
-    funcionario_nome = serializers.CharField(source='id_funcionario.nome_completo', read_only=True)
-    aluno_nome = serializers.CharField(source='id_aluno.nome_completo', read_only=True)
-    encarregado_nome = serializers.CharField(source='id_encarregado.nome_completo', read_only=True)
+    usuario_nome = serializers.SerializerMethodField()
+    usuario_tipo = serializers.SerializerMethodField()
+    usuario_img = serializers.SerializerMethodField()
     
     class Meta:
         model = HistoricoLogin
         fields = [
-            'id_historico_login', 'id_funcionario', 'funcionario_nome',
-            'id_aluno', 'aluno_nome', 'id_encarregado', 'encarregado_nome',
+            'id_historico_login', 'usuario_nome', 'usuario_tipo', 'usuario_img',
             'ip_usuario', 'dispositivo', 'navegador', 'hora_entrada', 'hora_saida'
         ]
         read_only_fields = ['id_historico_login', 'hora_entrada']
+
+    def get_usuario_nome(self, obj):
+        if obj.id_funcionario: return obj.id_funcionario.nome_completo
+        if obj.id_aluno: return obj.id_aluno.nome_completo
+        if obj.id_encarregado: return obj.id_encarregado.nome_completo
+        return "Desconhecido"
+
+    def get_usuario_tipo(self, obj):
+        if obj.id_funcionario: return "Funcionário"
+        if obj.id_aluno: return "Aluno"
+        if obj.id_encarregado: return "Encarregado"
+        return "N/A"
+
+    def get_usuario_img(self, obj):
+        request = self.context.get('request')
+        user_obj = obj.id_funcionario or obj.id_aluno or obj.id_encarregado
+        if user_obj and user_obj.img_path:
+            if request:
+                return request.build_absolute_uri(user_obj.img_path.url)
+            return user_obj.img_path.url
+        return None

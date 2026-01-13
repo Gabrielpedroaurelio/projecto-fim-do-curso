@@ -1,19 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './Schedule.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { RiCalendar2Line, RiTimeLine, RiMapPin2Line, RiBook3Line } from 'react-icons/ri';
-
-const scheduleData = [
-    { time: '08:00 - 08:50', mon: 'Matemática', tue: 'Física', wed: 'TLP', thu: 'Português', fri: 'Inglês' },
-    { time: '08:55 - 09:45', mon: 'Matemática', tue: 'Física', wed: 'TLP', thu: 'Português', fri: 'Inglês' },
-    { time: '10:00 - 10:50', mon: 'Português', tue: 'Inglês', wed: 'TREI', thu: 'Física', fri: 'Matemática' },
-    { time: '10:55 - 11:45', mon: 'Português', tue: 'Inglês', wed: 'TREI', thu: 'Física', fri: 'Matemática' },
-    { time: '12:00 - 12:50', mon: 'Química', tue: 'TLP', wed: 'Matemática', thu: 'TREI', fri: 'Química' },
-];
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const Schedule = () => {
+    const { user } = useAuth();
+    const [horarios, setHorarios] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSchedule = async () => {
+            try {
+                const response = await api.get(`/alunos/${user.id}/horario/`);
+                setHorarios(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Erro ao buscar horários:", error);
+                setLoading(false);
+            }
+        };
+        if (user?.id) fetchSchedule();
+    }, [user]);
+
+    // Grouping logic for the grid
+    const timeSlots = Array.from(new Set(horarios.map(h => `${h.hora_inicio.substring(0, 5)} - ${h.hora_fim.substring(0, 5)}`))).sort();
+
+    const getSubjectForDay = (slot, day) => {
+        const h = horarios.find(item =>
+            `${item.hora_inicio.substring(0, 5)} - ${item.hora_fim.substring(0, 5)}` === slot &&
+            item.dia_semana === day
+        );
+        return h ? h.disciplina_nome : '---';
+    };
+
     return (
         <div className='containelGeralclient'>
             <MenuNavBarCliente user={'student'} />
@@ -35,16 +58,23 @@ const Schedule = () => {
                                 <div>Quinta</div>
                                 <div>Sexta</div>
                             </div>
-                            {scheduleData.map((row, i) => (
-                                <div key={i} className={style.row}>
-                                    <div className={style.timeCell}>{row.time}</div>
-                                    <div className={style.subjectCell}><span>{row.mon}</span></div>
-                                    <div className={style.subjectCell}><span>{row.tue}</span></div>
-                                    <div className={style.subjectCell}><span>{row.wed}</span></div>
-                                    <div className={style.subjectCell}><span>{row.thu}</span></div>
-                                    <div className={style.subjectCell}><span>{row.fri}</span></div>
-                                </div>
-                            ))}
+
+                            {loading ? (
+                                <div className={style.row}><div className={style.timeCell} style={{ width: '100%' }}>Carregando horários...</div></div>
+                            ) : timeSlots.length > 0 ? (
+                                timeSlots.map((slot, i) => (
+                                    <div key={i} className={style.row}>
+                                        <div className={style.timeCell}>{slot}</div>
+                                        <div className={style.subjectCell}><span>{getSubjectForDay(slot, 'Segunda-feira')}</span></div>
+                                        <div className={style.subjectCell}><span>{getSubjectForDay(slot, 'Terça-feira')}</span></div>
+                                        <div className={style.subjectCell}><span>{getSubjectForDay(slot, 'Quarta-feira')}</span></div>
+                                        <div className={style.subjectCell}><span>{getSubjectForDay(slot, 'Quinta-feira')}</span></div>
+                                        <div className={style.subjectCell}><span>{getSubjectForDay(slot, 'Sexta-feira')}</span></div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className={style.row}><div className={style.timeCell} style={{ width: '100%' }}>Nenhum horário definido para esta turma.</div></div>
+                            )}
                         </div>
                     </div>
 
@@ -53,14 +83,14 @@ const Schedule = () => {
                             <RiMapPin2Line />
                             <div>
                                 <h4>Localização</h4>
-                                <p>Bloco B - Sala 12</p>
+                                <p>Sua sala de aula habitual</p>
                             </div>
                         </div>
                         <div className={style.infoCard}>
                             <RiCalendar2Line />
                             <div>
                                 <h4>Semana Acadêmica</h4>
-                                <p>Semana 12 (Trimester 2)</p>
+                                <p>Semestre Corrente</p>
                             </div>
                         </div>
                     </div>

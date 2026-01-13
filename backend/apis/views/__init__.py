@@ -15,6 +15,7 @@ from .avaliacao_views import (
 from .documento_views import DocumentoViewSet, SolicitacaoDocumentoViewSet
 from .biblioteca_views import CategoriaViewSet, LivroViewSet
 from .financeiro_views import FaturaViewSet, PagamentoViewSet
+from .auditoria_views import HistoricoLoginViewSet
 
 __all__ = [
     # Auth
@@ -35,4 +36,5 @@ __all__ = [
     'CategoriaViewSet', 'LivroViewSet',
     # Financeiro
     'FaturaViewSet', 'PagamentoViewSet',
+    'HistoricoLoginViewSet',
 ]

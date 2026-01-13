@@ -32,7 +32,7 @@ class AlunoListSerializer(serializers.ModelSerializer):
         fields = [
             'id_aluno', 'nome_completo', 'numero_matricula',
             'email', 'turma_codigo', 'classe_nivel', 'curso_nome',
-            'status_aluno', 'genero'
+            'status_aluno', 'genero', 'img_path'
         ]
 
 

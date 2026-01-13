@@ -45,13 +45,22 @@ class SolicitacaoDocumentoSerializer(serializers.ModelSerializer):
 class SolicitacaoDocumentoListSerializer(serializers.ModelSerializer):
     """Serializer simplificado para listagem de Solicitações"""
     aluno_nome = serializers.CharField(source='id_aluno.nome_completo', read_only=True)
+    aluno_img = serializers.SerializerMethodField()
     
     class Meta:
         model = SolicitacaoDocumento
         fields = [
-            'id_solicitacao', 'tipo_documento', 'aluno_nome',
+            'id_solicitacao', 'tipo_documento', 'aluno_nome', 'aluno_img',
             'status_solicitacao', 'data_solicitacao'
         ]
+
+    def get_aluno_img(self, obj):
+        request = self.context.get('request')
+        if obj.id_aluno and obj.id_aluno.img_path:
+            if request:
+                return request.build_absolute_uri(obj.id_aluno.img_path.url)
+            return obj.id_aluno.img_path.url
+        return None
 
 
 class SolicitacaoDocumentoAprovarSerializer(serializers.Serializer):

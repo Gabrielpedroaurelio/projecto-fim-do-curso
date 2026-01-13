@@ -64,7 +64,8 @@ def login_view(request):
                     'nome': user.nome_completo,
                     'email': user.email,
                     'cargo': user.id_cargo.nome_cargo if user.id_cargo else None,
-                    'status': user.status_funcionario
+                    'status': user.status_funcionario,
+                    'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
                 # Atualizar status online
                 user.is_online = True
@@ -85,7 +86,8 @@ def login_view(request):
                     'email': user.email,
                     'numero_matricula': user.numero_matricula,
                     'turma': user.id_turma.codigo_turma if user.id_turma else None,
-                    'status': user.status_aluno
+                    'status': user.status_aluno,
+                    'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
                 # Atualizar status online
                 user.is_online = True
@@ -103,7 +105,8 @@ def login_view(request):
                     'id': user.id_encarregado,
                     'tipo': 'encarregado',
                     'nome': user.nome_completo,
-                    'email': user.email
+                    'email': user.email,
+                    'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
                 # Atualizar status online
                 user.is_online = True
@@ -250,6 +253,7 @@ def me_view(request):
                 'email': user.email,
                 'cargo': user.id_cargo.nome_cargo if user.id_cargo else None,
                 'status': user.status_funcionario,
+                'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None,
                 'is_online': True
             }
         elif user_type == 'aluno':
@@ -262,6 +266,7 @@ def me_view(request):
                 'numero_matricula': user.numero_matricula,
                 'turma': user.id_turma.codigo_turma if user.id_turma else None,
                 'status': user.status_aluno,
+                'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None,
                 'is_online': True
             }
         elif user_type == 'encarregado':
@@ -271,6 +276,7 @@ def me_view(request):
                 'tipo': 'encarregado',
                 'nome': user.nome_completo,
                 'email': user.email,
+                'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None,
                 'is_online': True
             }
             

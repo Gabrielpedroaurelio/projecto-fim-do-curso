@@ -1,0 +1,1 @@
+modifique o grafico de eveluçao academica do encarregado para um tipo como de sector para comparar as estatisticas dos seus filhos

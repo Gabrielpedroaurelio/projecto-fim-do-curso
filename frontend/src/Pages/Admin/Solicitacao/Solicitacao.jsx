@@ -5,28 +5,31 @@ import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaMagnifyingGlass, FaPencil, FaTrash, FaDownload, FaEye } from 'react-icons/fa6'
 import { IoFilterSharp } from 'react-icons/io5'
-
-// Sample data for requests
-const requestsData = {
-    boletim: [
-        { id: 1, student: "Eleanor Pena", class: "10ª Classe", date: "2024-01-15", status: "Aprovado", format: "PDF" },
-        { id: 2, student: "Jessica Rose", class: "11ª Classe", date: "2024-01-14", status: "Pendente", format: "PDF" },
-        { id: 3, student: "Jenny Wilson", class: "9ª Classe", date: "2024-01-13", status: "Aprovado", format: "Impresso" },
-    ],
-    declaracao: [
-        { id: 1, student: "Guy Hawkins", type: "Matrícula", date: "2024-01-16", status: "Aprovado", format: "PDF" },
-        { id: 2, student: "Jacob Jones", type: "Frequência", date: "2024-01-15", status: "Pendente", format: "PDF" },
-    ],
-    certificado: [
-        { id: 1, student: "Jane Cooper", course: "12ª Classe", date: "2024-01-10", status: "Aprovado", year: "2023" },
-        { id: 2, student: "Floyd Miles", course: "11ª Classe", date: "2024-01-09", status: "Em Processamento", year: "2023" },
-    ]
-}
+import api from '../../../Services/api'
 
 export default function Solicitacao() {
     const [activeTab, setActiveTab] = useState('boletim')
     const [searchTerm, setSearchTerm] = useState('')
     const [filterDays, setFilterDays] = useState(30)
+    const [solicitacoes, setSolicitacoes] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage] = useState(10)
+
+    useEffect(() => {
+        const fetchSolicitacoes = async () => {
+            try {
+                const response = await api.get('/api/v1/solicitacoes/')
+                const data = response.data.results || response.data
+                setSolicitacoes(data)
+            } catch (error) {
+                console.error("Erro ao carregar solicitações:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchSolicitacoes()
+    }, [])
 
     // Reset page when tab or filters change
     useEffect(() => {
@@ -100,40 +103,17 @@ export default function Solicitacao() {
         return statusClasses[status] || style.StatusDefault
     }
 
-    const [currentPage, setCurrentPage] = useState(1)
-    const [itemsPerPage] = useState(10)
-
-    // Generate large mock data if needed
-    const generateMockData = (baseData, count) => {
-        const result = []
-        for (let i = 0; i < count; i++) {
-            const item = baseData[i % baseData.length]
-            // Randomize dates within last 90 days
-            const date = new Date()
-            date.setDate(date.getDate() - Math.floor(Math.random() * 95))
-            result.push({
-                ...item,
-                id: i + 1,
-                date: date.toISOString().split('T')[0],
-                student: `${item.student} ${i + 1}`
-            })
-        }
-        return result
-    }
-
-    const currentTabBaseData = requestsData[activeTab] || []
-    const expandedData = generateMockData(currentTabBaseData, 200)
-
     // Filtering logic
-    const filteredData = expandedData.filter(item => {
-        const matchesSearch = item.student.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredData = solicitacoes.filter(item => {
+        const matchesTab = item.tipo_documento.toLowerCase() === activeTab.toLowerCase();
+        const matchesSearch = item.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase())
 
-        const itemDate = new Date(item.date)
+        const itemDate = new Date(item.data_solicitacao)
         const diffTime = Math.abs(new Date() - itemDate)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
         const matchesFilter = diffDays <= filterDays
 
-        return matchesSearch && matchesFilter
+        return matchesTab && matchesSearch && matchesFilter
     })
 
     // Pagination logic
@@ -153,188 +133,192 @@ export default function Solicitacao() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <Header text1={"Documentos"} text2={"Solicitações"} onSearch={setSearchTerm} />
+                {loading ? <div className="loading">Carregando...</div> : (
 
-                <div className={style.SolicitacaoContainer}>
-                    {/* Tabs Navigation */}
-                    <div className={style.TabsContainer}>
-                        {tabs.map(tab => (
-                            <button
-                                key={tab.id}
-                                className={`${style.TabButton} ${activeTab === tab.id ? style.TabActive : ''}`}
-                                onClick={() => setActiveTab(tab.id)}
-                            >
-                                <span className={style.TabIcon}>{tab.icon}</span>
-                                <span>{tab.label}</span>
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Content Card */}
-                    <div className={style.ContentCard}>
-                        {/* Header Controls */}
-                        <div className={style.CardHeader}>
-                            <div className={style.HeaderLeft}>
-                                <h3>Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
-                                <p className={style.Subtitle}>Gerir e acompanhar solicitações de documentos</p>
-                            </div>
-                            <div className={style.HeaderActions}>
-                                <button className={style.RequestButton} onClick={handleRequest}>
-                                    + Nova Solicitação
+                    <div className={style.SolicitacaoContainer}>
+                        {/* Tabs Navigation */}
+                        <div className={style.TabsContainer}>
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab.id}
+                                    className={`${style.TabButton} ${activeTab === tab.id ? style.TabActive : ''}`}
+                                    onClick={() => setActiveTab(tab.id)}
+                                >
+                                    <span className={style.TabIcon}>{tab.icon}</span>
+                                    <span>{tab.label}</span>
                                 </button>
-                            </div>
+                            ))}
                         </div>
 
-                        {/* Search and Filter */}
-                        <div className={style.TableControls}>
-                            <div className={style.SearchBox}>
-                                <FaMagnifyingGlass />
-                                <input
-                                    type="text"
-                                    placeholder="Pesquisar por nome do aluno..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
+                        {/* Content Card */}
+                        <div className={style.ContentCard}>
+                            {/* Header Controls */}
+                            <div className={style.CardHeader}>
+                                <div className={style.HeaderLeft}>
+                                    <h3>Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
+                                    <p className={style.Subtitle}>Gerir e acompanhar solicitações de documentos</p>
+                                </div>
+                                <div className={style.HeaderActions}>
+                                    <button className={style.RequestButton} onClick={handleRequest}>
+                                        + Nova Solicitação
+                                    </button>
+                                </div>
                             </div>
-                            <div className={style.FilterDropdown}>
-                                <IoFilterSharp />
-                                <select value={filterDays} onChange={(e) => setFilterDays(e.target.value)}>
-                                    <option value={7}>Últimos 7 dias</option>
-                                    <option value={30}>Últimos 30 dias</option>
-                                    <option value={90}>Últimos 90 dias</option>
-                                </select>
+
+                            {/* Search and Filter */}
+                            <div className={style.TableControls}>
+                                <div className={style.SearchBox}>
+                                    <FaMagnifyingGlass />
+                                    <input
+                                        type="text"
+                                        placeholder="Pesquisar por nome do aluno..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                                <div className={style.FilterDropdown}>
+                                    <IoFilterSharp />
+                                    <select value={filterDays} onChange={(e) => setFilterDays(e.target.value)}>
+                                        <option value={7}>Últimos 7 dias</option>
+                                        <option value={30}>Últimos 30 dias</option>
+                                        <option value={90}>Últimos 90 dias</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Table */}
-                        <div className={style.TableWrapper}>
-                            <table className={style.Table}>
-                                <thead>
-                                    <tr>
-                                        <th>
+                            {/* Table */}
+                            <div className={style.TableWrapper}>
+                                <table className={style.Table}>
+                                    <thead>
+                                        <tr>
+                                            <th>
 
-                                        </th>
-                                        <th>Estudante</th>
-                                        {activeTab === 'boletim' && <th>Classe</th>}
-                                        {activeTab === 'declaracao' && <th>Tipo</th>}
-                                        {activeTab === 'certificado' && <th>Curso</th>}
-                                        <th>Data Solicitação</th>
-                                        <th>Status</th>
-                                        {activeTab === 'boletim' && <th>Formato</th>}
-                                        {activeTab === 'certificado' && <th>Ano</th>}
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {currentData.length > 0 ? (
-                                        currentData.map((item) => (
-                                            <tr key={item.id}>
-                                                <td>
-
-                                                </td>
-                                                <td>
-                                                    <div className={style.StudentCell}>
-                                                        <div className={style.Avatar}>
-                                                            {item.student.split(' ').map(n => n[0]).join('')}
+                                            </th>
+                                            <th>Estudante</th>
+                                            {activeTab === 'boletim' && <th>Classe</th>}
+                                            {activeTab === 'declaracao' && <th>Tipo</th>}
+                                            {activeTab === 'certificado' && <th>Curso</th>}
+                                            <th>Data Solicitação</th>
+                                            <th>Status</th>
+                                            {activeTab === 'boletim' && <th>Formato</th>}
+                                            {activeTab === 'certificado' && <th>Ano</th>}
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {currentData.length > 0 ? (
+                                            currentData.map((item) => (
+                                                <tr key={item.id_solicitacao || item.id}>
+                                                    <td></td>
+                                                    <td>
+                                                        <div className={style.StudentCell}>
+                                                            <div className={style.Avatar}>
+                                                                {item.aluno_img ? (
+                                                                    <img src={item.aluno_img} alt={item.aluno_nome} />
+                                                                ) : (
+                                                                    item.aluno_nome?.split(' ').map(n => n[0]).join('') || 'A'
+                                                                )}
+                                                            </div>
+                                                            <span>{item.aluno_nome}</span>
                                                         </div>
-                                                        <span>{item.student}</span>
-                                                    </div>
-                                                </td>
-                                                {activeTab === 'boletim' && <td>{item.class}</td>}
-                                                {activeTab === 'declaracao' && <td>{item.type}</td>}
-                                                {activeTab === 'certificado' && <td>{item.course}</td>}
-                                                <td>{item.date}</td>
-                                                <td>
-                                                    <span className={`${style.StatusBadge} ${getStatusBadge(item.status)}`}>
-                                                        {item.status}
-                                                    </span>
-                                                </td>
-                                                {activeTab === 'boletim' && <td>{item.format}</td>}
-                                                {activeTab === 'certificado' && <td>{item.year}</td>}
-                                                <td>
-                                                    <div className={style.ActionButtons}>
-                                                        <button
-                                                            className={style.ViewBtn}
-                                                            onClick={() => handleView(item)}
-                                                            title="Visualizar"
-                                                        >
-                                                            <FaEye />
-                                                        </button>
-                                                        <button
-                                                            className={style.DownloadBtn}
-                                                            onClick={() => handleDownload(item)}
-                                                            title="Download"
-                                                        >
-                                                            <FaDownload />
-                                                        </button>
-                                                        <button
-                                                            className={style.DeleteBtn}
-                                                            onClick={() => handleDelete(item)}
-                                                            title="Eliminar"
-                                                        >
-                                                            <FaTrash />
+                                                    </td>
+                                                    {activeTab === 'boletim' && <td>{item.classe || 'N/A'}</td>}
+                                                    {activeTab === 'declaracao' && <td>{item.tipo_documento}</td>}
+                                                    {activeTab === 'certificado' && <td>{item.curso || 'N/A'}</td>}
+                                                    <td>{new Date(item.data_solicitacao).toLocaleDateString()}</td>
+                                                    <td>
+                                                        <span className={`${style.StatusBadge} ${getStatusBadge(item.status_solicitacao)}`}>
+                                                            {item.status_solicitacao}
+                                                        </span>
+                                                    </td>
+                                                    {activeTab === 'boletim' && <td>PDF</td>}
+                                                    {activeTab === 'certificado' && <td>{item.ano || '2024'}</td>}
+                                                    <td>
+                                                        <div className={style.ActionButtons}>
+                                                            <button
+                                                                className={style.ViewBtn}
+                                                                onClick={() => handleView(item)}
+                                                                title="Visualizar"
+                                                            >
+                                                                <FaEye />
+                                                            </button>
+                                                            <button
+                                                                className={style.DownloadBtn}
+                                                                onClick={() => handleDownload(item)}
+                                                                title="Download"
+                                                            >
+                                                                <FaDownload />
+                                                            </button>
+                                                            <button
+                                                                className={style.DeleteBtn}
+                                                                onClick={() => handleDelete(item)}
+                                                                title="Eliminar"
+                                                            >
+                                                                <FaTrash />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="8" className={style.EmptyState}>
+                                                    <div className={style.EmptyStateContent}>
+                                                        <span className={style.EmptyIcon}>📭</span>
+                                                        <p>Nenhuma solicitação encontrada</p>
+                                                        <button className={style.EmptyActionBtn} onClick={handleRequest}>
+                                                            Criar primeira solicitação
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="8" className={style.EmptyState}>
-                                                <div className={style.EmptyStateContent}>
-                                                    <span className={style.EmptyIcon}>📭</span>
-                                                    <p>Nenhuma solicitação encontrada</p>
-                                                    <button className={style.EmptyActionBtn} onClick={handleRequest}>
-                                                        Criar primeira solicitação
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Pagination */}
-                        <div className={style.TableFooter}>
-                            <div className={style.Pagination}>
-                                <button
-                                    className={style.PageArrow}
-                                    onClick={() => handlePageChange(currentPage - 1)}
-                                    disabled={currentPage === 1}
-                                >
-                                    ‹
-                                </button>
-                                {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                                    let pageNum = currentPage <= 3 ? i + 1 :
-                                        currentPage >= totalPages - 2 ? totalPages - 4 + i :
-                                            currentPage - 2 + i;
-                                    if (pageNum < 1) pageNum = i + 1;
-                                    if (pageNum > totalPages) return null;
-
-                                    return (
-                                        <button
-                                            key={i}
-                                            className={currentPage === pageNum ? style.ActivePage : ''}
-                                            onClick={() => handlePageChange(pageNum)}
-                                        >
-                                            {pageNum}
-                                        </button>
-                                    )
-                                })}
-                                <button
-                                    className={style.PageArrow}
-                                    onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage === totalPages}
-                                >
-                                    ›
-                                </button>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
-                            <div className={style.ResultsInfo}>
-                                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, filteredData.length)} de {filteredData.length} resultados
+
+                            {/* Pagination */}
+                            <div className={style.TableFooter}>
+                                <div className={style.Pagination}>
+                                    <button
+                                        className={style.PageArrow}
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                    >
+                                        ‹
+                                    </button>
+                                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                                        let pageNum = currentPage <= 3 ? i + 1 :
+                                            currentPage >= totalPages - 2 ? totalPages - 4 + i :
+                                                currentPage - 2 + i;
+                                        if (pageNum < 1) pageNum = i + 1;
+                                        if (pageNum > totalPages) return null;
+
+                                        return (
+                                            <button
+                                                key={i}
+                                                className={currentPage === pageNum ? style.ActivePage : ''}
+                                                onClick={() => handlePageChange(pageNum)}
+                                            >
+                                                {pageNum}
+                                            </button>
+                                        )
+                                    })}
+                                    <button
+                                        className={style.PageArrow}
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        ›
+                                    </button>
+                                </div>
+                                <div className={style.ResultsInfo}>
+                                    Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, filteredData.length)} de {filteredData.length} resultados
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 {/* Modal for New Request */}
                 {showModal && (

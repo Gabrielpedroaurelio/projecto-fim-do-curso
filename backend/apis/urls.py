@@ -17,6 +17,7 @@ from apis.views import (
     DocumentoViewSet, SolicitacaoDocumentoViewSet,
     CategoriaViewSet, LivroViewSet,
     FaturaViewSet, PagamentoViewSet,
+    HistoricoLoginViewSet,
 )
 
 # Criar router e registrar ViewSets
@@ -61,6 +62,7 @@ router.register(r'livros', LivroViewSet, basename='livro')
 # Financeiro
 router.register(r'faturas', FaturaViewSet, basename='fatura')
 router.register(r'pagamentos', PagamentoViewSet, basename='pagamento')
+router.register(r'historico-login', HistoricoLoginViewSet, basename='historico-login')
 
 # URLs
 urlpatterns = [

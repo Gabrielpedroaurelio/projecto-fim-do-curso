@@ -99,9 +99,9 @@ export default function DataTable({
                                         </td>
                                         {columns.map((col, colIndex) => (
                                             <td key={colIndex}>
-                                                {col.key === 'name' && item.avatar ? (
+                                                {col.key === 'name' && (item.avatar || item.img_path) ? (
                                                     <div className={style.NameCell}>
-                                                        <img src={item.avatar} alt={item[col.key]} />
+                                                        <img src={item.avatar || item.img_path} alt={item[col.key]} />
                                                         <span>{item[col.key]}</span>
                                                     </div>
                                                 ) : col.key === 'name' && item.initials ? (

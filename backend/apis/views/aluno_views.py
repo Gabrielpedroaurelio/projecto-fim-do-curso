@@ -64,8 +64,8 @@ class AlunoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def boletim(self, request, pk=None):
-        """Retorna boletim completo do aluno"""
-        from apis.models import Nota
+        """Retorna boletim completo do aluno com estatísticas"""
+        from apis.models import Nota, FaltaAluno
         from django.db.models import Avg, Count
         
         aluno = self.get_object()
@@ -74,26 +74,72 @@ class AlunoViewSet(viewsets.ModelViewSet):
         notas_por_disciplina = Nota.objects.filter(
             id_aluno=aluno
         ).values(
+            'id_disciplina__id_disciplina',
             'id_disciplina__nome'
         ).annotate(
             media=Avg('valor'),
             total_avaliacoes=Count('id_nota')
         )
         
+        # Média Geral
+        media_geral = Nota.objects.filter(id_aluno=aluno).aggregate(Avg('valor'))['valor__avg'] or 0
+        
         # Faltas totais
-        from apis.models import FaltaAluno
         total_faltas = FaltaAluno.objects.filter(id_aluno=aluno).count()
         faltas_justificadas = FaltaAluno.objects.filter(
             id_aluno=aluno, justificada=True
         ).count()
         
+        # Cálculo de presença (aproximado)
+        # Vamos assumir 200 aulas por ano para simplicidade ou calcular baseado em disciplinas
+        presenca_percentual = 100
+        if total_faltas > 0:
+            # Lógica simples para demonstração
+            presenca_percentual = max(0, 100 - (total_faltas * 0.5)) 
+
+        # Faltas agrupadas por disciplina
+        faltas_por_disciplina = FaltaAluno.objects.filter(
+            id_aluno=aluno
+        ).values(
+            'id_disciplina__nome'
+        ).annotate(
+            total=Count('id_falta')
+        )
+        
+        # Mapear faltas para as disciplinas das notas
+        notas_list = list(notas_por_disciplina)
+        faltas_map = {f['id_disciplina__nome']: f['total'] for f in faltas_por_disciplina}
+        
+        for nota in notas_list:
+            nota['faltas'] = faltas_map.get(nota['id_disciplina__nome'], 0)
+            # Assumindo 40 aulas por disciplina para o cálculo de percentagem
+            nota['presenca_percentual'] = max(0, 100 - (nota['faltas'] * 2.5))
+
         return Response({
             'aluno': AlunoDetailSerializer(aluno).data,
-            'notas_por_disciplina': list(notas_por_disciplina),
+            'notas_por_disciplina': notas_list,
+            'media_geral': round(float(media_geral), 1),
+            'presenca_percentual': round(presenca_percentual, 1),
             'total_faltas': total_faltas,
             'faltas_justificadas': faltas_justificadas,
             'faltas_injustificadas': total_faltas - faltas_justificadas
         })
+
+    @action(detail=True, methods=['get'])
+    def horario(self, request, pk=None):
+        """Retorna o horário semanal da turma do aluno"""
+        from apis.models import Horario
+        from apis.serializers import HorarioSerializer
+        
+        aluno = self.get_object()
+        if not aluno.id_turma:
+            return Response({'error': 'Aluno não está vinculado a nenhuma turma'}, status=status.HTTP_404_NOT_FOUND)
+            
+        horarios = Horario.objects.filter(id_turma=aluno.id_turma).select_related(
+            'id_disciplina', 'id_professor'
+        )
+        serializer = HorarioSerializer(horarios, many=True)
+        return Response(serializer.data)
     
     @action(detail=True, methods=['get'])
     def encarregados(self, request, pk=None):

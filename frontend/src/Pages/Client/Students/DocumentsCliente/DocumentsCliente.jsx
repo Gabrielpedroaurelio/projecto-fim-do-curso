@@ -1,17 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './DocumentsCliente.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { RiFileList3Line, RiDownload2Line, RiEyeLine } from 'react-icons/ri';
-
-const dummyDocuments = [
-  { id: 1, type: 'Declaração de Matrícula', date: '2023-11-20', status: 'Pronto', color: 'statusReady' },
-  { id: 2, type: 'Boletim do 1º Trimestre', date: '2023-10-15', status: 'Pendente', color: 'statusPending' },
-  { id: 3, type: 'Certificado de Conclusão', date: '2023-12-01', status: 'Rejeitado', color: 'statusRejected' },
-];
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const DocumentsCliente = () => {
+  const { user } = useAuth();
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        // Re-using the same endpoint as Parents but filtered for this student
+        const response = await api.get(`/solicitacaodocumento/minhas/?id_aluno=${user.id}`);
+        setDocuments(response.data.results || response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Erro ao buscar documentos:", error);
+        setLoading(false);
+      }
+    };
+    if (user?.id) fetchDocuments();
+  }, [user]);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Pronto': return 'statusReady';
+      case 'Pendente': return 'statusPending';
+      case 'Rejeitado': return 'statusRejected';
+      default: return 'statusPending';
+    }
+  };
+
   return (
     <div className='containelGeralclient'>
       <MenuNavBarCliente user={'student'} />
@@ -34,34 +58,40 @@ const DocumentsCliente = () => {
                 </tr>
               </thead>
               <tbody>
-                {dummyDocuments.map((doc) => (
-                  <tr key={doc.id}>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <RiFileList3Line className="text-emerald-500" />
-                        {doc.type}
-                      </div>
-                    </td>
-                    <td>{doc.date}</td>
-                    <td>
-                      <span className={`${style.statusBadge} ${style[doc.color]}`}>
-                        {doc.status}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="flex gap-2">
-                        <button className={`${style.actionBtn} ${style.viewBtn}`} title="Visualizar">
-                          <RiEyeLine />
-                        </button>
-                        {doc.status === 'Pronto' && (
-                          <button className={style.actionBtn} title="Baixar">
-                            <RiDownload2Line />
+                {loading ? (
+                  <tr><td colSpan="4">Carregando seus documentos...</td></tr>
+                ) : documents.length > 0 ? (
+                  documents.map((doc) => (
+                    <tr key={doc.id_solicitacao}>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <RiFileList3Line className="text-emerald-500" />
+                          {doc.tipo_documento}
+                        </div>
+                      </td>
+                      <td>{new Date(doc.data_solicitacao).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`${style.statusBadge} ${style[getStatusColor(doc.status)]}`}>
+                          {doc.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex gap-2">
+                          <button className={`${style.actionBtn} ${style.viewBtn}`} title="Visualizar">
+                            <RiEyeLine />
                           </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          {doc.status === 'Pronto' && (
+                            <button className={style.actionBtn} title="Baixar">
+                              <RiDownload2Line />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr><td colSpan="4">Você ainda não possui solicitações de documentos.</td></tr>
+                )}
               </tbody>
             </table>
           </div>

@@ -1,21 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './Grades.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { RiLineChartLine, RiArrowUpSLine, RiArrowDownSLine, RiMedalLine, RiExpandDiagonalLine } from 'react-icons/ri';
-
-const gradesData = [
-    { subject: 'Matemática', q1: 15, q2: 14, q3: 16, avg: 15.0, status: 'Aprovado' },
-    { subject: 'Língua Portuguesa', q1: 12, q2: 15, q3: 14, avg: 13.7, status: 'Aprovado' },
-    { subject: 'Física', q1: 10, q2: 12, q3: 11, avg: 11.0, status: 'Aprovado' },
-    { subject: 'Química', q1: 14, q2: 13, q3: 15, avg: 14.0, status: 'Aprovado' },
-    { subject: 'TLP', q1: 18, q2: 19, q3: 18, avg: 18.3, status: 'Excelente' },
-    { subject: 'TREI', q1: 16, q2: 15, q3: 17, avg: 16.0, status: 'Bom' },
-    { subject: 'Inglês', q1: 17, q2: 18, q3: 17, avg: 17.3, status: 'Excelente' },
-];
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const Grades = () => {
+    const { user } = useAuth();
+    const [stats, setStats] = useState({
+        media_geral: 0,
+        notas_por_disciplina: [],
+        presenca_percentual: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchGrades = async () => {
+            try {
+                const response = await api.get(`/alunos/${user.id}/boletim/`);
+                setStats(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Erro ao buscar notas:", error);
+                setLoading(false);
+            }
+        };
+        if (user?.id) fetchGrades();
+    }, [user]);
+
+    const bestSubject = stats.notas_por_disciplina.length > 0
+        ? stats.notas_por_disciplina.reduce((prev, current) => (prev.media > current.media) ? prev : current)
+        : { id_disciplina__nome: '---', media: 0 };
+
     return (
         <div className='containelGeralclient'>
             <MenuNavBarCliente user={'student'} />
@@ -33,9 +51,10 @@ const Grades = () => {
                                 <span className={style.statLabel}>Média Geral</span>
                                 <RiLineChartLine />
                             </div>
-                            <div className={style.statValue}>15.4</div>
-                            <span className={`${style.statChange} ${style.positive}`}>
-                                <RiArrowUpSLine /> +0.5 este trimestre
+                            <div className={style.statValue}>{stats.media_geral.toFixed(1)}</div>
+                            <span className={`${style.statChange} ${stats.media_geral >= 10 ? style.positive : style.negative}`}>
+                                {stats.media_geral >= 10 ? <RiArrowUpSLine /> : <RiArrowDownSLine />}
+                                {stats.media_geral >= 10 ? 'Bom desempenho' : 'Abaixo da média'}
                             </span>
                         </div>
                         <div className={style.statCard}>
@@ -43,16 +62,18 @@ const Grades = () => {
                                 <span className={style.statLabel}>Melhor Disciplina</span>
                                 <RiMedalLine />
                             </div>
-                            <div className={style.statValue}>TLP</div>
-                            <span className={style.subjectBadge}>18.3 / 20</span>
+                            <div className={style.statValue}>{bestSubject.id_disciplina__nome.substring(0, 10)}</div>
+                            <span className={style.subjectBadge}>{bestSubject.media.toFixed(1)} / 20</span>
                         </div>
                         <div className={style.statCard}>
                             <div className={style.statHeader}>
                                 <span className={style.statLabel}>Status Acadêmico</span>
                                 <RiExpandDiagonalLine />
                             </div>
-                            <div className={`${style.statValue} ${style.statusOk}`}>Ótimo</div>
-                            <span className={style.statSubtext}>Reserva: 100%</span>
+                            <div className={`${style.statValue} ${stats.media_geral >= 10 ? style.statusOk : style.statusWarning}`}>
+                                {stats.media_geral >= 14 ? 'Excelente' : stats.media_geral >= 10 ? 'Aprovado' : 'Reprovado'}
+                            </div>
+                            <span className={style.statSubtext}>Frequência: {stats.presenca_percentual}%</span>
                         </div>
                     </div>
 
@@ -69,20 +90,26 @@ const Grades = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {gradesData.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className={style.subjectName}>{item.subject}</td>
-                                        <td>{item.q1}</td>
-                                        <td>{item.q2}</td>
-                                        <td>{item.q3}</td>
-                                        <td className={style.gradeAvg}>{item.avg}</td>
-                                        <td>
-                                            <span className={`${style.badge} ${item.status === 'Excelente' ? style.excellent : style.approved}`}>
-                                                {item.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {loading ? (
+                                    <tr><td colSpan="6">Carregando notas...</td></tr>
+                                ) : stats.notas_por_disciplina.length > 0 ? (
+                                    stats.notas_por_disciplina.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className={style.subjectName}>{item.id_disciplina__nome}</td>
+                                            <td>{item.media.toFixed(1)}</td>
+                                            <td>---</td>
+                                            <td>---</td>
+                                            <td className={style.gradeAvg}>{item.media.toFixed(1)}</td>
+                                            <td>
+                                                <span className={`${style.badge} ${item.media >= 14 ? style.excellent : item.media >= 10 ? style.approved : style.rejected}`}>
+                                                    {item.media >= 14 ? 'Excelente' : item.media >= 10 ? 'Aprovado' : 'Reprovado'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr><td colSpan="6">Nenhuma nota lançada ainda.</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

@@ -3,6 +3,7 @@ import style from './Settings.module.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
+import { useAuth } from '../../../Context/AuthContext'
 import {
     FaBuilding,
     FaDatabase,
@@ -11,19 +12,21 @@ import {
     FaCloudArrowDown,
     FaClockRotateLeft,
     FaCircleCheck,
-    FaTriangleExclamation
+    FaTriangleExclamation,
+    FaUser
 } from 'react-icons/fa6'
 
 export default function Settings() {
-    const [activeTab, setActiveTab] = useState('general')
+    const { user } = useAuth()
+    const [activeTab, setActiveTab] = useState('profile')
     const [isBackingUp, setIsBackingUp] = useState(false)
     const [backupProgress, setBackupProgress] = useState(0)
 
     const tabs = [
-        { id: 'general', label: 'Informações', icon: <FaBuilding /> },
-        { id: 'backup', label: 'Backup & Dados', icon: <FaDatabase /> },
+        { id: 'profile', label: 'Meu Perfil', icon: <FaUser /> },
+        { id: 'general', label: 'Instituição', icon: <FaBuilding /> },
+        { id: 'backup', label: 'Backup', icon: <FaDatabase /> },
         { id: 'security', label: 'Segurança', icon: <FaShieldHalved /> },
-        { id: 'system', label: 'Sistema', icon: <FaServer /> }
     ]
 
     const handleRunBackup = () => {
@@ -64,6 +67,44 @@ export default function Settings() {
 
                     {/* Content Area */}
                     <div className={style.ContentArea}>
+                        {activeTab === 'profile' && (
+                            <div className={style.SettingSection}>
+                                <div className={style.SectionHeader}>
+                                    <h3>Informações de Perfil</h3>
+                                    <p>Gerencie suas informações pessoais e de contato</p>
+                                </div>
+                                <div className={style.ProfileUpload}>
+                                    <div className={style.AvatarLarge}>
+                                        {user?.img_path ? (
+                                            <img src={user.img_path} alt={user.nome} />
+                                        ) : (
+                                            <span>{user?.nome?.split(' ').map(n => n[0]).join('')}</span>
+                                        )}
+                                    </div>
+                                    <button className={style.ChangePhotoBtn}>Alterar Foto</button>
+                                </div>
+                                <div className={style.FormGrid}>
+                                    <div className={style.InputGroup}>
+                                        <label>Nome Completo</label>
+                                        <input type="text" defaultValue={user?.nome} />
+                                    </div>
+                                    <div className={style.InputGroup}>
+                                        <label>Endereço de Email</label>
+                                        <input type="email" defaultValue={user?.email} />
+                                    </div>
+                                    <div className={style.InputGroup}>
+                                        <label>Cargo / Função</label>
+                                        <input type="text" defaultValue={user?.cargo || user?.tipo} disabled />
+                                    </div>
+                                    <div className={style.InputGroup}>
+                                        <label>Status</label>
+                                        <input type="text" defaultValue={user?.status} disabled />
+                                    </div>
+                                </div>
+                                <button className={style.SaveButton}>Atualizar Perfil</button>
+                            </div>
+                        )}
+
                         {activeTab === 'general' && (
                             <div className={style.SettingSection}>
                                 <div className={style.SectionHeader}>
@@ -172,54 +213,6 @@ export default function Settings() {
                                     <p className={style.HelperText}>Aumenta a segurança exigindo código via email.</p>
                                 </div>
                                 <button className={style.SaveButton}>Atualizar Segurança</button>
-                            </div>
-                        )}
-
-                        {activeTab === 'system' && (
-                            <div className={style.SettingSection}>
-                                <div className={style.SectionHeader}>
-                                    <h3>Status do Sistema</h3>
-                                    <p>Informações técnicas e recursos</p>
-                                </div>
-
-                                <div className={style.StatusGrid}>
-                                    <div className={style.StatusCard}>
-                                        <div className={style.StatusValue}>
-                                            <FaCircleCheck className={style.SuccessIcon} />
-                                            <span>Servidor Online</span>
-                                        </div>
-                                        <p>Tempo de atividade: 12 dias, 4 horas</p>
-                                    </div>
-                                    <div className={style.StatusCard}>
-                                        <div className={style.StatusValue}>
-                                            <FaServer className={style.InfoIcon} />
-                                            <span>Armazenamento</span>
-                                        </div>
-                                        <p>1.2 GB / 5 GB Utilizados (24%)</p>
-                                    </div>
-                                    <div className={style.StatusCard}>
-                                        <div className={style.StatusValue}>
-                                            <FaTriangleExclamation className={style.WarningIcon} />
-                                            <span>Carga da CPU</span>
-                                        </div>
-                                        <p>Oscilando em 15% - 22%</p>
-                                    </div>
-                                </div>
-
-                                <div className={style.SystemInfo}>
-                                    <div className={style.InfoRow}>
-                                        <span>Versão do Software:</span>
-                                        <strong>v2.4.0-stable</strong>
-                                    </div>
-                                    <div className={style.InfoRow}>
-                                        <span>Ambiente:</span>
-                                        <strong>Produção (WAMP64)</strong>
-                                    </div>
-                                    <div className={style.InfoRow}>
-                                        <span>Banco de Dados:</span>
-                                        <strong>MySQL 8.0.x</strong>
-                                    </div>
-                                </div>
                             </div>
                         )}
                     </div>

@@ -202,3 +202,33 @@ class Turma(BaseModel):
 
     def __str__(self):
         return self.codigo_turma
+
+
+class Horario(BaseModel):
+    """Horário das aulas (Timetable)"""
+    
+    DIA_SEMANA_CHOICES = [
+        ('Segunda-feira', 'Segunda-feira'),
+        ('Terça-feira', 'Terça-feira'),
+        ('Quarta-feira', 'Quarta-feira'),
+        ('Quinta-feira', 'Quinta-feira'),
+        ('Sexta-feira', 'Sexta-feira'),
+        ('Sábado', 'Sábado'),
+    ]
+    
+    id_horario = models.AutoField(primary_key=True)
+    id_turma = models.ForeignKey(Turma, on_delete=models.CASCADE, verbose_name='Turma', related_name='horarios')
+    id_disciplina = models.ForeignKey('Disciplina', on_delete=models.CASCADE, verbose_name='Disciplina')
+    id_professor = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Professor')
+    dia_semana = models.CharField(max_length=20, choices=DIA_SEMANA_CHOICES, verbose_name='Dia da Semana')
+    hora_inicio = models.TimeField(verbose_name='Hora de Início')
+    hora_fim = models.TimeField(verbose_name='Hora de Fim')
+    
+    class Meta:
+        db_table = 'horario'
+        verbose_name = 'Horário'
+        verbose_name_plural = 'Horários'
+        ordering = ['dia_semana', 'hora_inicio']
+    
+    def __str__(self):
+        return f"{self.id_turma.codigo_turma} - {self.dia_semana} ({self.hora_inicio}-{self.hora_fim})"

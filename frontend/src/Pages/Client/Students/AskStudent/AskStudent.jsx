@@ -4,24 +4,41 @@ import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { RiSendPlaneLine, RiCheckLine, RiErrorWarningLine } from 'react-icons/ri';
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const AskStudent = () => {
+  const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     docType: '',
     reason: '',
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.docType) return;
 
-    // Simulate API call
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false)
-      setFormData({ docType: '', reason: '' })
-    }, 4000);
+    setLoading(true);
+    try {
+      await api.post('/solicitacaodocumento/', {
+        id_aluno: user.id,
+        tipo_documento: formData.docType,
+        motivo: formData.reason,
+        status: 'Pendente'
+      });
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false)
+        setFormData({ docType: '', reason: '' })
+      }, 4000);
+    } catch (error) {
+      console.error("Erro ao enviar solicitação:", error);
+      alert("Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,10 +63,9 @@ const AskStudent = () => {
                   onChange={(e) => setFormData({ ...formData, docType: e.target.value })}
                 >
                   <option value="">Selecione um documento...</option>
-                  <option value="matriz">Declaração de Matrícula</option>
-                  <option value="boletim">Boletim Trimestral</option>
-                  <option value="certificado">Certificado de Habilitações</option>
-             
+                  <option value="Declaração de Matrícula">Declaração de Matrícula</option>
+                  <option value="Boletim Trimestral">Boletim Trimestral</option>
+                  <option value="Certificado de Habilitações">Certificado de Habilitações</option>
                 </select>
               </div>
 
@@ -63,12 +79,14 @@ const AskStudent = () => {
                 ></textarea>
               </div>
 
-              <button type="submit" className={style.submitBtn} disabled={submitted}>
+              <button type="submit" className={style.submitBtn} disabled={submitted || loading}>
                 {submitted ? (
                   <>
                     <RiCheckLine size={24} />
                     Solicitação Enviada!
                   </>
+                ) : loading ? (
+                  "Enviando..."
                 ) : (
                   <>
                     <RiSendPlaneLine />

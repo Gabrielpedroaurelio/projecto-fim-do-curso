@@ -38,7 +38,7 @@ class FuncionarioListSerializer(serializers.ModelSerializer):
         model = Funcionario
         fields = [
             'id_funcionario', 'codigo_identificacao', 'nome_completo',
-            'cargo_nome', 'email', 'status_funcionario', 'is_online'
+            'cargo_nome', 'email', 'status_funcionario', 'is_online', 'img_path'
         ]
 
 
@@ -64,7 +64,7 @@ class EncarregadoListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Encarregado
-        fields = ['id_encarregado', 'nome_completo', 'email', 'telefone']
+        fields = ['id_encarregado', 'nome_completo', 'email', 'telefone', 'img_path']
 
 
 class CargoFuncionarioSerializer(serializers.ModelSerializer):

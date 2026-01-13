@@ -10,31 +10,48 @@ import {
   AreaChart, Area
 } from 'recharts';
 import CardsDocments from '../../../../Components/Elements/CardsDocuments/CardsDocuments';
-
-const performanceData = [
-  { month: 'Jan', grade: 12 },
-  { month: 'Fev', grade: 14 },
-  { month: 'Mar', grade: 13 },
-  { month: 'Abr', grade: 16 },
-  { month: 'Mai', grade: 15 },
-  { month: 'Jun', grade: 18 },
-];
-
-const attendanceData = [
-  { name: 'Seg', status: 100 },
-  { name: 'Ter', status: 80 },
-  { name: 'Qua', status: 100 },
-  { name: 'Qui', status: 90 },
-  { name: 'Sex', status: 100 },
-];
+import { useAuth } from '../../../../Context/AuthContext';
+import api from '../../../../Services/api';
 
 const DashboardsStudents = () => {
+  const { user } = useAuth();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [stats, setStats] = useState({
+    media_geral: 0,
+    presenca_percentual: 0,
+    total_faltas: 0,
+    notas_por_disciplina: []
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await api.get(`/alunos/${user.id}/boletim/`);
+        setStats(response.data);
+        setIsLoaded(true);
+      } catch (error) {
+        console.error("Erro ao buscar dados do dashboard:", error);
+        setIsLoaded(true);
+      }
+    };
+    if (user?.id) fetchData();
+  }, [user]);
+
+  // Map backend notes to evolution chart
+  const performanceData = stats.notas_por_disciplina.length > 0
+    ? stats.notas_por_disciplina.map(n => ({ month: n.id_disciplina__nome.substring(0, 3), grade: n.media }))
+    : [
+      { month: 'Jan', grade: 0 },
+      { month: 'Fev', grade: 0 },
+      { month: 'Mar', grade: 0 },
+      { month: 'Abr', grade: 0 },
+    ];
+
+  const attendanceData = [
+    { name: 'Total', status: stats.presenca_percentual },
+    { name: 'Meta', status: 75 },
+    { name: 'Hist.', status: 90 },
+  ];
 
   return (
     <div className='containelGeralclient'>
@@ -43,7 +60,7 @@ const DashboardsStudents = () => {
         <Header text1="Estudante" text2="Dashboard" />
         <div className={`${style.dashboardContainer} ${isLoaded ? style.loaded : ''}`}>
           <header className={style.welcomeSection}>
-            <h1>Bem-vindo de volta, [Aluno logado]</h1>
+            <h1>Bem-vindo de volta, {user?.nome || 'Estudante'}</h1>
             <p>Acompanhe seu progresso acadêmico.</p>
           </header>
 
@@ -52,26 +69,26 @@ const DashboardsStudents = () => {
               <Cards
                 icon={<RiLineChartLine size={30} />}
                 title="Média Geral"
-                value="15.8"
-                value_percentual={4.2}
+                value={stats.media_geral.toString()}
+                value_percentual={stats.media_geral >= 10 ? 5 : -2}
               />
               <Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
-                value="96.5%"
-                value_percentual={1.5}
+                value={`${stats.presenca_percentual}%`}
+                value_percentual={stats.presenca_percentual >= 75 ? 2.1 : -4.5}
               />
               <Cards
                 icon={<RiArticleLine size={30} />}
-                title="Provas Agendadas"
-                value="2 Próximas"
+                title="Faltas Acumuladas"
+                value={`${stats.total_faltas} Faltas`}
                 value_percentual={0}
               />
               <Cards
                 icon={<RiFileList3Line size={30} />}
-                title="Trabalhos"
-                value="4 Pendentes"
-                value_percentual={20}
+                title="Status Geral"
+                value={stats.media_geral >= 10 ? "Aprovado" : "Em Risco"}
+                value_percentual={100}
               />
             </div>
           </div>
@@ -109,7 +126,7 @@ const DashboardsStudents = () => {
 
             <div className={style.cardChart}>
               <div className={style.sectionHeader}>
-                <h2>Frequência por Semana</h2>
+                <h2>Frequência Acadêmica</h2>
               </div>
               <div className={style.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
