@@ -33,16 +33,24 @@ class DocumentoViewSet(viewsets.ModelViewSet):
             return DocumentoListSerializer
         return DocumentoSerializer
     
-    @action(detail=True, methods=['get'])
-    def download(self, request, pk=None):
-        """Download do documento PDF"""
-        documento = self.get_object()
-        # Implementar lógica de download do PDF
-        return Response({
-            'message': 'Endpoint para download de documento',
-            'caminho_pdf': documento.caminho_pdf,
-            'uuid': str(documento.uuid_documento)
-        })
+    @action(detail=False, methods=['get'])
+    def para_encarregado(self, request):
+        """Retorna documentos de todos os educandos de um encarregado"""
+        id_encarregado = request.query_params.get('id_encarregado')
+        if not id_encarregado:
+            return Response({'error': 'ID do encarregado é obrigatório'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        from apis.models import AlunoEncarregado
+        aluno_ids = AlunoEncarregado.objects.filter(id_encarregado_id=id_encarregado).values_list('id_aluno_id', flat=True)
+        documentos = self.queryset.filter(id_aluno_id__in=aluno_ids)
+        
+        page = self.paginate_queryset(documentos)
+        if page is not None:
+            serializer = DocumentoListSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+            
+        serializer = DocumentoListSerializer(documentos, many=True)
+        return Response(serializer.data)
 
 
 class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
@@ -68,9 +76,20 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def minhas(self, request):
-        """Retorna solicitações do usuário autenticado"""
-        # Implementar lógica baseada no tipo de usuário (aluno/encarregado)
-        return Response({'message': 'Endpoint para minhas solicitações'})
+        """Retorna solicitações do usuário autenticado (Encarregado)"""
+        id_encarregado = request.query_params.get('id_encarregado')
+        if not id_encarregado:
+            return Response({'error': 'ID do encarregado é obrigatório'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        solicitacoes = self.queryset.filter(id_encarregado_id=id_encarregado)
+        
+        page = self.paginate_queryset(solicitacoes)
+        if page is not None:
+            serializer = SolicitacaoDocumentoListSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = SolicitacaoDocumentoListSerializer(solicitacoes, many=True)
+        return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
     def pendentes(self, request):

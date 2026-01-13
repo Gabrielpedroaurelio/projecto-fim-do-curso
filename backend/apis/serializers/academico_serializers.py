@@ -103,7 +103,7 @@ class TurmaSerializer(serializers.ModelSerializer):
             'id_periodo', 'periodo_nome', 'ano', 'id_responsavel',
             'responsavel_nome', 'criado_em', 'atualizado_em'
         ]
-        read_only_fields = ['id_turma', 'criado_em', 'atualizado_em']
+        read_only_fields = ['id_turma', 'codigo_turma', 'criado_em', 'atualizado_em']
 
 
 class TurmaListSerializer(serializers.ModelSerializer):

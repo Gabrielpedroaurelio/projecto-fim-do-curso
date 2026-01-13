@@ -177,6 +177,7 @@ class TurmaAdmin(ModelAdmin):
     list_filter = ['id_curso', 'id_classe', 'id_periodo', 'ano']
     search_fields = ['codigo_turma']
     list_per_page = 20
+    readonly_fields = ['codigo_turma']
     
     @display(description='Curso', ordering='id_curso__nome_curso')
     def curso_badge(self, obj):

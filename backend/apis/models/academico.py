@@ -145,7 +145,7 @@ class Periodo(models.Model):
     ]
     
     id_periodo = models.AutoField(primary_key=True)
-    periodo = models.CharField(max_length=10, choices=PERIODO_CHOICES)
+    periodo = models.CharField(max_length=10, choices=PERIODO_CHOICES,unique=True)
     id_responsavel = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -171,8 +171,8 @@ class Turma(BaseModel):
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Curso')
     id_classe = models.ForeignKey(Classe, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Classe')
     id_periodo = models.ForeignKey(Periodo, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Período')
-    ano = models.CharField(null=True, blank=True, verbose_name='Ano',default=f"{str(datetime.date.year)}")
-    codigo_turma = models.CharField(max_length=50, unique=True, verbose_name='Código da Turma')
+    ano = models.CharField(max_length=4, null=True, blank=True, verbose_name='Ano', default=lambda: str(datetime.date.today().year))
+    codigo_turma = models.CharField(max_length=50, unique=True, blank=True, verbose_name='Código da Turma')
     id_responsavel = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,

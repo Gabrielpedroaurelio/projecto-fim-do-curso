@@ -24,12 +24,15 @@ class AlunoSerializer(serializers.ModelSerializer):
 class AlunoListSerializer(serializers.ModelSerializer):
     """Serializer simplificado para listagem de Alunos"""
     turma_codigo = serializers.CharField(source='id_turma.codigo_turma', read_only=True)
+    classe_nivel = serializers.CharField(source='id_turma.id_classe.nivel', read_only=True)
+    curso_nome = serializers.CharField(source='id_turma.id_curso.nome_curso', read_only=True)
     
     class Meta:
         model = Aluno
         fields = [
             'id_aluno', 'nome_completo', 'numero_matricula',
-            'email', 'turma_codigo', 'status_aluno', 'genero'
+            'email', 'turma_codigo', 'classe_nivel', 'curso_nome',
+            'status_aluno', 'genero'
         ]
 
 
