@@ -22,7 +22,7 @@ from apis.models import (
     # Matrículas
     Inscricao, Matricula,
     # Auditoria
-    Historico, HistoricoLogin,
+    Historico, HistoricoLogin, Notificacao, ConfiguracaoSistema
 )
 
 
@@ -50,11 +50,12 @@ class CargoAdmin(ModelAdmin):
 
 @admin.register(Funcionario)
 class FuncionarioAdmin(ModelAdmin):
-    list_display = ['id_funcionario', 'nome_completo', 'codigo_identificacao', 
+    list_display = ['img_path','id_funcionario', 'nome_completo', 'codigo_identificacao', 
                     'cargo_badge', 'email', 'status_badge', 'online_badge']
     list_filter = ['status_funcionario', 'id_cargo', 'genero']
     search_fields = ['nome_completo', 'email', 'codigo_identificacao']
     list_per_page = 20
+    list_display_links=('nome_completo', 'email',)
     fieldsets = (
         ('Informações Básicas', {
             'fields': ('codigo_identificacao', 'nome_completo', 'numero_bi', 'id_cargo')
@@ -204,7 +205,7 @@ class TurmaAdmin(ModelAdmin):
 
 
 @admin.register(Curso)
-class CursoAdmin(ModelAdmin):
+class CargoAdmin(ModelAdmin):
     list_display = ['id_curso', 'nome_curso', 'area_badge', 'duracao', 'total_turmas']
     list_filter = ['id_area_formacao']
     search_fields = ['nome_curso']
@@ -242,7 +243,7 @@ class NotaAdmin(ModelAdmin):
     search_fields = ['id_aluno__nome_completo']
     list_per_page = 20
     
-    @display(description='Aluno', ordering='id_aluno__nome_completo')
+    @display(description='Alunos', ordering='id_aluno__nome_completo')
     def aluno_nome(self, obj):
         return obj.id_aluno.nome_completo
     
@@ -334,3 +335,36 @@ admin.site.register(Inscricao, ModelAdmin)
 admin.site.register(Matricula, ModelAdmin)
 admin.site.register(Historico, ModelAdmin)
 admin.site.register(HistoricoLogin, ModelAdmin)
+
+@admin.register(Notificacao)
+class NotificacaoAdmin(ModelAdmin):
+    list_display = ['id_notificacao', 'titulo', 'tipo_badge', 'alvo', 'lida', 'data_criacao']
+    list_filter = ['tipo', 'lida', 'data_criacao']
+    search_fields = ['titulo', 'mensagem']
+    list_per_page = 20
+    
+    @display(description='Tipo', ordering='tipo')
+    def tipo_badge(self, obj):
+        colors = {
+            'info': 'info',
+            'success': 'success',
+            'warning': 'warning',
+            'error': 'danger'
+        }
+        color = colors.get(obj.tipo, 'secondary')
+        return format_html('<span class="badge badge-{}">{}</span>', color, obj.tipo.upper())
+    
+    @display(description='Alvo')
+    def alvo(self, obj):
+        if obj.id_funcionario:
+            return f"Func: {obj.id_funcionario.nome_completo}"
+        if obj.id_aluno:
+            return f"Aluno: {obj.id_aluno.nome_completo}"
+        if obj.id_encarregado:
+            return f"Enc: {obj.id_encarregado.nome_completo}"
+        return "Todos / Admin"
+
+@admin.register(ConfiguracaoSistema)
+class ConfiguracaoSistemaAdmin(ModelAdmin):
+    list_display = ['nome_instituicao', 'nif', 'telefone', 'email_oficial', 'backup_automatico']
+    search_fields = ['nome_instituicao', 'nif']

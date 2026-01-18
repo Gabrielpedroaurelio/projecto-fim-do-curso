@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import style from './Dashboards.module.css'
 import '../../../assets/style/global.style.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
@@ -6,50 +6,54 @@ import Header from '../../../Components/Elements/Header/Header'
 import Cards from '../../../Components/Elements/Cards/Cards'
 import { FaCircleCheck, FaFileInvoice, FaMagnifyingGlass, FaUserGraduate } from 'react-icons/fa6'
 import { RiBillLine } from 'react-icons/ri'
+import api from '../../../Services/api'
 
-// IMPORTAÇ~OES PARA OS GRAFICOS
+// IMPORTAÇÕES PARA OS GRAFICOS
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 
-/* DADOS FICTICIOS */
-const performanceData = [
-    { subject: 'Vendas', A: 120, fullMark: 150 },
-    { subject: 'Campanha', A: 98, fullMark: 150 },
-    { subject: 'Referral', A: 86, fullMark: 150 },
-    { subject: 'Satisfação', A: 99, fullMark: 150 },
-    { subject: 'Retenção', A: 85, fullMark: 150 },
-    { subject: 'Novos', A: 65, fullMark: 150 },
-];
-const revenueData = [
-    { name: 'Jan', value: 4000 },
-    { name: 'Fev', value: 3000 },
-    { name: 'Mar', value: 2000 },
-    { name: 'Abr', value: 2780 },
-    { name: 'Mai', value: 1890 },
-    { name: 'Jun', value: 2390 },
-    { name: 'Jul', value: 3490 },
-    { name: 'Ago', value: 4000 },
-    { name: 'Set', value: 3000 },
-    { name: 'Out', value: 4500 },
-    { name: 'Nov', value: 3800 },
-    { name: 'Dez', value: 4200 },
-];
-const activities_recently = [
-    { id: 1, Nome: "Gabriel Aurelio", Curso: "Informatica de Gestão", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
-    { id: 2, Nome: "Aguinaldo Arnaldo", Curso: "Informatica de Gestao", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
-    { id: 3, Nome: "Leonel Antonio", Curso: "Informatica", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
-    { id: 4, Nome: "Ernesto Buka", Curso: "Informatica", Descrição: "Solicitação", TIPO: "Declaração", Data: "2026-01-05", Status: "Concluido" },
-]
-
 export default function Dashboards() {
     const [searchTerm, setSearchTerm] = useState('')
+    const [stats, setStats] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    const filteredActivities = activities_recently.filter(activity =>
-        activity.Nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.Curso.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.TIPO.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await api.get('dashboard/stats/')
+                setStats(response.data)
+            } catch (error) {
+                console.error("Erro ao carregar dados do dashboard:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchStats()
+    }, [])
+
+    if (loading) {
+        return (
+            <div className={'ContainerGeneral'}>
+                <NavBarMenu />
+                <main className={'ContainerMain'}>
+                    <Header text1={"Resumo"} text2={"Dashboard"} onSearch={setSearchTerm} />
+                    <div className="flex items-center justify-center h-full">
+                        <p>Carregando dados do dashboard...</p>
+                    </div>
+                </main>
+            </div>
+        )
+    }
+
+    if (!stats) return null
+    const { kpis, revenue_data, performance_data, recent_activities } = stats
+
+    const filteredActivities = recent_activities.filter(activity =>
+        activity.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.tipo_documento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.status_solicitacao.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     return (
@@ -58,27 +62,45 @@ export default function Dashboards() {
             <main className={'ContainerMain'}>
                 <Header text1={"Resumo"} text2={"Dashboard"} onSearch={setSearchTerm} />
                 <div className={style.GridCards}>
-                    <Cards icon={<FaFileInvoice size={40} />} title={"Total Solicitações"} value={"8,456"} value_percentual={22.2} />
-                    <Cards icon={<FaCircleCheck size={40} />} value_percentual={"104.5"} title={"Declarações Emitidas"} value={"4,450"} />
-                    <Cards icon={<FaUserGraduate size={40} />} title={"Novos Alunos"} value_percentual={12.3} value={"34,567"} />
-                    <Cards icon={<RiBillLine size={40} />} title={"Receita Total"} value={"Kz 80,768"} value_percentual={14.8} />
+                    <Cards
+                        icon={<FaFileInvoice size={40} />}
+                        title={"Total Solicitações"}
+                        value={kpis.total_solicitacoes.toLocaleString()}
+                        value_percentual={kpis.percentuais.solicitacoes}
+                    />
+                    <Cards
+                        icon={<FaCircleCheck size={40} />}
+                        title={"Declarações Emitidas"}
+                        value={kpis.declaracoes_emitidas.toLocaleString()}
+                        value_percentual={kpis.percentuais.declaracoes}
+                    />
+                    <Cards
+                        icon={<FaUserGraduate size={40} />}
+                        title={"Novos Alunos"}
+                        value={kpis.novos_alunos.toLocaleString()}
+                        value_percentual={kpis.percentuais.alunos}
+                    />
+                    <Cards
+                        icon={<RiBillLine size={40} />}
+                        title={"Receita Total"}
+                        value={`Kz ${kpis.receita_total.toLocaleString()}`}
+                        value_percentual={kpis.percentuais.receita}
+                    />
                 </div>
                 <div className={style.ChartsRow}>
                     <div className={style.RevenueChart}>
                         <div className={style.ChartHeader}>
                             <div>
                                 <h3>Crescimento da Receita</h3>
-                                <h2>Kz 189,400.00</h2>
+                                <h2>Kz {kpis.receita_total.toLocaleString()}</h2>
                             </div>
                             <div className={style.DateTabs}>
-                                <button className={style.Active}>Semanal</button>
-                                <button>Mensal</button>
-                                <button>Anual</button>
+                                <button className={style.Active}>Mensal</button>
                             </div>
                         </div>
                         <div className="h-[150px] w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={revenueData}>
+                                <BarChart data={revenue_data}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} dy={10} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
@@ -117,7 +139,7 @@ export default function Dashboards() {
                         </div>
                         <div className="h-[150px] w-full flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart outerRadius={60} data={performanceData}>
+                                <RadarChart outerRadius={60} data={performance_data}>
                                     <PolarGrid stroke="var(--border-color)" />
                                     <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
                                     <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="transparent" />
@@ -161,32 +183,43 @@ export default function Dashboards() {
                             <thead>
                                 <tr>
                                     <th>Nome</th>
-                                    <th>Curso</th>
-                                    <th>Descrição </th>
-                                    <th>Tipo Documento</th>
+                                    <th>Tipo</th>
                                     <th>Data</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredActivities.map((activity) => (
-                                    <tr key={activity.id}>
+                                    <tr key={activity.id_solicitacao}>
                                         <td>
                                             <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-                                                <span>{activity.Nome}</span>
+                                                {activity.aluno_img ? (
+                                                    <img src={activity.aluno_img} alt="" className="w-8 h-8 rounded-full object-cover" />
+                                                ) : (
+                                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                        {activity.aluno_nome.charAt(0)}
+                                                    </div>
+                                                )}
+                                                <span>{activity.aluno_nome}</span>
                                             </div>
                                         </td>
-                                        <td>{activity.Curso}</td>
-                                        <td>{activity.Descrição}</td>
-                                        <td>{activity.TIPO}</td>
-                                        <td>2025-09-02</td>
-                                        <td><span className={style.StatusBadgeBlue}>{activity.Status}</span></td>
+                                        <td>{activity.tipo_documento}</td>
+                                        <td>{new Date(activity.data_solicitacao).toLocaleDateString()}</td>
+                                        <td>
+                                            <span className={
+                                                activity.status_solicitacao === 'pendente' ? style.StatusBadgeOrange :
+                                                    activity.status_solicitacao === 'aprovado' ? style.StatusBadgeGreen :
+                                                        activity.status_solicitacao === 'pago' ? style.StatusBadgeBlue :
+                                                            style.StatusBadgeRed
+                                            }>
+                                                {activity.status_solicitacao}
+                                            </span>
+                                        </td>
                                     </tr>
                                 ))}
                                 {filteredActivities.length === 0 && (
                                     <tr>
-                                        <td colSpan="6" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                                        <td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
                                             Nenhum resultado encontrado para "{searchTerm}"
                                         </td>
                                     </tr>

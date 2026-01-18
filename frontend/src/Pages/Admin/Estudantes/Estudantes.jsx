@@ -22,7 +22,7 @@ export default function Estudantes() {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await api.get('/api/v1/alunos/')
+                const response = await api.get('alunos/')
                 const data = response.data.results || response.data
                 setStudents(data.map(student => ({
                     id: student.id_aluno,
@@ -44,8 +44,22 @@ export default function Estudantes() {
         fetchStudents()
     }, [])
 
-    const handleAdd = () => {
-        console.log("Add student clicked");
+    const handleExport = async () => {
+        try {
+            const response = await api.get('alunos/export_csv/', {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `alunos_${new Date().getTime()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Erro ao exportar alunos:", error);
+            alert("Erro ao gerar relatório. Por favor, tente novamente.");
+        }
     };
 
     return (
@@ -61,7 +75,7 @@ export default function Estudantes() {
                         externalSearchTerm={searchTerm}
                         data={students}
                         columns={columns}
-                        onAdd={handleAdd}
+                        onAdd={handleExport}
                         searchPlaceholder="Pesquisar por nome ou matrícula"
                     />
                 )}

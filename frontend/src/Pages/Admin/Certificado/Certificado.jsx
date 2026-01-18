@@ -1,32 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import style from './Certificado.module.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaCertificate, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
+import api from '../../../Services/api'
 
-// Sample templates data
+// Sample templates data (Keeping static for now)
 const templatesData = [
     { id: 1, name: "Certificado de Conclusão 2024", description: "Modelo oficial para conclusão de curso", lastModified: "2024-01-10", isActive: true },
     { id: 2, name: "Certificado de Participação", description: "Para eventos e workshops", lastModified: "2023-12-15", isActive: false },
     { id: 3, name: "Certificado de Mérito", description: "Reconhecimento de excelência académica", lastModified: "2023-11-20", isActive: false },
 ]
 
-// Sample generated documents
-const documentsData = [
-    { id: 1, student: "Eleanor Pena", course: "12ª Classe - Ciências", year: "2023", date: "2024-01-15", status: "Emitido" },
-    { id: 2, student: "Jessica Rose", course: "11ª Classe - Letras", year: "2023", date: "2024-01-14", status: "Em Processamento" },
-    { id: 3, student: "Jenny Wilson", course: "12ª Classe - Ciências", year: "2023", date: "2024-01-13", status: "Emitido" },
-    { id: 4, student: "Guy Hawkins", course: "10ª Classe", year: "2023", date: "2024-01-12", status: "Emitido" },
-]
-
 export default function Certificado() {
     const [activeTab, setActiveTab] = useState('modelos')
     const [searchTerm, setSearchTerm] = useState('')
+    const [documents, setDocuments] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const filteredDocuments = documentsData.filter(doc =>
-        doc.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.course.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await api.get('documentos/?tipo_documento=CERTIFICADO')
+                setDocuments(response.data.results || response.data)
+            } catch (error) {
+                console.error("Erro ao carregar certificados:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchDocuments()
+    }, [])
+
+    const filteredDocuments = documents.filter(doc =>
+        doc.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.curso && doc.curso.toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
     const filteredTemplates = templatesData.filter(template =>
@@ -60,11 +69,20 @@ export default function Certificado() {
     }
 
     const handleViewDocument = (doc) => {
-        console.log('Visualizar documento:', doc)
+        if (doc.caminho_pdf) {
+            window.open(doc.caminho_pdf, '_blank')
+        }
     }
 
     const handleDownloadDocument = (doc) => {
-        console.log('Download documento:', doc)
+        if (doc.caminho_pdf) {
+            const link = document.createElement('a')
+            link.href = doc.caminho_pdf
+            link.download = `certificado_${doc.aluno_nome}_${doc.uuid_documento}.pdf`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
     }
 
     return (
@@ -169,65 +187,75 @@ export default function Certificado() {
 
                                 {/* Documents Table */}
                                 <div className={style.TableWrapper}>
-                                    <table className={style.Table}>
-                                        <thead>
-                                            <tr>
-                                                <th>Estudante</th>
-                                                <th>Curso</th>
-                                                <th>Ano Letivo</th>
-                                                <th>Data de Emissão</th>
-                                                <th>Status</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {filteredDocuments.map(doc => (
-                                                <tr key={doc.id}>
-                                                    <td>
-                                                        <div className={style.StudentCell}>
-                                                            <div className={style.Avatar}>
-                                                                {doc.student.split(' ').map(n => n[0]).join('')}
-                                                            </div>
-                                                            <span>{doc.student}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td>{doc.course}</td>
-                                                    <td>{doc.year}</td>
-                                                    <td>{doc.date}</td>
-                                                    <td>
-                                                        <span className={`${style.StatusBadge} ${doc.status === 'Emitido' ? style.StatusIssued : style.StatusProcessing}`}>
-                                                            {doc.status}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div className={style.ActionButtons}>
-                                                            <button
-                                                                className={style.ViewBtn}
-                                                                onClick={() => handleViewDocument(doc)}
-                                                                title="Visualizar"
-                                                            >
-                                                                <FaEye />
-                                                            </button>
-                                                            <button
-                                                                className={style.DownloadBtn}
-                                                                onClick={() => handleDownloadDocument(doc)}
-                                                                title="Download"
-                                                            >
-                                                                <FaDownload />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            {filteredDocuments.length === 0 && (
+                                    {loading ? (
+                                        <div className="flex items-center justify-center p-10">
+                                            <p>Carregando certificados...</p>
+                                        </div>
+                                    ) : (
+                                        <table className={style.Table}>
+                                            <thead>
                                                 <tr>
-                                                    <td colSpan="6" className={style.EmptyState}>
-                                                        Nenhum certificado encontrado para "{searchTerm}"
-                                                    </td>
+                                                    <th>Estudante</th>
+                                                    <th>Curso</th>
+                                                    <th>Classe</th>
+                                                    <th>Data de Emissão</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {filteredDocuments.map(doc => (
+                                                    <tr key={doc.id_documento}>
+                                                        <td>
+                                                            <div className={style.StudentCell}>
+                                                                <div className={style.Avatar}>
+                                                                    {doc.aluno_img ? (
+                                                                        <img src={doc.aluno_img} alt={doc.aluno_nome} />
+                                                                    ) : (
+                                                                        doc.aluno_nome?.split(' ').map(n => n[0]).join('')
+                                                                    )}
+                                                                </div>
+                                                                <span>{doc.aluno_nome}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>{doc.curso || 'N/A'}</td>
+                                                        <td>{doc.classe || 'N/A'}</td>
+                                                        <td>{new Date(doc.data_emissao).toLocaleDateString()}</td>
+                                                        <td>
+                                                            <span className={`${style.StatusBadge} ${style.StatusIssued}`}>
+                                                                Emitido
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div className={style.ActionButtons}>
+                                                                <button
+                                                                    className={style.ViewBtn}
+                                                                    onClick={() => handleViewDocument(doc)}
+                                                                    title="Visualizar"
+                                                                >
+                                                                    <FaEye />
+                                                                </button>
+                                                                <button
+                                                                    className={style.DownloadBtn}
+                                                                    onClick={() => handleDownloadDocument(doc)}
+                                                                    title="Download"
+                                                                >
+                                                                    <FaDownload />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {filteredDocuments.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className={style.EmptyState}>
+                                                            Nenhum certificado encontrado para "{searchTerm}"
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    )}
                                 </div>
                             </>
                         )}

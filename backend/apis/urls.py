@@ -6,10 +6,10 @@ from rest_framework.routers import DefaultRouter
 
 from apis.views import (
     # Auth views
-    login_view, logout_view, me_view,
+    login_view, logout_view, me_view, update_profile_view, change_password_view,
     # ViewSets
     CargoViewSet, FuncionarioViewSet, EncarregadoViewSet, CargoFuncionarioViewSet,
-    AlunoViewSet, AlunoEncarregadoViewSet,
+    AlunoViewSet, AlunoEncarregadoViewSet, NotificacaoViewSet,
     SalaViewSet, ClasseViewSet, DepartamentoViewSet, SeccaoViewSet,
     AreaFormacaoViewSet, CursoViewSet, PeriodoViewSet, TurmaViewSet,
     TipoDisciplinaViewSet, DisciplinaViewSet, DisciplinaCursoViewSet,
@@ -17,7 +17,8 @@ from apis.views import (
     DocumentoViewSet, SolicitacaoDocumentoViewSet,
     CategoriaViewSet, LivroViewSet,
     FaturaViewSet, PagamentoViewSet,
-    HistoricoLoginViewSet,
+    HistoricoLoginViewSet, BackupViewSet, ConfiguracaoSistemaViewSet,
+    DashboardStatsAPIView,
 )
 
 # Criar router e registrar ViewSets
@@ -63,13 +64,22 @@ router.register(r'livros', LivroViewSet, basename='livro')
 router.register(r'faturas', FaturaViewSet, basename='fatura')
 router.register(r'pagamentos', PagamentoViewSet, basename='pagamento')
 router.register(r'historico-login', HistoricoLoginViewSet, basename='historico-login')
+router.register(r'backups', BackupViewSet, basename='backup')
+router.register(r'configuracao-sistema', ConfiguracaoSistemaViewSet, basename='configuracao-sistema')
 
 # URLs
+router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
+
 urlpatterns = [
     # Autenticação
     path('auth/login/', login_view, name='login'),
     path('auth/logout/', logout_view, name='logout'),
     path('auth/me/', me_view, name='me'),
+    path('auth/update-profile/', update_profile_view, name='update-profile'),
+    path('auth/change-password/', change_password_view, name='change-password'),
+    
+    # Dashboard
+    path('dashboard/stats/', DashboardStatsAPIView.as_view(), name='dashboard-stats'),
     
     # Incluir rotas do router
     path('', include(router.urls)),

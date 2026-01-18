@@ -1,6 +1,58 @@
 from django.db import models
 from .usuarios import Funcionario, Encarregado
 from .alunos import Aluno
+from .base import BaseModel
+class Notificacao(models.Model):
+    """Sistema de notificações do sistema"""
+    TIPOS = (
+        ('info', 'Informação'),
+        ('success', 'Sucesso'),
+        ('warning', 'Aviso'),
+        ('error', 'Erro'),
+    )
+
+    id_notificacao = models.AutoField(primary_key=True)
+    titulo = models.CharField(max_length=200, verbose_name='Título')
+    mensagem = models.TextField(verbose_name='Mensagem')
+    tipo = models.CharField(max_length=10, choices=TIPOS, default='info', verbose_name='Tipo')
+    lida = models.BooleanField(default=False, verbose_name='Lida')
+    data_criacao = models.DateTimeField(auto_now_add=True, verbose_name='Data de Criação')
+    
+    # Destinatários (opcionais)
+    id_funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, null=True, blank=True, related_name='notificacoes')
+    id_aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True, blank=True, related_name='notificacoes')
+    id_encarregado = models.ForeignKey(Encarregado, on_delete=models.CASCADE, null=True, blank=True, related_name='notificacoes')
+
+    class Meta:
+        db_table = 'notificacao'
+        verbose_name = 'Notificação'
+        verbose_name_plural = 'Notificações'
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return self.titulo
+
+
+class ConfiguracaoSistema(BaseModel):
+    """Configurações gerais do sistema e dados da instituição"""
+    nome_instituicao = models.CharField(max_length=200, verbose_name='Nome da Instituição')
+    nif = models.CharField(max_length=50, verbose_name='NIF', null=True, blank=True)
+    endereco = models.CharField(max_length=255, verbose_name='Endereço', null=True, blank=True)
+    telefone = models.CharField(max_length=50, verbose_name='Telefone', null=True, blank=True)
+    email_oficial = models.EmailField(verbose_name='Email Oficial', null=True, blank=True)
+    logo = models.ImageField(upload_to='config/logos/', null=True, blank=True, verbose_name='Logo')
+    
+    # Configurações de Backup
+    backup_automatico = models.BooleanField(default=True, verbose_name='Backup Automático')
+    frequencia_backup = models.CharField(max_length=50, default='diario', verbose_name='Frequência de Backup')
+    
+    class Meta:
+        db_table = 'configuracao_sistema'
+        verbose_name = 'Configuração do Sistema'
+        verbose_name_plural = 'Configurações do Sistema'
+
+    def __str__(self):
+        return self.nome_instituicao
 
 
 class Historico(models.Model):

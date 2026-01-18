@@ -20,7 +20,7 @@ export default function Encarregado() {
     useEffect(() => {
         const fetchGuardians = async () => {
             try {
-                const response = await api.get('/api/v1/encarregados/')
+                const response = await api.get('encarregados/')
                 const data = response.data.results || response.data
                 setGuardians(data.map(g => ({
                     id: g.id_encarregado,
@@ -40,8 +40,22 @@ export default function Encarregado() {
         fetchGuardians()
     }, [])
 
-    const handleAdd = () => {
-        console.log("Add guardian clicked");
+    const handleExport = async () => {
+        try {
+            const response = await api.get('encarregados/export_csv/', {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `encarregados_${new Date().getTime()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Erro ao exportar encarregados:", error);
+            alert("Erro ao gerar relatório. Por favor, tente novamente.");
+        }
     };
 
     return (
@@ -57,7 +71,7 @@ export default function Encarregado() {
                         externalSearchTerm={searchTerm}
                         data={guardians}
                         columns={columns}
-                        onAdd={handleAdd}
+                        onAdd={handleExport}
                         searchPlaceholder="Pesquisar por nome ou ID"
                     />
                 )}

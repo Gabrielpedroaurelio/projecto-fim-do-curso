@@ -19,7 +19,7 @@ export default function Solicitacao() {
     useEffect(() => {
         const fetchSolicitacoes = async () => {
             try {
-                const response = await api.get('/api/v1/solicitacoes/')
+                const response = await api.get('solicitacoes/')
                 const data = response.data.results || response.data
                 setSolicitacoes(data)
             } catch (error) {

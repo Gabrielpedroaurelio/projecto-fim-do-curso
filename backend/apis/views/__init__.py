@@ -1,5 +1,5 @@
 # Importar todas as views para facilitar o uso
-from .auth_views import login_view, logout_view, me_view
+from .auth_views import login_view, logout_view, me_view, update_profile_view, change_password_view
 from .usuario_views import (
     CargoViewSet, FuncionarioViewSet, EncarregadoViewSet, CargoFuncionarioViewSet
 )
@@ -16,10 +16,13 @@ from .documento_views import DocumentoViewSet, SolicitacaoDocumentoViewSet
 from .biblioteca_views import CategoriaViewSet, LivroViewSet
 from .financeiro_views import FaturaViewSet, PagamentoViewSet
 from .auditoria_views import HistoricoLoginViewSet
+from .notificacao_views import NotificacaoViewSet
+from .backup_views import BackupViewSet, ConfiguracaoSistemaViewSet
+from .dashboard_api_views import DashboardStatsAPIView
 
 __all__ = [
     # Auth
-    'login_view', 'logout_view', 'me_view',
+    'login_view', 'logout_view', 'me_view', 'update_profile_view', 'change_password_view',
     # Usuários
     'CargoViewSet', 'FuncionarioViewSet', 'EncarregadoViewSet', 'CargoFuncionarioViewSet',
     # Alunos
@@ -37,4 +40,7 @@ __all__ = [
     # Financeiro
     'FaturaViewSet', 'PagamentoViewSet',
     'HistoricoLoginViewSet',
+    'BackupViewSet', 'ConfiguracaoSistemaViewSet',
+    'DashboardStatsAPIView',
+    'NotificacaoViewSet',
 ]

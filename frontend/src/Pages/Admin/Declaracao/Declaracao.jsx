@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import style from './Declaracao.module.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
+import api from '../../../Services/api'
 
-// Sample templates data
+// Sample templates data (Keeping static for now)
 const templatesData = [
     { id: 1, name: "Declaração de Matrícula", description: "Modelo padrão para declaração de matrícula", lastModified: "2024-01-10", isActive: true },
     { id: 2, name: "Declaração de Frequência", description: "Comprova frequência do aluno", lastModified: "2023-12-15", isActive: false },
@@ -13,22 +14,30 @@ const templatesData = [
     { id: 4, name: "Declaração de Transferência", description: "Para transferência entre escolas", lastModified: "2023-10-05", isActive: false },
 ]
 
-// Sample generated documents
-const documentsData = [
-    { id: 1, student: "Eleanor Pena", type: "Matrícula", class: "10ª Classe", date: "2024-01-15", status: "Aprovado" },
-    { id: 2, student: "Jessica Rose", type: "Frequência", class: "11ª Classe", date: "2024-01-14", status: "Pendente" },
-    { id: 3, student: "Jenny Wilson", type: "Conclusão", class: "12ª Classe", date: "2024-01-13", status: "Aprovado" },
-    { id: 4, student: "Guy Hawkins", type: "Transferência", class: "9ª Classe", date: "2024-01-12", status: "Aprovado" },
-]
-
 export default function Declaracao() {
     const [activeTab, setActiveTab] = useState('modelos')
     const [searchTerm, setSearchTerm] = useState('')
+    const [documents, setDocuments] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const filteredDocuments = documentsData.filter(doc =>
-        doc.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.class.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await api.get('documentos/?tipo_documento=DECLARAÇÃO')
+                setDocuments(response.data.results || response.data)
+            } catch (error) {
+                console.error("Erro ao carregar declarações:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchDocuments()
+    }, [])
+
+    const filteredDocuments = documents.filter(doc =>
+        doc.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.tipo_documento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.classe && doc.classe.toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
     const filteredTemplates = templatesData.filter(template =>
@@ -62,11 +71,20 @@ export default function Declaracao() {
     }
 
     const handleViewDocument = (doc) => {
-        console.log('Visualizar documento:', doc)
+        if (doc.caminho_pdf) {
+            window.open(doc.caminho_pdf, '_blank')
+        }
     }
 
     const handleDownloadDocument = (doc) => {
-        console.log('Download documento:', doc)
+        if (doc.caminho_pdf) {
+            const link = document.createElement('a')
+            link.href = doc.caminho_pdf
+            link.download = `declaracao_${doc.aluno_nome}_${doc.uuid_documento}.pdf`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
     }
 
     return (
@@ -171,65 +189,75 @@ export default function Declaracao() {
 
                                 {/* Documents Table */}
                                 <div className={style.TableWrapper}>
-                                    <table className={style.Table}>
-                                        <thead>
-                                            <tr>
-                                                <th>Estudante</th>
-                                                <th>Tipo de Declaração</th>
-                                                <th>Classe</th>
-                                                <th>Data de Emissão</th>
-                                                <th>Status</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {filteredDocuments.map(doc => (
-                                                <tr key={doc.id}>
-                                                    <td>
-                                                        <div className={style.StudentCell}>
-                                                            <div className={style.Avatar}>
-                                                                {doc.student.split(' ').map(n => n[0]).join('')}
-                                                            </div>
-                                                            <span>{doc.student}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td>{doc.type}</td>
-                                                    <td>{doc.class}</td>
-                                                    <td>{doc.date}</td>
-                                                    <td>
-                                                        <span className={`${style.StatusBadge} ${doc.status === 'Aprovado' ? style.StatusApproved : style.StatusPending}`}>
-                                                            {doc.status}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div className={style.ActionButtons}>
-                                                            <button
-                                                                className={style.ViewBtn}
-                                                                onClick={() => handleViewDocument(doc)}
-                                                                title="Visualizar"
-                                                            >
-                                                                <FaEye />
-                                                            </button>
-                                                            <button
-                                                                className={style.DownloadBtn}
-                                                                onClick={() => handleDownloadDocument(doc)}
-                                                                title="Download"
-                                                            >
-                                                                <FaDownload />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            {filteredDocuments.length === 0 && (
+                                    {loading ? (
+                                        <div className="flex items-center justify-center p-10">
+                                            <p>Carregando declarações...</p>
+                                        </div>
+                                    ) : (
+                                        <table className={style.Table}>
+                                            <thead>
                                                 <tr>
-                                                    <td colSpan="6" className={style.EmptyState}>
-                                                        Nenhuma declaração encontrada para "{searchTerm}"
-                                                    </td>
+                                                    <th>Estudante</th>
+                                                    <th>Tipo de Declaração</th>
+                                                    <th>Classe</th>
+                                                    <th>Data de Emissão</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {filteredDocuments.map(doc => (
+                                                    <tr key={doc.id_documento}>
+                                                        <td>
+                                                            <div className={style.StudentCell}>
+                                                                <div className={style.Avatar}>
+                                                                    {doc.aluno_img ? (
+                                                                        <img src={doc.aluno_img} alt={doc.aluno_nome} />
+                                                                    ) : (
+                                                                        doc.aluno_nome?.split(' ').map(n => n[0]).join('')
+                                                                    )}
+                                                                </div>
+                                                                <span>{doc.aluno_nome}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>{doc.tipo_documento}</td>
+                                                        <td>{doc.classe || 'N/A'}</td>
+                                                        <td>{new Date(doc.data_emissao).toLocaleDateString()}</td>
+                                                        <td>
+                                                            <span className={`${style.StatusBadge} ${style.StatusApproved}`}>
+                                                                Aprovado
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div className={style.ActionButtons}>
+                                                                <button
+                                                                    className={style.ViewBtn}
+                                                                    onClick={() => handleViewDocument(doc)}
+                                                                    title="Visualizar"
+                                                                >
+                                                                    <FaEye />
+                                                                </button>
+                                                                <button
+                                                                    className={style.DownloadBtn}
+                                                                    onClick={() => handleDownloadDocument(doc)}
+                                                                    title="Download"
+                                                                >
+                                                                    <FaDownload />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {filteredDocuments.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className={style.EmptyState}>
+                                                            Nenhuma declaração encontrada para "{searchTerm}"
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    )}
                                 </div>
                             </>
                         )}

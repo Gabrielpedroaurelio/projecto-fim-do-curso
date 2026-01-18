@@ -1,7 +1,8 @@
 /* DataTable Container */
 .DataTableContainer {
     padding: 0;
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
 }
 
 /* Header Section */
@@ -147,6 +148,24 @@
 /* Table Wrapper */
 .TableWrapper {
     overflow-x: auto;
+}
+
+.TableWrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.TableWrapper::-webkit-scrollbar-track {
+    background: var(--bg-card);
+    border-radius: 10px;
+}
+
+.TableWrapper::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.TableWrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
 }
 
 .Table {
@@ -445,5 +464,35 @@
     .Pagination {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* Loading State */
+.LoadingState {
+    text-align: center;
+    padding: 4rem 1rem !important;
+}
+
+.LoadingWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+}
+
+.Spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(14, 165, 233, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }

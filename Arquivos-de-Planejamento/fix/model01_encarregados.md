@@ -1,0 +1,1 @@
+no dashboard melhora os grafico, coloque grafico de comparacao entre os rendimentos dos filhos ou educandos

@@ -63,6 +63,40 @@ class FuncionarioViewSet(viewsets.ModelViewSet):
         serializer = CargoFuncionarioSerializer(historico, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """Exporta lista de funcionários em formato CSV"""
+        import csv
+        from django.http import HttpResponse
+        from django.utils import timezone
+
+        response = HttpResponse(content_type='text/csv')
+        filename = f"funcionarios_export_{timezone.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Código', 'Nome Completo', 'Email', 'Número BI', 
+            'Telefone', 'Cargo', 'Status', 'Online', 'Data Admissão'
+        ])
+
+        funcionarios = self.filter_queryset(self.get_queryset())
+        for f in funcionarios:
+            writer.writerow([
+                f.id_funcionario,
+                f.codigo_identificacao,
+                f.nome_completo,
+                f.email or '',
+                f.numero_bi or '',
+                f.telefone or '',
+                f.id_cargo.nome_cargo if f.id_cargo else 'Sem Cargo',
+                f.status_funcionario,
+                'Sim' if f.is_online else 'Não',
+                f.data_admissao.strftime('%Y-%m-%d') if f.data_admissao else ''
+            ])
+
+        return response
+
 
 class EncarregadoViewSet(viewsets.ModelViewSet):
     """ViewSet para Encarregado"""
@@ -91,6 +125,58 @@ class EncarregadoViewSet(viewsets.ModelViewSet):
         alunos = [v.id_aluno for v in vinculos]
         serializer = AlunoListSerializer(alunos, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def rendimento_educandos(self, request, pk=None):
+        """Retorna o rendimento médio de cada educando para comparação"""
+        from apis.models import AlunoEncarregado, Nota
+        from django.db.models import Avg
+        
+        encarregado = self.get_object()
+        vinculos = AlunoEncarregado.objects.filter(
+            id_encarregado=encarregado
+        ).select_related('id_aluno')
+        
+        rendimento = []
+        for v in vinculos:
+            media = Nota.objects.filter(id_aluno=v.id_aluno).aggregate(Avg('valor'))['valor__avg'] or 0
+            rendimento.append({
+                'id_aluno': v.id_aluno.id_aluno,
+                'nome': v.id_aluno.nome_completo.split(' ')[0], # Primeiro nome para o gráfico
+                'nome_completo': v.id_aluno.nome_completo,
+                'media': round(float(media), 1)
+            })
+            
+        return Response(rendimento)
+
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """Exporta lista de encarregados em formato CSV"""
+        import csv
+        from django.http import HttpResponse
+        from django.utils import timezone
+
+        response = HttpResponse(content_type='text/csv')
+        filename = f"encarregados_export_{timezone.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Nome Completo', 'Email', 'Telefone', 'Província', 'Data Cadastro'
+        ])
+
+        encarregados = self.filter_queryset(self.get_queryset())
+        for e in encarregados:
+            writer.writerow([
+                e.id_encarregado,
+                e.nome_completo,
+                e.email or '',
+                e.telefone or '', 
+                e.provincia_residencia or '',
+                e.criado_em.strftime('%Y-%m-%d %H:%M')
+            ])
+
+        return response
 
 
 class CargoFuncionarioViewSet(viewsets.ModelViewSet):

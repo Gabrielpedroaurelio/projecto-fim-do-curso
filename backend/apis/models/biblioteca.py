@@ -39,6 +39,7 @@ class Livro(models.Model):
         verbose_name='Categoria'
     )
     data_upload = models.DateTimeField(auto_now_add=True, verbose_name='Data de Upload')
+    img_path = models.ImageField(upload_to='image/biblioteca/capas/', null=True, blank=True, verbose_name='Capa do Livro')
     
     class Meta:
         db_table = 'livro'

@@ -18,12 +18,28 @@ def get_client_ip(request):
 
 
 def get_user_agent_info(request):
-    """Extrai informações do User-Agent"""
-    user_agent = request.META.get('HTTP_USER_AGENT', '')
-    # Simplificado - pode usar biblioteca como user-agents para parsing mais detalhado
+    """Extrai informações detalhadas do User-Agent utilizando a biblioteca user_agents"""
+    from user_agents import parse
+    ua_string = request.META.get('HTTP_USER_AGENT', '')
+    user_agent = parse(ua_string)
+    
+    # Determinar tipo de dispositivo
+    if user_agent.is_mobile:
+        dispositivo = "Mobile"
+    elif user_agent.is_tablet:
+        dispositivo = "Tablet"
+    elif user_agent.is_pc:
+        dispositivo = "Desktop"
+    else:
+        dispositivo = "Desconhecido"
+
+    # Capturar Navegador e SO
+    navegador = f"{user_agent.browser.family} {user_agent.browser.version_string}"
+    so = f"{user_agent.os.family} {user_agent.os.version_string}"
+    
     return {
-        'dispositivo': user_agent[:150] if user_agent else 'Desconhecido',
-        'navegador': user_agent[:150] if user_agent else 'Desconhecido'
+        'dispositivo': dispositivo,
+        'navegador': f"{navegador} ({so})"
     }
 
 
@@ -289,3 +305,105 @@ def me_view(request):
             {'error': f'Erro ao obter dados do usuário: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+@api_view(['PATCH', 'POST'])
+def update_profile_view(request):
+    """
+    Atualiza informações do perfil e foto do usuário autenticado
+    """
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    
+    try:
+        jwt_auth = JWTAuthentication()
+        user_auth_tuple = jwt_auth.authenticate(request)
+        
+        if user_auth_tuple is None:
+            return Response({'error': 'Não autorizado'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        token = user_auth_tuple[1]
+        user_id = token.payload.get('user_id')
+        user_type = token.payload.get('user_type')
+        
+        user = None
+        if user_type == 'funcionario':
+            user = Funcionario.objects.get(id_funcionario=user_id)
+        elif user_type == 'aluno':
+            user = Aluno.objects.get(id_aluno=user_id)
+        elif user_type == 'encarregado':
+            user = Encarregado.objects.get(id_encarregado=user_id)
+            
+        if not user:
+            return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Atualizar campos
+        if 'nome' in request.data:
+            user.nome_completo = request.data['nome']
+        if 'email' in request.data:
+            user.email = request.data['email']
+        if 'img_path' in request.FILES:
+            user.img_path = request.FILES['img_path']
+        if 'telefone' in request.data:
+            user.telefone = request.data['telefone']
+            
+        user.save()
+        
+        # Retornar dados atualizados
+        user_data = {
+            'id': user_id,
+            'tipo': user_type,
+            'nome': user.nome_completo,
+            'email': user.email,
+            'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
+        }
+        
+        return Response({'user': user_data, 'message': 'Perfil atualizado com sucesso'})
+        
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def change_password_view(request):
+    """
+    Altera a senha do usuário autenticado
+    """
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from django.contrib.auth.hashers import check_password, make_password
+    
+    try:
+        jwt_auth = JWTAuthentication()
+        user_auth_tuple = jwt_auth.authenticate(request)
+        
+        if user_auth_tuple is None:
+            return Response({'error': 'Não autorizado'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        token = user_auth_tuple[1]
+        user_id = token.payload.get('user_id')
+        user_type = token.payload.get('user_type')
+        
+        senha_atual = request.data.get('senha_atual')
+        nova_senha = request.data.get('nova_senha')
+        
+        if not senha_atual or not nova_senha:
+            return Response({'error': 'Senha atual e nova senha são obrigatórias'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        user = None
+        if user_type == 'funcionario':
+            user = Funcionario.objects.get(id_funcionario=user_id)
+        elif user_type == 'aluno':
+            user = Aluno.objects.get(id_aluno=user_id)
+        elif user_type == 'encarregado':
+            user = Encarregado.objects.get(id_encarregado=user_id)
+            
+        if not user:
+            return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            
+        if not check_password(senha_atual, user.senha_hash):
+            return Response({'error': 'Senha atual incorreta'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        user.senha_hash = make_password(nova_senha)
+        user.save()
+        
+        return Response({'message': 'Senha alterada com sucesso'})
+        
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

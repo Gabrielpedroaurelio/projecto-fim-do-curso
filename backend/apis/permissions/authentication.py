@@ -36,13 +36,20 @@ class SchoolJWTAuthentication(JWTAuthentication):
 
     def get_user(self, validated_token):
         """
-        Sobrescreve para retornar o usuário Django se existir,
-        mas também podemos garantir que o perfil existe
+        Retorna o objeto do perfil (Funcionario, Aluno ou Encarregado)
+        baseado no user_type do token.
         """
+        user_id = validated_token.get('user_id')
+        user_type = validated_token.get('user_type')
+        
         try:
-            user = super().get_user(validated_token)
-            return user
+            if user_type == 'funcionario':
+                return Funcionario.objects.get(id_funcionario=user_id)
+            elif user_type == 'aluno':
+                return Aluno.objects.get(id_aluno=user_id)
+            elif user_type == 'encarregado':
+                return Encarregado.objects.get(id_encarregado=user_id)
         except Exception:
-            # Se for um login direto sem usuário Django (via profiles)
-            # Retornamos um objeto anônimo com as flags necessárias ou o próprio profile
             return None
+        
+        return None

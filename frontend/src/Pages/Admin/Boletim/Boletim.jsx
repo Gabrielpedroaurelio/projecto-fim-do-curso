@@ -1,31 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import style from './Boletim.module.css'
 import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
+import api from '../../../Services/api'
 
-// Sample templates data
+// Sample templates data (Keeping static for now as there is no backend model)
 const templatesData = [
     { id: 1, name: "Modelo Padrão 2024", description: "Modelo oficial do boletim escolar", lastModified: "2024-01-10", isActive: true },
     { id: 2, name: "Modelo Simplificado", description: "Versão reduzida para impressão", lastModified: "2023-12-15", isActive: false },
     { id: 3, name: "Modelo Detalhado", description: "Com notas e observações completas", lastModified: "2023-11-20", isActive: false },
 ]
 
-// Sample generated documents
-const documentsData = [
-    { id: 1, student: "Eleanor Pena", class: "10ª Classe", period: "1º Trimestre", date: "2024-01-15", status: "Finalizado" },
-    { id: 2, student: "Jessica Rose", class: "11ª Classe", period: "1º Trimestre", date: "2024-01-14", status: "Rascunho" },
-    { id: 3, student: "Jenny Wilson", class: "9ª Classe", period: "1º Trimestre", date: "2024-01-13", status: "Finalizado" },
-]
-
 export default function Boletim() {
     const [activeTab, setActiveTab] = useState('modelos')
     const [searchTerm, setSearchTerm] = useState('')
+    const [documents, setDocuments] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const filteredDocuments = documentsData.filter(doc =>
-        doc.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.class.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await api.get('documentos/?tipo_documento=BOLETIM')
+                setDocuments(response.data.results || response.data)
+            } catch (error) {
+                console.error("Erro ao carregar boletins:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchDocuments()
+    }, [])
+
+    const filteredDocuments = documents.filter(doc =>
+        doc.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.classe && doc.classe.toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
     const filteredTemplates = templatesData.filter(template =>
@@ -59,11 +69,20 @@ export default function Boletim() {
     }
 
     const handleViewDocument = (doc) => {
-        console.log('Visualizar documento:', doc)
+        if (doc.caminho_pdf) {
+            window.open(doc.caminho_pdf, '_blank')
+        }
     }
 
     const handleDownloadDocument = (doc) => {
-        console.log('Download documento:', doc)
+        if (doc.caminho_pdf) {
+            const link = document.createElement('a')
+            link.href = doc.caminho_pdf
+            link.download = `boletim_${doc.aluno_nome}_${doc.uuid_documento}.pdf`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
     }
 
     return (
@@ -168,65 +187,75 @@ export default function Boletim() {
 
                                 {/* Documents Table */}
                                 <div className={style.TableWrapper}>
-                                    <table className={style.Table}>
-                                        <thead>
-                                            <tr>
-                                                <th>Estudante</th>
-                                                <th>Classe</th>
-                                                <th>Período</th>
-                                                <th>Data de Emissão</th>
-                                                <th>Status</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {filteredDocuments.map(doc => (
-                                                <tr key={doc.id}>
-                                                    <td>
-                                                        <div className={style.StudentCell}>
-                                                            <div className={style.Avatar}>
-                                                                {doc.student.split(' ').map(n => n[0]).join('')}
-                                                            </div>
-                                                            <span>{doc.student}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td>{doc.class}</td>
-                                                    <td>{doc.period}</td>
-                                                    <td>{doc.date}</td>
-                                                    <td>
-                                                        <span className={`${style.StatusBadge} ${doc.status === 'Finalizado' ? style.StatusFinished : style.StatusDraft}`}>
-                                                            {doc.status}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div className={style.ActionButtons}>
-                                                            <button
-                                                                className={style.ViewBtn}
-                                                                onClick={() => handleViewDocument(doc)}
-                                                                title="Visualizar"
-                                                            >
-                                                                <FaEye />
-                                                            </button>
-                                                            <button
-                                                                className={style.DownloadBtn}
-                                                                onClick={() => handleDownloadDocument(doc)}
-                                                                title="Download"
-                                                            >
-                                                                <FaDownload />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            {filteredDocuments.length === 0 && (
+                                    {loading ? (
+                                        <div className="flex items-center justify-center p-10">
+                                            <p>Carregando boletins...</p>
+                                        </div>
+                                    ) : (
+                                        <table className={style.Table}>
+                                            <thead>
                                                 <tr>
-                                                    <td colSpan="6" className={style.EmptyState}>
-                                                        Nenhum boletim encontrado para "{searchTerm}"
-                                                    </td>
+                                                    <th>Estudante</th>
+                                                    <th>Classe</th>
+                                                    <th>Curso</th>
+                                                    <th>Data de Emissão</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {filteredDocuments.map(doc => (
+                                                    <tr key={doc.id_documento}>
+                                                        <td>
+                                                            <div className={style.StudentCell}>
+                                                                <div className={style.Avatar}>
+                                                                    {doc.aluno_img ? (
+                                                                        <img src={doc.aluno_img} alt={doc.aluno_nome} />
+                                                                    ) : (
+                                                                        doc.aluno_nome?.split(' ').map(n => n[0]).join('')
+                                                                    )}
+                                                                </div>
+                                                                <span>{doc.aluno_nome}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>{doc.classe || 'N/A'}</td>
+                                                        <td>{doc.curso || 'N/A'}</td>
+                                                        <td>{new Date(doc.data_emissao).toLocaleDateString()}</td>
+                                                        <td>
+                                                            <span className={`${style.StatusBadge} ${style.StatusFinished}`}>
+                                                                Finalizado
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div className={style.ActionButtons}>
+                                                                <button
+                                                                    className={style.ViewBtn}
+                                                                    onClick={() => handleViewDocument(doc)}
+                                                                    title="Visualizar"
+                                                                >
+                                                                    <FaEye />
+                                                                </button>
+                                                                <button
+                                                                    className={style.DownloadBtn}
+                                                                    onClick={() => handleDownloadDocument(doc)}
+                                                                    title="Download"
+                                                                >
+                                                                    <FaDownload />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {filteredDocuments.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className={style.EmptyState}>
+                                                            Nenhum boletim encontrado para "{searchTerm}"
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    )}
                                 </div>
                             </>
                         )}

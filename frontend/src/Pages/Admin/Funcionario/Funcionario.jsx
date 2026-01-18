@@ -21,7 +21,7 @@ export default function Funcionario() {
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await api.get('/api/v1/funcionarios/')
+                const response = await api.get('funcionarios/')
                 const data = response.data.results || response.data
                 setEmployees(data.map(emp => ({
                     id: emp.id_funcionario,
@@ -42,8 +42,22 @@ export default function Funcionario() {
         fetchEmployees()
     }, [])
 
-    const handleAdd = () => {
-        console.log("Add employee clicked");
+    const handleExport = async () => {
+        try {
+            const response = await api.get('funcionarios/export_csv/', {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `funcionarios_${new Date().getTime()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Erro ao exportar funcionários:", error);
+            alert("Erro ao gerar relatório. Por favor, tente novamente.");
+        }
     };
 
     return (
@@ -59,7 +73,7 @@ export default function Funcionario() {
                         externalSearchTerm={searchTerm}
                         data={employees}
                         columns={columns}
-                        onAdd={handleAdd}
+                        onAdd={handleExport}
                         searchPlaceholder="Pesquisar por nome ou ID"
                     />
                 )}

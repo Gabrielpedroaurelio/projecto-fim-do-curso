@@ -20,10 +20,24 @@ class DocumentoSerializer(serializers.ModelSerializer):
 class DocumentoListSerializer(serializers.ModelSerializer):
     """Serializer simplificado para listagem de Documentos"""
     aluno_nome = serializers.CharField(source='id_aluno.nome_completo', read_only=True)
+    aluno_img = serializers.SerializerMethodField()
+    classe = serializers.CharField(source='id_aluno.id_turma.id_classe.nivel', read_only=True)
+    curso = serializers.CharField(source='id_aluno.id_turma.id_curso.nome_curso', read_only=True)
     
     class Meta:
         model = Documento
-        fields = ['id_documento', 'tipo_documento', 'aluno_nome', 'uuid_documento', 'data_emissao']
+        fields = [
+            'id_documento', 'tipo_documento', 'aluno_nome', 'aluno_img', 
+            'classe', 'curso', 'caminho_pdf', 'uuid_documento', 'data_emissao'
+        ]
+
+    def get_aluno_img(self, obj):
+        request = self.context.get('request')
+        if obj.id_aluno and obj.id_aluno.img_path:
+            if request:
+                return request.build_absolute_uri(obj.id_aluno.img_path.url)
+            return obj.id_aluno.img_path.url
+        return None
 
 
 class SolicitacaoDocumentoSerializer(serializers.ModelSerializer):

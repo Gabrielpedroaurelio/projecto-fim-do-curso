@@ -6,5 +6,9 @@ class BaseModel(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
     atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
     
+    @property
+    def is_authenticated(self):
+        return True
+
     class Meta:
         abstract = True

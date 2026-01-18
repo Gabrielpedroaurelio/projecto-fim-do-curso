@@ -11,7 +11,8 @@ export default function DataTable({
     onEdit,
     onDelete,
     searchPlaceholder = "Search by name or roll",
-    externalSearchTerm = ""
+    externalSearchTerm = "",
+    loading = false
 }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -91,7 +92,16 @@ export default function DataTable({
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems.length > 0 ? (
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={columns.length + 2} className={style.LoadingState}>
+                                        <div className={style.LoadingWrapper}>
+                                            <div className={style.Spinner}></div>
+                                            <span>Carregando dados...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : currentItems.length > 0 ? (
                                 currentItems.map((item, index) => (
                                     <tr key={index}>
                                         <td>

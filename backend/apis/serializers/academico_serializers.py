@@ -74,7 +74,7 @@ class CursoListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Curso
-        fields = ['id_curso', 'nome_curso', 'area_formacao_nome', 'duracao_meses']
+        fields = ['id_curso', 'nome_curso', 'area_formacao_nome', 'duracao']
 
 
 class PeriodoSerializer(serializers.ModelSerializer):
@@ -111,10 +111,15 @@ class TurmaListSerializer(serializers.ModelSerializer):
     curso_nome = serializers.CharField(source='id_curso.nome_curso', read_only=True)
     classe_nivel = serializers.IntegerField(source='id_classe.nivel', read_only=True)
     periodo_nome = serializers.CharField(source='id_periodo.periodo', read_only=True)
+    sala_numero = serializers.IntegerField(source='id_sala.numero_sala', read_only=True)
+    responsavel_nome = serializers.CharField(source='id_responsavel.nome_completo', read_only=True)
     
     class Meta:
         model = Turma
-        fields = ['id_turma', 'codigo_turma', 'curso_nome', 'classe_nivel', 'periodo_nome', 'ano']
+        fields = [
+            'id_turma', 'codigo_turma', 'curso_nome', 'classe_nivel', 
+            'periodo_nome', 'ano', 'sala_numero', 'responsavel_nome'
+        ]
 
 
 class HorarioSerializer(serializers.ModelSerializer):

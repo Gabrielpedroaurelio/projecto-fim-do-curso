@@ -16,6 +16,7 @@ import {
 import style from './Header.module.css'
 import { useAuth } from '../../../Context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../../Services/api';
 
 export default function Header({ text1, text2, onSearch }) {
     const { user, logout } = useAuth();
@@ -23,15 +24,54 @@ export default function Header({ text1, text2, onSearch }) {
     const [isDarkMode, setIsDarkMode] = useState(false)
     const [showNotifications, setShowNotifications] = useState(false)
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
+    const [notifications, setNotifications] = useState([])
+    const [unreadCount, setUnreadCount] = useState(0)
+    const [loadingNotifs, setLoadingNotifs] = useState(false)
     const notificationRef = useRef(null)
     const profileRef = useRef(null)
 
-    // Notifications mockup
-    const notifications = [
-        { id: 1, type: 'success', title: 'Backup concluído', time: 'Há 5 min', description: 'O backup do sistema foi realizado com sucesso.' },
-        { id: 2, type: 'warning', title: 'Nova solicitação', time: 'Há 12 min', description: 'Gabriel Aurelio solicitou um certificado.' },
-        { id: 3, type: 'info', title: 'Acesso detectado', time: 'Há 1 hora', description: 'Novo login do IP 192.168.1.45 detected.' },
-    ]
+    // Load Notifications from API
+    const fetchNotifications = async () => {
+        try {
+            setLoadingNotifs(true)
+            const response = await api.get('notificacoes/')
+            setNotifications(response.data.results || response.data)
+            setUnreadCount((response.data.results || response.data).filter(n => !n.lida).length)
+        } catch (error) {
+            console.error("Erro ao buscar notificações:", error)
+        } finally {
+            setLoadingNotifs(false)
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchNotifications()
+            // Polling opcional a cada 1 minuto
+            const interval = setInterval(fetchNotifications, 60000)
+            return () => clearInterval(interval)
+        }
+    }, [user])
+
+    const markAsRead = async (id) => {
+        try {
+            await api.post(`notificacoes/${id}/marcar_lida/`)
+            setNotifications(prev => prev.map(n => n.id_notificacao === id ? { ...n, lida: true } : n))
+            setUnreadCount(prev => Math.max(0, prev - 1))
+        } catch (error) {
+            console.error("Erro ao marcar como lida:", error)
+        }
+    }
+
+    const markAllAsRead = async () => {
+        try {
+            await api.post('notificacoes/marcar_todas_lidas/')
+            setNotifications(prev => prev.map(n => ({ ...n, lida: true })))
+            setUnreadCount(0)
+        } catch (error) {
+            console.error("Erro ao marcar todas como lidas:", error)
+        }
+    }
 
     // Load theme preference on mount
     useEffect(() => {
@@ -139,28 +179,40 @@ export default function Header({ text1, text2, onSearch }) {
                             onClick={() => setShowNotifications(!showNotifications)}
                         >
                             <RiNotification3Line />
-                            <span className={style.Badge}></span>
+                            {unreadCount > 0 && <span className={style.Badge}>{unreadCount}</span>}
                         </button>
 
                         {showNotifications && (
                             <div className={style.NotificationDropdown}>
                                 <div className={style.DropdownHeader}>
                                     <h3>Notificações</h3>
-                                    <span>Marcar como lidas</span>
+                                    <span onClick={markAllAsRead} style={{ cursor: 'pointer' }}>Marcar todas como lidas</span>
                                 </div>
                                 <div className={style.NotificationList}>
-                                    {notifications.map(notif => (
-                                        <div key={notif.id} className={style.NotificationItem}>
-                                            <div className={`${style.NotifIcon} ${style[notif.type]}`}>
-                                                {notif.type === 'success' ? <RiCheckLine /> : <RiErrorWarningLine />}
+                                    {loadingNotifs ? (
+                                        <div className={style.EmptyState}>Carregando...</div>
+                                    ) : notifications.length > 0 ? (
+                                        notifications.map(notif => (
+                                            <div
+                                                key={notif.id_notificacao}
+                                                className={`${style.NotificationItem} ${notif.lida ? style.Read : ''}`}
+                                                onClick={() => !notif.lida && markAsRead(notif.id_notificacao)}
+                                            >
+                                                <div className={`${style.NotifIcon} ${style[notif.tipo || 'info']}`}>
+                                                    {notif.tipo === 'success' ? <RiCheckLine /> : <RiErrorWarningLine />}
+                                                </div>
+                                                <div className={style.NotifContent}>
+                                                    <h4>{notif.titulo}</h4>
+                                                    <p>{notif.mensagem}</p>
+                                                    <span className={style.NotifTime}>
+                                                        {new Date(notif.data_criacao).toLocaleString()}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className={style.NotifContent}>
-                                                <h4>{notif.title}</h4>
-                                                <p>{notif.description}</p>
-                                                <span className={style.NotifTime}>{notif.time}</span>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    ) : (
+                                        <div className={style.EmptyState}>Sem notificações</div>
+                                    )}
                                 </div>
                                 <div className={style.DropdownFooter}>
                                     Ver todas as notificações

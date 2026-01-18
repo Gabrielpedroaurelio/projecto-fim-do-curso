@@ -11,7 +11,7 @@ from .documentos import Documento, SolicitacaoDocumento
 from .biblioteca import Categoria, Livro
 from .financeiro import Fatura, Pagamento
 from .matriculas import Inscricao, Matricula
-from .auditoria import Historico, HistoricoLogin
+from .auditoria import Historico, HistoricoLogin, Notificacao,ConfiguracaoSistema
 
 __all__ = [
     'BaseModel',
@@ -23,5 +23,5 @@ __all__ = [
     'Categoria', 'Livro',
     'Fatura', 'Pagamento',
     'Inscricao', 'Matricula',
-    'Historico', 'HistoricoLogin',
+    'Historico', 'HistoricoLogin','Notificacao','ConfiguracaoSistema'
 ]

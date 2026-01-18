@@ -11,12 +11,23 @@ export default function Histories() {
     const [searchTerm, setSearchTerm] = useState('')
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalCount, setTotalCount] = useState(0)
 
     useEffect(() => {
         const fetchHistory = async () => {
+            setLoading(true)
             try {
-                const response = await api.get('/api/v1/historico-login/')
-                const data = response.data.results || response.data
+                const response = await api.get('historico-login/', {
+                    params: {
+                        page: currentPage,
+                        search: searchTerm
+                    }
+                })
+
+                const data = response.data.results || []
+                setTotalCount(response.data.count || data.length)
+
                 setHistory(data.map(item => ({
                     id: item.id_historico_login,
                     user: item.usuario_nome,
@@ -35,16 +46,17 @@ export default function Histories() {
             }
         }
         fetchHistory()
-    }, [])
+    }, [currentPage, searchTerm])
 
-    const filteredData = history.filter(item =>
-        item.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.ip.includes(searchTerm)
-    )
+    const totalPages = Math.ceil(totalCount / 10)
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value)
+        setCurrentPage(1) // Reset to first page on search
+    }
 
     const getDeviceIcon = (device) => {
-        if (device.toLowerCase().includes('mobile')) return <FaMobileScreenButton />;
+        if (device && device.toLowerCase().includes('mobile')) return <FaMobileScreenButton />;
         return <FaLaptop />;
     }
 
@@ -55,27 +67,29 @@ export default function Histories() {
                 <Header text1={"Segurança"} text2={"Histórico de Logins"} onSearch={setSearchTerm} />
 
                 <div className={style.HistoryContainer}>
-                    {loading ? <div className="loading">Carregando...</div> : (
-                        <div className={style.TableCard}>
-                            {/* Table Header Controls */}
-                            <div className={style.CardHeader}>
-                                <div className={style.HeaderLeft}>
-                                    <h3>Registos de Atividade</h3>
-                                    <p>Monitorize acessos e sessões no sistema</p>
-                                </div>
-                                <div className={style.SearchBox}>
-                                    <FaMagnifyingGlass />
-                                    <input
-                                        type="text"
-                                        placeholder="Pesquisar por usuário, cargo ou IP..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </div>
+                    <div className={style.TableCard}>
+                        {/* Table Header Controls */}
+                        <div className={style.CardHeader}>
+                            <div className={style.HeaderLeft}>
+                                <h3>Registos de Atividade</h3>
+                                <p>Monitorize acessos e sessões no sistema</p>
                             </div>
+                            <div className={style.SearchBox}>
+                                <FaMagnifyingGlass />
+                                <input
+                                    type="text"
+                                    placeholder="Pesquisar por usuário ou IP..."
+                                    value={searchTerm}
+                                    onChange={handleSearch}
+                                />
+                            </div>
+                        </div>
 
-                            {/* Table */}
-                            <div className={style.TableWrapper}>
+                        {/* Table */}
+                        <div className={style.TableWrapper}>
+                            {loading ? (
+                                <div className="loading p-10 text-center">Carregando histórico...</div>
+                            ) : (
                                 <table className={style.Table}>
                                     <thead>
                                         <tr>
@@ -88,8 +102,8 @@ export default function Histories() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredData.length > 0 ? (
-                                            filteredData.map((item) => (
+                                        {history.length > 0 ? (
+                                            history.map((item) => (
                                                 <tr key={item.id}>
                                                     <td>
                                                         <div className={style.UserCell}>
@@ -97,7 +111,7 @@ export default function Histories() {
                                                                 {item.img_path ? (
                                                                     <img src={item.img_path} alt={item.user} />
                                                                 ) : (
-                                                                    item.user.split(' ').map(n => n[0]).join('')
+                                                                    item.user?.split(' ').map(n => n[0]).join('')
                                                                 )}
                                                             </div>
                                                             <div className={style.UserInfo}>
@@ -134,25 +148,35 @@ export default function Histories() {
                                         ) : (
                                             <tr>
                                                 <td colSpan="6" className={style.EmptyState}>
-                                                    Nenhum registo encontrado para "{searchTerm}"
+                                                    Nenhum registo encontrado.
                                                 </td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
-                            </div>
+                            )}
+                        </div>
 
-                            {/* Pagination footer - simplified for UI mockup */}
-                            <div className={style.TableFooter}>
-                                <span>Mostrando {filteredData.length} registos</span>
-                                <div className={style.Pagination}>
-                                    <button disabled>Anterior</button>
-                                    <button className={style.ActivePage}>1</button>
-                                    <button disabled>Próxima</button>
-                                </div>
+                        {/* Pagination footer */}
+                        <div className={style.TableFooter}>
+                            <span>Mostrando {history.length} de {totalCount} registos</span>
+                            <div className={style.Pagination}>
+                                <button
+                                    disabled={currentPage === 1 || loading}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                >
+                                    Anterior
+                                </button>
+                                <button className={style.ActivePage}>{currentPage}</button>
+                                <button
+                                    disabled={currentPage >= totalPages || loading}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                >
+                                    Próxima
+                                </button>
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
             </main>
         </div>

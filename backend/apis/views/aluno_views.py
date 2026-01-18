@@ -140,6 +140,39 @@ class AlunoViewSet(viewsets.ModelViewSet):
         )
         serializer = HorarioSerializer(horarios, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """Exporta lista de alunos em formato CSV"""
+        import csv
+        from django.http import HttpResponse
+        from django.utils import timezone
+
+        response = HttpResponse(content_type='text/csv')
+        filename = f"alunos_export_{timezone.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Nome Completo', 'Email', 'Número BI', 'Matrícula', 
+            'Gênero', 'Status', 'Turma', 'Data Criação'
+        ])
+
+        alunos = self.filter_queryset(self.get_queryset())
+        for aluno in alunos:
+            writer.writerow([
+                aluno.id_aluno,
+                aluno.nome_completo,
+                aluno.email or '',
+                aluno.numero_bi or '',
+                aluno.numero_matricula or '',
+                aluno.get_genero_display() if aluno.genero else '',
+                aluno.status_aluno,
+                aluno.id_turma.codigo_turma if aluno.id_turma else 'Sem Turma',
+                aluno.criado_em.strftime('%Y-%m-%d %H:%M')
+            ])
+
+        return response
     
     @action(detail=True, methods=['get'])
     def encarregados(self, request, pk=None):

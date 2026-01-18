@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
                     user_type: userType
                 });
             }
-        } catch (e) {
+        } catch {
             // Ignora erro no logout
         } finally {
             localStorage.removeItem('access_token');
@@ -33,7 +33,7 @@ export function AuthProvider({ children }) {
                 try {
                     const response = await api.get('/auth/me/');
                     setUser(response.data.user || response.data);
-                } catch (error) {
+                } catch {
                     logout();
                 }
             }
@@ -41,7 +41,8 @@ export function AuthProvider({ children }) {
         };
 
         loadUser();
-    }, [logout]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const login = async (email, senha, tipo_usuario) => {
         try {
