@@ -12,7 +12,7 @@ export default function CardDocuments() {
             </div>
             <div className={style.resourceInfo}>
                 <h3 className={style.resourceTitle}>Html5 & Css3</h3>
-                <p className={style.resourceAuthor}>{stateCategoria} </p>
+                <p className={style.resourceAuthor}>{"stateCategoria"} </p>
                 <div className={style.resourceFooter}>
                     <div className={style.resourceType}>Livro</div>
                     <div className={style.resourceActions}>

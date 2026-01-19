@@ -62,8 +62,8 @@ export default function MenuNavBarCliente({ user }) {
                         <span className={style.title_favicon}>IPM</span>
                     </div>
                     <div className={style.BtnToggleMenu}>
-                        <button onClick={() => settoggleMenuNavBar(!toggleMenuNavBar)}>
-                            <RiLayoutLeftLine size={25} />
+                        <button onClick={() => settoggleMenuNavBar(toggleMenuNavBar)}>
+                            {/*<RiLayoutLeftLine size={25} />*/}
                         </button>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default function MenuNavBarCliente({ user }) {
                         <span>gabrielpedroaurelio@gmail</span>
                     </div>
                 </div>
-                */}
+                
                 <div className={style.menu}>
                     <nav>
                         <Link to={'#'} onClick={(e) => { e.preventDefault(); settoggleBoxMessage(true) }}>
@@ -102,6 +102,7 @@ export default function MenuNavBarCliente({ user }) {
                         </Link>
                     </nav>
                 </div>
+                */}
             </div>
         </>
     )

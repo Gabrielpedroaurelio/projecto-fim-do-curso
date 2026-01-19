@@ -4,7 +4,7 @@
     background: var(--bg-card);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
+    /*border: 1px solid var(--border-color);*/
     border-radius: var(--radius-md);
     padding: 1.5rem;
     /* Reduced from 2.25rem for more petite look */
