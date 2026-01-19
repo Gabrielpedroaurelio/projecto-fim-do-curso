@@ -47,7 +47,12 @@ class Pagamento(BaseModel):
     id_fatura = models.ForeignKey(Fatura, on_delete=models.CASCADE, verbose_name='Fatura')
     valor_pago = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Valor Pago')
     metodo_pagamento = models.CharField(max_length=80, null=True, blank=True, verbose_name='Método de Pagamento')
-    comprovante_path = models.TextField(null=True, blank=True, verbose_name='Comprovante')
+    comprovante_path = models.FileField(
+        upload_to='comprovantes/',
+        null=True,
+        blank=True,
+        verbose_name='Comprovante'
+    )
     id_recebedor = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,

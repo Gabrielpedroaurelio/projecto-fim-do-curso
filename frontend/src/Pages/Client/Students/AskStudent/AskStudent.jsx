@@ -22,7 +22,7 @@ const AskStudent = () => {
 
     setLoading(true);
     try {
-      await api.post('/solicitacaodocumento/', {
+      await api.post('/solicitacoes/', {
         id_aluno: user.id,
         tipo_documento: formData.docType,
         motivo: formData.reason,

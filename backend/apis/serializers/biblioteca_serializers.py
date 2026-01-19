@@ -20,7 +20,7 @@ class LivroSerializer(serializers.ModelSerializer):
         model = Livro
         fields = [
             'id_livro', 'titulo', 'editora', 'id_responsavel', 'responsavel_nome',
-            'caminho_arquivo', 'img_path', 'id_categoria', 'categoria_nome', 'data_upload'
+            'caminho_arquivo', 'img_path', 'id_categoria', 'categoria_nome', 'data_upload', 'recomendado'
         ]
         read_only_fields = ['id_livro', 'data_upload']
 
@@ -31,4 +31,4 @@ class LivroListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Livro
-        fields = ['id_livro', 'titulo', 'editora', 'categoria_nome', 'data_upload', 'caminho_arquivo', 'img_path']
+        fields = ['id_livro', 'titulo', 'editora', 'categoria_nome', 'data_upload', 'caminho_arquivo', 'img_path', 'recomendado']

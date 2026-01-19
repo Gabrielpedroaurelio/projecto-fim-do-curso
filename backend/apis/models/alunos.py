@@ -24,7 +24,7 @@ class Aluno(BaseModel):
     nome_completo = models.CharField(max_length=150, verbose_name='Nome Completo')
     email = models.EmailField(max_length=250, unique=True, null=True, blank=True)
     numero_matricula = models.BigIntegerField(unique=True, null=True, blank=True, verbose_name='Número de Matrícula')
-    telefone = models.CharField(max_length=10, verbose_name='Telefone')
+    telefone = models.CharField(max_length=20, verbose_name='Telefone')
     provincia_residencia = models.CharField(max_length=100, null=True, blank=True)
     municipio_residencia = models.CharField(max_length=100, null=True, blank=True)
     bairro_residencia = models.CharField(max_length=100, null=True, blank=True)

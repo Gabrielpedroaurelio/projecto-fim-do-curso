@@ -48,7 +48,12 @@ const Children = () => {
               <p>Carregando educandos...</p>
             ) : childrenData.length > 0 ? (
               childrenData.map((child) => (
-                <Link to="/parent/actionstudent" key={child.id_aluno} className={style.childCard}>
+                <Link 
+                  to="/parent/actionstudent" 
+                  key={child.id_aluno} 
+                  className={style.childCard}
+                  onClick={() => localStorage.setItem('selectedStudent', JSON.stringify(child))}
+                >
                   <div className={style.avatar}>
                     {child.img_path ? (
                       <img src={child.img_path} alt={child.nome_completo} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />

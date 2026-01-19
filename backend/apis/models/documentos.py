@@ -53,10 +53,17 @@ class SolicitacaoDocumento(models.Model):
     """Solicitações de documentos"""
     
     STATUS_CHOICES = [
-        ('pendente', 'Pendente'),
-        ('aprovado', 'Aprovado'),
+        ('pendente', 'Pendente (Aguardando RUP)'),
+        ('pago', 'Pago (Confirmado)'),
+        ('aguardando_assinatura', 'Aguardando Assinatura'),
+        ('impresso', 'Impresso (Físico)'),
+        ('disponivel', 'Disponível para Levantamento'),
         ('rejeitado', 'Rejeitado'),
-        ('pago', 'Pago'),
+    ]
+
+    CANAL_PAGAMENTO_CHOICES = [
+        ('express', 'Multicaixa Express'),
+        ('fisico_rup', 'Impressão de RUP (Físico)'),
     ]
     
     id_solicitacao = models.AutoField(primary_key=True)
@@ -84,12 +91,25 @@ class SolicitacaoDocumento(models.Model):
     )
     tipo_documento = models.CharField(max_length=100, verbose_name='Tipo de Documento')
     status_solicitacao = models.CharField(
-        max_length=20,
+        max_length=30,
         choices=STATUS_CHOICES,
         default='pendente',
         verbose_name='Status'
     )
-    caminho_arquivo = models.TextField(null=True, blank=True, verbose_name='Arquivo Gerado')
+    canal_pagamento_rup = models.CharField(
+        max_length=20,
+        choices=CANAL_PAGAMENTO_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name='Canal de Pagamento'
+    )
+    data_expiracao_rup = models.DateTimeField(null=True, blank=True, verbose_name='Expiração do RUP')
+    caminho_arquivo = models.FileField(
+        upload_to='documentos/',
+        null=True,
+        blank=True,
+        verbose_name='Arquivo Gerado (PDF)'
+    )
     uuid_documento = models.UUIDField(null=True, blank=True, verbose_name='UUID do Documento')
     data_solicitacao = models.DateTimeField(auto_now_add=True, verbose_name='Data da Solicitação')
     data_aprovacao = models.DateTimeField(null=True, blank=True, verbose_name='Data de Aprovação')

@@ -29,15 +29,44 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
         # Opcional: Notificar funcionários da secretaria
         # Por simplicidade, vamos pular ou notificar todos os admins
     else:
-        # Se o status mudou para aprovado ou rejeitado
-        if instance.status_solicitacao == 'aprovado':
+        # Se o status mudou
+        if instance.status_solicitacao == 'pago':
+            # Notificar Diretor (Simplificado: Notificar todos os admins ou funcionário específico)
             Notificacao.objects.create(
-                titulo="Solicitação Aprovada",
-                mensagem=f"Sua solicitação de {instance.tipo_documento} foi aprovada!",
-                tipo='success',
-                id_aluno=instance.id_aluno,
-                id_encarregado=instance.id_encarregado
+                titulo="RUP Pago - Documento Pendente",
+                mensagem=f"O pagamento para {instance.tipo_documento} de {instance.id_aluno.nome_completo} foi confirmado. O documento pode ser gerado.",
+                tipo='info',
+                # Idealmente vincular a um perfil de Diretor/Secretaria. 
+                # Como não temos Diretor model explícito aqui, deixamos sem destinatário específico ou criamos logica futura.
+                # Para MVP, vamos assumir que o admin vê todas ou notificamos um funcionario padrao se existir.
             )
+            
+        elif instance.status_solicitacao == 'aguardando_assinatura':
+             Notificacao.objects.create(
+                titulo="Documento Aguardando Assinatura",
+                mensagem=f"O documento de {instance.id_aluno.nome_completo} foi gerado e aguarda sua assinatura digital.",
+                tipo='warning',
+                # id_funcionario=Diretor
+            )
+            
+        elif instance.status_solicitacao == 'disponivel':
+            msg = f"Seu documento ({instance.tipo_documento}) já está assinado e disponível para levantamento/download."
+            if instance.id_aluno:
+                Notificacao.objects.create(
+                    titulo="Documento Disponível",
+                    mensagem=msg,
+                    tipo='success',
+                    id_aluno=instance.id_aluno
+                )
+            if instance.id_encarregado:
+                # Se foi solicitado pelo encarregado ou se notificamos sempre
+                Notificacao.objects.create(
+                    titulo="Documento Disponível",
+                    mensagem=msg,
+                    tipo='success',
+                    id_encarregado=instance.id_encarregado
+                )
+
         elif instance.status_solicitacao == 'rejeitado':
             Notificacao.objects.create(
                 titulo="Solicitação Rejeitada",

@@ -6,8 +6,10 @@ import '../../../assets/style/global.style.css'
 import { FaMagnifyingGlass, FaPencil, FaTrash, FaDownload, FaEye } from 'react-icons/fa6'
 import { IoFilterSharp } from 'react-icons/io5'
 import api from '../../../Services/api'
+import SolicitacaoFlow from '../../../Components/Features/Documents/SolicitacaoFlow' // Importar Flow
 
 export default function Solicitacao() {
+    console.log("Solicitacao Page Loaded (Admin)");
     const [activeTab, setActiveTab] = useState('boletim')
     const [searchTerm, setSearchTerm] = useState('')
     const [filterDays, setFilterDays] = useState(30)
@@ -16,18 +18,25 @@ export default function Solicitacao() {
     const [currentPage, setCurrentPage] = useState(1)
     const [itemsPerPage] = useState(10)
 
-    useEffect(() => {
-        const fetchSolicitacoes = async () => {
-            try {
-                const response = await api.get('solicitacoes/')
-                const data = response.data.results || response.data
-                setSolicitacoes(data)
-            } catch (error) {
-                console.error("Erro ao carregar solicitações:", error)
-            } finally {
-                setLoading(false)
-            }
+    const fetchSolicitacoes = async () => {
+        console.log("Fetching solicitações...");
+        try {
+            const response = await api.get('solicitacoes/')
+            console.log("API Response:", response);
+            console.log("Response data:", response.data);
+            const data = response.data.results || response.data
+            console.log("Processed data:", data);
+            console.log("Data length:", data.length);
+            setSolicitacoes(data)
+        } catch (error) {
+            console.error("Erro ao carregar solicitações:", error)
+            console.error("Error details:", error.response?.data)
+        } finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchSolicitacoes()
     }, [])
 
@@ -35,14 +44,8 @@ export default function Solicitacao() {
     useEffect(() => {
         setCurrentPage(1)
     }, [activeTab, searchTerm, filterDays])
+
     const [showModal, setShowModal] = useState(false)
-    const [formData, setFormData] = useState({
-        tipoDocumento: '',
-        bilheteAluno: '',
-        classe: '',
-        curso: '',
-        ano: new Date().getFullYear().toString()
-    })
 
     const tabs = [
         { id: 'boletim', label: 'Boletim', icon: '' },
@@ -51,35 +54,16 @@ export default function Solicitacao() {
     ]
 
     const handleRequest = () => {
-        setFormData({
-            tipoDocumento: activeTab,
-            bilheteAluno: '',
-            classe: '',
-            curso: '',
-            ano: new Date().getFullYear().toString()
-        })
         setShowModal(true)
     }
 
-    const handleCloseModal = () => {
+    const handleCloseModal = (result) => {
         setShowModal(false)
+        if (result) {
+            // Se houve sucesso, recarregar a lista
+            fetchSolicitacoes();
+        }
     }
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-    }
-
-    const handleSubmitRequest = (e) => {
-        e.preventDefault()
-        console.log('Nova solicitação:', formData)
-        // Aqui você adicionaria a lógica para enviar para o backend
-        setShowModal(false)
-    }
-
 
     const handleView = (item) => {
         console.log('Visualizar:', item)
@@ -95,25 +79,30 @@ export default function Solicitacao() {
 
     const getStatusBadge = (status) => {
         const statusClasses = {
-            'Aprovado': style.StatusApproved,
-            'Pendente': style.StatusPending,
-            'Em Processamento': style.StatusProcessing,
-            'Rejeitado': style.StatusRejected
+            'pago': style.StatusApproved,
+            'aprovado': style.StatusApproved,
+            'pendente': style.StatusPending,
+            'em_processamento': style.StatusProcessing,
+            'rejeitado': style.StatusRejected
         }
-        return statusClasses[status] || style.StatusDefault
+        return statusClasses[status?.toLowerCase()] || style.StatusDefault
     }
 
     // Filtering logic
     const filteredData = solicitacoes.filter(item => {
-        const matchesTab = item.tipo_documento.toLowerCase() === activeTab.toLowerCase();
-        const matchesSearch = item.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase())
+        // Simple type check (can be improved)
+        const typeMatch = item.tipo_documento?.toLowerCase().includes(activeTab) ||
+            (activeTab === 'declaracao' && item.tipo_documento?.toLowerCase().includes('declaração'));
 
+        const nameMatch = item.aluno_nome?.toLowerCase().includes(searchTerm.toLowerCase())
+
+        // Date filter
         const itemDate = new Date(item.data_solicitacao)
         const diffTime = Math.abs(new Date() - itemDate)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        const matchesFilter = diffDays <= filterDays
+        const dateMatch = diffDays <= filterDays
 
-        return matchesTab && matchesSearch && matchesFilter
+        return typeMatch && nameMatch && dateMatch
     })
 
     // Pagination logic
@@ -160,7 +149,7 @@ export default function Solicitacao() {
                                 </div>
                                 <div className={style.HeaderActions}>
                                     <button className={style.RequestButton} onClick={handleRequest}>
-                                        + Nova Solicitação
+                                        + Nova Solicitação (Presencial)
                                     </button>
                                 </div>
                             </div>
@@ -191,17 +180,10 @@ export default function Solicitacao() {
                                 <table className={style.Table}>
                                     <thead>
                                         <tr>
-                                            <th>
-
-                                            </th>
                                             <th>Estudante</th>
-                                            {activeTab === 'boletim' && <th>Classe</th>}
-                                            {activeTab === 'declaracao' && <th>Tipo</th>}
-                                            {activeTab === 'certificado' && <th>Curso</th>}
+                                            <th>Documento</th>
                                             <th>Data Solicitação</th>
                                             <th>Status</th>
-                                            {activeTab === 'boletim' && <th>Formato</th>}
-                                            {activeTab === 'certificado' && <th>Ano</th>}
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -209,7 +191,6 @@ export default function Solicitacao() {
                                         {currentData.length > 0 ? (
                                             currentData.map((item) => (
                                                 <tr key={item.id_solicitacao || item.id}>
-                                                    <td></td>
                                                     <td>
                                                         <div className={style.StudentCell}>
                                                             <div className={style.Avatar}>
@@ -222,19 +203,16 @@ export default function Solicitacao() {
                                                             <span>{item.aluno_nome}</span>
                                                         </div>
                                                     </td>
-                                                    {activeTab === 'boletim' && <td>{item.classe || 'N/A'}</td>}
-                                                    {activeTab === 'declaracao' && <td>{item.tipo_documento}</td>}
-                                                    {activeTab === 'certificado' && <td>{item.curso || 'N/A'}</td>}
+                                                    <td>{item.tipo_documento}</td>
                                                     <td>{new Date(item.data_solicitacao).toLocaleDateString()}</td>
                                                     <td>
                                                         <span className={`${style.StatusBadge} ${getStatusBadge(item.status_solicitacao)}`}>
                                                             {item.status_solicitacao}
                                                         </span>
                                                     </td>
-                                                    {activeTab === 'boletim' && <td>PDF</td>}
-                                                    {activeTab === 'certificado' && <td>{item.ano || '2024'}</td>}
                                                     <td>
                                                         <div className={style.ActionButtons}>
+                                                            {/* Actions can be enhanced later */}
                                                             <button
                                                                 className={style.ViewBtn}
                                                                 onClick={() => handleView(item)}
@@ -242,27 +220,13 @@ export default function Solicitacao() {
                                                             >
                                                                 <FaEye />
                                                             </button>
-                                                            <button
-                                                                className={style.DownloadBtn}
-                                                                onClick={() => handleDownload(item)}
-                                                                title="Download"
-                                                            >
-                                                                <FaDownload />
-                                                            </button>
-                                                            <button
-                                                                className={style.DeleteBtn}
-                                                                onClick={() => handleDelete(item)}
-                                                                title="Eliminar"
-                                                            >
-                                                                <FaTrash />
-                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="8" className={style.EmptyState}>
+                                                <td colSpan="5" className={style.EmptyState}>
                                                     <div className={style.EmptyStateContent}>
                                                         <span className={style.EmptyIcon}>📭</span>
                                                         <p>Nenhuma solicitação encontrada</p>
@@ -320,109 +284,25 @@ export default function Solicitacao() {
                     </div>
                 )}
 
-                {/* Modal for New Request */}
+                {/* Modal for New Request with SolicitacaoFlow */}
                 {showModal && (
-                    <div className={style.ModalOverlay} onClick={handleCloseModal}>
-                        <div className={style.ModalContent} onClick={(e) => e.stopPropagation()}>
+                    <div className={style.ModalOverlay} onClick={() => handleCloseModal(false)}>
+                        <div className={style.ModalContent} onClick={(e) => e.stopPropagation()} style={{ width: '800px', maxWidth: '95%' }}>
                             <div className={style.ModalHeader}>
-                                <h3>Nova Solicitação de Documento</h3>
-                                <button className={style.CloseButton} onClick={handleCloseModal}>×</button>
+                                <h3>Nova Solicitação (Presencial)</h3>
+                                <button className={style.CloseButton} onClick={() => handleCloseModal(false)}>×</button>
                             </div>
 
-                            <form onSubmit={handleSubmitRequest} className={style.ModalForm}>
-                                <div className={style.FormGroup}>
-                                    <label htmlFor="tipoDocumento">Tipo de Documento *</label>
-                                    <select
-                                        id="tipoDocumento"
-                                        name="tipoDocumento"
-                                        value={formData.tipoDocumento}
-                                        onChange={handleInputChange}
-                                        required
-                                    >
-                                        <option value="">Selecione o tipo</option>
-                                        <option value="boletim">Boletim</option>
-                                        <option value="declaracao">Declaração</option>
-                                        <option value="certificado">Certificado</option>
-                                    </select>
-                                </div>
-
-                                <div className={style.FormGroup}>
-                                    <label htmlFor="bilheteAluno">Bilhete do Aluno *</label>
-                                    <input
-                                        type="text"
-                                        id="bilheteAluno"
-                                        name="bilheteAluno"
-                                        value={formData.bilheteAluno}
-                                        onChange={handleInputChange}
-                                        placeholder="Digite o número do bilhete"
-                                        required
-                                    />
-                                </div>
-
-                                <div className={style.FormRow}>
-                                    <div className={style.FormGroup}>
-                                        <label htmlFor="classe">Classe *</label>
-                                        <select
-                                            id="classe"
-                                            name="classe"
-                                            value={formData.classe}
-                                            onChange={handleInputChange}
-                                            required
-                                        >
-                                            <option value="">Selecione</option>
-
-                                            <option value="10ª Classe">10ª Classe</option>
-                                            <option value="11ª Classe">11ª Classe</option>
-                                            <option value="12ª Classe">12ª Classe</option>
-                                            <option value="13ª Classe">13ª Classe</option>
-                                        </select>
-                                    </div>
-
-                                    <div className={style.FormGroup}>
-                                        <label htmlFor="curso">Curso *</label>
-                                        <select
-                                            id="curso"
-                                            name="curso"
-                                            value={formData.curso}
-                                            onChange={handleInputChange}
-                                            required
-                                        >
-                                            <option value="">Selecione</option>
-                                            <option value="Informática de Gestão">Informática de Gestão</option>
-                                            <option value="Contabilidade de Gestão">Contabilidade de Gestão</option>
-                                            <option value="Gestão Empresarial">Gestão Empresarial</option>
-                                            <option value="Informática">Informática</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className={style.FormGroup}>
-                                    <label htmlFor="ano">Ano Letivo *</label>
-                                    <input
-                                        type="number"
-                                        id="ano"
-                                        name="ano"
-                                        value={formData.ano}
-                                        onChange={handleInputChange}
-                                        min="2020"
-                                        max="2030"
-                                        required
-                                    />
-                                </div>
-
-                                <div className={style.ModalActions}>
-                                    <button type="button" className={style.CancelButton} onClick={handleCloseModal}>
-                                        Cancelar
-                                    </button>
-                                    <button type="submit" className={style.SubmitButton}>
-                                        Solicitar Documento
-                                    </button>
-                                </div>
-                            </form>
+                            <div style={{ padding: '20px' }}>
+                                <SolicitacaoFlow
+                                    userType="funcionario"
+                                    onComplete={handleCloseModal}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}
             </main>
         </div>
     )
-} 
+}

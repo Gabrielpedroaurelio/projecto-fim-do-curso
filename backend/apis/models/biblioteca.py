@@ -40,6 +40,7 @@ class Livro(models.Model):
     )
     data_upload = models.DateTimeField(auto_now_add=True, verbose_name='Data de Upload')
     img_path = models.ImageField(upload_to='image/biblioteca/capas/', null=True, blank=True, verbose_name='Capa do Livro')
+    recomendado = models.BooleanField(default=False, verbose_name='Recomendado')
     
     class Meta:
         db_table = 'livro'

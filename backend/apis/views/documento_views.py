@@ -12,7 +12,8 @@ from apis.models import Documento, SolicitacaoDocumento
 from apis.serializers import (
     DocumentoSerializer, DocumentoListSerializer,
     SolicitacaoDocumentoSerializer, SolicitacaoDocumentoListSerializer,
-    SolicitacaoDocumentoAprovarSerializer, SolicitacaoDocumentoRejeitarSerializer
+    SolicitacaoDocumentoAprovarSerializer, SolicitacaoDocumentoRejeitarSerializer,
+    FaturaSerializer
 )
 
 
@@ -60,7 +61,7 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
     ).all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    #filterset_fields = ['status_solicitacao', 'tipo_documento', 'id_aluno']
+    filterset_fields = ['status_solicitacao', 'tipo_documento', 'id_aluno']
     search_fields = ['tipo_documento']
     ordering_fields = ['data_solicitacao']
     ordering = ['-data_solicitacao']
@@ -73,6 +74,54 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
         elif self.action == 'rejeitar':
             return SolicitacaoDocumentoRejeitarSerializer
         return SolicitacaoDocumentoSerializer
+    
+    def get_queryset(self):
+        """
+        Filtra solicitações baseado no tipo de usuário:
+        - Funcionário/Admin: vê todas as solicitações
+        - Encarregado: vê apenas solicitações dos seus filhos
+        """
+        queryset = super().get_queryset()
+        user = self.request.user
+        
+        # Verificar se é encarregado pelo nome do modelo
+        user_model_name = user.__class__.__name__
+        
+        if user_model_name == 'Encarregado':
+            # Buscar IDs dos alunos vinculados a este encarregado
+            from apis.models import AlunoEncarregado
+            alunos_ids = AlunoEncarregado.objects.filter(
+                id_encarregado=user.id_encarregado
+            ).values_list('id_aluno', flat=True)
+            
+            queryset = queryset.filter(id_aluno__in=alunos_ids)
+        
+        return queryset
+
+
+    def create(self, request, *args, **kwargs):
+        """Sobrescreve criação para usar DocumentService"""
+        aluno_id = request.data.get('id_aluno')
+        tipo_documento = request.data.get('tipo_documento')
+        canal_pagamento = request.data.get('canal_pagamento_rup', 'fisico_rup')
+        encarregado_id = request.data.get('id_encarregado')
+
+        if not aluno_id or not tipo_documento:
+            return Response({'error': 'Dados incompletos'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            solicitacao, fatura = DocumentService.criar_solicitacao(
+                aluno_id, tipo_documento, canal_pagamento, encarregado_id
+            )
+            return Response({
+                'message': 'Solicitação criada com sucesso',
+                'solicitacao': SolicitacaoDocumentoSerializer(solicitacao).data,
+                'fatura': FaturaSerializer(fatura).data
+            }, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f"Erro inesperado: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=False, methods=['get'])
     def minhas(self, request):
@@ -134,3 +183,36 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @action(detail=True, methods=['post'], permission_classes=[IsFuncionario])
+    def confirmar_pagamento(self, request, pk=None):
+        """Confirmar pagamento manual e gerar documento final"""
+        funcionario_id = request.data.get('id_funcionario')
+        # Fallback para o usuário logado se for funcionário
+        if not funcionario_id and hasattr(request.user, 'funcionario'):
+             funcionario_id = request.user.funcionario.id_funcionario
+             
+        try:
+            caminho_pdf = DocumentService.confirmar_pagamento_funcionario(pk, funcionario_id)
+            # Construir URL completa
+            from django.conf import settings
+            pdf_url = request.build_absolute_uri(settings.MEDIA_URL + str(caminho_pdf))
+            
+            return Response({
+                'message': 'Pagamento confirmado e documento gerado.',
+                'download_url': pdf_url
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def imprimir_rup(self, request, pk=None):
+        """Gerar e retornar URL do PDF do RUP"""
+        try:
+            caminho_pdf = DocumentService.gerar_comprovativo_rup(pk)
+            if caminho_pdf:
+                from django.conf import settings
+                pdf_url = request.build_absolute_uri(settings.MEDIA_URL + str(caminho_pdf))
+                return Response({'download_url': pdf_url}, status=status.HTTP_200_OK)
+            return Response({'error': 'Erro ao gerar RUP'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

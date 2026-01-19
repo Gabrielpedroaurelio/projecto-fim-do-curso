@@ -5,39 +5,81 @@ import MenuSitePublic from "../../../Components/Utils/MenuSitePublic/MenuSitePub
 import SearchBar from "../../../Components/Utils/SearchBar/SearchBar";
 import BookCard from "../../../Components/Utils/BookCard/BookCard";
 import style from './LIbrary.module.css';
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import AuroraBackground from "../Site/AuroraBackground";
+//import api from "../../../Services/api"; // Removed to avoid token issues
+import axios from 'axios';
 
-const initialBooks = [
-  { id: 1, title: 'PostgreSQL Notes', author: 'Gabriel Aurélio', category: 'Tecnologia', recommended: true, excerpt: 'Notas e dicas práticas sobre PostgreSQL.', cover: 'https://picsum.photos/seed/postgres/600/800', pdf: '../../../assets/uploads/books/PostgreSQLNotesForProfessionals.pdf' },
-  { id: 2, title: 'Intro to Algorithms', author: 'Cormen', category: 'Tecnologia', recommended: true, excerpt: 'Algoritmos clássicos e estruturas de dados.', cover: 'https://picsum.photos/seed/algorithms/600/800' },
-  { id: 3, title: 'Fantasy Tales', author: 'A. Writer', category: 'Fantasia', recommended: false, cover: 'https://picsum.photos/seed/fantasy/600/800' },
-  { id: 4, title: 'Teaching Methods', author: 'Prof. Silva', category: 'Educação', recommended: false, cover: 'https://picsum.photos/seed/teaching/600/800' },
-  { id: 5, title: 'World Geography', author: 'Geo Author', category: 'Geografia', recommended: true, cover: 'https://picsum.photos/seed/geography/600/800' },
-  { id: 6, title: 'CSS Secrets', author: 'Lea Verou', category: 'Tecnologia', recommended: false, cover: 'https://picsum.photos/seed/css/600/800' },
-  { id: 7, title: 'Learning React', author: 'React Team', category: 'Tecnologia', recommended: true, cover: 'https://picsum.photos/seed/react/600/800' },
-  { id: 8, title: 'Modern Physics', author: 'Phys Author', category: 'Educação', recommended: false, cover: 'https://picsum.photos/seed/physics/600/800' },
-  { id: 9, title: 'Mountains & Rivers', author: 'Geo Author', category: 'Geografia', recommended: true, cover: 'https://picsum.photos/seed/mountains/600/800' }
-]
-
-const allCategories = ['Todas', 'Tecnologia', 'Fantasia', 'Educação', 'Geografia']
+// Instance for public requests without Auth Token
+const publicApi = axios.create({
+  baseURL: 'http://localhost:8000/api/v1/',
+});
 
 export default function LIbrary() {
-  const [category, setCategory] = useState('Todas')
-  const [books] = useState(initialBooks)
+  const [category, setCategory] = useState({ id: 'Todas', nome: 'Todas' });
+  const [books, setBooks] = useState([]);
+  const [categories, setCategories] = useState([{ id: 'Todas', nome: 'Todas' }]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [booksRes, catsRes] = await Promise.all([
+          publicApi.get('/livros/'),
+          publicApi.get('/categorias/')
+        ]);
 
-  const recommended = useMemo(() => books.filter(b => b.recommended), [books])
-  const filtered = useMemo(() => category === 'Todas' ? books : books.filter(b => b.category === category), [books, category])
+        setBooks(booksRes.data.results || booksRes.data);
+
+        const backendCats = catsRes.data.results || catsRes.data;
+        setCategories([
+          { id: 'Todas', nome: 'Todas' },
+          ...backendCats.map(c => ({ id: c.id_categoria, nome: c.nome_categoria }))
+        ]);
+      } catch (error) {
+        console.error("Erro ao carregar dados da biblioteca:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const recommended = useMemo(() => books.filter(b => b.recomendado), [books]);
+
+  const filtered = useMemo(() => {
+    if (category.id === 'Todas') return books;
+    return books.filter(b => b.categoria_nome === category.nome);
+  }, [books, category]);
 
   function handleView(book) {
-    // placeholder: open or preview
-    console.log('view', book.title)
+    if (book.caminho_arquivo) {
+      window.open(book.caminho_arquivo, '_blank');
+    }
   }
 
   function handleAdd(book) {
-    console.log('add', book.title)
+    if (book.caminho_arquivo) {
+      const link = document.createElement('a');
+      link.href = book.caminho_arquivo;
+      link.download = `${book.titulo}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
+
+  // Helper function to map backend book to BookCard props
+  const mapBook = (b) => ({
+    id: b.id_livro,
+    title: b.titulo,
+    author: b.editora || 'Editora não informada',
+    category: b.categoria_nome,
+    recommended: b.recomendado,
+    cover: b.img_path,
+    pdf: b.caminho_arquivo,
+    excerpt: b.excerpt || 'Resumo não disponível.'
+  });
 
   return (
     <AuroraBackground>
@@ -45,22 +87,25 @@ export default function LIbrary() {
         <MenuSitePublic />
 
         <div className="relative z-10 w-full flex flex-col">
-
-
           {/* Recommended Books - Full Width */}
           <section className={style.recommendedBooks}>
-          {/* Search Bar - Centered */}
-          <div className="px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full pt-8">
-            <SearchBar />
-          </div>
+            <div className="px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full pt-8">
+              <SearchBar />
+            </div>
             <div className={style.sectionHeader}>
               <h3>Livros Recomendados</h3>
             </div>
             <div className={style.listEBooksRecommendedBooks}>
               <div className={style.resourceGrid}>
-                {recommended.map(book => (
-                  <BookCard key={book.id} book={book} onView={handleView} onAdd={handleAdd} />
-                ))}
+                {loading ? (
+                  <p>Carregando livros...</p>
+                ) : recommended.length > 0 ? (
+                  recommended.map(book => (
+                    <BookCard key={book.id_livro} book={mapBook(book)} onView={handleView} onAdd={handleAdd} />
+                  ))
+                ) : (
+                  <p>Nenhum livro recomendado no momento.</p>
+                )}
               </div>
             </div>
           </section>
@@ -71,15 +116,27 @@ export default function LIbrary() {
               <div>
                 <h3>Categorias</h3>
                 <div className={style.containerCategory}>
-                  {allCategories.map(cat => (
-                    <button key={cat} onClick={() => setCategory(cat)} className={`${cat === category ? style.is_selected : ''}`}>{cat}</button>
+                  {categories.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setCategory(cat)}
+                      className={`${cat.id === category.id ? style.is_selected : ''}`}
+                    >
+                      {cat.nome}
+                    </button>
                   ))}
                 </div>
 
                 <div className={style.listEBooks}>
-                  {filtered.map(book => (
-                    <BookCard key={book.id} book={book} onView={handleView} onAdd={handleAdd} />
-                  ))}
+                  {loading ? (
+                    <p>Carregando...</p>
+                  ) : filtered.length > 0 ? (
+                    filtered.map(book => (
+                      <BookCard key={book.id_livro} book={mapBook(book)} onView={handleView} onAdd={handleAdd} />
+                    ))
+                  ) : (
+                    <p>Nenhum livro encontrado nesta categoria.</p>
+                  )}
                 </div>
               </div>
             </section>

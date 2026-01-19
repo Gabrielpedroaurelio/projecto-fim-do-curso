@@ -18,7 +18,7 @@ class AlunoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     #filterset_fields = ['status_aluno', 'id_turma', 'genero']
-    search_fields = ['nome_completo', 'email', 'numero_matricula']
+    search_fields = ['nome_completo', 'email', 'numero_matricula', 'numero_bi']
     ordering_fields = ['nome_completo', 'numero_matricula', 'criado_em']
     ordering = ['nome_completo']
     
