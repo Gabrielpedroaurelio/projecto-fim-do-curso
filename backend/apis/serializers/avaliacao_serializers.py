@@ -97,11 +97,13 @@ class NotaListSerializer(serializers.ModelSerializer):
 class NotaLancamentoLoteSerializer(serializers.Serializer):
     """Serializer para lançamento de notas em lote"""
     id_turma = serializers.IntegerField()
-    id_disciplina = serializers.IntegerField()
+    id_disciplina = serializers.IntegerField(required=False, allow_null=True)
+    id_matriz_disciplina = serializers.IntegerField(required=False, allow_null=True)
     id_professor = serializers.IntegerField()
-    tipo_avaliacao = serializers.ChoiceField(choices=Nota.TIPO_AVALIACAO_CHOICES)
+    trimestre = serializers.ChoiceField(choices=Nota.TRIMESTRE_CHOICES)
+    tipo_nota = serializers.ChoiceField(choices=Nota.TIPO_NOTA_CHOICES)
     notas = serializers.ListField(
-        child=serializers.DictField(child=serializers.DecimalField(max_digits=5, decimal_places=2))
+        child=serializers.DictField() # id_aluno, valor
     )
 
 

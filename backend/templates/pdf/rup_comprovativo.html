@@ -1,0 +1,73 @@
+{% extends "pdf/base_documento.html" %}
+
+{% block content %}
+<div class="doc-title">Comprovativo de Solicitação / Nota de Pagamento</div>
+
+<div style="border: 1.5pt solid #000; padding: 25px; margin: 20px 0;">
+    <h3 style="margin-top: 0; text-align: center; color: #000; text-transform: uppercase;">Dados para Pagamento (RUP)
+    </h3>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr style="border-bottom: 0.5pt solid #eee;">
+            <td style="padding: 12px;"><strong>Entidade:</strong></td>
+            <td style="padding: 12px; font-weight: bold;">INSTITUTO POLITÉCNICO DO MAIOMBE</td>
+        </tr>
+        <tr style="border-bottom: 0.5pt solid #eee;">
+            <td style="padding: 12px;"><strong>Referência (RUP):</strong></td>
+            <td style="padding: 12px; font-size: 16pt; font-weight: bold; letter-spacing: 2px;">{{ solicitacao.rupe }}
+            </td>
+        </tr>
+        <tr style="border-bottom: 0.5pt solid #eee;">
+            <td style="padding: 12px;"><strong>Valor a Liquidar:</strong></td>
+            <td style="padding: 12px; font-size: 14pt; font-weight: bold;">{{ solicitacao.valor_rupe|stringformat:".2f"
+                }} KZ</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px;"><strong>Válido até:</strong></td>
+            <td style="padding: 12px; color: #d32f2f; font-weight: bold;">{{ solicitacao.data_expiracao_rup|date:"d/m/Y
+                H:i" }}</td>
+        </tr>
+    </table>
+</div>
+
+<div style="margin-top: 30px;">
+    <h4 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Detalhes do Requisitante</h4>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 50%;">
+                <p><strong>Estudante:</strong> {{ aluno.nome_completo }}</p>
+            </td>
+            <td style="width: 50%;">
+                <p><strong>Nº Processo:</strong> {{ aluno.numero_matricula }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p><strong>Curso:</strong> {{ aluno.id_turma.id_curso.nome_curso }}</p>
+            </td>
+            <td>
+                <p><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p><strong>Documento Solicitado:</strong> {{ solicitacao.tipo_documento }}</p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div style="margin-top: 30px; background-color: #f5f5f5; padding: 20px; border-left: 4pt solid #10b981;">
+    <h4 style="margin-top: 0;">Instruções Importantes:</h4>
+    <ol style="margin-bottom: 0;">
+        <li>Efetue o pagamento via <strong>Multicaixa Express</strong> ou <strong>ATM</strong>.</li>
+        <li>Escolha a opção: <strong>Pagamentos > Estado > Escolas / Institutos</strong>.</li>
+        <li>Insira a referência <strong>{{ solicitacao.rupe }}</strong> e confirme os dados.</li>
+        <li>Após o pagamento, o sistema processará o documento automaticamente em até 1 hora.</li>
+    </ol>
+</div>
+
+<div style="margin-top: 20px; font-size: 9pt; color: #666; font-style: italic;">
+    Nota: Este documento serve apenas para instrução de pagamento. Não substitui o documento oficial final.
+</div>
+{% endblock %}

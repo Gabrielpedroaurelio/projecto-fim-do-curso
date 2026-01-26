@@ -49,7 +49,7 @@ class SchoolJWTAuthentication(JWTAuthentication):
                 return Aluno.objects.get(id_aluno=user_id)
             elif user_type == 'encarregado':
                 return Encarregado.objects.get(id_encarregado=user_id)
-        except Exception:
-            return None
+        except Exception as e:
+            raise exceptions.AuthenticationFailed(f"Perfil {user_type} não encontrado para o ID {user_id}")
         
         return None

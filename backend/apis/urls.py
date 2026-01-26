@@ -3,6 +3,11 @@ URLs da API v1
 """
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+from apis.serializers.auth_serializers import SchoolTokenRefreshSerializer
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = SchoolTokenRefreshSerializer
 
 from apis.views import (
     # Auth views
@@ -19,6 +24,7 @@ from apis.views import (
     FaturaViewSet, PagamentoViewSet,
     HistoricoLoginViewSet, BackupViewSet, ConfiguracaoSistemaViewSet,
     DashboardStatsAPIView,
+    MatrizCurricularViewSet, MatrizCurricularDisciplinaViewSet
 )
 
 # Criar router e registrar ViewSets
@@ -43,6 +49,8 @@ router.register(r'areas-formacao', AreaFormacaoViewSet, basename='area-formacao'
 router.register(r'cursos', CursoViewSet, basename='curso')
 router.register(r'periodos', PeriodoViewSet, basename='periodo')
 router.register(r'turmas', TurmaViewSet, basename='turma')
+router.register(r'matrizes-curriculares', MatrizCurricularViewSet, basename='matriz-curricular')
+router.register(r'matriz-disciplinas', MatrizCurricularDisciplinaViewSet, basename='matriz-disciplina')
 
 # Avaliações
 router.register(r'tipos-disciplina', TipoDisciplinaViewSet, basename='tipo-disciplina')
@@ -75,6 +83,8 @@ urlpatterns = [
     path('auth/login/', login_view, name='login'),
     path('auth/logout/', logout_view, name='logout'),
     path('auth/me/', me_view, name='me'),
+    path('auth/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('auth/update-profile/', update_profile_view, name='update-profile'),
     path('auth/change-password/', change_password_view, name='change-password'),
     

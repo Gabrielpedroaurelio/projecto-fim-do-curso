@@ -7,12 +7,14 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 from apis.models import (
     Sala, Classe, Departamento, Seccao, AreaFormacao,
-    Curso, Periodo, Turma
+    Curso, Periodo, Turma,
+    MatrizCurricular, MatrizCurricularDisciplina
 )
 from apis.serializers import (
     SalaSerializer, ClasseSerializer, DepartamentoSerializer, SeccaoSerializer,
     AreaFormacaoSerializer, CursoSerializer, CursoListSerializer,
-    PeriodoSerializer, TurmaSerializer, TurmaListSerializer
+    PeriodoSerializer, TurmaSerializer, TurmaListSerializer,
+    MatrizCurricularSerializer, MatrizCurricularDisciplinaSerializer
 )
 
 
@@ -163,4 +165,23 @@ class TurmaViewSet(viewsets.ModelViewSet):
             'alunos_por_status': list(alunos_por_status),
             'alunos_por_genero': list(alunos_por_genero)
         })
+
+
+class MatrizCurricularViewSet(viewsets.ModelViewSet):
+    """ViewSet para Matriz Curricular"""
+    queryset = MatrizCurricular.objects.select_related('id_curso', 'id_classe').all()
+    serializer_class = MatrizCurricularSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['id_curso', 'id_classe', 'ativo']
+    search_fields = ['descricao']
+
+
+class MatrizCurricularDisciplinaViewSet(viewsets.ModelViewSet):
+    """ViewSet para Disciplina da Matriz"""
+    queryset = MatrizCurricularDisciplina.objects.select_related('id_disciplina').all()
+    serializer_class = MatrizCurricularDisciplinaSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id_matriz_curricular']
         

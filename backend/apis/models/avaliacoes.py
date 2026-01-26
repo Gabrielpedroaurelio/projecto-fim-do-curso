@@ -97,10 +97,29 @@ class Nota(models.Model):
         ('Prova Trimestral', 'Prova Trimestral'),
         ('Avaliação Continua', 'Avaliação Contínua'),
     ]
+
+    TIPO_NOTA_CHOICES = [
+        ('MAC', 'Média de Avaliação Contínua'),
+        ('PP', 'Prova do Professor'),
+        ('PT', 'Prova Trimestral'),
+    ]
+
+    TRIMESTRE_CHOICES = [
+        ('1', '1º Trimestre'),
+        ('2', '2º Trimestre'),
+        ('3', '3º Trimestre'),
+    ]
     
     id_nota = models.AutoField(primary_key=True)
     id_aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, verbose_name='Aluno')
-    id_disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name='Disciplina')
+    id_disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name='Disciplina', null=True, blank=True)
+    id_matriz_disciplina = models.ForeignKey(
+        'apis.MatrizCurricularDisciplina', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='Disciplina da Matriz'
+    )
     id_professor = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -109,7 +128,9 @@ class Nota(models.Model):
         verbose_name='Professor'
     )
     id_turma = models.ForeignKey(Turma, on_delete=models.CASCADE, verbose_name='Turma')
-    tipo_avaliacao = models.CharField(max_length=30, choices=TIPO_AVALIACAO_CHOICES, verbose_name='Tipo de Avaliação')
+    tipo_avaliacao = models.CharField(max_length=30, choices=TIPO_AVALIACAO_CHOICES, verbose_name='Tipo de Avaliação', null=True, blank=True)
+    tipo_nota = models.CharField(max_length=20, choices=TIPO_NOTA_CHOICES, verbose_name='Tipo de Nota', null=True, blank=True)
+    trimestre = models.CharField(max_length=10, choices=TRIMESTRE_CHOICES, verbose_name='Trimestre', null=True, blank=True)
     valor = models.DecimalField(
         max_digits=5,
         decimal_places=2,

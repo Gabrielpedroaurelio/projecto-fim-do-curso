@@ -1,0 +1,33 @@
+{% extends "pdf/base_documento.html" %}
+
+{% block content %}
+<div class="title">Certificado de Habilitações</div>
+
+<p>Para os devidos efeitos, certifica-se que:</p>
+
+<p style="text-indent: 2cm;">
+    <strong>{{ aluno.nome_completo }}</strong>,
+    filho de {{ aluno.nome_pai|default:"..." }} e de {{ aluno.nome_mae|default:"..." }},
+    nascido em {{ aluno.data_nascimento|date:"d/m/Y"|default:"..." }},
+    natural de {{ aluno.naturalidade|default:"..." }}, província de {{ aluno.provincia_naturalidade|default:"..." }},
+    portador do Bilhete de Identidade nº {{ aluno.numero_bi }},
+    concluiu com aproveitamento o <strong>II CICLO DO ENSINO SECUNDÁRIO TÉCNICO</strong>,
+    no Curso de <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>,
+    neste Instituto, no ano letivo de {{ aluno.id_turma.ano }}.
+</p>
+
+<p>Pelo que lhe é concedido o presente Certificado com a classificação final de <strong>[NOTA FINAL]</strong> valores.
+</p>
+
+<p>Instituto Politécnico do Maiombe, em Cabinda aos {{ hoje|date:"d" }} de {{ hoje|date:"F" }} de {{ hoje|date:"Y" }}.
+</p>
+
+<div class="signature">
+    <div class="signature-line"></div>
+    <strong>O Diretor Geral</strong>
+</div>
+
+<div class="verification">
+    <strong>Código de Autenticidade:</strong> {{ solicitacao.uuid_documento }}
+</div>
+{% endblock %}

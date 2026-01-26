@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from apis.models import (
     Sala, Classe, Departamento, Seccao, AreaFormacao,
-    Curso, Periodo, Turma, Horario
+    Curso, Periodo, Turma, Horario,
+    MatrizCurricular, MatrizCurricularDisciplina
 )
 
 
@@ -100,7 +101,7 @@ class TurmaSerializer(serializers.ModelSerializer):
         fields = [
             'id_turma', 'codigo_turma', 'id_sala', 'sala_numero',
             'id_curso', 'curso_nome', 'id_classe', 'classe_nivel',
-            'id_periodo', 'periodo_nome', 'ano', 'id_responsavel',
+            'id_periodo', 'periodo_nome', 'id_matriz_curricular', 'ano', 'id_responsavel',
             'responsavel_nome', 'criado_em', 'atualizado_em'
         ]
         read_only_fields = ['id_turma', 'codigo_turma', 'criado_em', 'atualizado_em']
@@ -135,3 +136,30 @@ class HorarioSerializer(serializers.ModelSerializer):
             'hora_inicio', 'hora_fim', 'criado_em', 'atualizado_em'
         ]
         read_only_fields = ['id_horario', 'criado_em', 'atualizado_em']
+class MatrizCurricularDisciplinaSerializer(serializers.ModelSerializer):
+    """Serializer para Disciplina da Matriz"""
+    disciplina_nome = serializers.CharField(source='id_disciplina.nome', read_only=True)
+    
+    class Meta:
+        model = MatrizCurricularDisciplina
+        fields = [
+            'id_matriz_disciplina', 'id_matriz_curricular', 'id_disciplina',
+            'disciplina_nome', 'carga_horaria', 'coeficiente', 'e_nuclear'
+        ]
+        read_only_fields = ['id_matriz_disciplina']
+
+
+class MatrizCurricularSerializer(serializers.ModelSerializer):
+    """Serializer para Matriz Curricular"""
+    curso_nome = serializers.CharField(source='id_curso.nome_curso', read_only=True)
+    classe_nivel = serializers.IntegerField(source='id_classe.nivel', read_only=True)
+    disciplinas = MatrizCurricularDisciplinaSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = MatrizCurricular
+        fields = [
+            'id_matriz_curricular', 'id_curso', 'curso_nome',
+            'id_classe', 'classe_nivel', 'descricao', 'ano_letivo',
+            'ativo', 'disciplinas', 'criado_em', 'atualizado_em'
+        ]
+        read_only_fields = ['id_matriz_curricular', 'criado_em', 'atualizado_em']

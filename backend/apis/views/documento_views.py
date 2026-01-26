@@ -105,13 +105,14 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
         tipo_documento = request.data.get('tipo_documento')
         canal_pagamento = request.data.get('canal_pagamento_rup', 'fisico_rup')
         encarregado_id = request.data.get('id_encarregado')
+        classe_id = request.data.get('classe_solicitada')
 
         if not aluno_id or not tipo_documento:
             return Response({'error': 'Dados incompletos'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             solicitacao, fatura = DocumentService.criar_solicitacao(
-                aluno_id, tipo_documento, canal_pagamento, encarregado_id
+                aluno_id, tipo_documento, canal_pagamento, encarregado_id, classe_id
             )
             return Response({
                 'message': 'Solicitação criada com sucesso',

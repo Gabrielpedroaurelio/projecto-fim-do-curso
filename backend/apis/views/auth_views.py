@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
@@ -140,8 +140,19 @@ def login_view(request):
         
         # Gerar tokens JWT
         refresh = RefreshToken()
+        
+        # Inserir claims tanto no Refresh quanto no Access Token inicial
         refresh['user_id'] = user_data['id']
         refresh['user_type'] = user_data['tipo']
+        if user_data['tipo'] == 'funcionario':
+            refresh['cargo'] = user_data.get('cargo')
+        
+        # Importante: O SimpleJWT não copia claims customizados para o access_token automaticamente
+        access = refresh.access_token
+        access['user_id'] = user_data['id']
+        access['user_type'] = user_data['tipo']
+        if user_data['tipo'] == 'funcionario':
+            access['cargo'] = user_data.get('cargo')
         
         # Registrar histórico de login
         user_agent_info = get_user_agent_info(request)
@@ -231,37 +242,37 @@ def logout_view(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def me_view(request):
     """
-    Retorna informações do usuário autenticado baseado no Token JWT
+    Retorna informações do usuário autenticado baseado no Token JWT.
+    A autenticação é tratada pelo SchoolJWTAuthentication configurado no settings.
     """
-    from rest_framework_simplejwt.authentication import JWTAuthentication
-    from rest_framework.exceptions import AuthenticationFailed
-    
     try:
-        # Autenticar manualmente o token
-        jwt_auth = JWTAuthentication()
-        user_auth_tuple = jwt_auth.authenticate(request)
+        user = request.user
         
-        if user_auth_tuple is None:
-            return Response(
-                {'error': 'Token inválido ou não fornecido'},
+        # O user aqui é o objeto retornado pelo SchoolJWTAuthentication.get_user
+        # (pode ser Funcionario, Aluno ou Encarregado)
+        # (pode ser Funcionario, Aluno ou Encarregado)
+        
+        if not user:
+             return Response(
+                {'error': 'Usuário não encontrado ou não autenticado'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-            
-        # O user retornado pelo JWTAuthentication já é o objeto do modelo (AuthUser ou Custom)
-        # Mas como não usamos o Auth User padrão do Django para tudo, precisamos verificar
-        # o payload do token para saber quem é (aluno, funcionario, etc)
+
+        user_type = getattr(request, 'user_type', None)
         
-        # O payload está no segundo elemento da tupla (token)
-        token = user_auth_tuple[1]
-        user_id = token.payload.get('user_id')
-        user_type = token.payload.get('user_type')
-        
+        # Fallback: Detectar tipo pela classe do objeto caso request.user_type falhe
+        if not user_type:
+            from apis.models import Funcionario, Aluno, Encarregado
+            if isinstance(user, Funcionario): user_type = 'funcionario'
+            elif isinstance(user, Aluno): user_type = 'aluno'
+            elif isinstance(user, Encarregado): user_type = 'encarregado'
+
         user_data = {}
         
         if user_type == 'funcionario':
-            user = Funcionario.objects.get(id_funcionario=user_id)
             user_data = {
                 'id': user.id_funcionario,
                 'tipo': 'funcionario',
@@ -273,7 +284,6 @@ def me_view(request):
                 'is_online': True
             }
         elif user_type == 'aluno':
-            user = Aluno.objects.get(id_aluno=user_id)
             user_data = {
                 'id': user.id_aluno,
                 'tipo': 'aluno',
@@ -286,7 +296,6 @@ def me_view(request):
                 'is_online': True
             }
         elif user_type == 'encarregado':
-            user = Encarregado.objects.get(id_encarregado=user_id)
             user_data = {
                 'id': user.id_encarregado,
                 'tipo': 'encarregado',
@@ -295,6 +304,11 @@ def me_view(request):
                 'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None,
                 'is_online': True
             }
+        else:
+            return Response(
+                {'error': 'Tipo de usuário não identificado'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
             
         return Response({
             'user': user_data

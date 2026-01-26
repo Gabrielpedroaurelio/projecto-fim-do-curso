@@ -3,7 +3,8 @@ import uuid
 from .usuarios import Funcionario
 from .alunos import Aluno
 from .usuarios import Encarregado
-
+from .academico import Classe
+from .academico import Classe  # Importado para referência na solicitação
 
 class Documento(models.Model):
     TIPO_DOCUMENTO_CHOICES=[
@@ -21,7 +22,7 @@ class Documento(models.Model):
         verbose_name='Aluno'
     )
     tipo_documento = models.CharField(max_length=100,choices=TIPO_DOCUMENTO_CHOICES, verbose_name='Tipo de Documento')
-    caminho_pdf = models.FileField(upload_to="documentos/documents/pdfs/")
+    caminho_pdf = models.FileField(upload_to="documentos/documents/pdfs/", null=True)
     #models.TextField(null=True, blank=True, verbose_name='Caminho do PDF')
     #imagem_carimbo = models.TextField(null=True, blank=True, verbose_name='Carimbo/Assinatura')
     uuid_documento = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, verbose_name='CÓDIGO ÚNICO DO DOCUMENTO')
@@ -89,6 +90,7 @@ class SolicitacaoDocumento(models.Model):
         related_name='solicitacoes_gerenciadas',
         verbose_name='Funcionário Responsável'
     )
+    
     tipo_documento = models.CharField(max_length=100, verbose_name='Tipo de Documento')
     status_solicitacao = models.CharField(
         max_length=30,
@@ -96,6 +98,17 @@ class SolicitacaoDocumento(models.Model):
         default='pendente',
         verbose_name='Status'
     )
+    # Novos campos para fluxo RUP e Classe
+    rupe = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name='RUPE/Referência')
+    valor_rupe = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Valor do RUP')
+    classe_solicitada = models.ForeignKey(
+        Classe,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Classe Solicitada'
+    )
+
     canal_pagamento_rup = models.CharField(
         max_length=20,
         choices=CANAL_PAGAMENTO_CHOICES,

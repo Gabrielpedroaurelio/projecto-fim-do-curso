@@ -29,7 +29,7 @@ class LivroViewSet(viewsets.ModelViewSet):
         'id_categoria', 'id_responsavel'
     ).all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id_categoria', 'recomendado']
+    #filterset_fields = ['id_categoria', 'recomendado']
     search_fields = ['titulo', 'editora']
     ordering_fields = ['titulo', 'data_upload']
     ordering = ['titulo']

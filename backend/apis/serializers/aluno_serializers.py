@@ -13,7 +13,9 @@ class AlunoSerializer(serializers.ModelSerializer):
             'telefone', 'provincia_residencia', 'municipio_residencia',
             'bairro_residencia', 'numero_casa', 'senha_hash', 'genero',
             'status_aluno', 'modo_user', 'id_turma', 'turma_codigo',
-            'img_path', 'is_online', 'criado_em', 'atualizado_em'
+            'img_path', 'is_online', 'criado_em', 'atualizado_em',
+            'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
+            'provincia_naturalidade', 'data_emissao_bilhete'
         ]
         read_only_fields = ['id_aluno', 'criado_em', 'atualizado_em']
         extra_kwargs = {
@@ -32,7 +34,9 @@ class AlunoListSerializer(serializers.ModelSerializer):
         fields = [
             'id_aluno', 'nome_completo', 'numero_matricula',
             'email', 'turma_codigo', 'classe_nivel', 'curso_nome',
-            'status_aluno', 'genero', 'img_path'
+            'status_aluno', 'genero', 'img_path',
+            'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
+            'provincia_naturalidade', 'data_emissao_bilhete'
         ]
 
 
@@ -50,7 +54,9 @@ class AlunoDetailSerializer(serializers.ModelSerializer):
             'telefone', 'provincia_residencia', 'municipio_residencia',
             'bairro_residencia', 'numero_casa', 'genero', 'status_aluno',
             'modo_user', 'id_turma', 'turma_codigo', 'img_path', 'is_online',
-            'encarregados', 'criado_em', 'atualizado_em'
+            'encarregados', 'criado_em', 'atualizado_em',
+            'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
+            'provincia_naturalidade', 'data_emissao_bilhete'
         ]
     
     def get_encarregados(self, obj):

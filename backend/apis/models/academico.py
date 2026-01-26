@@ -164,6 +164,48 @@ class Periodo(models.Model):
         return self.periodo
 
 
+def current_year():
+    return str(datetime.date.today().year)
+
+
+class MatrizCurricular(BaseModel):
+    """Matriz Curricular (Plano de Estudos)"""
+    id_matriz_curricular = models.AutoField(primary_key=True)
+    id_curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name='Curso')
+    id_classe = models.ForeignKey(Classe, on_delete=models.CASCADE, verbose_name='Classe')
+    descricao = models.CharField(max_length=150, verbose_name='Descrição (ex: Grade 2024)', blank=True, null=True)
+    ano_letivo = models.CharField(max_length=20, blank=True, null=True, verbose_name='Ano Letivo')
+    ativo = models.BooleanField(default=True, verbose_name='Ativo')
+
+    class Meta:
+        db_table = 'matriz_curricular'
+        verbose_name = 'Matriz Curricular'
+        verbose_name_plural = 'Matrizes Curriculares'
+        unique_together = ['id_curso', 'id_classe', 'ano_letivo']
+
+    def __str__(self):
+        return f"{self.id_curso} - {self.id_classe} ({self.descricao or 'Padrão'})"
+
+
+class MatrizCurricularDisciplina(models.Model):
+    """Disciplinas da Matriz Curricular"""
+    id_matriz_disciplina = models.AutoField(primary_key=True)
+    id_matriz_curricular = models.ForeignKey(MatrizCurricular, on_delete=models.CASCADE, related_name='disciplinas', verbose_name='Matriz')
+    id_disciplina = models.ForeignKey('Disciplina', on_delete=models.CASCADE, verbose_name='Disciplina')
+    carga_horaria = models.IntegerField(default=0, verbose_name='Carga Horária Semanal')
+    coeficiente = models.DecimalField(max_digits=4, decimal_places=2, default=1.00, verbose_name='Coeficiente/Peso')
+    e_nuclear = models.BooleanField(default=True, verbose_name='É Nuclear?')
+
+    class Meta:
+        db_table = 'matriz_curricular_disciplina'
+        verbose_name = 'Disciplina da Matriz'
+        verbose_name_plural = 'Disciplinas da Matriz'
+        unique_together = ['id_matriz_curricular', 'id_disciplina']
+
+    def __str__(self):
+        return f"{self.id_disciplina} (Matriz: {self.id_matriz_curricular.id_curso})"
+
+
 class Turma(BaseModel):
     """Turmas de alunos"""
     id_turma = models.AutoField(primary_key=True)
@@ -171,7 +213,10 @@ class Turma(BaseModel):
     id_curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Curso')
     id_classe = models.ForeignKey(Classe, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Classe')
     id_periodo = models.ForeignKey(Periodo, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Período')
-    ano = models.CharField(max_length=4, null=True, blank=True, verbose_name='Ano', default=lambda: str(datetime.date.today().year))
+    id_matriz_curricular = models.ForeignKey(MatrizCurricular, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Matriz Curricular')
+    
+    # Campos mantidos para compatibilidade (serão preenchidos via Matriz)
+    ano = models.CharField(max_length=4, null=True, blank=True, verbose_name='Ano', default=current_year)
     codigo_turma = models.CharField(max_length=50, unique=True, blank=True, verbose_name='Código da Turma')
     id_responsavel = models.ForeignKey(
         Funcionario,
@@ -189,6 +234,11 @@ class Turma(BaseModel):
         ordering = ['codigo_turma']
     
     def save(self, *args, **kwargs):
+        # Auto-preencher Curso e Classe se Matriz estiver definida
+        if self.id_matriz_curricular:
+            self.id_curso = self.id_matriz_curricular.id_curso
+            self.id_classe = self.id_matriz_curricular.id_classe
+
         if self.id_sala and self.id_curso and self.id_classe and self.id_periodo and self.ano:
             sala = str(self.id_sala.numero_sala)
             curso = self.id_curso.nome_curso[:2].upper()
@@ -202,6 +252,7 @@ class Turma(BaseModel):
 
     def __str__(self):
         return self.codigo_turma
+
 
 
 class Horario(BaseModel):

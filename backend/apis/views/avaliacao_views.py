@@ -86,39 +86,51 @@ class NotaViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'], permission_classes=[IsProfessor | IsDirecao])
     def lancar_lote(self, request):
-        """Lançamento de notas em lote usando AcademicService"""
+        """Lançamento de notas em lote"""
         serializer = NotaLancamentoLoteSerializer(data=request.data)
         if serializer.is_valid():
             id_turma = serializer.validated_data['id_turma']
-            id_disciplina = serializer.validated_data['id_disciplina']
+            id_disciplina = serializer.validated_data.get('id_disciplina')
+            id_matriz_disciplina = serializer.validated_data.get('id_matriz_disciplina')
             id_professor = serializer.validated_data['id_professor']
-            tipo_avaliacao = serializer.validated_data['tipo_avaliacao']
+            trimestre = serializer.validated_data['trimestre']
+            tipo_nota = serializer.validated_data['tipo_nota']
             notas_data = serializer.validated_data['notas']
             
             try:
-                # Nota: Na vida real, o AcademicService lidaria com a iteração
-                # Aqui simplificamos a lógica repetitiva
-                from apis.models import Nota, Aluno, Disciplina, Funcionario, Turma
+                from apis.models import Nota, Aluno, Disciplina, Funcionario, Turma, MatrizCurricularDisciplina
                 
                 turma = Turma.objects.get(id_turma=id_turma)
-                disciplina = Disciplina.objects.get(id_disciplina=id_disciplina)
                 professor = Funcionario.objects.get(id_funcionario=id_professor)
                 
-                notas_criadas = []
+                # Resolvendo disciplina
+                if id_matriz_disciplina:
+                    matriz_disciplina = MatrizCurricularDisciplina.objects.get(id_matriz_curricular_disciplina=id_matriz_disciplina)
+                    disciplina = matriz_disciplina.id_disciplina
+                else:
+                    matriz_disciplina = None
+                    disciplina = Disciplina.objects.get(id_disciplina=id_disciplina)
+
+                notas_processadas = 0
                 for n in notas_data:
-                    nota = Nota.objects.create(
+                    # Update or Create
+                    nota_obj, created = Nota.objects.update_or_create(
                         id_aluno_id=n['id_aluno'],
-                        id_disciplina=disciplina,
-                        id_professor=professor,
                         id_turma=turma,
-                        tipo_avaliacao=tipo_avaliacao,
-                        valor=n['valor']
+                        id_disciplina=disciplina,
+                        id_matriz_disciplina=matriz_disciplina,
+                        trimestre=trimestre,
+                        tipo_nota=tipo_nota,
+                        defaults={
+                            'id_professor': professor,
+                            'valor': n['valor']
+                        }
                     )
-                    notas_criadas.append(nota)
+                    notas_processadas += 1
                 
                 return Response({
-                    'message': f'{len(notas_criadas)} notas lançadas via AcademicService',
-                    'count': len(notas_criadas)
+                    'message': f'{notas_processadas} notas processadas (lançadas/atualizadas).',
+                    'count': notas_processadas
                 }, status=status.HTTP_201_CREATED)
                 
             except Exception as e:
