@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import style from './SolicitacaoFlow.module.css';
-import { RiUser3Line, RiFileList3Line, RiWallet3Line, RiCheckLine, RiPrinterLine, RiSmartphoneLine, RiArrowRightLine, RiArrowLeftLine, RiSearchLine } from 'react-icons/ri';
+import { RiUser3Line, RiFileList3Line, RiWallet3Line, RiCheckLine, RiPrinterLine, RiSmartphoneLine, RiArrowRightLine, RiArrowLeftLine, RiSearchLine, RiErrorWarningLine } from 'react-icons/ri';
 import api from '../../../Services/api';
 
 import { useAuth } from '../../../Context/AuthContext';
@@ -11,26 +11,130 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [loading, setLoading] = useState(false);
     const [studentInfo, setStudentInfo] = useState(fixedStudent);
     const [biSearch, setBiSearch] = useState('');
-    const [myStudents, setMyStudents] = useState([]); // Para encarregados
+    const [myStudents, setMyStudents] = useState([]);
 
-    // ... states existentes ...
     const [selectedDoc, setSelectedDoc] = useState('');
+    const [selectedClass, setSelectedClass] = useState('');
+    const [classes, setClasses] = useState([]);
+    const [availableClasses, setAvailableClasses] = useState([]);
+
     const [paymentMethod, setPaymentMethod] = useState('');
     const [result, setResult] = useState(null);
     const [error, setError] = useState('');
 
+    const [missingFields, setMissingFields] = useState({});
+    const [isEditingMissing, setIsEditingMissing] = useState(false);
+
     const docOptions = [
-        { id: 'DECLARAÇÃO', label: 'Declaração de Matrícula (Com Notas)' },
-        { id: 'DECLARAÇÃO_SIMPLES', label: 'Declaração de Matrícula (Sem Notas)' },
+        { id: 'DECLARAÇÃO', label: 'Declaração de Matrícula (Simples)' },
+        { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento (Com Notas)' },
         { id: 'CERTIFICADO', label: 'Certificado de Habilitações' },
         { id: 'BOLETIM', label: 'Boletim de Notas' }
     ];
 
+    // Fields to check
+    const mandatoryFields = useMemo(() => [
+        { key: 'nome_pai', label: 'Nome do Pai' },
+        { key: 'nome_mae', label: 'Nome da Mãe' },
+        { key: 'data_nascimento', label: 'Data de Nascimento', type: 'date' },
+        { key: 'naturalidade', label: 'Naturalidade' },
+        { key: 'provincia_naturalidade', label: 'Província de Naturalidade' },
+        { key: 'data_emissao_bilhete', label: 'Data de Emissão do BI', type: 'date' }
+    ], []);
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const response = await api.get('/classes/');
+                setClasses(response.data.results || response.data);
+            } catch (err) {
+                console.error("Erro ao buscar classes", err);
+            }
+        };
+        fetchClasses();
+    }, []);
+
+    useEffect(() => {
+        if (studentInfo) {
+            const missing = {};
+            let hasMissing = false;
+            mandatoryFields.forEach(field => {
+                if (!studentInfo[field.key]) {
+                    missing[field.key] = '';
+                    hasMissing = true;
+                }
+            });
+            if (hasMissing) {
+                setMissingFields(missing);
+                setIsEditingMissing(true);
+            } else {
+                setMissingFields({});
+                setIsEditingMissing(false);
+            }
+        }
+    }, [studentInfo, mandatoryFields]);
+
+    const handleMissingFieldChange = (key, value) => {
+        setMissingFields(prev => ({ ...prev, [key]: value }));
+    };
+
+    const saveMissingData = async () => {
+        try {
+            setLoading(true);
+            setError('');
+            // Validar se todos foram preenchidos
+            for (const key in missingFields) {
+                if (!missingFields[key]) {
+                    setError(`Por favor, preencha o campo ${mandatoryFields.find(f => f.key === key).label}`);
+                    setLoading(false);
+                    return;
+                }
+            }
+
+            await api.patch(`/alunos/${studentInfo.id_aluno}/`, missingFields);
+            const updated = { ...studentInfo, ...missingFields };
+            setStudentInfo(updated);
+            setIsEditingMissing(false);
+            setError('');
+        } catch (err) {
+            setError("Erro ao atualizar dados do aluno.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Filtra classes baseado na regra de negócio e no aluno selecionado
+        if (!studentInfo || !selectedDoc || classes.length === 0) {
+            setAvailableClasses([]);
+            return;
+        }
+
+        const currentLevel = parseInt(studentInfo.classe_nivel || 0);
+        let filtered = [];
+
+        // Regras Reais:
+        // Declaração: Máximo permitida = Classe Atual - 1 (ex: aluno da 12ª só pede até 11ª)
+        // Boletim: Permitida Classe Atual ou inferior
+        // Certificado: Apenas se aprovado na última classe do ciclo (13ª) ou Ex-aluno finalizado
+
+        if (selectedDoc === 'DECLARAÇÃO' || selectedDoc === 'DECLARAÇÃO_SIMPLES' || selectedDoc === 'DECLARAÇÃO_APROVEITAMENTO' || selectedDoc.includes('DECLARAÇÃO')) {
+            filtered = classes.filter(c => c.nivel < currentLevel);
+        } else if (selectedDoc === 'BOLETIM') {
+            filtered = classes.filter(c => c.nivel <= currentLevel);
+        } else if (selectedDoc === 'CERTIFICADO') {
+            filtered = classes.filter(c => c.nivel === 13);
+        }
+
+        setAvailableClasses(filtered.sort((a, b) => b.nivel - a.nivel));
+    }, [selectedDoc, studentInfo, classes]);
+
     useEffect(() => {
         const fetchMyStudents = async () => {
             try {
-                if (user?.id) {
-                    const response = await api.get(`/encarregados/${user.id}/educandos/`);
+                if (user?.id || user?.id_aluno || user?.id_encarregado) {
+                    const id = user.id_encarregado || user.id_aluno || user.id;
+                    const response = await api.get(`/encarregados/${id}/educandos/`);
                     setMyStudents(response.data);
                 }
             } catch {
@@ -41,19 +145,17 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
         if (fixedStudent) {
             setStudentInfo(fixedStudent);
             setStep(2);
-        } else if (userType === 'encarregado' && user?.id) {
+        } else if (userType === 'encarregado' && (user?.id || user?.id_encarregado)) {
             fetchMyStudents();
         }
     }, [fixedStudent, user, userType]);
 
-    // Função de selecionar da lista
     const handleStudentSelect = (e) => {
         const selectedId = e.target.value;
         if (!selectedId) return;
         const student = myStudents.find(s => s.id_aluno === parseInt(selectedId));
         if (student) {
             setStudentInfo(student);
-            // reset error
             setError('');
         }
     };
@@ -91,21 +193,20 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             const payload = {
                 id_aluno: studentInfo.id_aluno,
                 tipo_documento: selectedDoc,
-                canal_pagamento_rup: paymentMethod === 'confirmado_local' ? 'fisico_rup' : paymentMethod, // Backend default to fisico if confirming locally
-                id_encarregado: userType === 'encarregado' ? user.id : null,
-                id_funcionario: userType === 'funcionario' ? user.id : null
+                canal_pagamento_rup: paymentMethod === 'confirmado_local' ? 'fisico_rup' : paymentMethod,
+                id_encarregado: userType === 'encarregado' ? (user.id_encarregado || user.id) : null,
+                id_funcionario: userType === 'funcionario' ? (user.id_funcionario || user.id) : null,
+                classe_solicitada: selectedClass || null
             };
 
             const response = await api.post('/solicitacoes/', payload);
             let finalResult = response.data;
 
-            // Se for funcionário e escolheu confirmar pagamento na hora
             if (userType === 'funcionario' && paymentMethod === 'confirmado_local') {
                 const idSolicitacao = response.data.solicitacao.id_solicitacao;
                 const confirmResponse = await api.post(`/solicitacoes/${idSolicitacao}/confirmar_pagamento/`, {
-                    id_funcionario: user.id
+                    id_funcionario: user.id_funcionario || user.id
                 });
-                // Merge result to show success/download
                 finalResult = { ...finalResult, ...confirmResponse.data, confirmed: true };
             }
 
@@ -123,7 +224,6 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     return (
         <div className={style.flowContainer}>
             <div className={style.stepper}>
-                {/* ... steps ... */}
                 <div className={`${style.step} ${step >= 1 ? style.active : ''}`}>
                     <div className={style.stepIcon}><RiUser3Line /></div>
                     <span>Identificação</span>
@@ -169,37 +269,33 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 >
                                     Avançar <RiArrowRightLine />
                                 </button>
-
-                                <div className={style.dividerLine}>
-                                    <p>Ou pesquise por outro BI se necessário:</p>
+                                {error && <p className={style.errorMsg}>{error}</p>}
+                            </div>
+                        ) : (
+                            /* Search Box - Default for Funcionario or Fallback */
+                            <div className={style.searchBox} style={userType === 'funcionario' ? { marginTop: 0 } : {}}>
+                                <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                                    {userType === 'funcionario' ? 'Pesquisar Aluno por BI' : 'Pesquisar por BI'}
+                                </h4>
+                                <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Digite o número do BI..."
+                                        value={biSearch}
+                                        onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
+                                        style={{ flex: 1 }}
+                                    />
+                                    <button onClick={searchStudent} disabled={loading}>
+                                        {loading ? '...' : <RiSearchLine />}
+                                    </button>
                                 </div>
+                                {error && <p className={style.errorMsg}>{error}</p>}
                             </div>
-                        ) : null}
-
-                        {/* Search Box - Default for Funcionario or Fallback */}
-                        <div className={style.searchBox} style={userType === 'funcionario' ? { marginTop: 0 } : {}}>
-                            <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                                {userType === 'funcionario' ? 'Pesquisar Aluno por BI' : 'Pesquisar por BI'}
-                            </h4>
-                            <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                                <input
-                                    type="text"
-                                    placeholder="Digite o número do BI..."
-                                    value={biSearch}
-                                    onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
-                                    style={{ flex: 1 }}
-                                />
-                                <button onClick={searchStudent} disabled={loading}>
-                                    {loading ? '...' : <RiSearchLine />}
-                                </button>
-                            </div>
-                        </div>
-                        {error && <p className={style.errorMsg}>{error}</p>}
+                        )}
                     </div>
                 )}
 
                 {step === 2 && studentInfo && (
-                    // ... step 2 content ...
                     <div className={style.stepIn}>
                         <h2>Confirmar Dados do Educando</h2>
                         <div className={style.confirmCard}>
@@ -209,35 +305,99 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 </div>
                                 <div className={style.details}>
                                     <h3>{studentInfo.nome_completo}</h3>
-                                    <p>BI: {studentInfo.numero_bi}</p>
-                                    <p>Matrícula: {studentInfo.numero_matricula}</p>
-                                    <p>{studentInfo.classe_nivel || 'Classe N/A'} - {studentInfo.curso_nome || 'Curso N/A'}</p>
+                                    <p><strong>BI:</strong> {studentInfo.numero_bi}</p>
+                                    <p><strong>Matrícula:</strong> {studentInfo.numero_matricula}</p>
+                                    <p><strong>Actual:</strong> {studentInfo.classe_nivel || 'Classe N/A'}ª Classe - {studentInfo.curso_nome || 'Curso N/A'}</p>
+                                </div>
+                                <div className={style.actionsTop}>
+                                    <button className={style.btnWrongData} onClick={() => {
+                                        if (window.confirm("Deseja cancelar esta solicitação e voltar ao início?")) {
+                                            setStep(1);
+                                            setStudentInfo(fixedStudent ? fixedStudent : null);
+                                        }
+                                    }}>
+                                        <RiErrorWarningLine /> Dados Incorretos? (Cancelar)
+                                    </button>
                                 </div>
                             </div>
 
-                            <div className={style.formGroup}>
-                                <label>Tipo de Documento Desejado:</label>
-                                <select value={selectedDoc} onChange={(e) => setSelectedDoc(e.target.value)}>
-                                    <option value="">Selecione um documento...</option>
-                                    {docOptions.map(opt => (
-                                        <option key={opt.id} value={opt.id}>{opt.label}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            {/* Missing Data Form */}
+                            {isEditingMissing ? (
+                                <div className={style.missingDataForm}>
+                                    <div className={style.alertInfo}>
+                                        <RiErrorWarningLine />
+                                        <p>Para prosseguir, precisamos completar as informações em falta no seu cadastro:</p>
+                                    </div>
+                                    <div className={style.gridForm}>
+                                        {mandatoryFields.filter(f => studentInfo[f.key] === null || studentInfo[f.key] === '').map(field => (
+                                            <div key={field.key} className={style.formGroup}>
+                                                <label>{field.label}</label>
+                                                <input
+                                                    type={field.type || 'text'}
+                                                    value={missingFields[field.key] || ''}
+                                                    onChange={(e) => handleMissingFieldChange(field.key, e.target.value)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button className={style.btnSave} onClick={saveMissingData} disabled={loading}>
+                                        {loading ? 'Salvando...' : 'Salvar e Continuar'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className={style.selectionArea}>
+                                    <div className={style.formGroup}>
+                                        <label>Tipo de Documento Desejado:</label>
+                                        <select value={selectedDoc} onChange={(e) => {
+                                            setSelectedDoc(e.target.value);
+                                            setSelectedClass('');
+                                        }}>
+                                            <option value="">Selecione um documento...</option>
+                                            {docOptions.map(opt => (
+                                                <option key={opt.id} value={opt.id}>{opt.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {selectedDoc && (
+                                        <div className={style.formGroup}>
+                                            <label>Referente à Classe:</label>
+                                            <select
+                                                value={selectedClass}
+                                                onChange={(e) => setSelectedClass(e.target.value)}
+                                                disabled={availableClasses.length === 0}
+                                            >
+                                                <option value="">Selecione a classe...</option>
+                                                {availableClasses.map(cls => (
+                                                    <option key={cls.id_classe} value={cls.id_classe}>
+                                                        {cls.nivel}ª Classe ({cls.descricao})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {availableClasses.length === 0 && (
+                                                <span className={style.helperText}>Nenhuma classe disponível para este documento conforme as regras de emissão.</span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
-                        <div className={style.actions}>
-                            <button className={style.btnPrev} onClick={() => setStep(1)}>
-                                <RiArrowLeftLine /> Voltar
-                            </button>
-                            <button
-                                className={style.btnNext}
-                                onClick={() => setStep(3)}
-                                disabled={!selectedDoc}
-                            >
-                                Próximo (Pagamento) <RiArrowRightLine />
-                            </button>
-                        </div>
+                        {!isEditingMissing && (
+                            <div className={style.actions}>
+                                <button className={style.btnPrev} onClick={() => setStep(1)}>
+                                    <RiArrowLeftLine /> Voltar
+                                </button>
+                                <button
+                                    className={style.btnNext}
+                                    onClick={() => setStep(3)}
+                                    disabled={!selectedDoc || !selectedClass}
+                                >
+                                    Próximo (Pagamento) <RiArrowRightLine />
+                                </button>
+                            </div>
+                        )}
+                        {error && <p className={style.errorMsg}>{error}</p>}
                     </div>
                 )}
 

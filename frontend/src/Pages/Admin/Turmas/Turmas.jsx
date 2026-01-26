@@ -39,14 +39,14 @@ export default function Turmas() {
         console.log("Add turma clicked");
     };
 
-    const handleEdit = (item) => {
+   /* const handleEdit = (item) => {
         console.log("Edit turma:", item);
     };
 
     const handleDelete = (item) => {
         console.log("Delete turma:", item);
     };
-
+*/
     return (
         <div className="ContainerGeneral">
             <NavBarMenu />
@@ -61,8 +61,8 @@ export default function Turmas() {
                         data={turmas}
                         columns={columns}
                         onAdd={handleAdd}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
+                       /* onEdit={handleEdit}
+                        onDelete={handleDelete}*/
                         searchPlaceholder="Pesquisar por código ou curso..."
                     />
                 )}

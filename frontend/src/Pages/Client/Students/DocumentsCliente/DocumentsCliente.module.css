@@ -36,7 +36,14 @@
     margin-top: 0.5rem;
     font-size: 1.1rem;
 }
-
+.newRequestBtn{
+    background-color: #0ea5e9;
+    color: #fff;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
 .tableContainer {
     background: var(--bg-card);
     border: 1px solid var(--border-color);

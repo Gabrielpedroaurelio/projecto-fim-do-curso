@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
         try {
             const userType = localStorage.getItem('user_type');
             if (user && userType) {
-                await api.post('/auth/logout/', {
+                await api.post('auth/logout/', {
                     user_id: user.id,
                     user_type: userType
                 });
@@ -29,12 +29,22 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const loadUser = async () => {
             const token = localStorage.getItem('access_token');
+            const userType = localStorage.getItem('user_type');
+
+            console.log("Iniciando loadUser. Token presente:", !!token, "Tipo:", userType);
+
             if (token) {
                 try {
-                    const response = await api.get('/auth/me/');
+                    const response = await api.get('auth/me/');
+                    console.log("Resposta me_view:", response.data);
                     setUser(response.data.user || response.data);
-                } catch {
-                    logout();
+                } catch (error) {
+                    console.error("Erro no me_view:", error.response?.status, error.response?.data);
+
+                    if (error.response && [401, 403].includes(error.response.status)) {
+                        console.warn("Sessão inválida. Executando logout...");
+                        logout();
+                    }
                 }
             }
             setLoading(false);
@@ -46,7 +56,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, senha, tipo_usuario) => {
         try {
-            const response = await api.post('/auth/login/', {
+            const response = await api.post('auth/login/', {
                 email,
                 senha,
                 tipo_usuario
@@ -61,7 +71,7 @@ export function AuthProvider({ children }) {
             setUser(user);
             return { success: true };
         } catch (error) {
-            console.error("Login error:", error);
+            console.log("Login error:", error);
             return {
                 success: false,
                 message: error.response?.data?.error || "Falha na autenticação"

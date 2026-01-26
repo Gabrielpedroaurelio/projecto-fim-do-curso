@@ -73,9 +73,7 @@ const DocumentsCliente = () => {
                   <h1>Meus Documentos</h1>
                   <p>Gerencie suas solicitações e baixe documentos oficiais.</p>
                 </div>
-                <button className={style.newRequestBtn} onClick={() => setShowRequestForm(true)}>
-                  + Nova Solicitação
-                </button>
+             
               </header>
 
               <div className={style.tableContainer}>

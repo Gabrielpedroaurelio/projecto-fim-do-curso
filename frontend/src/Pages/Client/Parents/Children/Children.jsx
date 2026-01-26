@@ -6,7 +6,7 @@ import '../../../../assets/style/global.style.css'
 import { Link } from 'react-router-dom'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiUser3Line, RiArrowRightSLine } from 'react-icons/ri'
+import { RiUser3Line, RiArrowRightSLine, RiUser6Line, RiGroupLine } from 'react-icons/ri'
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
 
@@ -21,6 +21,8 @@ const Children = () => {
         if (user?.id) {
           const response = await api.get(`/encarregados/${user.id}/educandos/`);
           setChildrenData(response.data);
+          console.log(response.data);
+          
         }
       } catch (error) {
         console.error("Erro ao carregar educandos:", error);
@@ -39,7 +41,7 @@ const Children = () => {
 
         <div className={style.childrenContainer}>
           <header className={style.sectionHeader}>
-            <h1>Gestão de Educandos 🎓</h1>
+            <h1>Gestão de Educandos  <RiGroupLine /></h1>
             <p>Acompanhe o desempenho individual, assiduidade e situação administrativa de cada um dos seus educandos.</p>
           </header>
 

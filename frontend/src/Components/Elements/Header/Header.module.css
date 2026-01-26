@@ -7,13 +7,16 @@
     background-color: var(--bg-card);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0px;
+    z-index: 1;
 }
 
 /* Dark mode premium header effect */
 body.dark-mode .Header {
     background: var(--bg-page);
-    backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
     box-shadow: 0 1px 0 var(--border-color);
 }
 
@@ -69,6 +72,8 @@ body.dark-mode .Header {
     transition: all 0.3s ease;
 }
 
+ 
+
 .SearchBar svg {
     color: var(--text-muted);
 }
@@ -120,6 +125,7 @@ body.dark-mode .Header {
     font-size: 0.9rem;
     color: var(--text-main);
     width: 100%;
+    background-color: transparent;
 }
 
 .SearchBar input::placeholder {

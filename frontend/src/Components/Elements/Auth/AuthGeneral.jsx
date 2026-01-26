@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
 import fundo_login from '../../../assets/images/backgroundlogin.png'
+import fundo_login2 from '../../../assets/images/robot.png'
+import fundo_login3 from '../../../assets/images/img-login.jpg'
 import { useAuth } from '../../../Context/AuthContext';
 import { useState } from 'react';
 
@@ -27,7 +29,7 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
         }
         setIsSubmitting(false);
     }
-
+     
     return (
         <>
             <div className={style.containerForm}>
@@ -38,8 +40,11 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                                 <img src={favicon} alt="" width={30} /> <small className='s'>IPM</small>
                             </div>
                             <div className={style.mensage}>
-                                <h1>Olá,<br /> Bem-Vindo de Volta</h1>
-                                <small className=' text-gray-400'>Oi, bem-vindo de volta ao nosso sistema ({userType === 'funcionario' ? 'Admin' : userType})</small>
+                                <h1>Olá, <br /> Bem-Vindo de Volta</h1>
+                                <p>
+                                    Painel do {userType === 'funcionario' ? 'Administrador' : userType}
+                                </p>
+                                <small className=''>Oi, bem-vindo de volta ao nosso sistema ({userType === 'funcionario' ? 'Admin' : userType})</small>
                             </div>
 
                         </div>
@@ -49,6 +54,7 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                                 <input type="text" placeholder='E-mail'  {...register("email", {
                                     required: "E-mail é um campo Obrigatório"
                                 })}
+                                autoComplete='email'
                                 />
                                 {
                                     errors && (
@@ -62,7 +68,7 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                                     {
                                         required: "Palavra-Passe é um campo Obrigatório"
 
-                                    })} />
+                                    })} autoComplete='current-password' />
                                 {
                                     errors && (
 
@@ -71,13 +77,13 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                                 }
                             </div>
 
-                            {loginError && <p className="text-red-500 text-sm mb-2">{loginError}</p>}
+                            {loginError && <p className={`text-red-500 text-sm mb-2 ${style.error}`}>{loginError}</p>}
 
                             <div className={style.forgotPassword}>
                                 <small>  <Link to='/admin/dashboards'>Esqueceu a senha?</Link></small>
                             </div>
                             <div className={style.inputController}>
-                                <button type='submit' disabled={isSubmitting}>
+                                <button type='submit' disabled={isSubmitting} className={`${userType==="aluno"?style.student:userType==="encarregado"?style.parent:userType==="funcionario"?style.admin:style.admin}`}>
                                     {isSubmitting ? 'A entrar...' : 'Iniciar Sessão'}
                                 </button>
                             </div>
@@ -85,7 +91,21 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                     </div>
                     <div className={style.background}>
                         <div>
-                            <img src={fundo_login} alt="" />
+                            {
+                                userType == "aluno" ? (
+
+                                    <img src={fundo_login} alt="" />
+                                ) : (
+                                    userType == "encarregado" ? (
+
+                                        <img src={fundo_login2} alt="" />
+                                    ) : (
+                                        <img src={fundo_login3} alt="" />
+
+                                    )
+
+                                )
+                            }
                         </div>
                     </div>
                 </div>

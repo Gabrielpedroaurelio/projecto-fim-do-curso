@@ -40,16 +40,36 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // Se o erro for 401 e não for uma tentativa de refresh (para evitar loop infinito)
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            // TODO: Implementar lógica de Refresh Token aqui se necessário
-            // Por enquanto, apenas redireciona para login ou limpa o storage
-            // console.warn("Sessão expirada ou token inválido.");
+        // Se o erro for 401 e não for uma tentativa de login ou refresh
+        if (error.response && error.response.status === 401 && !originalRequest._retry && !originalRequest.url.includes('/auth/login/')) {
+            originalRequest._retry = true;
+            const refreshToken = localStorage.getItem('refresh_token');
 
-            // Opcional: Limpar dados se o token for inválido
-            // localStorage.removeItem('access_token');
-            // localStorage.removeItem('refresh_token');
-            // window.location.href = '/public/site';
+            if (refreshToken) {
+                try {
+                    // Tentar obter novo access token usando a baseURL da própria instância
+                    const refreshUrl = `${api.defaults.baseURL}auth/token/refresh/`;
+                    const response = await axios.post(refreshUrl, {
+                        refresh: refreshToken
+                    });
+
+                    if (response.status === 200) {
+                        const { access } = response.data;
+                        localStorage.setItem('access_token', access);
+                        // Atualizar cabeçalhos para requisições futuras e para a requisição atual
+                        api.defaults.headers.Authorization = `Bearer ${access}`;
+                        originalRequest.headers.Authorization = `Bearer ${access}`;
+                        return api(originalRequest);
+                    }
+                } catch (refreshError) {
+                    console.error("Erro ao renovar sessão (Refresh Token):", refreshError);
+                    // Se o refresh falhar, limpamos os tokens para forçar login no próximo carregamento
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    // Não chamamos logout() ou redirecionamos aqui para evitar loops, 
+                    // o AuthContext lidará com o erro 401 original se este retry falhar.
+                }
+            }
         }
 
         // Retorna o erro para ser tratado no componente/serviço

@@ -2,14 +2,45 @@
     box-sizing: border-box;
 }
 
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode label,
+body.dark-mode div,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode li,
+body.dark-mode a {
+    color: inherit;
+}
+
+/* Ensure inputs and textareas also follow the theme */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #fff;
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: var(--text-muted);
+}
 .SearchBar {
     display: flex;
     align-items: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 24px auto 32px auto;
+    
+    width: 600px;
+
+    margin: 44px auto 32px auto;
     padding: 12px 20px;
-    background: rgba(30, 41, 59, 0.6);
+    background: #f0f0f099;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 9999px;
@@ -27,8 +58,8 @@
     transition: color 0.3s;
 }
 
-.SearchBar input {
-    color: #f8fafc;
+body.dark-mode .SearchBar input,.SearchBar input {
+    color: #000000;
     width: 100%;
     font-size: 1rem;
     outline: none;
@@ -51,7 +82,7 @@
 
 /* Focus / subtle glow */
 .SearchBar:focus-within {
-    background: rgba(30, 41, 59, 0.8);
+    background: #f0f0f099;
     border-color: #0ea5e9;
     box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
     transform: translateY(-1px);

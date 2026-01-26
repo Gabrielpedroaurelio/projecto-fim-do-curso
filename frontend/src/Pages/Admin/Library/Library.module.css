@@ -64,16 +64,18 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 2rem;
+    padding: 10px;
 }
 
 .BookCard {
     background: var(--bg-card);
-    border-radius: var(--radius-md);
+    border-radius: 5px;
     border: 1px solid var(--border-color);
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
+    height: 350px;
 }
 
 .BookCard:hover {

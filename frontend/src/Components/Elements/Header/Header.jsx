@@ -75,7 +75,7 @@ export default function Header({ text1, text2, onSearch }) {
 
     // Load theme preference on mount
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme')
+        const savedTheme = localStorage.getItem('site-theme')
         const prefersDark = savedTheme === 'dark'
         setIsDarkMode(prefersDark)
         if (prefersDark) {
@@ -118,10 +118,10 @@ export default function Header({ text1, text2, onSearch }) {
         setIsDarkMode(newTheme)
         if (newTheme) {
             document.body.classList.add('dark-mode')
-            localStorage.setItem('theme', 'dark')
+            localStorage.setItem('site-theme', 'dark')
         } else {
             document.body.classList.remove('dark-mode')
-            localStorage.setItem('theme', 'light')
+            localStorage.setItem('site-theme', 'light')
         }
     }
 
@@ -259,10 +259,11 @@ export default function Header({ text1, text2, onSearch }) {
                                     <RiUserLine />
                                     <span>Meu Perfil</span>
                                 </Link>
+                                {/*
                                 <button className={style.MenuItem}>
                                     <RiSettings4Line />
                                     <span>Configurações</span>
-                                </button>
+                                </button>*/}
                                 <hr className={style.Divider} />
                                 <button className={`${style.MenuItem} ${style.Logout}`} onClick={handleLogout}>
                                     <RiLogoutBoxRLine />

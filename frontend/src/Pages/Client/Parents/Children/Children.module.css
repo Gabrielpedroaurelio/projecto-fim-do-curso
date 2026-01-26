@@ -136,9 +136,9 @@
 }
 
 .childCard:hover .btnAction {
-    background: var(--green-primay);
-    color: white;
-    border-color: var(--green-primay);
+    background: var(  --bs-green);
+    color: #ffffff;
+    border-color: var(  --bs-green);
 }
 
 @media (max-width: 768px) {

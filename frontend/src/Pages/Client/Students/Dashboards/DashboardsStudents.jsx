@@ -70,25 +70,25 @@ const DashboardsStudents = () => {
                 icon={<RiLineChartLine size={30} />}
                 title="Média Geral"
                 value={stats.media_geral.toString()}
-                value_percentual={stats.media_geral >= 10 ? 5 : -2}
+                value_percentual={(stats.media_geral >= 10 ? 5 : -2)+"%"}
               />
               <Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value={`${stats.presenca_percentual}%`}
-                value_percentual={stats.presenca_percentual >= 75 ? 2.1 : -4.5}
+                value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5)+"%"}
               />
               <Cards
                 icon={<RiArticleLine size={30} />}
                 title="Faltas Acumuladas"
                 value={`${stats.total_faltas} Faltas`}
-                value_percentual={0}
+                value_percentual={(0)+'%'}
               />
               <Cards
                 icon={<RiFileList3Line size={30} />}
                 title="Status Geral"
                 value={stats.media_geral >= 10 ? "Aprovado" : "Em Risco"}
-                value_percentual={100}
+                value_percentual={stats.media_geral+"%"}
               />
             </div>
           </div>
@@ -157,13 +157,13 @@ const DashboardsStudents = () => {
             </div>
             <div className={style.quickAccessGrid}>
               <div className={style.revealItem}>
-                <CardsDocments text="Declaração" icon={<RiFileList3Line size={50} />} url="/student/ask" />
+                <CardsDocments text="Solicitações" icon={<RiFileList3Line size={50} />} url="/student/ask" />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Certificado" icon={<RiShieldUserLine size={50} />} url="/student/ask" />
+                <CardsDocments text="Notas e Avaliações" icon={<RiShieldUserLine size={50} />} url="/student/grades" />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Boletim" icon={<RiCalendarEventLine size={50} />} url="/student/document" />
+                <CardsDocments text="Documentos" icon={<RiCalendarEventLine size={50} />} url="/student/document" />
               </div>
             </div>
           </section>

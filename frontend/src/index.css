@@ -67,16 +67,16 @@ body {
 /* Glassmorphism Classes */
 .glass-panel {
     background: var(--bg-card);
-    backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
 }
 
 .glass-card {
     background: var(--bg-card);
-    backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;

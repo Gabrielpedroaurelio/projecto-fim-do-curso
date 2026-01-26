@@ -20,6 +20,8 @@ export default function LIbrary() {
   const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([{ id: 'Todas', nome: 'Todas' }]);
   const [loading, setLoading] = useState(true);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,13 +50,22 @@ export default function LIbrary() {
   const recommended = useMemo(() => books.filter(b => b.recomendado), [books]);
 
   const filtered = useMemo(() => {
-    if (category.id === 'Todas') return books;
-    return books.filter(b => b.categoria_nome === category.nome);
-  }, [books, category]);
+    let result = books;
+    if (category.id !== 'Todas') {
+      result = result.filter(b => b.categoria_nome === category.nome);
+    }
+    if (searchTerm.trim()) {
+      result = result.filter(b =>
+        b.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (b.editora && b.editora.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+    return result;
+  }, [books, category, searchTerm]);
 
   function handleView(book) {
     if (book.caminho_arquivo) {
-      window.open(book.caminho_arquivo, '_blank');
+      setSelectedBook(book);
     }
   }
 
@@ -78,6 +89,7 @@ export default function LIbrary() {
     recommended: b.recomendado,
     cover: b.img_path,
     pdf: b.caminho_arquivo,
+    caminho_arquivo: b.caminho_arquivo,
     excerpt: b.excerpt || 'Resumo não disponível.'
   });
 
@@ -89,9 +101,11 @@ export default function LIbrary() {
         <div className="relative z-10 w-full flex flex-col">
           {/* Recommended Books - Full Width */}
           <section className={style.recommendedBooks}>
-            <div className="px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full pt-8">
-              <SearchBar />
-            </div>
+            <SearchBar
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
             <div className={style.sectionHeader}>
               <h3>Livros Recomendados</h3>
             </div>
@@ -142,6 +156,34 @@ export default function LIbrary() {
             </section>
           </div>
         </div>
+
+        {/* Modal Viewer */}
+        {selectedBook && (
+          <div className={style.modalOverlay} onClick={() => setSelectedBook(null)}>
+            <div className={style.modalContent} onClick={e => e.stopPropagation()}>
+              <div className={style.modalHeader}>
+                <h3>{selectedBook.title || selectedBook.titulo}</h3>
+                <button onClick={() => setSelectedBook(null)} className={style.closeBtn}>×</button>
+              </div>
+              <div className={style.modalBody}>
+                <iframe
+                  src={selectedBook.caminho_arquivo || selectedBook.pdf}
+                  title="Leitor de PDF"
+                  className={style.pdfViewer}
+                ></iframe>
+                <object data="" type=""></object>
+              </div>
+              <div className={style.modalFooter}>
+                <button
+                  className={style.downloadBtn}
+                  onClick={() => handleAdd(selectedBook)}
+                >
+                  <MdDownload size={20} style={{ marginRight: '8px' }} /> Baixar PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </AuroraBackground>
   )

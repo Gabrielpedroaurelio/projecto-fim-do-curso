@@ -66,25 +66,25 @@ export default function Dashboards() {
                         icon={<FaFileInvoice size={40} />}
                         title={"Total Solicitações"}
                         value={kpis.total_solicitacoes.toLocaleString()}
-                        value_percentual={kpis.percentuais.solicitacoes}
+                        value_percentual={(kpis.percentuais.solicitacoes)+"%"}
                     />
                     <Cards
                         icon={<FaCircleCheck size={40} />}
                         title={"Declarações Emitidas"}
                         value={kpis.declaracoes_emitidas.toLocaleString()}
-                        value_percentual={kpis.percentuais.declaracoes}
+                        value_percentual={(kpis.percentuais.declaracoes)+"%"}
                     />
                     <Cards
                         icon={<FaUserGraduate size={40} />}
                         title={"Novos Alunos"}
                         value={kpis.novos_alunos.toLocaleString()}
-                        value_percentual={kpis.percentuais.alunos}
+                        value_percentual={(kpis.percentuais.alunos)+"%"}
                     />
                     <Cards
                         icon={<RiBillLine size={40} />}
                         title={"Receita Total"}
                         value={`Kz ${kpis.receita_total.toLocaleString()}`}
-                        value_percentual={kpis.percentuais.receita}
+                        value_percentual={(kpis.percentuais.receita)+"%"}
                     />
                 </div>
                 <div className={style.ChartsRow}>

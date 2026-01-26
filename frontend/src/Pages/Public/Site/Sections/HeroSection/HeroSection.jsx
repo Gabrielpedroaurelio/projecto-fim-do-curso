@@ -1,6 +1,6 @@
 import style from './HeroSection.module.css';
 import { FaArrowRight } from 'react-icons/fa6';
-
+import img from '../../../../../assets/images/Online learning-amico.svg'
 export default function HeroSection() {
     return (
         <section className={style.hero}>
@@ -36,8 +36,10 @@ export default function HeroSection() {
                         <div className={style.line}></div>
                     </div>
                     <div className={style.cardBody}>
-                        <div className={style.skeletonLine}></div>
-                        <div className={style.skeletonLineShort}></div>
+                        <div className={style.skeletonLine}>
+                            <img src={img} alt="" />
+                        </div>
+                      
                     </div>
                 </div>
             </div>

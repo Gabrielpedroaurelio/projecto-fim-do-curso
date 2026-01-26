@@ -4,13 +4,15 @@
     box-sizing: border-box;
     margin: 0px;
     padding: 0px;
-
+    
 }
 
-.containerForm {
+body.dak-mode .containerForm,  .containerForm {
     width: 100vw;
     height: 100vh;
+    color: #000;
 
+    background-color: rgb(255, 255, 255);
 }
 
 .containerForm .cardForm {
@@ -51,7 +53,9 @@
 
 }
 
-.containerForm .cardForm .form .mensage {}
+body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardForm .form .mensage *{
+    color: #000000;
+}
 
 .containerForm .cardForm .form .mensage h1 {
     font-size: 18pt;
@@ -79,7 +83,8 @@
     border: 1px solid var(--fundo-login);
     border-radius: var(--radius-sm);
     padding: 10px;
-
+    background-color: #ffffff;
+    color: #000;
 }
 
 .containerForm .cardForm .form form .inputController input:focus {
@@ -108,7 +113,7 @@
 }
 
 .containerForm .cardForm .form form .inputController button[type="submit"] {
-    background-color: #198754;
+    
     border-radius: var(--radius-sm);
     width: 80%;
     margin: auto;
@@ -116,6 +121,15 @@
     color: #fff;
     padding: 5px 10px;
     cursor: pointer;
+}
+.containerForm .cardForm .form form .inputController button.admin[type="submit"]{
+    background-color: #198754;
+}
+.containerForm .cardForm .form form .inputController button.student[type="submit"] {
+    background-color:var(--bs-purple);
+}
+.containerForm .cardForm .form form .inputController button.parent[type="submit"] {
+    background-color: var(--bs-success);
 }
 
 .containerForm .cardForm .form {}
@@ -259,4 +273,10 @@
         height: 100%;
 
     }
+}
+.error{
+    color: var(--bs-danger);
+    text-align: center;
+    font-size: 10pt;
+    
 }

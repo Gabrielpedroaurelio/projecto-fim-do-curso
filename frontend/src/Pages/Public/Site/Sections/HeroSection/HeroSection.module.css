@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     /* Centered layout like Welcome page */
-    padding: 140px 5% 100px;
+    padding: 0px 5% 100px;
     gap: 60px;
     position: relative;
     overflow: hidden;
@@ -33,7 +33,7 @@
 .badge span {
     font-size: 0.8rem;
     font-weight: 500;
-    color: #e3e3e3;
+    color: var(--text-main);
     letter-spacing: 0.02em;
 }
 
@@ -41,8 +41,9 @@
     font-size: clamp(3.5rem, 6vw, 5rem);
     font-weight: 500;
     /* Lighter weight for modern feel */
+    /* Lighter weight for modern feel */
     line-height: 1.1;
-    color: #e3e3e3;
+    color: var(--text-title);
     margin-bottom: 24px;
     letter-spacing: -0.03em;
     font-family: 'Open Sans', sans-serif;
@@ -54,6 +55,7 @@
     background: linear-gradient(90deg, #4285f4 0%, #9b72cb 50%, #d96570 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 8s linear infinite;
     display: inline-block;
@@ -62,7 +64,7 @@
 .description {
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #c4c7c5;
+    color: var(--text-muted);
     /* Muted text */
     max-width: 600px;
     margin-bottom: 40px;
@@ -75,8 +77,8 @@
 }
 
 .primaryBtn {
-    background: #e3e3e3;
-    color: #131314;
+    background: var(--text-main);
+    color: var(--bg-page);
     padding: 12px 32px;
     border-radius: 100px;
     /* Full pill */
@@ -91,7 +93,7 @@
 }
 
 .primaryBtn:hover {
-    background: #ffffff;
+    background: var(--primary);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     transform: translateY(-1px);
 }
@@ -138,7 +140,7 @@
 .floatingCard {
     width: 320px;
     height: 420px;
-    background: rgba(30, 31, 32, 0.6);
+    background: var(--bg-card);
     /* #1e1f20 with opacity */
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
@@ -197,6 +199,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+ 
 }
 
 .skeletonLine {

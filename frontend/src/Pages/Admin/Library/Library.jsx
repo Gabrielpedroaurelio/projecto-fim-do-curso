@@ -126,7 +126,7 @@ export default function Library() {
                                     <p className={style.Author}>{book.editora || 'Editora N/A'}</p>
                                     <div className={style.BookMeta}>
                                         <span><FaCalendarAlt /> {new Date(book.data_upload).getFullYear()}</span>
-                                        <a href={book.caminho_arquivo} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium">Ver PDF</a>
+                                        <a href={book.caminho_arquivo} download={book.titulo} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium">Ver PDF</a>
                                     </div>
                                 </div>
                             </div>

@@ -64,7 +64,7 @@ export default function BookCard({ book, onView, onAdd }) {
           <span className={styles.category}>{book.category}</span>
           <div className={styles.actions}>
             <button aria-label={`Ver ${book.title}`} className={styles.actionBtn} onClick={() => onView?.(book)}><IoEyeOutline size={18} /></button>
-            <button aria-label={`Baixar ${book.title}`} className={styles.actionBtn} onClick={() => onAdd?.(book)}><MdOutlineFileDownload size={20} /></button>
+            <a href={book.caminho_arquivo} title='Baixar' aria-label={`Baixar ${book.title}`} className={styles.actionBtn} onClick={() => onAdd?.(book)}><MdOutlineFileDownload size={20} /></a>
           </div>
         </div>
       </div>

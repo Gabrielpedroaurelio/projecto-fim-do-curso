@@ -7,13 +7,14 @@
 
 }
 
-.containerForm {
+body.dark-mode .containerForm {
     width: 100vw;
     height: 100vh;
+    background-color: rgb(255, 255, 255);
 
 }
 
-.containerForm .cardForm {
+body.dark-mode .containerForm,.containerForm .cardForm {
     height: 500px;
   background-color: rgb(255, 255, 255);
   -webkit-backdrop-filter: blur(10px);

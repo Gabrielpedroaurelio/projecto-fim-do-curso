@@ -31,7 +31,8 @@
     position: absolute;
     bottom: 24px;
     right: -24px;
-    background: rgba(30, 31, 32, 0.8);
+    right: -24px;
+    background: var(--bg-card);
     backdrop-filter: blur(16px);
     padding: 12px;
     border-radius: 16px;
@@ -40,7 +41,7 @@
     align-items: center;
     gap: 16px;
     max-width: 260px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .BadgeIcon {
@@ -59,13 +60,13 @@
 .BadgeText h4 {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #e3e3e3;
+    color: var(--text-title);
     margin: 0;
 }
 
 .BadgeText span {
     font-size: 0.85rem;
-    color: #c4c7c5;
+    color: var(--text-muted);
 }
 
 .TextCol {
@@ -85,7 +86,7 @@
 .Title {
     font-size: clamp(2.5rem, 4vw, 3rem);
     font-weight: 600;
-    color: #e3e3e3;
+    color: var(--text-title);
     line-height: 1.2;
     margin-bottom: 24px;
     font-family: 'Open Sans', sans-serif;
@@ -93,7 +94,7 @@
 
 .Description {
     font-size: 1.125rem;
-    color: #c4c7c5;
+    color: var(--text-muted);
     line-height: 1.7;
     margin-bottom: 40px;
 }
@@ -124,7 +125,7 @@
 }
 
 .CheckList strong {
-    color: #e3e3e3;
+    color: var(--text-main);
     font-weight: 600;
     font-size: 1.1rem;
     display: block;
@@ -132,16 +133,16 @@
 }
 
 .CheckList p {
-    color: #9ca3af;
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0;
 }
 
 .BtnSecondary {
-    background: #e3e3e3;
+    background: var(--text-main);
     /* Primary action color from Hero */
-    color: #131314;
+    color: var(--bg-page);
     border: none;
     padding: 12px 32px;
     border-radius: 100px;
@@ -154,7 +155,7 @@
 }
 
 .BtnSecondary:hover {
-    background: #ffffff;
+    background: var(--primary);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }

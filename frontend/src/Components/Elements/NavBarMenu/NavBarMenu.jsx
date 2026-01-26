@@ -14,8 +14,13 @@ import { RiBillLine } from "react-icons/ri";
 import { CiFileOn, CiSettings } from 'react-icons/ci';
 import favicon from '../../../assets/images/favicon.ico'
 
-export default function NavBarMenu() {
+import { useAuth } from '../../../Context/AuthContext';
+import { FaGraduationCap } from 'react-icons/fa6';
 
+export default function NavBarMenu() {
+    const { user } = useAuth();
+    const isProfessor = user?.cargo?.toLowerCase().includes('professor') || user?.cargo?.toLowerCase().includes('docente');
+    const isAdmin = user?.cargo?.toLowerCase().includes('administrador');
 
     return (
         <>
@@ -28,12 +33,22 @@ export default function NavBarMenu() {
                 <div className={style.MenuSection}>
                     <h3>Menu</h3>
                     <ul>
-                        <li className={style.Active}>
+                        <li>
                             <Link to={"/admin/dashboard"}>
                                 <BsHouse />
                                 <span>Dashboard</span>
                             </Link>
                         </li>
+
+                        {(isProfessor || isAdmin) && (
+                            <li>
+                                <Link to={"/admin/notas"}>
+                                    <FaGraduationCap />
+                                    <span>Lançar Notas</span>
+                                </Link>
+                            </li>
+                        )}
+
                         <li>
                             <Link to={"/admin/ask"}>
                                 <BsCart3 />

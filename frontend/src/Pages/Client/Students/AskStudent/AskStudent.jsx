@@ -1,45 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import style from './AskStudent.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiSendPlaneLine, RiCheckLine, RiErrorWarningLine } from 'react-icons/ri';
 import { useAuth } from '../../../../Context/AuthContext';
-import api from '../../../../Services/api';
+import SolicitacaoFlow from '../../../../Components/Features/Documents/SolicitacaoFlow';
 
 const AskStudent = () => {
   const { user } = useAuth();
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    docType: '',
-    reason: '',
-  });
+  // Estados antigos removidos
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.docType) return;
-
-    setLoading(true);
-    try {
-      await api.post('/solicitacoes/', {
-        id_aluno: user.id,
-        tipo_documento: formData.docType,
-        motivo: formData.reason,
-        status: 'Pendente'
-      });
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false)
-        setFormData({ docType: '', reason: '' })
-      }, 4000);
-    } catch (error) {
-      console.error("Erro ao enviar solicitação:", error);
-      alert("Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className='containelGeralclient'>
@@ -53,54 +23,11 @@ const AskStudent = () => {
           </header>
 
           <div className={style.formContainer}>
-            <form onSubmit={handleSubmit}>
-              <div className={style.formGroup}>
-                <label>Tipo de Documento</label>
-                <select
-                  className={style.select}
-                  required
-                  value={formData.docType}
-                  onChange={(e) => setFormData({ ...formData, docType: e.target.value })}
-                >
-                  <option value="">Selecione um documento...</option>
-                  <option value="Declaração de Matrícula">Declaração de Matrícula</option>
-                  <option value="Boletim Trimestral">Boletim Trimestral</option>
-                  <option value="Certificado de Habilitações">Certificado de Habilitações</option>
-                </select>
-              </div>
-
-              <div className={style.formGroup}>
-                <label>Motivo / Observações (Opcional)</label>
-                <textarea
-                  className={style.textarea}
-                  placeholder="Descreva brevemente o motivo da sua solicitação..."
-                  value={formData.reason}
-                  onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                ></textarea>
-              </div>
-
-              <button type="submit" className={style.submitBtn} disabled={submitted || loading}>
-                {submitted ? (
-                  <>
-                    <RiCheckLine size={24} />
-                    Solicitação Enviada!
-                  </>
-                ) : loading ? (
-                  "Enviando..."
-                ) : (
-                  <>
-                    <RiSendPlaneLine />
-                    Enviar Solicitação
-                  </>
-                )}
-              </button>
-            </form>
-
-            {submitted && (
-              <div className={style.successMessage}>
-                Sua solicitação foi recebida e está em processamento.
-              </div>
-            )}
+            <SolicitacaoFlow
+              userType="aluno"
+              fixedStudent={user}
+              onComplete={() => console.log("Solicitação completada")}
+            />
           </div>
         </div>
       </main>

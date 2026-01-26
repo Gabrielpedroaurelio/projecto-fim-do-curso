@@ -34,6 +34,7 @@ import Certificado from './Pages/Admin/Certificado/Certificado'
 import Boletim from './Pages/Admin/Boletim/Boletim'
 import Declaracao from './Pages/Admin/Declaracao/Declaracao'
 import YasminChat from './Pages/YasminAI/YasminChat'
+import GradeLaunching from './Pages/Admin/Grades/GradeLaunching'
 
 import ProtectedRoute from './Components/Security/ProtectedRoute'
 import Profile from './Pages/Common/Profile/Profile';
@@ -57,6 +58,7 @@ const Routers = () => {
                     <Route path='/admin/library' element={<ProtectedRoute allowedTypes={['funcionario']}><LibraryAdmin /></ProtectedRoute>}></Route>
                     <Route path='/admin/history' element={<ProtectedRoute allowedTypes={['funcionario']}><Histories /></ProtectedRoute>}></Route>
                     <Route path='/admin/setting' element={<ProtectedRoute allowedTypes={['funcionario']}><Settings /></ProtectedRoute>}></Route>
+                    <Route path='/admin/notas' element={<ProtectedRoute allowedTypes={['funcionario']}><GradeLaunching /></ProtectedRoute>}></Route>
                     <Route path='/admin/auth' element={<AuthAdmin />}></Route>
                     <Route path='/agent/account' element={<ProtectedRoute allowedTypes={['funcionario']}><Accounts /></ProtectedRoute>}></Route>
                     <Route path='/admin/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>

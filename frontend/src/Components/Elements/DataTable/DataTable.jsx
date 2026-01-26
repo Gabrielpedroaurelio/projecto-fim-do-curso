@@ -8,8 +8,8 @@ export default function DataTable({
     data = [],
     columns = [],
     onAdd,
-    onEdit,
-    onDelete,
+    //onEdit,
+    //onDelete,
     searchPlaceholder = "Search by name or roll",
     externalSearchTerm = "",
     loading = false
@@ -88,7 +88,7 @@ export default function DataTable({
                                 {columns.map((col, index) => (
                                     <th key={index}>{col.label}</th>
                                 ))}
-                                {(onEdit || onDelete) && <th>Action</th>}
+                                {/*(onEdit || onDelete) && <th>Action</th>*/}
                             </tr>
                         </thead>
                         <tbody>
@@ -135,7 +135,7 @@ export default function DataTable({
                                                 )}
                                             </td>
                                         ))}
-                                        {(onEdit || onDelete) ? (
+                                        {/*(onEdit || onDelete) ? (
                                             <td>
                                                 <div className={style.ActionButtons}>
                                                     {onEdit && (
@@ -158,13 +158,13 @@ export default function DataTable({
                                                     )}
                                                 </div>
                                             </td>
-                                        ) : null}
+                                        ) : null*/}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan={columns.length + 2} className={style.EmptyState}>
-                                        No data found
+                                    Sem Dados Encontrados
                                     </td>
                                 </tr>
                             )}

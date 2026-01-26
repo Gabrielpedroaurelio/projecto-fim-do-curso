@@ -1,13 +1,23 @@
-/* Main Layout Container */
-.layoutContainer {
+/* Main Layout Container - Force Light Theme regardless of body.dark-mode */
+.layoutContainer,
+body.dark-mode .layoutContainer {
     display: flex;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     position: relative;
-    background-color: #131314;
-    /* Deep Charcoal */
-    color: #e3e3e3;
+    /* Enforce Institutional Light Mode specifically for Public Site */
+    --bg-page: #f8f9fa !important;
+    --text-main: #212529 !important;
+    --text-title: #121212 !important;
+    --bg-card: #ffffff !important;
+    --border-color: #dee2e6 !important;
+    --text-muted: #6c757d !important;
+    --bg-header: #ffffff !important;
+    --primary: #0ea5e9 !important;
+
+    background-color: var(--bg-page);
+    color: var(--text-main);
     transition: background-color 0.3s ease;
 }
 

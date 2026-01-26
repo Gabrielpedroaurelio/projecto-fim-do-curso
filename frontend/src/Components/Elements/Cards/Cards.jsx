@@ -11,7 +11,7 @@ export default function Cards({icon, value,title, value_percentual}) {
             </div>
             <h2>{value}</h2>
             <div className={style.TrendUp}>
-                <span>+{value_percentual}%</span> vs mês passado
+                <span>{value_percentual}</span> vs mês passado
             </div>
         </div>
 
