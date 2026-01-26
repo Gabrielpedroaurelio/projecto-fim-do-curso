@@ -12,7 +12,8 @@ export default function DataTable({
     //onDelete,
     searchPlaceholder = "Search by name or roll",
     externalSearchTerm = "",
-    loading = false
+    loading = false,
+    addButtonLabel
 }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +50,7 @@ export default function DataTable({
                 </div>
                 {onAdd && (
                     <button className={style.AddButton} onClick={onAdd}>
-                        Exportar {title.split(' ')[2]}
+                        {addButtonLabel || `Adicionar ${title.split(' ')[2] || 'Item'}`}
                     </button>
                 )}
             </div>
@@ -164,7 +165,7 @@ export default function DataTable({
                             ) : (
                                 <tr>
                                     <td colSpan={columns.length + 2} className={style.EmptyState}>
-                                    Sem Dados Encontrados
+                                        Sem Dados Encontrados
                                     </td>
                                 </tr>
                             )}

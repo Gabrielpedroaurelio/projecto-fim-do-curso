@@ -183,70 +183,10 @@ class DocumentService:
     def _get_notas_finais_aluno(aluno, classe):
         """
         Calcula as notas detalhadas (MAC, PP, PT) e médias por trimestre.
-        Retorna estrutura pronta para a Declaração de Aproveitamento.
+        Proxy para AcademicService para evitar duplicação.
         """
-        from apis.models import MatrizCurricularDisciplina, Nota, MatrizCurricular
-        from django.db.models import Avg
-
-        matriz = MatrizCurricular.objects.filter(
-            id_curso=aluno.id_turma.id_curso,
-            id_classe=classe,
-            ativo=True
-        ).first()
-
-        if not matriz:
-            return []
-
-        disciplinas_matriz = MatrizCurricularDisciplina.objects.filter(
-            id_matriz_curricular=matriz
-        ).select_related('id_disciplina')
-
-        resultados = []
-        for m_disc in disciplinas_matriz:
-            notas_disc = Nota.objects.filter(id_aluno=aluno, id_matriz_disciplina=m_disc)
-            
-            # Estrutura por trimestre
-            grades = {
-                '1': {'MAC': 0, 'PP': 0, 'PT': 0, 'MT': 0},
-                '2': {'MAC': 0, 'PP': 0, 'PT': 0, 'MT': 0},
-                '3': {'MAC': 0, 'PP': 0, 'PT': 0, 'MT': 0}
-            }
-
-            for n in notas_disc:
-                if n.trimestre in grades and n.tipo_nota in grades[n.trimestre]:
-                    grades[n.trimestre][n.tipo_nota] = float(n.valor)
-
-            # Calcular Médias Trimestrais (MT = (MAC + PP + PT) / 3)
-            for t in grades:
-                g = grades[t]
-                if g['MAC'] or g['PP'] or g['PT']:
-                    # Se tiver pelo menos uma nota, calcula a média parcial
-                    g['MT'] = (g['MAC'] + g['PP'] + g['PT']) / 3
-            
-            # Média Final (MF = (MT1 + MT2 + MT3) / 3)
-            soma_mt = sum(grades[t]['MT'] for t in grades)
-            count_mt = sum(1 for t in grades if grades[t]['MT'] > 0)
-            media_final = soma_mt / count_mt if count_mt > 0 else 0
-
-            def nota_para_extenso(n):
-                nomes = {
-                    0: 'Zero', 1: 'Um', 2: 'Dois', 3: 'Três', 4: 'Quatro', 5: 'Cinco',
-                    6: 'Seis', 7: 'Sete', 8: 'Oito', 9: 'Nove', 10: 'Dez',
-                    11: 'Onze', 12: 'Doze', 13: 'Treze', 14: 'Catorze', 15: 'Quinze',
-                    16: 'Dezasseis', 17: 'Dezassete', 18: 'Dezoito', 19: 'Dezanove', 20: 'Vinte'
-                }
-                inteiro = int(round(n))
-                return nomes.get(inteiro, str(inteiro))
-
-            resultados.append({
-                'disciplina': m_disc.id_disciplina.nome,
-                'trimestres': grades,
-                'media_final': f"{media_final:.1f}",
-                'media_final_extenso': nota_para_extenso(media_final),
-                'resultado': 'Aprovado' if media_final >= 10 else 'Reprovado' if count_mt == 3 else '---'
-            })
-
-        return resultados
+        from apis.services.academic_service import AcademicService
+        return AcademicService.get_boletim_aluno(aluno, classe)
 
     @staticmethod
     def assinar_e_aprovar(solicitacao_id, funcionario_id):

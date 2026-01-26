@@ -106,13 +106,17 @@ class AlunoViewSet(viewsets.ModelViewSet):
             total=Count('id_falta')
         )
         
+        # Calcular notas detalhadas usando AcademicService
+        from apis.services.academic_service import AcademicService
+        notas_list = AcademicService.get_boletim_aluno(aluno)
+        
         # Mapear faltas para as disciplinas das notas
-        notas_list = list(notas_por_disciplina)
         faltas_map = {f['id_disciplina__nome']: f['total'] for f in faltas_por_disciplina}
         
         for nota in notas_list:
-            nota['faltas'] = faltas_map.get(nota['id_disciplina__nome'], 0)
-            # Assumindo 40 aulas por disciplina para o cálculo de percentagem
+            nota['faltas'] = faltas_map.get(nota['disciplina'], 0)
+            # Assumindo 40 aulas por disciplina para o cálculo de percentagem ou usar carga horária da matriz se disponível
+            # Aqui estamos simplificando
             nota['presenca_percentual'] = max(0, 100 - (nota['faltas'] * 2.5))
 
         return Response({

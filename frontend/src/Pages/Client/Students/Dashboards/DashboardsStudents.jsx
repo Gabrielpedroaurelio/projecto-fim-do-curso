@@ -39,7 +39,7 @@ const DashboardsStudents = () => {
 
   // Map backend notes to evolution chart
   const performanceData = stats.notas_por_disciplina.length > 0
-    ? stats.notas_por_disciplina.map(n => ({ month: n.id_disciplina__nome.substring(0, 3), grade: n.media }))
+    ? stats.notas_por_disciplina.map(n => ({ month: n.disciplina.substring(0, 3), grade: n.media_final_valor }))
     : [
       { month: 'Jan', grade: 0 },
       { month: 'Fev', grade: 0 },
@@ -70,25 +70,25 @@ const DashboardsStudents = () => {
                 icon={<RiLineChartLine size={30} />}
                 title="Média Geral"
                 value={stats.media_geral.toString()}
-                value_percentual={(stats.media_geral >= 10 ? 5 : -2)+"%"}
+                value_percentual={(stats.media_geral >= 10 ? 5 : -2) + "%"}
               />
               <Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value={`${stats.presenca_percentual}%`}
-                value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5)+"%"}
+                value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5) + "%"}
               />
               <Cards
                 icon={<RiArticleLine size={30} />}
                 title="Faltas Acumuladas"
                 value={`${stats.total_faltas} Faltas`}
-                value_percentual={(0)+'%'}
+                value_percentual={(0) + '%'}
               />
               <Cards
                 icon={<RiFileList3Line size={30} />}
                 title="Status Geral"
                 value={stats.media_geral >= 10 ? "Aprovado" : "Em Risco"}
-                value_percentual={stats.media_geral+"%"}
+                value_percentual={stats.media_geral + "%"}
               />
             </div>
           </div>

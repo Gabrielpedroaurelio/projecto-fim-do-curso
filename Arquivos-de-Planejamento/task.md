@@ -275,17 +275,15 @@ O sistema é escalável, seguro e alinhado com práticas modernas de engenharia 
   *Apos o aluno confirmar os dados o sistema vai mostrar as opções de pagamentos (usando o expresso, imprimir fomulario com rup mas com o status do pagamento como pentende)*
   *se o aluno selecionar a opção de multicaixa express o pagamento será realizado a partir do app, caso ele selecione a opção de imprimir o formulario, deve finalizar a operação com a mensagem de aviso que o rup expira em 24 horas*
   *O documento pdf e o fisico só estará disponivel apos a confirmação do pagamento do rup, o documento em pdf terá a assinatura digital do direitor, e o fisico será imprimido imediatamente assim que o pagamento for efetuado, e a impressora da instituicao que esta conectado a rede da escola vai imprimir o documento, e uma notificação será enviada para o aluno requisitante de que o seu documento foi impresso mas falta a assinatura do direitor, ao mesmo tempo será enviada uma notificação para o direitor com os dados do documento e um link para baixar ou visualizar o documento em questao, e o direitor deve validar o documento, e assinar, após o direitor assinar o ele deve aprovar a solicitacao do documento , e uma nova solicitacao sera enviada para o aluno dizendo que pode buscar o docuemnto*
+
 >>Encarregado
   *O encarredado deve selecionar o educando  e selectionar o docuemnto desejado e  o sistema  vai pegar o Bilhete e pesquisar os dados do educando selecionado e mostrar dados ( dados que ficaram no formulario), e depois manda o formulario para o encarregado confirmar os dados mais relevante: nome, bi, numero de matricula e outros*
-
   *Apos o encarregado confirmar os dados o sistema vai mostrar as opções de pagamentos (usando o expresso, imprimir fomulario com rup mas com o status do pagamento como pentende)*
-
   *se o encarregado selecionar a opção de multicaixa express o pagamento será realizado a partir do app, caso ele selecione a opção de imprimir o formulario, deve finalizar a operação com a mensagem de aviso que o rup expira em 24 horas*
-  
   *O documento pdf e o fisico só estará disponivel apos a confirmação do pagamento do rup, o documento em pdf terá a assinatura digital do direitor, e o fisico será imprimido imediatamente assim que o pagamento for efetuado, e a impressora da instituicao que esta conectado a rede da escola vai imprimir o documento, e uma notificação será enviada para o encarregado requisitante de que o seu documento foi impresso mas falta a assinatura do direitor, ao mesmo tempo será enviada uma notificação para o direitor com os dados do documento e um link para baixar ou visualizar o documento em questao, e o direitor deve validar o documento, e assinar, após o direitor assinar o ele deve aprovar a solicitacao do documento , e uma nova solicitacao sera enviada para o encarregado dizendo que pode buscar o docuemnto*
->>Funcionario
-*O funcionario deve pequisar o aluno pro bilehte de identidade e selctionar o documento desejado, o sistema vai fornecer um rup para o funcionario e imprimir um formulario para o funcionario dar a entidade requisitante para o mesmo realizar o pagamento ou pagar via tpa*
 
-*O documento pdf e o fisico só estará disponivel apos a confirmação do pagamento do rup, o documento em pdf terá a assinatura digital do direitor, e o fisico será imprimido imediatamente assim que o pagamento for efetuado, e a impressora da instituicao que esta conectado a rede da escola vai imprimir o documento, o funcionario deve levar o documento para o direitor assinar e entregar ao requisitante de emidiado*
+>>Funcionario
+  *O funcionario deve pequisar o aluno pro bilehte de identidade e selctionar o documento desejado, o sistema vai fornecer um rup para o funcionario e imprimir um formulario para o funcionario dar a entidade requisitante para o mesmo realizar o pagamento ou pagar via tpa*
+  *O documento pdf e o fisico só estará disponivel apos a confirmação do pagamento do rup, o documento em pdf terá a assinatura digital do direitor, e o fisico será imprimido imediatamente assim que o pagamento for efetuado, e a impressora da instituicao que esta conectado a rede da escola vai imprimir o documento, o funcionario deve levar o documento para o direitor assinar e entregar ao requisitante de emidiado*
 
 

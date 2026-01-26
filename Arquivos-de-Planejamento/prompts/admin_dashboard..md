@@ -1,10 +1,3 @@
->> admin dashboards
-melhorar os cards de resumos, dá uma ajustada nos graficos, quero que o menu do admin esteja responsivo para mobile, ajusta o container que é a tag main para ficar responsivo e para não ficar com ar de que vazou  e ele nao pode ser tapado delo menu dev começar onde o width do menu terminar e nao esquece que tem que ter o padding no main para ficar um pouco mais solto,
-coloque alguns efeito nos cards para aparecer com efeito bonito e tambem os graficos 
->> solicitações admin
-no pages de solicitações do administrador podes tirar o botao para editar modelo de boletim, declaração e solicitacao, e quero que a paginação funcione para todas as tabelas, use um array mais grande para testar tabelas com grandes quantidades de dados como 200 linhas no maximo 
-e quero que o filtro funcione para todas as tabelas do projecto o filtro de ultimo 7,30 e 90 dias
->> biblioteca
-no menu do admin tem um item chamado biblioteca, quero que coloques lá uma page onde virão os livros que estaram na biblioteca em forma de card e um btn para adicionar livros e quando clicar em add livro abre um formulario para cadastrar um livro, outra coisa todos os formularios do sistema deve se prepara para fazer requisições fecth, na pasta services tem arquivos requeste e ModelServices quero que melhores eles e corrijas erros neles, e eles devem ser usados para qualquel tipode regiquisição, na pasta hook deve criar um hook personalizado para pegar os dados ele deve retornar um objecto com os atributos, data, setdata, e isloading, vai ser um fluxo limpo e optimizado.
-
-para todo o admin a table de aluno, funcionario e encarregados deves tira as accoes e no lugar delas colocar o estado( online ou offline e quando passar o mouse por cima do status apareça uma msm que mostra desde quando ele esta online ou offline)
+## COISAS QUE FALTAM NO ADMIN
+>> SOLICITADOS: O BTN PARA VISUALIZAR NAO ESTA A FUNCIOAR
+>> BIBLIOTECA TEM ERRO NA REQUISICAO

@@ -18,6 +18,7 @@ const Profile = () => {
     });
     const [previewImage, setPreviewImage] = useState(null);
     const [rawImage, setRawImage] = useState(null);
+    const [passwordVerified, setPasswordVerified] = useState(false);
 
     // Sidebar choice based on user type
     const Sidebar = user?.tipo === 'funcionario' ? NavBarMenu : MenuNavBarCliente;
@@ -38,17 +39,31 @@ const Profile = () => {
         formData.append('img_path', rawImage);
 
         try {
-            const endpoint = user.tipo === 'funcionario' ? `/funcionarios/${user.id}/` :
-                user.tipo === 'aluno' ? `/alunos/${user.id}/` :
-                    `/encarregados/${user.id}/`;
-
-            await api.patch(endpoint, formData, {
+            // Usar o endpoint específico de update profile que lida com o token automaticamente
+            await api.post('/auth/update-profile/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            alert("Foto de perfil atualizada com sucesso! Recarregue para ver as mudanças.");
+            alert("Foto de perfil atualizada com sucesso! A página será recarregada.");
+            window.location.reload();
         } catch (error) {
             console.error(error);
             alert("Erro ao atualizar foto.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyPassword = async (e) => {
+        e?.preventDefault();
+        setLoading(true);
+        try {
+            await api.post('/auth/verify-password/', { senha_atual: passwordData.currentPassword });
+            setPasswordVerified(true);
+        } catch (error) {
+            console.error(error);
+            setPasswordVerified(false);
+            const errorMsg = error.response?.data?.error || "Senha incorreta.";
+            alert(errorMsg);
         } finally {
             setLoading(false);
         }
@@ -63,16 +78,18 @@ const Profile = () => {
 
         setLoading(true);
         try {
-            const endpoint = user.tipo === 'funcionario' ? `/funcionarios/${user.id}/` :
-                user.tipo === 'aluno' ? `/alunos/${user.id}/` :
-                    `/encarregados/${user.id}/`;
-
-            await api.patch(endpoint, { senha_hash: passwordData.newPassword });
+            await api.post('/auth/change-password/', {
+                senha_atual: passwordData.currentPassword,
+                nova_senha: passwordData.newPassword
+            });
             alert("Senha atualizada com sucesso!");
             setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setPasswordVerified(false);
         } catch (error) {
             console.error(error);
-            alert("Erro ao atualizar senha.");
+            // Melhor feedback de erro
+            const errorMsg = error.response?.data?.error || "Erro ao atualizar senha. Verifique sua senha atual.";
+            alert(errorMsg);
         } finally {
             setLoading(false);
         }
@@ -88,6 +105,7 @@ const Profile = () => {
                     {/* Informações Pessoais (Read-only) */}
                     <div className={style.card}>
                         <div className={style.profileInfoSide}>
+                            {/* ... (Avatar and Info Code remains the same) ... */}
                             <div className={style.avatarContainer}>
                                 <div className={style.avatar}>
                                     {previewImage ? (
@@ -95,7 +113,7 @@ const Profile = () => {
                                     ) : user?.img_path ? (
                                         <img src={user.img_path} alt="Profile" />
                                     ) : (
-                                        <RiUserLine size={64} />
+                                        <RiUserLine size={64} style={{ opacity: 0.5 }} />
                                     )}
                                     <label htmlFor="photo-upload" className={style.editOverlay}>
                                         <RiImageEditLine />
@@ -151,36 +169,80 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* Segurança (Editable) */}
+                    {/* Segurança (Editable 2-Step) */}
                     <div className={style.card}>
                         <div className={style.cardHeader}>
                             <RiLockLine />
                             <h2>Alterar Senha</h2>
                         </div>
-                        <form onSubmit={handleUpdatePassword} className={style.passwordForm}>
-                            <div className={style.inputGroup}>
-                                <label>Nova Senha</label>
-                                <input
-                                    type="password"
-                                    required
-                                    value={passwordData.newPassword}
-                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                />
-                            </div>
-                            <div className={style.inputGroup}>
-                                <label>Confirmar Nova Senha</label>
-                                <input
-                                    type="password"
-                                    required
-                                    value={passwordData.confirmPassword}
-                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                />
-                            </div>
-                            <button type="submit" className={style.submitBtn} disabled={loading}>
-                                {loading ? 'Aguarde...' : 'Atualizar Credenciais'}
-                                <RiSaveLine />
-                            </button>
-                        </form>
+
+                        {!passwordVerified ? (
+                            <form onSubmit={(e) => { e.preventDefault(); handleVerifyPassword(); }} className={style.passwordForm}>
+                                <div className={style.inputGroup}>
+                                    <label>Para continuar, digite sua senha atual</label>
+                                    <input
+                                        type="password"
+                                        required
+                                        placeholder="Senha Atual"
+                                        value={passwordData.currentPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                                    />
+                                </div>
+                                <button type="submit" className={style.submitBtn} disabled={loading || !passwordData.currentPassword}>
+                                    {loading ? 'Verificando...' : 'Verificar Senha'}
+                                </button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleUpdatePassword} className={style.passwordForm}>
+                                <div className={style.inputGroup}>
+                                    <label style={{ color: 'var(--emerald-500)' }}>✓ Senha Atual Verificada</label>
+                                    <input
+                                        type="password"
+                                        disabled
+                                        value={passwordData.currentPassword}
+                                        style={{ opacity: 0.7, borderColor: 'var(--emerald-500)' }}
+                                    />
+                                </div>
+                                <div className={style.inputGroup}>
+                                    <label>Nova Senha</label>
+                                    <input
+                                        type="password"
+                                        required
+                                        placeholder="Nova Senha"
+                                        value={passwordData.newPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                        autoFocus
+                                    />
+                                </div>
+                                <div className={style.inputGroup}>
+                                    <label>Confirmar Nova Senha</label>
+                                    <input
+                                        type="password"
+                                        required
+                                        placeholder="Repita a Nova Senha"
+                                        value={passwordData.confirmPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <button
+                                        type="button"
+                                        className={style.submitBtn}
+                                        style={{ background: 'var(--bg-hover)', color: 'var(--text-main)', flex: 1 }}
+                                        onClick={() => {
+                                            setPasswordVerified(false);
+                                            setPasswordData({ ...passwordData, newPassword: '', confirmPassword: '' });
+                                        }}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" className={style.submitBtn} disabled={loading} style={{ flex: 2 }}>
+                                        {loading ? 'Atualizando...' : 'Confirmar Alteração'}
+                                        <RiSaveLine />
+                                    </button>
+                                </div>
+                            </form>
+                        )}
                     </div>
                 </div>
             </main>

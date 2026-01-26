@@ -11,7 +11,7 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 from apis.views import (
     # Auth views
-    login_view, logout_view, me_view, update_profile_view, change_password_view,
+    login_view, logout_view, me_view, update_profile_view, change_password_view, verify_password_view,
     # ViewSets
     CargoViewSet, FuncionarioViewSet, EncarregadoViewSet, CargoFuncionarioViewSet,
     AlunoViewSet, AlunoEncarregadoViewSet, NotificacaoViewSet,
@@ -87,6 +87,7 @@ urlpatterns = [
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('auth/update-profile/', update_profile_view, name='update-profile'),
     path('auth/change-password/', change_password_view, name='change-password'),
+    path('auth/verify-password/', verify_password_view, name='verify-password'),
     
     # Dashboard
     path('dashboard/stats/', DashboardStatsAPIView.as_view(), name='dashboard-stats'),

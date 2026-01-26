@@ -421,3 +421,48 @@ def change_password_view(request):
         
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def verify_password_view(request):
+    """
+    Verifica se a senha fornecida corresponde à senha do usuário autenticado.
+    Usado antes de permitir alterações sensíveis.
+    """
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from django.contrib.auth.hashers import check_password
+    
+    try:
+        jwt_auth = JWTAuthentication()
+        user_auth_tuple = jwt_auth.authenticate(request)
+        
+        if user_auth_tuple is None:
+            return Response({'error': 'Não autorizado'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+        token = user_auth_tuple[1]
+        user_id = token.payload.get('user_id')
+        user_type = token.payload.get('user_type')
+        
+        senha_atual = request.data.get('senha_atual')
+        
+        if not senha_atual:
+            return Response({'error': 'Senha inválida'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        user = None
+        if user_type == 'funcionario':
+            user = Funcionario.objects.get(id_funcionario=user_id)
+        elif user_type == 'aluno':
+            user = Aluno.objects.get(id_aluno=user_id)
+        elif user_type == 'encarregado':
+            user = Encarregado.objects.get(id_encarregado=user_id)
+            
+        if not user:
+            return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            
+        if check_password(senha_atual, user.senha_hash):
+            return Response({'valid': True, 'message': 'Senha correta'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'valid': False, 'error': 'Senha ncorreta'}, status=status.HTTP_400_BAD_REQUEST)
+            
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

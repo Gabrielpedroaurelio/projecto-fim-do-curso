@@ -31,8 +31,8 @@ const Grades = () => {
     }, [user]);
 
     const bestSubject = stats.notas_por_disciplina.length > 0
-        ? stats.notas_por_disciplina.reduce((prev, current) => (prev.media > current.media) ? prev : current)
-        : { id_disciplina__nome: '---', media: 0 };
+        ? stats.notas_por_disciplina.reduce((prev, current) => (prev.media_final_valor > current.media_final_valor) ? prev : current)
+        : { disciplina: '---', media_final_valor: 0 };
 
     return (
         <div className='containelGeralclient'>
@@ -62,8 +62,8 @@ const Grades = () => {
                                 <span className={style.statLabel}>Melhor Disciplina</span>
                                 <RiMedalLine />
                             </div>
-                            <div className={style.statValue}>{bestSubject.id_disciplina__nome.substring(0, 10)}</div>
-                            <span className={style.subjectBadge}>{bestSubject.media.toFixed(1)} / 20</span>
+                            <div className={style.statValue}>{bestSubject.disciplina.substring(0, 15)}</div>
+                            <span className={style.subjectBadge}>{bestSubject.media_final_valor.toFixed(1)} / 20</span>
                         </div>
                         <div className={style.statCard}>
                             <div className={style.statHeader}>
@@ -95,14 +95,17 @@ const Grades = () => {
                                 ) : stats.notas_por_disciplina.length > 0 ? (
                                     stats.notas_por_disciplina.map((item, index) => (
                                         <tr key={index}>
-                                            <td className={style.subjectName}>{item.id_disciplina__nome}</td>
-                                            <td>{item.media.toFixed(1)}</td>
-                                            <td>---</td>
-                                            <td>---</td>
-                                            <td className={style.gradeAvg}>{item.media.toFixed(1)}</td>
+                                            <td className={style.subjectName}>{item.disciplina}</td>
+                                            <td>{item.trimestres['1'].MT > 0 ? item.trimestres['1'].MT.toFixed(1) : '-'}</td>
+                                            <td>{item.trimestres['2'].MT > 0 ? item.trimestres['2'].MT.toFixed(1) : '-'}</td>
+                                            <td>{item.trimestres['3'].MT > 0 ? item.trimestres['3'].MT.toFixed(1) : '-'}</td>
+                                            <td className={style.gradeAvg}>{item.media_final}</td>
                                             <td>
-                                                <span className={`${style.badge} ${item.media >= 14 ? style.excellent : item.media >= 10 ? style.approved : style.rejected}`}>
-                                                    {item.media >= 14 ? 'Excelente' : item.media >= 10 ? 'Aprovado' : 'Reprovado'}
+                                                <span className={`${style.badge} ${item.media_final_valor >= 14 ? style.excellent :
+                                                    item.media_final_valor >= 10 ? style.approved :
+                                                        item.count_mt === 3 ? style.rejected : style.pending
+                                                    }`}>
+                                                    {item.resultado === '---' ? 'Pendente' : item.resultado}
                                                 </span>
                                             </td>
                                         </tr>

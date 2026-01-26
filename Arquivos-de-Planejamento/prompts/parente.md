@@ -1,1 +1,5 @@
-modifique o grafico de eveluçao academica do encarregado para um tipo como de sector para comparar as estatisticas dos seus filhos
+## COISAS QUE FALTAM NO MODULO DO ENCARREGADO: 
+    >> Terminar as solicitações
+    >> Yasmin para conversas com o usuario
+    >> Meu perfil : melhorar algumas coisas
+    >>f

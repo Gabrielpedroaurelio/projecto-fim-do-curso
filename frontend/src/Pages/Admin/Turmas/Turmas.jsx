@@ -4,6 +4,7 @@ import DataTable from '../../../Components/Elements/DataTable/DataTable'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import api from '../../../Services/api'
+import TurmaModal from './TurmaModal'
 
 const columns = [
     { label: "Código", key: "codigo_turma" },
@@ -20,33 +21,41 @@ export default function Turmas() {
     const [turmas, setTurmas] = useState([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchTurmas = async () => {
-            try {
-                const response = await api.get('turmas/')
-                const data = response.data.results || response.data
-                setTurmas(data)
-            } catch (error) {
-                console.error("Erro ao carregar turmas:", error)
-            } finally {
-                setLoading(false)
-            }
+    const [showModal, setShowModal] = useState(false);
+
+    const fetchTurmas = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get('turmas/')
+            const data = response.data.results || response.data
+            setTurmas(data)
+        } catch (error) {
+            console.error("Erro ao carregar turmas:", error)
+        } finally {
+            setLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchTurmas()
     }, [])
 
     const handleAdd = () => {
-        console.log("Add turma clicked");
+        setShowModal(true);
     };
 
-   /* const handleEdit = (item) => {
+    const handleSuccess = () => {
+        fetchTurmas();
+    };
+
+    /* const handleEdit = (item) => {
         console.log("Edit turma:", item);
     };
 
     const handleDelete = (item) => {
         console.log("Delete turma:", item);
     };
-*/
+    */
     return (
         <div className="ContainerGeneral">
             <NavBarMenu />
@@ -61,9 +70,16 @@ export default function Turmas() {
                         data={turmas}
                         columns={columns}
                         onAdd={handleAdd}
-                       /* onEdit={handleEdit}
-                        onDelete={handleDelete}*/
+                        addButtonLabel="Criar Turma"
+                        /* onEdit={handleEdit}
+                          onDelete={handleDelete}*/
                         searchPlaceholder="Pesquisar por código ou curso..."
+                    />
+                )}
+                {showModal && (
+                    <TurmaModal
+                        onClose={() => setShowModal(false)}
+                        onSuccess={handleSuccess}
                     />
                 )}
             </main>
