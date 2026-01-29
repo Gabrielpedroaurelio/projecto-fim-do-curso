@@ -1,13 +1,12 @@
 
-ALUNO: 
-1.	Adicionar os campos nome_pai,nome_mae, data_nascimento,naturalidade,provincia_naturalidade,data_emissao_bilhete(neste campo vai ser opçional mas o usuario aluno ou encarregado responsavel pelo aluno pode colocar esse data, se no momento da solicitação este campo estivel vazio deve pedir para preencher o campo)
+
 
 **CONFIGURAÇÕES NO FRONTEND**
 ## painel admin
 # Nas Paginas de Boletim, Declaração e Certificado para o carregamento dos modelos da escola
 # no dashboard trocar o grafico de desempenho por engajaemntos de usuario por perfil (aluno, funcionario, encarregado) um grafico de rolha dounot, e traocar o grafico de crescimento da receita por um grafico de comparção das solicitações por tipo de documento (certificado, declaracao,e boletim ) em cada mes,
 # em solicitações no administrador
-# criar os modelospdf para boletim, declaração e certificado
+# criar os modelos pdf para boletim, declaração e certificado
 # boletim, declaraçao, certificado (abas) devem ficar os documentos gerados 
 # definições em Informações de Perfil  os dados não estao a ser salvos mas a imagem esta a alterar sem problemas,
 # o formulario de informacoes da intituicao nao esta a funcionar
