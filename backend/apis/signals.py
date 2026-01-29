@@ -80,7 +80,7 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
 def notify_nova_nota(sender, instance, created, **kwargs):
     """Notifica quando uma nova nota é lançada ou alterada"""
     if created or instance.id_aluno:
-        msg = f"Uma nova nota ({instance.valor}) foi lançada para {instance.id_disciplina.nome_disciplina}."
+        msg = f"Uma nova nota ({instance.valor}) foi lançada para {instance.id_disciplina.nome}."
         
         # Notificar Aluno
         Notificacao.objects.create(
@@ -91,13 +91,14 @@ def notify_nova_nota(sender, instance, created, **kwargs):
         )
         
         # Notificar Encarregado (se existir vínculo)
-        encarregados = instance.id_aluno.encarregados.all()
-        for enc in encarregados:
+        from apis.models.alunos import AlunoEncarregado
+        encarregado_relations = AlunoEncarregado.objects.filter(id_aluno=instance.id_aluno).select_related('id_encarregado')
+        for rel in encarregado_relations:
             Notificacao.objects.create(
                 titulo="Nota lançada para Educando",
-                mensagem=f"Foi lançada uma nota para {instance.id_aluno.nome_completo}: {instance.valor} em {instance.id_disciplina.nome_disciplina}.",
+                mensagem=f"Foi lançada uma nota para {instance.id_aluno.nome_completo}: {instance.valor} em {instance.id_disciplina.nome}.",
                 tipo='info',
-                id_encarregado=enc
+                id_encarregado=rel.id_encarregado
             )
 
 @receiver(post_save, sender=Pagamento)
@@ -115,10 +116,12 @@ def notify_pagamento_confirmado(sender, instance, created, **kwargs):
             )
             
             # Notificar Encarregados
-            for enc in fatura.id_aluno.encarregados.all():
+            from apis.models.alunos import AlunoEncarregado
+            encarregado_relations = AlunoEncarregado.objects.filter(id_aluno=fatura.id_aluno).select_related('id_encarregado')
+            for rel in encarregado_relations:
                 Notificacao.objects.create(
                     titulo="Pagamento de Educando Confirmado",
                     mensagem=f"O pagamento de {fatura.id_aluno.nome_completo} ({instance.valor_pago} Kz) foi processado com sucesso.",
                     tipo='success',
-                    id_encarregado=enc
+                    id_encarregado=rel.id_encarregado
                 )
