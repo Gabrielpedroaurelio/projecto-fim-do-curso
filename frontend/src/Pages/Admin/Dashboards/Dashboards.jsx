@@ -10,9 +10,9 @@ import api from '../../../Services/api'
 
 // IMPORTAÇÕES PARA OS GRAFICOS
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 export default function Dashboards() {
     const [searchTerm, setSearchTerm] = useState('')
@@ -40,7 +40,7 @@ export default function Dashboards() {
                 <main className={'ContainerMain'}>
                     <Header text1={"Resumo"} text2={"Dashboard"} onSearch={setSearchTerm} />
                     <div className="flex items-center justify-center h-full">
-                        <p>Carregando dados do dashboard...</p>
+                        <Loading />
                     </div>
                 </main>
             </div>
@@ -48,7 +48,8 @@ export default function Dashboards() {
     }
 
     if (!stats) return null
-    const { kpis, revenue_data, performance_data, recent_activities } = stats
+    // Destructuring new data keys
+    const { kpis, requests_comparison_data, engagement_data, recent_activities } = stats
 
     const filteredActivities = recent_activities.filter(activity =>
         activity.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,46 +67,58 @@ export default function Dashboards() {
                         icon={<FaFileInvoice size={40} />}
                         title={"Total Solicitações"}
                         value={kpis.total_solicitacoes.toLocaleString()}
-                        value_percentual={(kpis.percentuais.solicitacoes)+"%"}
+                        value_percentual={(kpis.percentuais.solicitacoes) + "%"}
                     />
                     <Cards
                         icon={<FaCircleCheck size={40} />}
                         title={"Declarações Emitidas"}
                         value={kpis.declaracoes_emitidas.toLocaleString()}
-                        value_percentual={(kpis.percentuais.declaracoes)+"%"}
+                        value_percentual={(kpis.percentuais.declaracoes) + "%"}
                     />
                     <Cards
                         icon={<FaUserGraduate size={40} />}
-                        title={"Novos Alunos"}
+                        title={"Alunos"}
                         value={kpis.novos_alunos.toLocaleString()}
-                        value_percentual={(kpis.percentuais.alunos)+"%"}
+                        value_percentual={(kpis.percentuais.alunos) + "%"}
                     />
                     <Cards
                         icon={<RiBillLine size={40} />}
                         title={"Receita Total"}
                         value={`Kz ${kpis.receita_total.toLocaleString()}`}
-                        value_percentual={(kpis.percentuais.receita)+"%"}
+                        value_percentual={(kpis.percentuais.receita) + "%"}
                     />
                 </div>
                 <div className={style.ChartsRow}>
+                    {/* Gráfico 1: Comparação de Solicitações (AreaChart) */}
                     <div className={style.RevenueChart}>
                         <div className={style.ChartHeader}>
                             <div>
-                                <h3>Crescimento da Receita</h3>
-                                <h2>Kz {kpis.receita_total.toLocaleString()}</h2>
-                            </div>
-                            <div className={style.DateTabs}>
-                                <button className={style.Active}>Mensal</button>
+                                <h3>Comparação de Solicitações</h3>
+                                <p className="text-sm text-gray-500">Por tipo de documento (6 meses)</p>
                             </div>
                         </div>
-                        <div className="h-[150px] w-full mt-4">
+                        <div className="h-[250px] w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={revenue_data}>
+                                <AreaChart data={requests_comparison_data}>
+                                    <defs>
+                                        <linearGradient id="colorDecl" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorCert" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorBol" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
                                     <Tooltip
-                                        cursor={{ fill: 'var(--bg-input)' }}
+                                        cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }}
                                         contentStyle={{
                                             borderRadius: '12px',
                                             border: '1px solid var(--border-color)',
@@ -113,53 +126,75 @@ export default function Dashboards() {
                                             color: 'var(--text-main)',
                                             boxShadow: 'var(--shadow-hover)'
                                         }}
-                                        itemStyle={{ color: 'var(--primary)' }}
                                     />
-                                    <Bar
-                                        dataKey="value"
-                                        fill="url(#colorRevenue)"
-                                        radius={[6, 6, 0, 0]}
-                                        barSize={20}
-                                        animationDuration={1500}
+                                    <Legend iconType="circle" />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="Declaracao"
+                                        name="Declaração"
+                                        stroke="#3b82f6"
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill="url(#colorDecl)"
                                     />
-                                    <defs>
-                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="var(--primary)" stopOpacity={1} />
-                                            <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.6} />
-                                        </linearGradient>
-                                    </defs>
-                                </BarChart>
+                                    <Area
+                                        type="monotone"
+                                        dataKey="Certificado"
+                                        name="Certificado"
+                                        stroke="#f97316"
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill="url(#colorCert)"
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="Boletim"
+                                        name="Boletim"
+                                        stroke="#22c55e"
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill="url(#colorBol)"
+                                    />
+                                </AreaChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
+                    {/* Gráfico 2: Engajamento de Usuários (AreaChart) */}
                     <div className={style.PerformanceChart}>
                         <div className={style.ChartHeader}>
-                            <h3>Desempenho Operacional</h3>
+                            <h3>Engajamento de Usuários</h3>
                         </div>
-                        <div className="h-[150px] w-full flex items-center justify-center">
+                        <div className="h-[250px] w-full flex items-center justify-center mt-4">
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart outerRadius={60} data={performance_data}>
-                                    <PolarGrid stroke="var(--border-color)" />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
-                                    <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="transparent" />
-                                    <Radar
-                                        name="Desempenho"
-                                        dataKey="A"
-                                        stroke="var(--primary)"
-                                        strokeWidth={2}
-                                        fill="var(--primary)"
-                                        fillOpacity={0.2}
-                                    />
+                                <AreaChart data={engagement_data}>
+                                    <defs>
+                                        <linearGradient id="colorAlunos" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                                            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorFuncs" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                                            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorEncs" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8} />
+                                            <stop offset="95%" stopColor="#ffc658" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <XAxis dataKey="name" hide />
                                     <Tooltip
                                         contentStyle={{
                                             borderRadius: '12px',
                                             border: '1px solid var(--border-color)',
                                             backgroundColor: 'var(--bg-card)',
-                                            color: 'var(--text-main)'
+                                            color: 'var(--text-main)',
                                         }}
                                     />
-                                </RadarChart>
+                                    <Area type="monotone" dataKey="Alunos" stackId="1" stroke="#8884d8" fill="url(#colorAlunos)" />
+                                    <Area type="monotone" dataKey="Funcionarios" stackId="1" stroke="#82ca9d" fill="url(#colorFuncs)" />
+                                    <Area type="monotone" dataKey="Encarregados" stackId="1" stroke="#ffc658" fill="url(#colorEncs)" />
+                                </AreaChart>
                             </ResponsiveContainer>
                         </div>
                     </div>

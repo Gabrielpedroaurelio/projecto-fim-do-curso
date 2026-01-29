@@ -24,7 +24,7 @@ import {
 
 export default function MenuNavBarCliente({ user }) {
     const [toggleMenuNavBar, settoggleMenuNavBar] = useState(true)
-    const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
+   // const [toggleBoxMessage, settoggleBoxMessage] = useState(false)
     const location = useLocation()
 
     const isActive = (path) => location.pathname === path ? style.active : ''
@@ -51,9 +51,9 @@ export default function MenuNavBarCliente({ user }) {
 
     return (
         <>
-            {toggleBoxMessage && (
+ {/*toggleBoxMessage && (
                 <BoxMessage msm={"Tem Certeza Que Deseja Sair"} setController={settoggleBoxMessage} />
-            )}
+            )*/}
 
             <div className={`${style.containerMenu} ${toggleMenuNavBar ? style.extends : style.shinks}`}>
                 <div className={style.header}>

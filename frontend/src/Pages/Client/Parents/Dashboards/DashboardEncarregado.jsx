@@ -14,20 +14,21 @@ import api from '../../../../Services/api';
 
 const DashboardEncarregado = () => {
   const { user } = useAuth();
-  const [educandos, setEducandos] = useState([]);
-  const [performance, setPerformance] = useState([]);
+  const [notificacoes, setNotificacoes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user?.id) {
-          const [educandosRes, performanceRes] = await Promise.all([
+          const [educandosRes, performanceRes, notificacoesRes] = await Promise.all([
             api.get(`/encarregados/${user.id}/educandos/`),
-            api.get(`/encarregados/${user.id}/rendimento_educandos/`)
+            api.get(`/encarregados/${user.id}/rendimento_educandos/`),
+            api.get('/notificacoes/')
           ]);
           setEducandos(educandosRes.data);
           setPerformance(performanceRes.data);
+          setNotificacoes(notificacoesRes.data);
         }
       } catch (error) {
         console.error("Erro ao carregar dados do dashboard:", error);
@@ -38,7 +39,8 @@ const DashboardEncarregado = () => {
     fetchData();
   }, [user]);
 
-  const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const unreadNotifications = notificacoes.filter(n => !n.lida).length;
 
   return (
     <div className='containelGeralclient'>
@@ -68,33 +70,49 @@ const DashboardEncarregado = () => {
             <Cards
               icon={<RiNotification3Line />}
               title="Notificações"
-              value="03 Novas"
-              value_percentual={15}
+              value={loading ? "..." : `${String(unreadNotifications).padStart(2, '0')} Novas`}
+              value_percentual={unreadNotifications > 0 ? 100 : 0}
             />
           </div>
 
           <div className={style.chartsGrid}>
             <div className={style.cardChart}>
               <div className={style.sectionHeader}>
-                <h2>Comparação de Rendimento entre Educandos</h2>
-                <p>Média geral de aproveitamento acadêmico por aluno.</p>
+                <h2>Comparação de Rendimentos entre Educandos</h2>
+                <p>Análise comparativa do desempenho acadêmico (Média Geral).</p>
               </div>
               <div className={style.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={performance}>
+                  <BarChart data={performance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-                    <XAxis dataKey="nome" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} domain={[0, 20]} />
+                    <XAxis
+                      dataKey="nome"
+                      stroke="var(--text-muted)"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: 'var(--text-secondary)' }}
+                    />
+                    <YAxis
+                      stroke="var(--text-muted)"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      domain={[0, 20]}
+                      tick={{ fill: 'var(--text-secondary)' }}
+                    />
                     <Tooltip
                       cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                       contentStyle={{
                         backgroundColor: 'var(--bg-card)',
                         border: '1px solid var(--border-color)',
                         borderRadius: '12px',
-                        boxShadow: 'var(--shadow-soft)'
+                        boxShadow: 'var(--shadow-soft)',
+                        color: 'var(--text-primary)'
                       }}
+                      formatter={(value) => [`${value} Valores`, 'Média']}
                     />
-                    <Bar dataKey="media" radius={[6, 6, 0, 0]} barSize={40}>
+                    <Bar dataKey="media" radius={[8, 8, 0, 0]} barSize={50} animationDuration={1500}>
                       {performance.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}

@@ -5,6 +5,7 @@ import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import api from '../../../Services/api'
 import TurmaModal from './TurmaModal'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 const columns = [
     { label: "Código", key: "codigo_turma" },
@@ -62,7 +63,7 @@ export default function Turmas() {
             <main className="ContainerMain">
                 <Header text1={"Acadêmico"} text2={"Gestão de Turmas"} onSearch={setSearchTerm} />
                 {loading ? (
-                    <div className="loading">Carregando...</div>
+                    <div className="loading"><Loading/></div>
                 ) : (
                     <DataTable
                         title="Listagem de Turmas"

@@ -4,6 +4,7 @@ import DataTable from '../../../Components/Elements/DataTable/DataTable'
 import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import api from '../../../Services/api'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 const columns = [
     { label: "Nome do Funcionário", key: "name" },
@@ -66,7 +67,7 @@ export default function Funcionario() {
             <main className="ContainerMain">
                 <Header text1={"Recursos Humanos"} text2={"Lista de Funcionários"} onSearch={setSearchTerm} />
                 {loading ? (
-                    <div className="loading">Carregando...</div>
+                    <div className="loading"><Loading/></div>
                 ) : (
                     <DataTable
                         title="Lista de Funcionários"

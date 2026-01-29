@@ -5,6 +5,7 @@ import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaCertificate, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
 import api from '../../../Services/api'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 // Sample templates data (Keeping static for now)
 const templatesData = [
@@ -189,7 +190,7 @@ export default function Certificado() {
                                 <div className={style.TableWrapper}>
                                     {loading ? (
                                         <div className="flex items-center justify-center p-10">
-                                            <p>Carregando certificados...</p>
+                                            <Loading/>
                                         </div>
                                     ) : (
                                         <table className={style.Table}>

@@ -1,5 +1,6 @@
 import style from './HeroSection.module.css';
 import { FaArrowRight } from 'react-icons/fa6';
+import {Link} from 'react-router-dom'
 import img from '../../../../../assets/images/Online learning-amico.svg'
 export default function HeroSection() {
     return (
@@ -20,10 +21,10 @@ export default function HeroSection() {
                 </p>
 
                 <div className={style.ctaGroup}>
-                    <button className={style.primaryBtn}>
+                    <Link className={style.primaryBtn} to={"/public/library"}>
                         Explorar Biblioteca
                         <FaArrowRight />
-                    </button>
+                    </Link>
            
                 </div>
             </div>

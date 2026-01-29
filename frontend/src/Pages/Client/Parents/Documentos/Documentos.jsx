@@ -8,6 +8,7 @@ import Header from '../../../../Components/Elements/Header/Header'
 import { RiFileList3Line, RiDownloadLine, RiEyeLine } from 'react-icons/ri';
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
+import Loading from '../../../../Components/Elements/Loading/Loading';
 
 const Documentos = () => {
   const { user } = useAuth();
@@ -52,7 +53,7 @@ const Documentos = () => {
 
           <div className={style.tableContainer}>
             {loading ? (
-              <p>Carregando documentos...</p>
+              <p><Loading/></p>
             ) : documents.length > 0 ? (
               <table className={style.table}>
                 <thead>

@@ -5,6 +5,7 @@ import Header from '../../../Components/Elements/Header/Header'
 import '../../../assets/style/global.style.css'
 import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
 import api from '../../../Services/api'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 // Sample templates data (Keeping static for now as there is no backend model)
 const templatesData = [
@@ -189,7 +190,7 @@ export default function Boletim() {
                                 <div className={style.TableWrapper}>
                                     {loading ? (
                                         <div className="flex items-center justify-center p-10">
-                                            <p>Carregando boletins...</p>
+                                            <Loading/>
                                         </div>
                                     ) : (
                                         <table className={style.Table}>

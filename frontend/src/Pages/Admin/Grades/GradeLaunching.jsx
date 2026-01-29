@@ -6,6 +6,7 @@ import { useAuth } from '../../../Context/AuthContext';
 import api from '../../../Services/api';
 import { RiSave3Line, RiFilter2Line, RiUser3Line } from 'react-icons/ri';
 import { FaGraduationCap } from 'react-icons/fa6';
+import Loading from '../../../Components/Elements/Loading/Loading';
 
 const GradeLaunching = () => {
     const { user } = useAuth();
@@ -172,7 +173,7 @@ const GradeLaunching = () => {
 
                     <div className={style.tableWrapper}>
                         {loading ? (
-                            <p className={style.empty}>Carregando alunos...</p>
+                            <p className={style.empty}><Loading/></p>
                         ) : selectedAssignment ? (
                             <form onSubmit={handleSave}>
                                 <table className={style.gradesTable}>

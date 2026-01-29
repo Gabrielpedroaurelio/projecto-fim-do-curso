@@ -7,6 +7,7 @@ import { FaMagnifyingGlass, FaPencil, FaTrash, FaDownload, FaEye } from 'react-i
 import { IoFilterSharp } from 'react-icons/io5'
 import api from '../../../Services/api'
 import SolicitacaoFlow from '../../../Components/Features/Documents/SolicitacaoFlow' // Importar Flow
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 export default function Solicitacao() {
     console.log("Solicitacao Page Loaded (Admin)");
@@ -122,7 +123,7 @@ export default function Solicitacao() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <Header text1={"Documentos"} text2={"Solicitações"} onSearch={setSearchTerm} />
-                {loading ? <div className="loading">Carregando...</div> : (
+                {loading ? <div className="loading"><Loading/></div> : (
 
                     <div className={style.SolicitacaoContainer}>
                         {/* Tabs Navigation */}

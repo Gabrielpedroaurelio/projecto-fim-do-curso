@@ -6,6 +6,7 @@ import '../../../assets/style/global.style.css'
 import { FaMagnifyingGlass, FaLaptop, FaMobileScreenButton, FaGlobe } from 'react-icons/fa6'
 import { BsDot } from 'react-icons/bs'
 import api from '../../../Services/api'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 export default function Histories() {
     const [searchTerm, setSearchTerm] = useState('')
@@ -88,7 +89,7 @@ export default function Histories() {
                         {/* Table */}
                         <div className={style.TableWrapper}>
                             {loading ? (
-                                <div className="loading p-10 text-center">Carregando histórico...</div>
+                                <div className="loading p-10 text-center"><Loading/></div>
                             ) : (
                                 <table className={style.Table}>
                                     <thead>

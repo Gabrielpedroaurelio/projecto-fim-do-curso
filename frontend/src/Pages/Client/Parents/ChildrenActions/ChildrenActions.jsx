@@ -8,6 +8,7 @@ import Header from '../../../../Components/Elements/Header/Header'
 import { RiUser3Line, RiArrowLeftLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../Services/api';
+import Loading from '../../../../Components/Elements/Loading/Loading';
 
 const ChildrenActions = () => {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ const ChildrenActions = () => {
             <h2>Histórico de Solicitações e Movimentos</h2>
             <div className={style.tableContainer}>
               {loading ? (
-                <p>Carregando histórico...</p>
+                <p><Loading/></p>
               ) : history.length > 0 ? (
                 <table className={style.historyTable}>
                   <thead>

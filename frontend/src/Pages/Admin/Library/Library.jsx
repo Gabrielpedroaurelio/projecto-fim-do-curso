@@ -5,6 +5,7 @@ import NavBarMenu from '../../../Components/Elements/NavBarMenu/NavBarMenu'
 import Header from '../../../Components/Elements/Header/Header'
 import style from './Library.module.css'
 import api from '../../../Services/api'
+import Loading from '../../../Components/Elements/Loading/Loading'
 
 export default function Library() {
     const [showModal, setShowModal] = useState(false)
@@ -105,7 +106,7 @@ export default function Library() {
 
                 {loading ? (
                     <div className="flex items-center justify-center p-20">
-                        <p>Carregando livros...</p>
+                        <p><Loading/></p>
                     </div>
                 ) : (
                     <div className={style.BookGrid}>

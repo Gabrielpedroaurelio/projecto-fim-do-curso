@@ -9,7 +9,7 @@ import Header from '../../../../Components/Elements/Header/Header'
 import { RiUser3Line, RiArrowRightSLine, RiUser6Line, RiGroupLine } from 'react-icons/ri'
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
-
+import Loading from '../../../../Components/Elements/Loading/Loading'
 const Children = () => {
   const { user } = useAuth();
   const [childrenData, setChildrenData] = useState([]);
@@ -22,11 +22,12 @@ const Children = () => {
           const response = await api.get(`/encarregados/${user.id}/educandos/`);
           setChildrenData(response.data);
           console.log(response.data);
-          
+
         }
       } catch (error) {
         console.error("Erro ao carregar educandos:", error);
       } finally {
+
         setLoading(false);
       }
     };
@@ -47,12 +48,12 @@ const Children = () => {
 
           <div className={style.childrenGrid}>
             {loading ? (
-              <p>Carregando educandos...</p>
+              <p><Loading /></p>
             ) : childrenData.length > 0 ? (
               childrenData.map((child) => (
-                <Link 
-                  to="/parent/actionstudent" 
-                  key={child.id_aluno} 
+                <Link
+                  to="/parent/actionstudent"
+                  key={child.id_aluno}
                   className={style.childCard}
                   onClick={() => localStorage.setItem('selectedStudent', JSON.stringify(child))}
                 >
