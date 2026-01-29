@@ -189,10 +189,10 @@ UNFOLD = {
  
     "SITE_TITLE": "Sistema de Gestão de Declarações",
     "SITE_HEADER": "Gestão de Declarações",
-    "SITE_URL": "localhost:5173",
+    "SITE_URL": "http://localhost:5173",
     "SITE_SYMBOL": "school", # Símbolo do Material Symbols
     "SHOW_HISTORY": True, # Mostra botão de histórico
-    "SHOW_VIEW_ON_SITE": True, # Mostra botão ver no site
+    "SHOW_VIEW_ON_SITE": False, # Mostra botão ver no site
     #"THEME": "dark", # Tema padrão dark
     
     "SITE_ICON": {
@@ -222,7 +222,7 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Usuários",
+                "title": "Pessoas",
                 "separator": True,
                 "collapsible": True,
                 "items": [
@@ -252,6 +252,7 @@ UNFOLD = {
                 "title": "Académico",
                 "separator": True,
                 "collapsible": True,
+
                 "items": [
                     {
                         "title": "Cursos",
@@ -283,7 +284,8 @@ UNFOLD = {
                     {
                         "title": "Notas",
                         "icon": "grade",
-                        "link": lambda request: "/admin/apis/nota/",
+                        #"link": lambda request: "/admin/apis/nota/",
+                        "link": lambda request: "/admin/apis/nota/lancamento-massivo/",
                     },
                     {
                         "title": "Faltas",
