@@ -8,3 +8,4 @@ Arquivos-de-Planejamento/prompts/
  
 frontend/node_modules
 
+__pycache__/
