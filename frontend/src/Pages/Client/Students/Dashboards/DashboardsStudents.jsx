@@ -7,7 +7,7 @@ import Cards from '../../../../Components/Elements/Cards/Cards'
 import { RiFileList3Line, RiBookOpenLine, RiCalendarEventLine, RiNotification3Line, RiShieldUserLine, RiArticleLine, RiPieChartLine, RiLineChartLine } from 'react-icons/ri'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  AreaChart, Area
+  AreaChart, Area, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import CardsDocments from '../../../../Components/Elements/CardsDocuments/CardsDocuments';
 import { useAuth } from '../../../../Context/AuthContext';
@@ -22,12 +22,31 @@ const DashboardsStudents = () => {
     total_faltas: 0,
     notas_por_disciplina: []
   });
+  const [documentsStats, setDocumentsStats] = useState({
+    boletim: 0,
+    declaracao: 0,
+    certificado: 0
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(`/alunos/${user.id}/boletim/`);
-        setStats(response.data);
+        const [boletimResponse, documentsResponse] = await Promise.all([
+          api.get(`/alunos/${user.id}/boletim/`),
+          api.get(`/solicitacoes/?id_aluno=${user.id}&status=PAGO`)
+        ]);
+
+        setStats(boletimResponse.data);
+
+        // Contar documentos por tipo
+        const docs = documentsResponse.data.results || documentsResponse.data || [];
+        const counts = {
+          boletim: docs.filter(d => d.tipo_documento === 'BOLETIM').length,
+          declaracao: docs.filter(d => d.tipo_documento.includes('DECLARAÇÃO') || d.tipo_documento.includes('DECLARACAO')).length,
+          certificado: docs.filter(d => d.tipo_documento === 'CERTIFICADO').length
+        };
+        setDocumentsStats(counts);
+
         setIsLoaded(true);
       } catch (error) {
         console.error("Erro ao buscar dados do dashboard:", error);
@@ -126,26 +145,50 @@ const DashboardsStudents = () => {
 
             <div className={style.cardChart}>
               <div className={style.sectionHeader}>
-                <h2>Frequência Acadêmica</h2>
+                <h2>Documentos Gerados</h2>
               </div>
               <div className={style.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={attendanceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-                    <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}% `} />
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: 'Boletins', value: documentsStats.boletim, color: '#0ea5e9' },
+                        { name: 'Declarações', value: documentsStats.declaracao, color: '#8b5cf6' },
+                        { name: 'Certificados', value: documentsStats.certificado, color: '#10b981' }
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={70}
+                      paddingAngle={3}
+                      dataKey="value"
+                      label={({ name, value }) => value > 0 ? `${value}` : ''}
+                      labelLine={false}
+                    >
+                      {[
+                        { name: 'Boletins', value: documentsStats.boletim, color: '#0ea5e9' },
+                        { name: 'Declarações', value: documentsStats.declaracao, color: '#8b5cf6' },
+                        { name: 'Certificados', value: documentsStats.certificado, color: '#10b981' }
+                      ].map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
                     <Tooltip
                       contentStyle={{
                         backgroundColor: 'var(--bg-card)',
                         border: '1px solid var(--border-color)',
                         borderRadius: '12px',
-                        boxShadow: 'var(--shadow-soft)'
+                        boxShadow: 'var(--shadow-soft)',
+                        padding: '8px 12px'
                       }}
-                      itemStyle={{ color: 'var(--text-main)' }}
-                      cursor={{ fill: 'var(--bg-page)', opacity: 0.4 }}
                     />
-                    <Bar dataKey="status" fill="#0ea5e9" radius={[6, 6, 0, 0]} barSize={24} />
-                  </BarChart>
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      formatter={(value) => <span style={{ fontSize: '12px', color: 'var(--text-main)' }}>{value}</span>}
+                    />
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
             </div>
