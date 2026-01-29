@@ -76,7 +76,7 @@ class Encarregado(BaseModel):
     id_encarregado = models.AutoField(primary_key=True)
     nome_completo = models.CharField(max_length=150, verbose_name='Nome Completo')
     email = models.EmailField(max_length=150, unique=True, null=True, blank=True)
-    telefone = models.JSONField(default=list, verbose_name='Telefones')
+    telefone = models.CharField(verbose_name='Telefone')
     provincia_residencia = models.CharField(max_length=100, null=True, blank=True)
     municipio_residencia = models.CharField(max_length=100, null=True, blank=True)
     bairro_residencia = models.CharField(max_length=100, null=True, blank=True)

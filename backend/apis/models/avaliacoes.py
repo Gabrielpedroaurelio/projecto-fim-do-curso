@@ -52,20 +52,6 @@ class Disciplina(BaseModel):
         return self.nome
 
 
-class DisciplinaCurso(models.Model):
-    """Relacionamento entre Disciplina e Curso"""
-    id_disciplina_curso = models.AutoField(primary_key=True)
-    id_curso = models.ForeignKey(Curso, on_delete=models.CASCADE, verbose_name='Curso')
-    id_disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name='Disciplina')
-    
-    class Meta:
-        db_table = 'disciplina_curso'
-        verbose_name = 'Disciplina-Curso'
-        verbose_name_plural = 'Disciplinas-Cursos'
-        unique_together = ['id_curso', 'id_disciplina']
-    
-    def __str__(self):
-        return f"{self.id_disciplina.nome} - {self.id_curso.nome_curso}"
 
 
 class ProfessorDisciplina(models.Model):
@@ -105,21 +91,14 @@ class Nota(models.Model):
     ]
 
     TRIMESTRE_CHOICES = [
-        ('1', '1º Trimestre'),
-        ('2', '2º Trimestre'),
-        ('3', '3º Trimestre'),
+        ('1º Trimestre', '1º Trimestre'),
+        ('2º Trimestre', '2º Trimestre'),
+        ('3º Trimestre', '3º Trimestre'),
     ]
     
     id_nota = models.AutoField(primary_key=True)
     id_aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, verbose_name='Aluno')
     id_disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, verbose_name='Disciplina', null=True, blank=True)
-    id_matriz_disciplina = models.ForeignKey(
-        'apis.MatrizCurricularDisciplina', 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        verbose_name='Disciplina da Matriz'
-    )
     id_professor = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -130,7 +109,7 @@ class Nota(models.Model):
     id_turma = models.ForeignKey(Turma, on_delete=models.CASCADE, verbose_name='Turma')
     tipo_avaliacao = models.CharField(max_length=30, choices=TIPO_AVALIACAO_CHOICES, verbose_name='Tipo de Avaliação', null=True, blank=True)
     tipo_nota = models.CharField(max_length=20, choices=TIPO_NOTA_CHOICES, verbose_name='Tipo de Nota', null=True, blank=True)
-    trimestre = models.CharField(max_length=10, choices=TRIMESTRE_CHOICES, verbose_name='Trimestre', null=True, blank=True)
+    trimestre = models.CharField(max_length=20, choices=TRIMESTRE_CHOICES, verbose_name='Trimestre', null=True, blank=True)
     valor = models.DecimalField(
         max_digits=5,
         decimal_places=2,

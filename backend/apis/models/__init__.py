@@ -6,7 +6,7 @@ from .academico import (
     Sala, Classe, Departamento, Seccao, AreaFormacao,
     Curso, Periodo, Turma, Horario, MatrizCurricular, MatrizCurricularDisciplina
 )
-from .avaliacoes import TipoDisciplina, Disciplina, DisciplinaCurso, ProfessorDisciplina, Nota, FaltaAluno
+from .avaliacoes import TipoDisciplina, Disciplina, ProfessorDisciplina, Nota, FaltaAluno
 from .documentos import Documento, SolicitacaoDocumento
 from .biblioteca import Categoria, Livro
 from .financeiro import Fatura, Pagamento
@@ -19,7 +19,7 @@ __all__ = [
     'Aluno', 'AlunoEncarregado',
     'Sala', 'Classe', 'Departamento', 'Seccao', 'AreaFormacao', 'Curso', 'Periodo', 'Turma', 'Horario',
     'MatrizCurricular', 'MatrizCurricularDisciplina',
-    'TipoDisciplina', 'Disciplina', 'DisciplinaCurso', 'ProfessorDisciplina', 'Nota', 'FaltaAluno',
+    'TipoDisciplina', 'Disciplina',  'ProfessorDisciplina', 'Nota', 'FaltaAluno',
     'Documento', 'SolicitacaoDocumento',
     'Categoria', 'Livro',
     'Fatura', 'Pagamento',

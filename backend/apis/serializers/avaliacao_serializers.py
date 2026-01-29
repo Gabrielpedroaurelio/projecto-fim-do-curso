@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apis.models import (
-    TipoDisciplina, Disciplina, DisciplinaCurso,
+    TipoDisciplina, Disciplina,
     ProfessorDisciplina, Nota, FaltaAluno
 )
 
@@ -38,18 +38,6 @@ class DisciplinaListSerializer(serializers.ModelSerializer):
         fields = ['id_disciplina', 'nome', 'tipo_nome', 'carga_horaria']
 
 
-class DisciplinaCursoSerializer(serializers.ModelSerializer):
-    """Serializer para DisciplinaCurso"""
-    curso_nome = serializers.CharField(source='id_curso.nome_curso', read_only=True)
-    disciplina_nome = serializers.CharField(source='id_disciplina.nome', read_only=True)
-    
-    class Meta:
-        model = DisciplinaCurso
-        fields = [
-            'id_disciplina_curso', 'id_curso', 'curso_nome',
-            'id_disciplina', 'disciplina_nome'
-        ]
-        read_only_fields = ['id_disciplina_curso']
 
 
 class ProfessorDisciplinaSerializer(serializers.ModelSerializer):

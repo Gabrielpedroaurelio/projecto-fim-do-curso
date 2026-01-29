@@ -14,7 +14,7 @@ from .academico_serializers import (
 )
 from .avaliacao_serializers import (
     TipoDisciplinaSerializer, DisciplinaSerializer, DisciplinaListSerializer,
-    DisciplinaCursoSerializer, ProfessorDisciplinaSerializer,
+    ProfessorDisciplinaSerializer,
     NotaSerializer, NotaListSerializer, NotaLancamentoLoteSerializer,
     FaltaAlunoSerializer, FaltaAlunoListSerializer
 )
@@ -48,7 +48,7 @@ __all__ = [
     'MatrizCurricularSerializer', 'MatrizCurricularDisciplinaSerializer',
     # Avaliações
     'TipoDisciplinaSerializer', 'DisciplinaSerializer', 'DisciplinaListSerializer',
-    'DisciplinaCursoSerializer', 'ProfessorDisciplinaSerializer',
+    'ProfessorDisciplinaSerializer',
     'NotaSerializer', 'NotaListSerializer', 'NotaLancamentoLoteSerializer',
     'FaltaAlunoSerializer', 'FaltaAlunoListSerializer',
     # Documentos
