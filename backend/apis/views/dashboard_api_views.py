@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Count, Sum, Avg
+from django.db.models import Count, Sum, Avg, Q
 from django.utils import timezone
 from datetime import timedelta
-from apis.models import Aluno, SolicitacaoDocumento, Fatura, Nota, Turma
+from apis.models import Aluno, SolicitacaoDocumento, Fatura, Nota, Turma, HistoricoLogin
 from apis.serializers.documento_serializers import SolicitacaoDocumentoListSerializer
 
 class DashboardStatsAPIView(APIView):
@@ -22,32 +22,72 @@ class DashboardStatsAPIView(APIView):
         # Receita total (Faturas pagas)
         receita_total = Fatura.objects.filter(status='pago').aggregate(total=Sum('total'))['total'] or 0
         
-        # 2. Dados do Gráfico de Receita (últimos 6 meses)
-        revenue_data = []
+        # 2. Dados de Engajamento de Usuários (Últimos 6 meses)
+        # Comparação de logins ou atividade de Alunos, Funcionários, Encarregados
+        engagement_data = []
         for i in range(5, -1, -1):
             date = timezone.now() - timedelta(days=i*30)
             month_name = date.strftime('%b')
-            month_revenue = Fatura.objects.filter(
-                status='pago', 
-                criado_em__year=date.year, 
-                criado_em__month=date.month
-            ).aggregate(total=Sum('total'))['total'] or 0
-            revenue_data.append({'name': month_name, 'value': float(month_revenue)})
+            
+            # Filtra logins por mês e tipo de usuario
+            alunos_logins = HistoricoLogin.objects.filter(
+                id_aluno__isnull=False,
+                hora_entrada__year=date.year,
+                hora_entrada__month=date.month
+            ).count()
+            
+            funcionarios_logins = HistoricoLogin.objects.filter(
+                id_funcionario__isnull=False,
+                hora_entrada__year=date.year,
+                hora_entrada__month=date.month
+            ).count()
+            
+            encarregados_logins = HistoricoLogin.objects.filter(
+                id_encarregado__isnull=False,
+                hora_entrada__year=date.year,
+                hora_entrada__month=date.month
+            ).count()
 
-        # 3. Desempenho Operacional (Radar Chart - Fictício baseado em dados reais)
-        # Vamos usar médias de notas por categoria ou algo similar
-        performance_data = [
-            {'subject': 'Solicitações', 'A': min(150, total_solicitacoes * 10), 'fullMark': 150},
-            {'subject': 'Alunos', 'A': min(150, Aluno.objects.filter(status_aluno='Activo').count()), 'fullMark': 150},
-            {'subject': 'Turmas', 'A': min(150, Turma.objects.count() * 5), 'fullMark': 150},
-            {'subject': 'Média Geral', 'A': min(150, (Nota.objects.aggregate(Avg('valor'))['valor__avg'] or 0) * 10), 'fullMark': 150},
-            {'subject': 'Eficiência', 'A': 110, 'fullMark': 150}, # Mocked
-            {'subject': 'Retenção', 'A': 130, 'fullMark': 150}, # Mocked
-        ]
+            engagement_data.append({
+                'name': month_name, 
+                'Alunos': alunos_logins,
+                'Funcionarios': funcionarios_logins,
+                'Encarregados': encarregados_logins
+            })
+
+        # 3. Comparação de Solicitações por Tipo (Últimos 6 meses)
+        requests_comparison_data = []
+        for i in range(5, -1, -1):
+            date = timezone.now() - timedelta(days=i*30)
+            month_name = date.strftime('%b')
+            
+            declaracoes = SolicitacaoDocumento.objects.filter(
+                tipo_documento__icontains='Declaração',
+                data_solicitacao__year=date.year,
+                data_solicitacao__month=date.month
+            ).count()
+            
+            certificados = SolicitacaoDocumento.objects.filter(
+                tipo_documento__icontains='Certificado',
+                data_solicitacao__year=date.year,
+                data_solicitacao__month=date.month
+            ).count()
+            
+            boletins = SolicitacaoDocumento.objects.filter(
+                tipo_documento__icontains='Boletim',
+                data_solicitacao__year=date.year,
+                data_solicitacao__month=date.month
+            ).count()
+
+            requests_comparison_data.append({
+                'name': month_name,
+                'Declaracao': declaracoes,
+                'Certificado': certificados,
+                'Boletim': boletins
+            })
 
         # 4. Atividades Recentes (Últimas 5 solicitações)
-        recent_solicitacoes = SolicitacaoDocumento.objects.all()[:5]
-        # Usar o serializer existente para formatar as solicitações
+        recent_solicitacoes = SolicitacaoDocumento.objects.all().order_by('-data_solicitacao')[:5]
         serializer = SolicitacaoDocumentoListSerializer(recent_solicitacoes, many=True, context={'request': request})
 
         return Response({
@@ -57,13 +97,13 @@ class DashboardStatsAPIView(APIView):
                 'novos_alunos': novos_alunos,
                 'receita_total': float(receita_total),
                 'percentuais': {
-                    'solicitacoes': 22.2, # Mocked percentage change
+                    'solicitacoes': 22.2, 
                     'declaracoes': 104.5,
                     'alunos': 12.3,
                     'receita': 14.8
                 }
             },
-            'revenue_data': revenue_data,
-            'performance_data': performance_data,
+            'engagement_data': engagement_data,
+            'requests_comparison_data': requests_comparison_data,
             'recent_activities': serializer.data
         })

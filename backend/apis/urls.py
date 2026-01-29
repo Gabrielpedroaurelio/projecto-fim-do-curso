@@ -17,7 +17,7 @@ from apis.views import (
     AlunoViewSet, AlunoEncarregadoViewSet, NotificacaoViewSet,
     SalaViewSet, ClasseViewSet, DepartamentoViewSet, SeccaoViewSet,
     AreaFormacaoViewSet, CursoViewSet, PeriodoViewSet, TurmaViewSet,
-    TipoDisciplinaViewSet, DisciplinaViewSet, DisciplinaCursoViewSet,
+    TipoDisciplinaViewSet, DisciplinaViewSet,
     ProfessorDisciplinaViewSet, NotaViewSet, FaltaAlunoViewSet,
     DocumentoViewSet, SolicitacaoDocumentoViewSet,
     CategoriaViewSet, LivroViewSet,
@@ -55,7 +55,6 @@ router.register(r'matriz-disciplinas', MatrizCurricularDisciplinaViewSet, basena
 # Avaliações
 router.register(r'tipos-disciplina', TipoDisciplinaViewSet, basename='tipo-disciplina')
 router.register(r'disciplinas', DisciplinaViewSet, basename='disciplina')
-router.register(r'disciplina-curso', DisciplinaCursoViewSet, basename='disciplina-curso')
 router.register(r'professor-disciplina', ProfessorDisciplinaViewSet, basename='professor-disciplina')
 router.register(r'notas', NotaViewSet, basename='nota')
 router.register(r'faltas', FaltaAlunoViewSet, basename='falta')

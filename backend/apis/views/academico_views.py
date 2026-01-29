@@ -96,15 +96,18 @@ class CursoViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def disciplinas(self, request, pk=None):
-        """Retorna disciplinas do curso"""
-        from apis.models import DisciplinaCurso
+        """Retorna disciplinas do curso (via Matrizes Ativas)"""
+        from apis.models import MatrizCurricularDisciplina, Disciplina
         from apis.serializers import DisciplinaListSerializer
         
         curso = self.get_object()
-        vinculos = DisciplinaCurso.objects.filter(
-            id_curso=curso
-        ).select_related('id_disciplina')
-        disciplinas = [v.id_disciplina for v in vinculos]
+        # Buscar IDs das disciplinas nas matrizes ativas deste curso
+        disciplinas_ids = MatrizCurricularDisciplina.objects.filter(
+            id_matriz_curricular__id_curso=curso,
+            id_matriz_curricular__ativo=True
+        ).values_list('id_disciplina', flat=True).distinct()
+        
+        disciplinas = Disciplina.objects.filter(id_disciplina__in=disciplinas_ids)
         serializer = DisciplinaListSerializer(disciplinas, many=True)
         return Response(serializer.data)
 

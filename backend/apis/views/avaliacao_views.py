@@ -8,12 +8,12 @@ from apis.permissions.custom_permissions import IsProfessor, IsDirecao, IsFuncio
 from apis.services.academic_service import AcademicService
 
 from apis.models import (
-    TipoDisciplina, Disciplina, DisciplinaCurso,
+    TipoDisciplina, Disciplina,
     ProfessorDisciplina, Nota, FaltaAluno
 )
 from apis.serializers import (
     TipoDisciplinaSerializer, DisciplinaSerializer, DisciplinaListSerializer,
-    DisciplinaCursoSerializer, ProfessorDisciplinaSerializer,
+    ProfessorDisciplinaSerializer,
     NotaSerializer, NotaListSerializer, NotaLancamentoLoteSerializer,
     FaltaAlunoSerializer, FaltaAlunoListSerializer
 )
@@ -44,15 +44,6 @@ class DisciplinaViewSet(viewsets.ModelViewSet):
         return DisciplinaSerializer
 
 
-class DisciplinaCursoViewSet(viewsets.ModelViewSet):
-    """ViewSet para DisciplinaCurso"""
-    queryset = DisciplinaCurso.objects.select_related(
-        'id_curso', 'id_disciplina'
-    ).all()
-    serializer_class = DisciplinaCursoSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
-    #filterset_fields = ['id_curso', 'id_disciplina']
 
 
 class ProfessorDisciplinaViewSet(viewsets.ModelViewSet):
@@ -118,7 +109,6 @@ class NotaViewSet(viewsets.ModelViewSet):
                         id_aluno_id=n['id_aluno'],
                         id_turma=turma,
                         id_disciplina=disciplina,
-                        id_matriz_disciplina=matriz_disciplina,
                         trimestre=trimestre,
                         tipo_nota=tipo_nota,
                         defaults={

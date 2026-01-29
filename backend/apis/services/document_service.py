@@ -179,7 +179,7 @@ class DocumentService:
         return None
 
     @staticmethod
-    @staticmethod
+
     def _get_notas_finais_aluno(aluno, classe):
         """
         Calcula as notas detalhadas (MAC, PP, PT) e médias por trimestre.

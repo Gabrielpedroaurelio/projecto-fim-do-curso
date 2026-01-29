@@ -10,7 +10,7 @@ from .academico_views import (
     MatrizCurricularViewSet, MatrizCurricularDisciplinaViewSet
 )
 from .avaliacao_views import (
-    TipoDisciplinaViewSet, DisciplinaViewSet, DisciplinaCursoViewSet,
+    TipoDisciplinaViewSet, DisciplinaViewSet,
     ProfessorDisciplinaViewSet, NotaViewSet, FaltaAlunoViewSet
 )
 from .documento_views import DocumentoViewSet, SolicitacaoDocumentoViewSet
@@ -33,7 +33,7 @@ __all__ = [
     'AreaFormacaoViewSet', 'CursoViewSet', 'PeriodoViewSet', 'TurmaViewSet',
     'MatrizCurricularViewSet', 'MatrizCurricularDisciplinaViewSet',
     # Avaliações
-    'TipoDisciplinaViewSet', 'DisciplinaViewSet', 'DisciplinaCursoViewSet',
+    'TipoDisciplinaViewSet', 'DisciplinaViewSet', 
     'ProfessorDisciplinaViewSet', 'NotaViewSet', 'FaltaAlunoViewSet',
     # Documentos
     'DocumentoViewSet', 'SolicitacaoDocumentoViewSet',
