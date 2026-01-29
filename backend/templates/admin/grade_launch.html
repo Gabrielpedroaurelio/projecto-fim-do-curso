@@ -1,0 +1,461 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    body{
+        background-color: #1f2937;
+    }
+    .grade-launch-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .filter-section {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+        font-size: 0.875rem;
+    }
+
+    .form-group select {
+        width: 100%;
+        padding: 0.625rem 0.75rem;
+        border: 1px solid #080808;
+        border-radius: 8px;
+        background: #1f2937;
+        color: #f9fafb;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+
+    .form-group select:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: #1f2937;
+    }
+
+    .form-group select:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #f3f4f6;
+    }
+
+    .help-text {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-text {
+        font-size: 0.75rem;
+        color: #ef4444;
+        margin-top: 0.25rem;
+    }
+
+    .students-table-wrapper {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .students-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .students-table thead {
+        background: #f9fafb;
+    }
+
+    .students-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #1f2937;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .students-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+        font-size: 0.875rem;
+    }
+
+    .students-table tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    .students-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .grade-input {
+        width: 100px;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #1f2937;
+        font-size: 0.875rem;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .grade-input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .btn {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #10b981;
+        color: #ffffff;
+    }
+
+    .btn-primary:hover {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        border: 1px solid #10b981;
+        color: #065f46;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        border: 1px solid #ef4444;
+        color: #dc2626;
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+
+        .filter-section,
+        .students-table-wrapper {
+            background: #1f2937;
+            border-color: #374151;
+        }
+
+        .form-group label,
+        .students-table th,
+        .page-header h1 {
+            color: #f9fafb;
+        }
+
+        .form-group select,
+        .grade-input {
+            background: #374151;
+            color: #f9fafb;
+            border-color: #4b5563;
+        }
+
+        .students-table td {
+            color: #e5e7eb;
+            border-bottom-color: #374151;
+        }
+
+        .students-table thead {
+            background: #374151;
+        }
+
+        .students-table tbody tr:hover {
+            background: #374151;
+        }
+
+        .page-header p,
+        .help-text {
+            color: #9ca3af;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: #f9fafb;
+            border-color: #4b5563;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+    }
+</style>
+<script>
+    function updateFilters() {
+        const turmaId = document.getElementById('id_turma').value;
+        if (!turmaId) return;
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('id_turma', turmaId);
+        url.searchParams.delete('id_disciplina');
+        url.searchParams.delete('tipo_avaliacao');
+        url.searchParams.delete('trimestre');
+        window.location.href = url.toString();
+    }
+
+    function validateForm() {
+        const inputs = document.querySelectorAll('.grade-input');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            const value = parseFloat(input.value);
+            if (input.value !== '' && (value < 0 || value > 20)) {
+                input.style.borderColor = '#ef4444';
+                isValid = false;
+            } else {
+                input.style.borderColor = '#d1d5db';
+            }
+        });
+
+        if (!isValid) {
+            alert('Por favor, insira notas válidas entre 0 e 20.');
+        }
+
+        return isValid;
+    }
+</script>
+<a href="/admin/apis/nota/">Voltar para notas</a>
+{% endblock %}
+
+{% block content %}
+<div class="grade-launch-container">
+    
+    <div class="page-header">
+        <h1>Lançamento de Notas em Massa</h1>
+        <p>Selecione os filtros abaixo para carregar a lista de alunos e lançar as notas de forma eficiente.</p>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Filters Section -->
+    <div class="filter-section">
+        <form method="get">
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label for="id_turma">Turma *</label>
+                    <select id="id_turma" name="id_turma" onchange="updateFilters()" required>
+                        <option value="">Selecione uma turma...</option>
+                        {% for turma in turmas %}
+                        <option value="{{ turma.id_turma }}" {% if selected_turma == turma.id_turma %}selected{% endif %}>
+                            {{ turma.codigo_turma }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_disciplina">Disciplina *</label>
+                    <select id="id_disciplina" name="id_disciplina" {% if not selected_turma %}disabled{% endif %}
+                        required>
+                        <option value="">Selecione uma disciplina...</option>
+                        {% for disc in disciplinas %}
+                        <option value="{{ disc.id_disciplina }}" {% if selected_disciplina == disc.id_disciplina %}selected{% endif %}>
+                            {{ disc.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if not selected_turma %}
+                    <span class="help-text">Selecione uma turma primeiro</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_avaliacao">Tipo de Avaliação *</label>
+                    <select name="tipo_avaliacao" id="tipo_avaliacao" required>
+                        <option value="">Selecione o tipo...</option>
+                        {% for code, name in tipos_avaliacao %}
+                        <option value="{{ code }}" {% if selected_tipo == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="trimestre">Trimestre *</label>
+                    <select name="trimestre" id="trimestre" required>
+                        <option value="">Selecione o trimestre...</option>
+                        {% for code, name in trimestres %}
+                        <option value="{{ code }}" {% if selected_trimestre == code %}selected{% endif %}>{{ name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-primary">
+                    Carregar Alunos
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Students List -->
+    {% if alunos_notas %}
+    <div class="students-table-wrapper">
+        <form method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <input type="hidden" name="id_turma" value="{{ selected_turma }}">
+            <input type="hidden" name="id_disciplina" value="{{ selected_disciplina }}">
+            <input type="hidden" name="tipo_avaliacao" value="{{ selected_tipo }}">
+            <input type="hidden" name="trimestre" value="{{ selected_trimestre }}">
+
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Aluno</th>
+                        <th style="width: 20%;">Matrícula</th>
+                        <th style="width: 20%;">Nota Atual</th>
+                        <th style="width: 20%;">Nova Nota (0-20)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in alunos_notas %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.aluno.nome_completo }}</strong>
+                        </td>
+                        <td>
+                            {{ item.aluno.numero_matricula|default:"—" }}
+                        </td>
+                        <td>
+                            {% if item.nota_valor %}
+                            <span
+                                style="color: {% if item.nota_valor >= 10 %}#10b981{% else %}#ef4444{% endif %}; font-weight: 600;">
+                                {{ item.nota_valor }}
+                            </span>
+                            {% else %}
+                            <span style="color: #9ca3af;">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <input type="number" name="nota_{{ item.aluno.id_aluno }}" value="{{ item.nota_valor }}"
+                                step="0.5" min="0" max="20" class="grade-input" placeholder="0-20">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="action-buttons" style="padding: 1.5rem;">
+                <a href="{% url 'admin:apis_nota_changelist' %}" class="btn btn-secondary">
+                     Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                     Salvar Notas ({{ alunos_notas|length }} alunos)
+                </button>
+            </div>
+        </form>
+    </div>
+    {% elif selected_turma and selected_disciplina and selected_tipo and selected_trimestre %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <h3>Nenhum aluno encontrado</h3>
+        <p>Não há alunos matriculados nesta turma ou os filtros selecionados não retornaram resultados.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
