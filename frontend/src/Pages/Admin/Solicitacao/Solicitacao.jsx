@@ -47,6 +47,8 @@ export default function Solicitacao() {
     }, [activeTab, searchTerm, filterDays])
 
     const [showModal, setShowModal] = useState(false)
+    const [showViewModal, setShowViewModal] = useState(false)
+    const [selectedSolicitacao, setSelectedSolicitacao] = useState(null)
 
     const tabs = [
         { id: 'boletim', label: 'Boletim', icon: '' },
@@ -67,7 +69,8 @@ export default function Solicitacao() {
     }
 
     const handleView = (item) => {
-        console.log('Visualizar:', item)
+        setSelectedSolicitacao(item)
+        setShowViewModal(true)
     }
 
     const handleDownload = (item) => {
@@ -123,7 +126,7 @@ export default function Solicitacao() {
             <NavBarMenu />
             <main className="ContainerMain">
                 <Header text1={"Documentos"} text2={"Solicitações"} onSearch={setSearchTerm} />
-                {loading ? <div className="loading"><Loading/></div> : (
+                {loading ? <div className="loading"><Loading /></div> : (
 
                     <div className={style.SolicitacaoContainer}>
                         {/* Tabs Navigation */}
@@ -141,11 +144,11 @@ export default function Solicitacao() {
                         </div>
 
                         {/* Content Card */}
-                        <div className={style.ContentCard}>
+                        <div className={`${style.ContentCard} glass-card`}>
                             {/* Header Controls */}
                             <div className={style.CardHeader}>
                                 <div className={style.HeaderLeft}>
-                                    <h3>Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
+                                    <h3 className="text-gradient">Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
                                     <p className={style.Subtitle}>Gerir e acompanhar solicitações de documentos</p>
                                 </div>
                                 <div className={style.HeaderActions}>
@@ -299,6 +302,74 @@ export default function Solicitacao() {
                                     userType="funcionario"
                                     onComplete={handleCloseModal}
                                 />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal View Details */}
+                {showViewModal && selectedSolicitacao && (
+                    <div className={style.ModalOverlay} onClick={() => setShowViewModal(false)}>
+                        <div className={style.ModalContent} onClick={(e) => e.stopPropagation()}>
+                            <div className={style.ModalHeader}>
+                                <h3>Detalhes da Solicitação</h3>
+                                <button className={style.CloseButton} onClick={() => setShowViewModal(false)}>×</button>
+                            </div>
+                            <div className={style.ModalBody} style={{ padding: '2rem' }}>
+                                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', alignItems: 'center' }}>
+                                    <div className={style.Avatar} style={{ width: '80px', height: '80px', fontSize: '2rem' }}>
+                                        {/*selectedSolicitacao.aluno_nome?.split(' ').map(n => n[0]).join('') || 'A'*/}
+                                        <img src={selectedSolicitacao.aluno_img} alt="Foto do Aluno" />
+                                    </div>
+                                    <div>
+                                        <h2 style={{ fontSize: '1.5rem', margin: 0, color: 'var(--text-main)' }}>{selectedSolicitacao.aluno_nome}</h2>
+                                        <p style={{ color: 'var(--text-muted)', margin: 0 }}>ID Aluno: {selectedSolicitacao.id_aluno}</p>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                    <div>
+                                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Tipo de Documento</label>
+                                        <div style={{ fontWeight: 600 }}>{selectedSolicitacao.tipo_documento}</div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Data</label>
+                                        <div>{new Date(selectedSolicitacao.data_solicitacao).toLocaleDateString()}</div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Status</label>
+                                        <span className={`${style.StatusBadge} ${getStatusBadge(selectedSolicitacao.status_solicitacao)}`}>
+                                            {selectedSolicitacao.status_solicitacao}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>Referência RUP</label>
+                                        <code style={{ background: '#f8fafc', padding: '4px 8px', borderRadius: '4px', border: '1px solid #e2e8f0', color: '#64748b' }}>
+                                            {selectedSolicitacao.rupe || '---'}
+                                        </code>
+                                    </div>
+                                </div>
+
+                                {selectedSolicitacao.caminho_arquivo && (
+                                    <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--bg-page)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
+                                            <FaDownload />
+                                            <span>Documento Gerado</span>
+                                        </div>
+                                        <a href={`http://localhost:8000/media/${selectedSolicitacao.caminho_arquivo}`} target="_blank" rel="noopener noreferrer"
+                                            style={{ padding: '0.5rem 1rem', background: 'var(--green-primay)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600 }}>
+                                            Baixar PDF
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                            <div className={style.ModalFooter} style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                                <button
+                                    onClick={() => setShowViewModal(false)}
+                                    style={{ padding: '0.6rem 1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer' }}
+                                >
+                                    Fechar
+                                </button>
                             </div>
                         </div>
                     </div>

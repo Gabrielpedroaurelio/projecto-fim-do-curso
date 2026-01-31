@@ -25,6 +25,10 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [missingFields, setMissingFields] = useState({});
     const [isEditingMissing, setIsEditingMissing] = useState(false);
 
+    // New state for confirmation modal
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [pendingSolicitacao, setPendingSolicitacao] = useState(null);
+
     const docOptions = [
         { id: 'DECLARAÇÃO', label: 'Declaração de Matrícula (Simples)' },
         { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento (Com Notas)' },
@@ -199,23 +203,56 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                 classe_solicitada: selectedClass || null
             };
 
+            // 1. Criar Solicitação (Sempre cria pendente)
             const response = await api.post('/solicitacoes/', payload);
-            let finalResult = response.data;
+            const data = response.data;
 
+            // Se for funcionário + Pagamento Instantâneo, abrir modal de conferência
             if (userType === 'funcionario' && paymentMethod === 'confirmado_local') {
-                const idSolicitacao = response.data.solicitacao.id_solicitacao;
-                const confirmResponse = await api.post(`/solicitacoes/${idSolicitacao}/confirmar_pagamento/`, {
-                    id_funcionario: user.id_funcionario || user.id
-                });
-                finalResult = { ...finalResult, ...confirmResponse.data, confirmed: true };
+                setPendingSolicitacao(data);
+                setShowConfirmModal(true);
+                setLoading(false);
+                return;
             }
 
-            setResult(finalResult);
+            // Fluxo normal (RUP para User/Funcionario que escolheu RUP)
+            setResult(data);
             setStep(4);
-            if (onComplete) onComplete(finalResult);
+            if (onComplete) onComplete(data);
+
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.error || 'Erro ao processar solicitação.');
+        } finally {
+            if (paymentMethod !== 'confirmado_local') {
+                setLoading(false);
+            }
+        }
+    };
+
+    const handleConfirmPayment = async () => {
+        if (!pendingSolicitacao) return;
+        setLoading(true);
+        try {
+            // 2. Confirmar Pagamento
+            const idSolicitacao = pendingSolicitacao.solicitacao ? pendingSolicitacao.solicitacao.id_solicitacao : pendingSolicitacao.id_solicitacao;
+
+            const confirmResponse = await api.post(`/solicitacoes/${idSolicitacao}/confirmar_pagamento/`, {
+                id_funcionario: user.id_funcionario || user.id
+            });
+
+            // Mesclar resultados
+            const finalResult = { ...pendingSolicitacao, ...confirmResponse.data, confirmed: true };
+
+            setResult(finalResult);
+            setShowConfirmModal(false);
+            setStep(4);
+            if (onComplete) onComplete(finalResult);
+        } catch (err) {
+            console.error("Erro detalhado:", err.response);
+            const msg = err.response?.data?.error || "Erro ao confirmar pagamento.";
+            setError(msg);
+            alert(`Falha na confirmação: ${msg}`);
         } finally {
             setLoading(false);
         }
@@ -223,6 +260,52 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
 
     return (
         <div className={style.flowContainer}>
+            {/* Modal de Confirmação de Pagamento Instantâneo */}
+            {showConfirmModal && pendingSolicitacao && (
+                <div className={style.modalOverlay}>
+                    <div className={style.modalContent}>
+                        <div className={style.modalHeader}>
+                            <h3><RiWallet3Line /> Confirmar Pagamento</h3>
+                        </div>
+                        <div className={style.modalBody}>
+                            <div className={style.rupDisplay}>
+                                <label>Referência Bancária (RUP)</label>
+                                <div className={style.rupCode}>{pendingSolicitacao.solicitacao?.rupe || '---'}</div>
+                            </div>
+
+                            <div className={style.detailsList}>
+                                <p><strong>Aluno:</strong> {pendingSolicitacao.solicitacao?.aluno_nome}</p>
+                                <p><strong>Documento:</strong> {pendingSolicitacao.solicitacao?.tipo_documento}</p>
+                                <p><strong>Valor a Receber:</strong> {pendingSolicitacao.fatura?.total ? new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(pendingSolicitacao.fatura.total) : '---'}</p>
+                            </div>
+
+                            <div className={style.alertInfo}>
+                                <RiErrorWarningLine />
+                                <p>Confirme que recebeu o valor acima do requerente. A validação gera o documento imediatamente.</p>
+                            </div>
+                        </div>
+                        <div className={style.modalActions}>
+                            <button
+                                className={style.btnCancel}
+                                onClick={() => {
+                                    setShowConfirmModal(false);
+                                    setStep(4); // Vai para sucesso mas Pendente (como RUP normal)
+                                    setResult(pendingSolicitacao);
+                                }}
+                            >
+                                Cancelar (Manter Pendente)
+                            </button>
+                            <button
+                                className={style.btnConfirm}
+                                onClick={handleConfirmPayment}
+                                disabled={loading}
+                            >
+                                {loading ? 'A confirmar...' : 'Confirmar Pagamento'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className={style.stepper}>
                 <div className={`${style.step} ${step >= 1 ? style.active : ''}`}>
                     <div className={style.stepIcon}><RiUser3Line /></div>
@@ -403,47 +486,56 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
 
                 {step === 3 && (
                     <div className={style.stepIn}>
-                        <h2>Opção de Pagamento do RUP</h2>
+                        <h2>Opção de Pagamento</h2>
+                        <p className={style.stepDescription}>
+                            Para concluir a solicitação, escolha como deseja realizar o pagamento do emolumento.
+                        </p>
 
-                        {userType === 'funcionario' ? (
-                            <div className={style.paymentGrid}>
-                                <div
-                                    className={`${style.paymentOption} ${paymentMethod === 'fisico_rup' ? style.selected : ''}`}
-                                    onClick={() => setPaymentMethod('fisico_rup')}
-                                >
-                                    <RiPrinterLine className={style.payIcon} />
-                                    <h3>Gerar RUP (Impressão)</h3>
-                                    <p>Imprimir formulário de RUP para o requisitante pagar no banco/TPA.</p>
+                        <div className={style.paymentGrid}>
+
+                            {/* Option 1: Multicaixa Express (General Public) */}
+                            <div className={`${style.paymentOption} ${style.disabled} ${paymentMethod === 'express' ? style.selected : ''}`}>
+                                <div className={style.optionHeader}>
+                                    <RiSmartphoneLine className={style.payIcon} />
+                                    <span className={style.badge}>Em Breve</span>
                                 </div>
+                                <h3>Multicaixa Express</h3>
+                                <p>Pagamento instantâneo via aplicativo MCX (Indisponível no momento).</p>
+                            </div>
+
+                            {/* Option 2: Manual / RUP (General Public & Employees) */}
+                            <div
+                                className={`${style.paymentOption} ${paymentMethod === 'fisico_rup' ? style.selected : ''}`}
+                                onClick={() => setPaymentMethod('fisico_rup')}
+                            >
+                                <div className={style.optionHeader}>
+                                    <RiPrinterLine className={style.payIcon} />
+                                </div>
+                                <h3>Pagamento por Referência (RUP)</h3>
+                                <p>Gera um formulário RUP para pagamento em ATM ou Internet Banking. Válido por 24h.</p>
+                            </div>
+
+                            {/* Option 3: Instant Payment (Employees Only) */}
+                            {userType === 'funcionario' && (
                                 <div
-                                    className={`${style.paymentOption} ${paymentMethod === 'confirmado_local' ? style.selected : ''}`}
+                                    className={`${style.paymentOption} ${style.premiumOption} ${paymentMethod === 'confirmado_local' ? style.selected : ''}`}
                                     onClick={() => setPaymentMethod('confirmado_local')}
                                 >
-                                    <RiCheckLine className={style.payIcon} />
-                                    <h3>Confirmar Pagamento Já Realizado</h3>
-                                    <p>Se o requisitante já pagou ou pagou via TPA na escola.</p>
+                                    <div className={style.optionHeader}>
+                                        <RiWallet3Line className={style.payIcon} />
+                                        <span className={style.badgeSuccess}>Exclusivo Funcionário</span>
+                                    </div>
+                                    <h3>Pagamento Instantâneo</h3>
+                                    <p>Confirmar recebimento do valor na hora e gerar documento imediatamente.</p>
                                 </div>
-                            </div>
-                        ) : (
-                            // Default Parent/Student view
-                            <div className={style.paymentGrid}>
-                                <div
-                                    className={`${style.paymentOption} ${paymentMethod === 'express' ? style.selected : ''}`}
-                                    onClick={() => setPaymentMethod('express')}
-                                >
-                                    <RiSmartphoneLine className={style.payIcon} />
-                                    <h3>Multicaixa Express</h3>
-                                    <p>Pague instantaneamente através da aplicação no seu telemóvel.</p>
-                                </div>
+                            )}
 
-                                <div
-                                    className={`${style.paymentOption} ${paymentMethod === 'fisico_rup' ? style.selected : ''}`}
-                                    onClick={() => setPaymentMethod('fisico_rup')}
-                                >
-                                    <RiPrinterLine className={style.payIcon} />
-                                    <h3>Imprimir RUP</h3>
-                                    <p>Gere o formulário para pagar num balcão ou TPA. Válido por 24h.</p>
-                                </div>
+                        </div>
+
+                        {paymentMethod === 'confirmado_local' && (
+                            <div className={style.alertInfo}>
+                                <RiErrorWarningLine />
+                                <p><strong>Atenção Funcionário:</strong> Ao selecionar "Pagamento Instantâneo", você confirma que recebeu o valor do emolumento em numerário ou TPA. O documento será emitido imediatamente.</p>
                             </div>
                         )}
 
@@ -458,7 +550,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 onClick={handleSubmit}
                                 disabled={!paymentMethod || loading}
                             >
-                                {loading ? 'Processando...' : 'Finalizar Solicitação'}
+                                {loading ? 'Processando...' : (paymentMethod === 'confirmado_local' ? 'Confirmar e Gerar Documento' : 'Gerar RUP e Finalizar')}
                             </button>
                         </div>
                     </div>
@@ -503,7 +595,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                                 Imprimir Formulário RUP para Requisitante
                                             </button>
                                         ) : (
-                                            <button className={style.btnDownload} onClick={() => window.open(result.fatura.url_fatura, '_blank')}>
+                                            <button className={style.btnDownload} onClick={() => window.open(`${api.defaults.baseURL}solicitacoes/${result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao}/imprimir_rup/`, '_blank')}>
                                                 Baixar Formulário RUP (PDF)
                                             </button>
                                         )}

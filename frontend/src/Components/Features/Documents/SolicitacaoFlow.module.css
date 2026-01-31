@@ -198,48 +198,135 @@
     color: var(--text-main);
 }
 
+/* --- Premium Payment Grid --- */
 .paymentGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-top: 2rem;
     width: 100%;
-    max-width: 700px;
 }
 
 .paymentOption {
-    padding: 2rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.3s;
     background: var(--bg-page);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.paymentOption:hover {
+.paymentOption:hover:not(.disabled) {
     border-color: var(--green-primay);
-    background: rgba(16, 185, 129, 0.05);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
 }
 
 .paymentOption.selected {
     border-color: var(--green-primay);
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(16, 185, 129, 0.05);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.paymentOption.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-card);
+    border-style: dashed;
+}
+
+.optionHeader {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
 }
 
 .payIcon {
-    font-size: 2.5rem;
-    color: var(--green-primay);
+    font-size: 3rem;
+    color: var(--text-muted);
     margin-bottom: 1rem;
+    transition: color 0.3s;
+}
+
+.paymentOption.selected .payIcon {
+    color: var(--green-primay);
+}
+
+.badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--text-muted);
+    color: white;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.badgeSuccess {
+    background: #10b981;
+    /* Emerald 500 */
+    color: white;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+/* Premium Option for Employees */
+.premiumOption {
+    border-color: #f59e0b;
+    /* Amber 500 */
+    background: linear-gradient(145deg, #fffbeb, #fff);
+}
+
+.premiumOption:hover:not(.disabled) {
+    border-color: #d97706;
+    box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2);
+}
+
+.premiumOption.selected {
+    border-color: #d97706;
+    background: #fff7ed;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+.premiumOption .payIcon {
+    color: #f59e0b;
+}
+
+.stepDescription {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .paymentOption h3 {
     margin: 0;
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--text-main);
 }
 
 .paymentOption p {
     margin: 0;
     font-size: 0.85rem;
-    line-height: 1.4;
+    line-height: 1.5;
+    color: var(--text-muted);
 }
 
 .successStep {
@@ -476,4 +563,154 @@
         align-items: center;
         text-align: center;
     }
+}
+
+/* --- Modal Styles --- */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+    background: var(--bg-card);
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-strong);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modalHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalHeader h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modalBody {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.rupDisplay {
+    background: var(--bg-page);
+    border: 2px dashed var(--border-color);
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rupDisplay label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.rupCode {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    font-family: monospace;
+    letter-spacing: 2px;
+}
+
+.detailsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detailsList p {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.detailsList strong {
+    color: var(--text-main);
+}
+
+.modalActions {
+    padding: 1.5rem;
+    background: var(--bg-page);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.btnConfirm {
+    padding: 0.8rem 1.5rem;
+    background: var(--green-primay);
+    color: var(--text-main);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.btnConfirm:hover {
+    filter: brightness(0.9);
+}
+
+.btnCancel {
+    padding: 0.8rem 1.5rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnCancel:hover {
+    background: var(--bg-card);
+    color: var(--text-main);
 }

@@ -284,17 +284,44 @@ def me_view(request):
                 'is_online': True
             }
         elif user_type == 'aluno':
-            user_data = {
-                'id': user.id_aluno,
-                'tipo': 'aluno',
-                'nome': user.nome_completo,
-                'email': user.email,
-                'numero_matricula': user.numero_matricula,
-                'turma': user.id_turma.codigo_turma if user.id_turma else None,
-                'status': user.status_aluno,
-                'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None,
-                'is_online': True
-            }
+            from apis.serializers import AlunoDetailSerializer
+            
+            # Usar serializer detalhado para obter todos os dados do aluno
+            serializer = AlunoDetailSerializer(user, context={'request': request})
+            user_data = serializer.data
+            
+            # Adicionar campos extras necessários para autenticação
+            user_data['tipo'] = 'aluno'
+            user_data['id'] = user.id_aluno
+            user_data['is_online'] = True
+            
+            # Enriquecer com dados completos de turma, curso e classe
+            if user.id_turma:
+                turma_detalhes = {
+                    'id': user.id_turma.id_turma,
+                    'codigo': user.id_turma.codigo_turma,
+                    'sala': user.id_turma.id_sala.numero_sala if user.id_turma.id_sala else None,
+                    'ano': user.id_turma.ano,
+                    'periodo': user.id_turma.id_periodo.periodo if user.id_turma.id_periodo else None,
+                }
+                
+                # Adicionar dados do curso
+                if user.id_turma.id_curso:
+                    turma_detalhes['curso'] = {
+                        'id': user.id_turma.id_curso.id_curso,
+                        'nome': user.id_turma.id_curso.nome_curso,
+                        'descricao': user.id_turma.id_curso.descricao if hasattr(user.id_turma.id_curso, 'descricao') else None
+                    }
+                
+                # Adicionar dados da classe
+                if user.id_turma.id_classe:
+                    turma_detalhes['classe'] = {
+                        'id': user.id_turma.id_classe.id_classe,
+                        'nivel': user.id_turma.id_classe.nivel,
+                        'descricao': user.id_turma.id_classe.descricao
+                    }
+                
+                user_data['turma_detalhes'] = turma_detalhes
         elif user_type == 'encarregado':
             user_data = {
                 'id': user.id_encarregado,

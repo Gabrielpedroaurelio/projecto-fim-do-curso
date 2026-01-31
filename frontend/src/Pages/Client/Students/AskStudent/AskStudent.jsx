@@ -1,39 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import style from './AskStudent.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
 import { useAuth } from '../../../../Context/AuthContext';
 import SolicitacaoFlow from '../../../../Components/Features/Documents/SolicitacaoFlow';
-import api from '../../../../Services/api';
 
 const AskStudent = () => {
-  const { user } = useAuth();
-  const [studentData, setStudentData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useAuth();
 
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      if (!user?.id) return;
-
-      try {
-        setLoading(true);
-        // Buscar dados completos do aluno
-        const response = await api.get(`/alunos/${user.id}/`);
-        setStudentData(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar dados do aluno:", error);
-        // Fallback para dados do contexto
-        setStudentData(user);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudentData();
-  }, [user]);
-
-  if (loading) {
+  if (authLoading || !user) {
     return (
       <div className='containelGeralclient'>
         <MenuNavBarCliente user={'student'} />
@@ -46,6 +22,7 @@ const AskStudent = () => {
       </div>
     );
   }
+
 
   return (
     <div className='containelGeralclient'>
@@ -61,7 +38,7 @@ const AskStudent = () => {
           <div className={style.formContainer}>
             <SolicitacaoFlow
               userType="aluno"
-              fixedStudent={studentData}
+              fixedStudent={user}
               onComplete={() => console.log("Solicitação completada")}
             />
           </div>

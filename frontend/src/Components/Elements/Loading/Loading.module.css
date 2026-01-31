@@ -1,55 +1,220 @@
-.loadercontainer {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 90vh;
+/* --- Container --- */
+.loaderContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    z-index: 9999;
+    /* Soft, sophisticated background gradient */
+    background: radial-gradient(circle at 50% 50%, #f1f5f9 0%, #cbd5e1 100%);
+    z-index: 10000;
 }
 
-.loadercontent {
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .loaderContainer {
+        background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+    }
+}
+
+/* --- Glass Card --- */
+.loaderContent {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 2.5rem;
+    padding: 3.5rem 4rem;
+    border-radius: 24px;
+
+    /* Super Premium Glass Effect */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+    /* Delicate border and shadow */
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.loaderspinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(37, 99, 235, 0.1);
-    border-left-color: #000000;
+@media (prefers-color-scheme: dark) {
+    .loaderContent {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+}
+
+/* --- Harmonic Animation Structure --- */
+.spinnerWrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.spinnerRingOne,
+.spinnerRingTwo,
+.spinnerRingThree {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 3px solid transparent;
 }
 
-.loadertext {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.2rem;
+/* 
+   HARMONY PALETTE: 
+   Indigo (Primary) -> Violet (Secondary) -> Fuchsia (Accent)
+   Creates a cool, professional, deep-tech vibe.
+*/
+
+.spinnerRingOne {
+    /* Base Ring - Slow Rotation */
+    border-top-color: #6366f1;
+    /* Indigo 500 */
+    border-right-color: rgba(99, 102, 241, 0.3);
+    animation: rotate 3s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.spinnerRingTwo {
+    /* Middle Ring - Medium Rotation + Scale */
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    border-bottom-color: #8b5cf6;
+    /* Violet 500 */
+    border-left-color: rgba(139, 92, 246, 0.3);
+    animation: rotateReverse 2s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.spinnerRingThree {
+    /* Inner Ring - Fast Rotation */
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    border-top-color: #d946ef;
+    /* Fuchsia 500 */
+    border-right-color: rgba(217, 70, 239, 0.3);
+    animation: rotate 1.5s linear infinite;
+}
+
+.spinnerCore {
+    /* Glowing Center Pulse */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #6366f1, #d946ef);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+    animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+/* --- Typography --- */
+.textWrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mainText {
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: #25a2eb;
-    letter-spacing: 0.05em;
-    animation: pulse 2s infinite;
+    letter-spacing: -0.01em;
+    /* Gradient Text matching the rings */
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: gradientFlow 3s linear infinite;
 }
 
-.loadersubtext {
-    font-size: 0.875rem;
+.subText {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
     color: #64748b;
+    /* Slate 500 */
+    animation: fadeInOut 2s ease-in-out infinite;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@media (prefers-color-scheme: dark) {
+    .subText {
+        color: #94a3b8;
+    }
+}
+
+/* --- Keyframes --- */
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateReverse {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    0% {
+        transform: translate(-50%, -50%) scale(0.85);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.15);
+        opacity: 1;
+    }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }

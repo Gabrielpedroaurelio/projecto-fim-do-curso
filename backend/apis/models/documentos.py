@@ -25,7 +25,7 @@ class Documento(models.Model):
     caminho_pdf = models.FileField(upload_to="documentos/documents/pdfs/", null=True)
     #models.TextField(null=True, blank=True, verbose_name='Caminho do PDF')
     #imagem_carimbo = models.TextField(null=True, blank=True, verbose_name='Carimbo/Assinatura')
-    uuid_documento = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, verbose_name='CÓDIGO ÚNICO DO DOCUMENTO')
+    uuid_documento = models.UUIDField(default=uuid.uuid4, unique=True, verbose_name='CÓDIGO ÚNICO DO DOCUMENTO')
     criado_por = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,

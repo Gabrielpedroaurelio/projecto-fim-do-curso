@@ -4,45 +4,25 @@
     background: var(--bg-card);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    /*border: 1px solid var(--border-color);*/
     border-radius: var(--radius-md);
-    padding: 1.5rem;
-    /* Reduced from 2.25rem for more petite look */
+    border: 1px solid var(--border-color);
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    /* Better vertical distribution */
-    gap: 1rem;
-    transition: all var(--transition-base);
+    gap: 1.25rem;
     box-shadow: var(--shadow-sm);
     text-decoration: none;
     position: relative;
     overflow: hidden;
     text-align: center;
     height: 100%;
-    /* Fill container */
-    min-height: 180px;
-    /* Ensure uniform height */
-}
-
-.cardDocument::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.03) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity var(--transition-base);
+    min-height: 200px;
 }
 
 .cardDocument:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--primary);
-}
-
-.cardDocument:hover::after {
-    opacity: 1;
+    border-color: var(--accent-violet);
 }
 
 .cardDocument h3 {
@@ -56,24 +36,24 @@
 
 .cardDocument svg {
     font-size: 2rem;
-    color: var(--primary);
+    color: var(--accent-violet);
     padding: 12px;
     /* Slightly reduced padding */
-    background: rgba(14, 165, 233, 0.08);
+    background: rgba(139, 92, 246, 0.08);
     border-radius: var(--radius-sm);
     transition: transform var(--transition-base);
 }
 
 .cardDocument:hover svg {
     transform: scale(1.1) rotate(5deg);
-    background: rgba(14, 165, 233, 0.15);
+    background: rgba(139, 92, 246, 0.15);
 }
 
 .cardDocument button {
     width: 100%;
     padding: 0.6rem 1rem;
     /* Reduced padding */
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
     color: white;
     border: none;
     border-radius: var(--radius-sm);
@@ -81,7 +61,7 @@
     font-size: 0.85rem;
     cursor: pointer;
     transition: all var(--transition-base);
-    box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
+    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
     /* Softer shadow */
 }
 

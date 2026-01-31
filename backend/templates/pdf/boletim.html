@@ -24,14 +24,10 @@
         {% for item in notas_finais %}
         <tr>
             <td style="border: 1px solid #000; padding: 5px;">{{ item.disciplina }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.1.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.2.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.3.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold;">{{ item.media_final
-                }}</td>
+            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.1.MT|floatformat:0 }}</td>
+            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.2.MT|floatformat:0 }}</td>
+            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.3.MT|floatformat:0 }}</td>
+            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold;">{{ item.media_final }}</td>
         </tr>
         {% empty %}
         <tr>

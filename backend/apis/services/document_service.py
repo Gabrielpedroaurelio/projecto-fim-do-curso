@@ -21,7 +21,8 @@ class DocumentService:
         categorias_permitidas = ['DECLARAÇÃO', 'CERTIFICADO', 'BOLETIM']
         tipo_base = tipo_documento.split('(')[0].strip().upper()
         
-        if tipo_base not in categorias_permitidas:
+        # Correção: Verificar se ALGUMA categoria permitida está contida no tipo base
+        if not any(cat in tipo_base for cat in categorias_permitidas):
             raise ValueError(f"Tipo de documento '{tipo_base}' não permitido. Use: {', '.join(categorias_permitidas)}")
 
         # 2. Obter dados do aluno e classe atual
@@ -155,7 +156,7 @@ class DocumentService:
 
         if 'CERTIFICADO' in tipo_base:
             template_name = 'pdf/certificado.html'
-        elif 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base or 'DECLARAÇÃO' in tipo_base:
+        elif 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base:
             # Se for aproveitamento ou boletim, carregar as notas
             context['notas_finais'] = DocumentService._get_notas_finais_aluno(
                 solicitacao.id_aluno, 
@@ -262,9 +263,25 @@ class DocumentService:
         caminho_pdf = DocumentService.gerar_pdf_documento(solicitacao_id, funcionario_id)
         
         if caminho_pdf:
-            # 4. Marcar como Impresso (pronto para levar ao diretor)
-            solicitacao.status_solicitacao = 'impresso'
+            # 4. Marcar como Disponível imediatamente (Fluxo Instantâneo)
+            solicitacao.status_solicitacao = 'disponivel'
+            solicitacao.data_aprovacao = timezone.now()
+            solicitacao.id_funcionario_id = funcionario_id # Quem confirmou/aprovou
             solicitacao.save()
+            
+            # 5. Criar registro oficial de Documento para aparecer nas listagens
+            from apis.models import Documento, Funcionario
+            funcionario = Funcionario.objects.get(id_funcionario=funcionario_id)
+            
+            Documento.objects.create(
+                id_aluno=solicitacao.id_aluno,
+                tipo_documento=solicitacao.tipo_documento,
+                caminho_pdf=solicitacao.caminho_arquivo,
+                uuid_documento=solicitacao.uuid_documento,
+                criado_por=funcionario,
+                data_emissao=timezone.now()
+            )
+
             return caminho_pdf
             
         raise Exception("Erro ao gerar o documento PDF final.")

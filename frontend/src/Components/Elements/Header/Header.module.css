@@ -14,9 +14,9 @@
 
 /* Dark mode premium header effect */
 body.dark-mode .Header {
-    background: var(--bg-page);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    background: var(--bg-header);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
     box-shadow: 0 1px 0 var(--border-color);
 }
 
@@ -72,7 +72,7 @@ body.dark-mode .Header {
     transition: all 0.3s ease;
 }
 
- 
+
 
 .SearchBar svg {
     color: var(--text-muted);
@@ -182,10 +182,10 @@ body.dark-mode .Header {
     top: calc(100% + 12px);
     right: 0;
     width: 320px;
-    background-color: var(--bg-card);
+    background-color: var(--bg-sidebar);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-soft);
     z-index: 1100;
     overflow: hidden;
     animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -390,10 +390,10 @@ body.dark-mode .Header {
     top: calc(100% + 12px);
     right: 0;
     width: 280px;
-    background-color: var(--bg-card);
+    background-color: var(--bg-sidebar);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-soft);
     z-index: 1100;
     overflow: hidden;
     animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);

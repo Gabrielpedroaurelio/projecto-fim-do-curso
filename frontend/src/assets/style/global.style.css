@@ -30,6 +30,8 @@
     --bg-sidebar: #ffffff;
     --border-color: #e2e8f0;
 
+    --bg-gradient: radial-gradient(circle at 50% 50%, #f1f5f9 0%, #cbd5e1 100%);
+
     --text-main: #0f172a;
     --text-muted: #64748b;
     --text-inverted: #ffffff;
@@ -43,37 +45,48 @@
     --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Dark Mode Overrides - Google AI Studio (Gemini) Aesthetic */
+/* Dark Mode Overrides - Harmony Theme (Slate & Indigo) */
 body.dark-mode {
-    /* Backgrounds - Deep neutral grey-black */
-    --bg-page: #131314;
-    --bg-card: #1e1f20;
-    --bg-header: #131314;
-    --bg-input: #0b0b0b;
-    --bg-sidebar: #1e1f20;
-    --border-color: #444746;
+    /* Backgrounds - Deep Slate */
+    --bg-page: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.6);
+    --bg-header: rgba(15, 23, 42, 0.8);
+    --bg-input: rgba(30, 41, 59, 0.5);
+    --bg-sidebar: rgba(15, 23, 42, 0.95);
+    --border-color: rgba(255, 255, 255, 0.05);
+
+    --bg-gradient: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
 
     /* Text - Crisp and professional */
-    --text-main: #e3e3e3;
-    --text-muted: #c4c7c5;
-    --text-inverted: #131314;
-    --text-primary: #8ab4f8;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-inverted: #0f172a;
+    --text-primary: #6366f1;
+
+    --accent-indigo: #6366f1;
+    --accent-violet: #8b5cf6;
+    --accent-fuchsia: #d946ef;
 
     /* Primary colors adapted for dark mode */
-    --primary: #8ab4f8;
-    --primary-soft: #3c4043;
-    --primary-dark: #1e1f20;
-    --primary-light: #3c4043;
+    --primary: #6366f1;
+    --primary-soft: rgba(99, 102, 241, 0.1);
+    --primary-dark: #4f46e5;
+    --primary-light: rgba(99, 102, 241, 0.2);
 
     /* Premium shadows for deep theme */
-    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
 body {
     background-color: var(--bg-page);
     color: var(--text-main);
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
 }
 
 /* Force all black text to white in dark mode - DISABLED to allow local isolation */
@@ -127,6 +140,11 @@ body.dark-mode textarea::placeholder {
     position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
     animation: globalFadeIn 0.6s ease-out forwards;
+}
+
+body.dark-mode .ContainerGeneral,
+body.dark-mode .containelGeralclient {
+    background: transparent;
 }
 
 .ContainerMain {

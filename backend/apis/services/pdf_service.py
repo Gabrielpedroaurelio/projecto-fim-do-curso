@@ -26,27 +26,43 @@ class PDFService:
             """
             # Caminho absoluto para arquivos estáticos e media
             sUrl = settings.STATIC_URL
-            sRoot = settings.STATIC_ROOT
+            sRoot = str(settings.STATIC_ROOT) if settings.STATIC_ROOT else ''
             mUrl = settings.MEDIA_URL
-            mRoot = settings.MEDIA_ROOT
+            mRoot = str(settings.MEDIA_ROOT) if settings.MEDIA_ROOT else ''
 
             if uri.startswith(mUrl):
                 path = os.path.join(mRoot, uri.replace(mUrl, ""))
             elif uri.startswith(sUrl):
                 path = os.path.join(sRoot, uri.replace(sUrl, ""))
+                if not os.path.isfile(path):
+                    # Fallback para STATICFILES_DIRS em desenvolvimento
+                    for static_dir in settings.STATICFILES_DIRS:
+                         # static_dir pode ser Path object
+                         s_dir = str(static_dir)
+                         possible_path = os.path.join(s_dir, uri.replace(sUrl, ""))
+                         if os.path.isfile(possible_path):
+                             path = possible_path
+                             break
             else:
                 return uri
 
-            # Verifica se o arquivo existe
+            # Se ainda não encontrou, tenta caminho absoluto local se não for url remota
+            if not os.path.isfile(path) and not uri.startswith('http'):
+                 path = os.path.join(str(settings.BASE_DIR), uri.lstrip('/'))
+
             if not os.path.isfile(path):
+                # print(f"DEBUG PDF: Arquivo não encontrado: {path} (URI: {uri})")
                 return uri
-            return path
+            return str(path)
 
         pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result, link_callback=link_callback)
         
         if not pdf.err:
             return result.getvalue()
-        return None
+            
+        error_msg = f"Erro na geração do PDF: {pdf.err} errors. Log: {pdf.log}"
+        print(error_msg)
+        raise Exception(error_msg)
 
     @staticmethod
     def save_pdf(pdf_content, filename, sub_dir='documentos'):

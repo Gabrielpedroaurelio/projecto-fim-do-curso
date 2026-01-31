@@ -3,9 +3,9 @@ import style from './CardsDocuments.module.css'
 export default function CardsDocments({ icon, text, url }) {
     return (
         <>
-            <Link to={url} className={style.cardDocument}>
+            <Link to={url} className={`${style.cardDocument} glass-card`}>
                 {icon}
-                <h3>{text}</h3>
+                <h3 className="text-gradient">{text}</h3>
                 <button>Solicitar</button>
             </Link>
         </>

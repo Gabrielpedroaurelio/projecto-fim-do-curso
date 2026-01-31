@@ -19,7 +19,7 @@
 
 /* Glass-morphism for dark mode */
 body.dark-mode .containerMenu {
-    background-color: var(--bg-card);
+    background-color: var(--bg-sidebar);
     border-right: 1px solid var(--border-color);
 }
 
@@ -161,7 +161,7 @@ body.dark-mode .containerMenu {
     display: none;
 }
 
- 
+
 @media (max-width: 1024px) {
     .containerMenu {
         left: -100%;
@@ -184,4 +184,4 @@ body.dark-mode .containerMenu {
 
 .mobileToggle {
     display: none;
-} 
+}

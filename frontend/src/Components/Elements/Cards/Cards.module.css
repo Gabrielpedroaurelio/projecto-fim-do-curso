@@ -1,73 +1,104 @@
 @import url(../../../assets/style/global.style.css);
 
+/* Keyframe for icon pulse */
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shimmerEffect {
+    0% {
+        background-position: -200% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
 .StatCard {
     background: var(--bg-card);
-   /* border: 1px solid var(--border-color);*/
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 1rem 1.25rem;
-    /* Reduced vertical padding slightly */
+    padding: 1.25rem 1.5rem;
     box-shadow: var(--shadow-sm);
-    /* Started softer */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Ensure content is justified */
-    gap: 0.5rem;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    gap: 0.75rem;
     min-width: 180px;
-    /* Reduced from 200px for "petite" feel */
     height: 100%;
-    /* Fill the grid cell */
     position: relative;
     overflow: hidden;
     backdrop-filter: var(--glass-blur);
     width: 100%;
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
+    /* Staggered animation handled by .glass-card in global.css */
 }
 
+/* Base Hover handled by .glass-card in index.css */
 .StatCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: var(--accent-indigo);
 }
 
 .CardHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    /* Better alignment if title wraps */
     color: var(--text-muted);
+    position: relative;
+    z-index: 1;
 }
 
 .CardHeader span {
     font-size: 0.75rem;
-    font-weight: 600;
-    /* Less heavy than 700 */
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.StatCard:hover .CardHeader span {
+    color: var(--accent-indigo);
 }
 
 .CardHeader svg {
     font-size: 1.15rem;
-    /* Slightly smaller icon */
-    color: #0ea5e9;
+    color: var(--accent-indigo);
     padding: 8px;
-    background: rgba(14, 165, 233, 0.08);
-    /* More subtle bg */
+    background: rgba(99, 102, 241, 0.08);
     border-radius: var(--radius-sm);
     flex-shrink: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.StatCard:hover .CardHeader svg {
+    background: rgba(99, 102, 241, 0.15);
+    transform: rotate(5deg) scale(1.1);
+    animation: iconPulse 1.5s ease-in-out infinite;
 }
 
 .StatCard h2 {
     font-size: 1.75rem;
-    /* Bigger for contrast, or smaller? User said "mais pequeno". Let's try 1.5rem -> 1.35rem actually. Wait, "mais sofisticado" usually means smaller labels, bigger numbers but thin. Let's keep 1.5rem for now but maybe lighter weight or better font. */
-    font-size: 1.5rem;
-    font-weight: 700;
-    /* Clean bold */
+    font-weight: 500;
     color: var(--text-main);
     letter-spacing: -0.03em;
     margin: 0.25rem 0 0 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.StatCard:hover h2 {
+    color: var(--accent-indigo);
+    transform: scale(1.05);
 }
 
 .TrendUp {
@@ -76,14 +107,34 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-weight: 500;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
 }
 
 .TrendUp span {
     color: var(--primary);
-    font-weight: 700;
+    font-weight: 500;
     background: rgba(14, 165, 233, 0.1);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.StatCard:hover .TrendUp span {
+    background: rgba(14, 165, 233, 0.2);
+    transform: translateX(2px);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    .StatCard,
+    .CardHeader svg,
+    .StatCard h2,
+    .TrendUp span {
+        transition: none !important;
+        animation: none !important;
+    }
 }

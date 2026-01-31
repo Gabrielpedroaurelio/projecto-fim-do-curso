@@ -1,5 +1,111 @@
 @import url(../../../../assets/style/global.style.css);
 
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(14, 165, 233, 0.2),
+            0 0 10px rgba(14, 165, 233, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(14, 165, 233, 0.4),
+            0 0 30px rgba(14, 165, 233, 0.2);
+    }
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+
 .dashboardContainer {
     display: flex;
     flex-direction: column;
@@ -9,8 +115,8 @@
     margin: 0 auto;
     width: 100%;
     opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .dashboardContainer.loaded {
@@ -18,25 +124,49 @@
     transform: translateY(0);
 }
 
+/* ============================================
+   WELCOME SECTION
+   ============================================ */
+
 .welcomeSection {
     margin-bottom: 0.5rem;
 }
 
 .welcomeSection h1 {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text-main);
     margin: 0;
     letter-spacing: -0.025em;
+    background: linear-gradient(135deg, var(--text-main) 0%, var(--text-main) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    position: relative;
+}
+
+.welcomeSection h1::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+    border-radius: 2px;
+    animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
 }
 
 .welcomeSection p {
     font-size: 1rem;
+    font-weight: 400;
     color: var(--text-muted);
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
 }
 
-/* Horizontal Scroll for Stats Cards */
+/* ============================================
+   HORIZONTAL SCROLL FOR STATS CARDS
+   ============================================ */
+
 .scrollWrapper {
     width: 100%;
     overflow-x: auto;
@@ -46,7 +176,7 @@
     -webkit-mask-image: linear-gradient(to right, black 95%, transparent);
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
-    transition: scrollbar-color 0.3s;
+    transition: scrollbar-color 0.3s ease;
 }
 
 .scrollWrapper:hover {
@@ -54,16 +184,18 @@
 }
 
 .scrollWrapper::-webkit-scrollbar {
-    height: 4px;
+    height: 6px;
 }
 
 .scrollWrapper::-webkit-scrollbar-track {
     background: transparent;
+    border-radius: 10px;
 }
 
 .scrollWrapper::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 10px;
+    transition: background 0.3s ease;
 }
 
 .scrollWrapper:hover::-webkit-scrollbar-thumb {
@@ -77,7 +209,13 @@
     padding: 5px 20px 5px 0;
 }
 
-/* Charts Section - Melhorado */
+/* Staggered animation for cards */
+/* Staggered animation handled globally by .glass-card in index.css */
+
+/* ============================================
+   CHARTS SECTION
+   ============================================ */
+
 .chartsGrid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -89,27 +227,21 @@
 .cardChart {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    /* Bordas mais suaves */
+    border-radius: 24px;
     padding: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-    /* Sombra mais suave e elegante */
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Transição mais suave */
     display: flex;
     flex-direction: column;
-    backdrop-filter: blur(10px);
-    /* Efeito glassmorphism sutil */
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
 }
 
 .cardChart:hover {
-    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.12), 0 4px 8px rgba(14, 165, 233, 0.08);
-    /* Sombra colorida suave */
-    border-color: rgba(14, 165, 233, 0.2);
-    transform: translateY(-2px);
-    /* Elevação suave */
+    box-shadow: var(--shadow-soft);
+    border-color: var(--accent-indigo);
 }
 
 .sectionHeader {
@@ -117,22 +249,36 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .sectionHeader h2 {
     font-size: 1.15rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--text-main);
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.cardChart:hover .sectionHeader h2 {
+    color: #0ea5e9;
 }
 
 .chartContainer {
     height: 200px;
-    /* Altura aumentada para melhor visualização */
     width: 100%;
     margin-top: auto;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
 }
 
-/* Quick Access Section */
+/* ============================================
+   QUICK ACCESS SECTION
+   ============================================ */
+
 .quickAccessSection {
     margin-top: 1rem;
     display: flex;
@@ -146,12 +292,16 @@
     gap: 1.5rem;
 }
 
-/* Staggered Reveal Animation */
+/* ============================================
+   STAGGERED REVEAL ANIMATION
+   ============================================ */
+
 .revealItem {
     opacity: 0;
-    transform: translateY(20px) scale(0.98);
-    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     height: 100%;
+    will-change: transform, opacity;
 }
 
 .loaded .revealItem {
@@ -160,18 +310,57 @@
 }
 
 .revealItem:nth-child(1) {
-    transition-delay: 0.1s;
+    transition-delay: 0.15s;
 }
 
 .revealItem:nth-child(2) {
-    transition-delay: 0.25s;
+    transition-delay: 0.3s;
 }
 
 .revealItem:nth-child(3) {
-    transition-delay: 0.4s;
+    transition-delay: 0.45s;
 }
 
-/* Responsive */
+/* Hover effect for reveal items */
+.revealItem:hover {
+    transform: translateY(-5px) scale(1.02);
+    transition-duration: 0.3s;
+}
+
+/* ============================================
+   LOADING SKELETON
+   ============================================ */
+
+.skeleton {
+    background: linear-gradient(90deg,
+            var(--bg-card) 0%,
+            rgba(14, 165, 233, 0.05) 50%,
+            var(--bg-card) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 1200px) {
     .chartsGrid {
         grid-template-columns: 1fr;
@@ -188,6 +377,11 @@
         font-size: 1.8rem;
     }
 
+    .welcomeSection h1::after {
+        width: 50px;
+        height: 3px;
+    }
+
     .gridCards {
         padding-right: 1.5rem;
     }
@@ -198,7 +392,7 @@
 
     .cardChart {
         padding: 1.5rem;
-        border-radius: 16px;
+        border-radius: 20px;
     }
 }
 
@@ -210,4 +404,38 @@
     .chartContainer {
         height: 160px;
     }
+
+    .welcomeSection h1 {
+        font-size: 1.5rem;
+    }
+
+    .cardChart {
+        border-radius: 16px;
+        padding: 1.25rem;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* GPU acceleration for smooth animations */
+.cardChart,
+.revealItem,
+.dashboardContainer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }

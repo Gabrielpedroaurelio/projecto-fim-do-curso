@@ -90,7 +90,7 @@ class AcademicService:
         resultados = []
         
         for m_disc in disciplinas_matriz:
-            notas_disc = Nota.objects.filter(id_aluno=aluno, id_matriz_disciplina=m_disc)
+            notas_disc = Nota.objects.filter(id_aluno=aluno, id_disciplina=m_disc.id_disciplina)
             
             # Estrutura por trimestre
             grades = {
@@ -103,9 +103,15 @@ class AcademicService:
             teve_nota = {'1': False, '2': False, '3': False}
 
             for n in notas_disc:
-                if n.trimestre in grades and n.tipo_nota in grades[n.trimestre]:
-                    grades[n.trimestre][n.tipo_nota] = float(n.valor)
-                    teve_nota[n.trimestre] = True
+                # Normalizar trimestre (Ex: "1º Trimestre" -> "1") ou verificar se já é "1"
+                t_key = str(n.trimestre).split('º')[0] if n.trimestre else ''
+                # Fallback para caso tenha sido salvo apenas "1"
+                if t_key == n.trimestre:
+                     t_key = str(n.trimestre).strip()
+
+                if t_key in grades and n.tipo_nota in grades[t_key]:
+                    grades[t_key][n.tipo_nota] = float(n.valor)
+                    teve_nota[t_key] = True
 
             # Calcular Médias Trimestrais (MT = (MAC + PP + PT) / 3) ou regra específica
             # Regra Comum: MT = (MAC + PP + PT) / 3

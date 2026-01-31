@@ -14,6 +14,8 @@ import api from '../../../../Services/api';
 
 const DashboardEncarregado = () => {
   const { user } = useAuth();
+  const [educandos, setEducandos] = useState([]);
+  const [performance, setPerformance] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,9 +28,9 @@ const DashboardEncarregado = () => {
             api.get(`/encarregados/${user.id}/rendimento_educandos/`),
             api.get('/notificacoes/')
           ]);
-          setEducandos(educandosRes.data);
-          setPerformance(performanceRes.data);
-          setNotificacoes(notificacoesRes.data);
+          setEducandos(Array.isArray(educandosRes.data) ? educandosRes.data : []);
+          setPerformance(Array.isArray(performanceRes.data) ? performanceRes.data : []);
+          setNotificacoes(Array.isArray(notificacoesRes.data) ? notificacoesRes.data : []);
         }
       } catch (error) {
         console.error("Erro ao carregar dados do dashboard:", error);
@@ -64,7 +66,7 @@ const DashboardEncarregado = () => {
             <Cards
               icon={<RiBarChartFill />}
               title="Média do Grupo"
-              value={loading ? "..." : (performance.reduce((acc, curr) => acc + curr.media, 0) / (performance.length || 1)).toFixed(1)}
+              value={loading ? "..." : (Array.isArray(performance) && performance.length > 0 ? (performance.reduce((acc, curr) => acc + (curr.media || 0), 0) / performance.length).toFixed(1) : "0.0")}
               value_percentual={0}
             />
             <Cards
@@ -113,7 +115,7 @@ const DashboardEncarregado = () => {
                       formatter={(value) => [`${value} Valores`, 'Média']}
                     />
                     <Bar dataKey="media" radius={[8, 8, 0, 0]} barSize={50} animationDuration={1500}>
-                      {performance.map((entry, index) => (
+                      {Array.isArray(performance) && performance.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Bar>

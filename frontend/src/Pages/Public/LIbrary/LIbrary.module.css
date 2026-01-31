@@ -1,18 +1,6 @@
 @import url(../../../assets/includes/includes.includes.css);
 
-/* Semantic Theming for Library - Force Light Theme specifically */
-.body,
-body.dark-mode .body {
-    /* Enforce Institutional Light Mode specifically for Library */
-    --bg-page: #f8f9fa !important;
-    --text-main: #212529 !important;
-    --text-title: #121212 !important;
-    --bg-card: #ffffff !important;
-    --border-color: #dee2e6 !important;
-    --text-muted: #6c757d !important;
-    --bg-header: #ffffff !important;
-    --primary: #0ea5e9 !important;
-
+.body {
     background-color: var(--bg-page);
     color: var(--text-main);
     min-height: 100vh;
@@ -20,6 +8,12 @@ body.dark-mode .body {
     padding: 0 0 64px 0;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode .body {
+    background: var(--bg-gradient);
+    color: var(--text-main);
 }
 
 /* CAROUSEL SECTION (Full Bleed) */
@@ -250,7 +244,10 @@ body.dark-mode .body {
 }
 
 .modalContent {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
     width: 90%;
     max-width: 1000px;
     height: 85vh;
@@ -258,14 +255,14 @@ body.dark-mode .body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
     animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modalHeader {
     padding: 16px 24px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -274,7 +271,7 @@ body.dark-mode .body {
 .modalHeader h3 {
     margin: 0;
     font-size: 1.25rem;
-    color: #333;
+    color: var(--text-main);
     font-weight: 600;
 }
 
@@ -316,8 +313,8 @@ body.dark-mode .body {
 
 .modalFooter {
     padding: 16px 24px;
-    background-color: #ffffff;
-    border-top: 1px solid #e5e5e5;
+    background-color: transparent;
+    border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-end;
 }

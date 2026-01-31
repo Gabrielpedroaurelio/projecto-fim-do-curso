@@ -126,12 +126,18 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def minhas(self, request):
-        """Retorna solicitações do usuário autenticado (Encarregado)"""
+        """Retorna solicitações do usuário autenticado (Encarregado ou Aluno)"""
         id_encarregado = request.query_params.get('id_encarregado')
-        if not id_encarregado:
-            return Response({'error': 'ID do encarregado é obrigatório'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        solicitacoes = self.queryset.filter(id_encarregado_id=id_encarregado)
+        id_aluno = request.query_params.get('id_aluno')
+        
+        if id_encarregado:
+            solicitacoes = self.queryset.filter(id_encarregado_id=id_encarregado)
+        elif id_aluno:
+            solicitacoes = self.queryset.filter(id_aluno_id=id_aluno)
+        else:
+             # Se for admin/funcionario, talvez retornar vazio ou erro?
+             # Vamos retornar erro para evitar listagem total acidental
+             return Response({'error': 'ID do aluno ou encarregado é obrigatório'}, status=status.HTTP_400_BAD_REQUEST)
         
         page = self.paginate_queryset(solicitacoes)
         if page is not None:

@@ -23,7 +23,7 @@ body.dark-mode a {
 body.dark-mode input,
 body.dark-mode textarea,
 body.dark-mode select {
-    background-color: #fff;
+    background-color: var(--bg-input);
     color: var(--text-main);
     border-color: var(--border-color);
 }
@@ -32,34 +32,36 @@ body.dark-mode input::placeholder,
 body.dark-mode textarea::placeholder {
     color: var(--text-muted);
 }
+
 .SearchBar {
     display: flex;
     align-items: center;
-    
+
     width: 600px;
 
     margin: 44px auto 32px auto;
     padding: 12px 20px;
-    background: #f0f0f099;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border-radius: 9999px;
     /* Pill shape */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
     gap: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .SearchBar svg {
-    color: #94a3b8;
+    color: var(--text-muted);
     min-width: 20px;
     font-size: 1.1rem;
     transition: color 0.3s;
 }
 
-body.dark-mode .SearchBar input,.SearchBar input {
-    color: #000000;
+body.dark-mode .SearchBar input,
+.SearchBar input {
+    color: var(--text-main);
     width: 100%;
     font-size: 1rem;
     outline: none;

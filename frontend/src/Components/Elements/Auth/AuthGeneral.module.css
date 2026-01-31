@@ -4,36 +4,35 @@
     box-sizing: border-box;
     margin: 0px;
     padding: 0px;
-    
 }
 
-body.dak-mode .containerForm,  .containerForm {
+.containerForm {
     width: 100vw;
     height: 100vh;
-    color: #000;
+    color: var(--text-main);
+    background: var(--bg-main);
+}
 
-    background-color: rgb(255, 255, 255);
+body.dark-mode .containerForm {
+    background: var(--bg-gradient);
 }
 
 .containerForm .cardForm {
     height: 500px;
-    background-color: rgb(255, 255, 255);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background-color: var(--bg-card);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
     transition: all .5s ease-in-out;
-
     width: 95%;
-
-
     margin: auto;
     padding: 10px 5px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: var(--radius-md);
 }
-
-.containerForm .cardForm .form {}
 
 .containerForm .cardForm .form .infos {
     width: 280px;
@@ -42,19 +41,20 @@ body.dak-mode .containerForm,  .containerForm {
 
 .containerForm .cardForm .form .infos .logo {
     display: flex;
-
     align-items: center;
     font-weight: 500;
-
 }
 
 .containerForm .cardForm .form .infos .logo small {
     margin-left: 5px;
-
 }
 
-body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardForm .form .mensage *{
-    color: #000000;
+body.dark-mode .containerForm .cardForm .form .mensage * {
+    color: var(--text-main);
+}
+
+.containerForm .cardForm .form .mensage * {
+    color: var(--text-main);
 }
 
 .containerForm .cardForm .form .mensage h1 {
@@ -66,35 +66,28 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
     font-size: 10px;
 }
 
-.containerForm .cardForm .form form {}
-
 .containerForm .cardForm .form form .inputController {
-
     display: grid;
-
     width: 280px;
     margin: 20px auto;
 }
 
 .containerForm .cardForm .form form .inputController input {
-
     font-size: 12px;
     height: 30px;
-    border: 1px solid var(--fundo-login);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: 10px;
-    background-color: #ffffff;
-    color: #000;
+    background-color: var(--bg-input);
+    color: var(--text-main);
 }
 
 .containerForm .cardForm .form form .inputController input:focus {
-
     box-shadow: 1px 0px 10px #f0f0f0;
     outline: 1px solid var(--fundo-login);
 }
 
 .containerForm .cardForm .form form .forgotPassword {
-
     display: flex;
     justify-content: flex-end;
     width: 280px;
@@ -104,7 +97,6 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
 .containerForm .cardForm .form form .forgotPassword small {
     font-size: 10px;
     color: #989898;
-
 }
 
 .containerForm .cardForm .form form .forgotPassword small:hover {
@@ -113,7 +105,6 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
 }
 
 .containerForm .cardForm .form form .inputController button[type="submit"] {
-    
     border-radius: var(--radius-sm);
     width: 80%;
     margin: auto;
@@ -122,19 +113,18 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
     padding: 5px 10px;
     cursor: pointer;
 }
-.containerForm .cardForm .form form .inputController button.admin[type="submit"]{
+
+.containerForm .cardForm .form form .inputController button.admin[type="submit"] {
     background-color: #198754;
 }
+
 .containerForm .cardForm .form form .inputController button.student[type="submit"] {
-    background-color:var(--bs-purple);
+    background-color: var(--bs-purple);
 }
+
 .containerForm .cardForm .form form .inputController button.parent[type="submit"] {
     background-color: var(--bs-success);
 }
-
-.containerForm .cardForm .form {}
-
-.containerForm .cardForm .form {}
 
 .containerForm .cardForm .background {
     display: none;
@@ -153,20 +143,25 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
     border-radius: var(--radius-sm);
     height: max-content;
     overflow: hidden;
-
 }
 
 @media screen and (min-width:668px) {
+    body.dark-mode .containerForm {
+        background: var(--bg-gradient);
+    }
+
     .containerForm {
-        background-color: var(--fundo-login);
         position: relative;
     }
 
     .containerForm .cardForm {
-        background-color: rgb(255, 255, 255);
+        background-color: var(--bg-card);
+        -webkit-backdrop-filter: var(--glass-blur);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--border-color);
         max-width: 700px;
         height: 500px;
-        box-shadow: 0px 0px 10px #e0e0e0;
+        box-shadow: var(--shadow-lg);
         position: absolute;
         top: 50%;
         left: 50%;
@@ -184,7 +179,6 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
 
     .containerForm .cardForm .form .infos .logo {
         display: flex;
-
         align-items: center;
         font-weight: 500;
         height: 40px;
@@ -202,34 +196,20 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
         display: none;
     }
 
-    .containerForm .cardForm .form .mensage {}
-
-    .containerForm .cardForm .form .mensage h1 {
-        font-weight: 100;
-        font-size: 20pt;
-
-    }
-
-    .containerForm .cardForm .form .mensage small {}
-
     .containerForm .cardForm .form {
-        background-color: rgb(255, 255, 255);
+        background-color: transparent;
         padding: 10px;
         box-sizing: border-box;
     }
 
     .containerForm .cardForm .form form .inputController {
-
         display: grid;
-
         width: 240px;
         margin: 20px auto;
     }
 
     .containerForm .cardForm .form form .inputController input {
         width: 98%;
-
-
     }
 
     .containerForm .cardForm .form form .forgotPassword {
@@ -237,26 +217,18 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
     }
 
     .containerForm .cardForm .form form .inputController:last-child {
-
         display: flex;
         justify-content: flex-start;
     }
 
     .containerForm .cardForm .form form .inputController button[type="submit"] {
-
-
         width: 100px;
         font-size: 10px;
-
         margin: 0px;
-
-
         font-weight: 500;
     }
 
     .containerForm .cardForm .background {
-
-
         display: grid;
         gap: 10px;
         border-radius: var(--radius-md);
@@ -266,17 +238,15 @@ body.dark-mode  .containerForm .cardForm .form .mensage *,.containerForm .cardFo
     .containerForm .cardForm .background>div {
         background-color: #f0f0f0;
         display: grid;
-
     }
 
     .containerForm .cardForm .background>div img {
         height: 100%;
-
     }
 }
-.error{
+
+.error {
     color: var(--bs-danger);
     text-align: center;
     font-size: 10pt;
-    
 }

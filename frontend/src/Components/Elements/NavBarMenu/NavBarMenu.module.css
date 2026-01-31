@@ -22,7 +22,7 @@
 
 /* Dark mode glass effect for sidebar */
 body.dark-mode .Sidebar {
-    background-color: var(--bg-card);
+    background-color: var(--bg-sidebar);
     border-right: 1px solid var(--border-color);
 }
 

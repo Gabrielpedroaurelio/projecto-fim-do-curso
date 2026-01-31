@@ -51,10 +51,10 @@ class SolicitacaoDocumentoSerializer(serializers.ModelSerializer):
         fields = [
             'id_solicitacao', 'id_aluno', 'aluno_nome', 'id_encarregado', 'encarregado_nome',
             'id_funcionario', 'funcionario_nome', 'tipo_documento', 'status_solicitacao',
-            'canal_pagamento_rup', 'data_expiracao_rup',
+            'canal_pagamento_rup', 'rupe', 'valor_rupe', 'data_expiracao_rup',
             'caminho_arquivo', 'uuid_documento', 'data_solicitacao', 'data_aprovacao'
         ]
-        read_only_fields = ['id_solicitacao', 'data_solicitacao', 'data_aprovacao', 'data_expiracao_rup']
+        read_only_fields = ['id_solicitacao', 'data_solicitacao', 'data_aprovacao', 'data_expiracao_rup', 'rupe', 'valor_rupe']
 
 
 class SolicitacaoDocumentoListSerializer(serializers.ModelSerializer):
@@ -65,7 +65,7 @@ class SolicitacaoDocumentoListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SolicitacaoDocumento
         fields = [
-            'id_solicitacao', 'tipo_documento', 'aluno_nome', 'aluno_img',
+            'id_solicitacao', 'tipo_documento', 'rupe', 'aluno_nome', 'aluno_img',
             'status_solicitacao', 'data_solicitacao'
         ]
 
