@@ -1,4 +1,4 @@
-import { BrowserRouter as BRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 // importing of views for routers
 import MainSite from './Pages/Public/Site/MainSite'
 import Dashboards from './Pages/Admin/Dashboards/Dashboards'
@@ -41,61 +41,56 @@ import Profile from './Pages/Common/Profile/Profile';
 
 const Routers = () => {
     return (
-        <>
-            <BRouter>
-                <Routes>
-                    {/***ADMINSTRADOR** */}
-                    <Route path='/admin/dashboard' element={<ProtectedRoute allowedTypes={['funcionario']}><Dashboards /></ProtectedRoute>}></Route>
-                    <Route path='/admin/' element={<ProtectedRoute allowedTypes={['funcionario']}><Dashboards /></ProtectedRoute>}></Route>
-                    <Route path='/admin/funcionario' element={<ProtectedRoute allowedTypes={['funcionario']}><Funcionario /></ProtectedRoute>}></Route>
-                    <Route path='/admin/student' element={<ProtectedRoute allowedTypes={['funcionario']}><Estudantes /></ProtectedRoute>}></Route>
-                    <Route path='/admin/parent' element={<ProtectedRoute allowedTypes={['funcionario']}><Encarregado /></ProtectedRoute>}></Route>
-                    <Route path='/admin/declaracao' element={<ProtectedRoute allowedTypes={['funcionario']}><Declaracao /></ProtectedRoute>}></Route>
-                    <Route path='/admin/certificado' element={<ProtectedRoute allowedTypes={['funcionario']}><Certificado /></ProtectedRoute>}></Route>
-                    <Route path='/admin/boletim' element={<ProtectedRoute allowedTypes={['funcionario']}><Boletim /></ProtectedRoute>}></Route>
-                    <Route path='/admin/ask' element={<ProtectedRoute allowedTypes={['funcionario']}><Solicitacao /></ProtectedRoute>}></Route>
-                    <Route path='/admin/turmas' element={<ProtectedRoute allowedTypes={['funcionario']}><Turmas /></ProtectedRoute>}></Route>
-                    <Route path='/admin/library' element={<ProtectedRoute allowedTypes={['funcionario']}><LibraryAdmin /></ProtectedRoute>}></Route>
-                    <Route path='/admin/history' element={<ProtectedRoute allowedTypes={['funcionario']}><Histories /></ProtectedRoute>}></Route>
-                    <Route path='/admin/setting' element={<ProtectedRoute allowedTypes={['funcionario']}><Settings /></ProtectedRoute>}></Route>
-                    <Route path='/admin/notas' element={<ProtectedRoute allowedTypes={['funcionario']}><GradeLaunching /></ProtectedRoute>}></Route>
-                    <Route path='/admin/auth' element={<AuthAdmin />}></Route>
-                    <Route path='/agent/account' element={<ProtectedRoute allowedTypes={['funcionario']}><Accounts /></ProtectedRoute>}></Route>
-                    <Route path='/admin/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>
-                    <Route path='/agent/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>
+        <Routes>
+            {/***ADMINSTRADOR** */}
+            <Route path='/admin/dashboard' element={<ProtectedRoute allowedTypes={['funcionario']}><Dashboards /></ProtectedRoute>}></Route>
+            <Route path='/admin/' element={<ProtectedRoute allowedTypes={['funcionario']}><Dashboards /></ProtectedRoute>}></Route>
+            <Route path='/admin/funcionario' element={<ProtectedRoute allowedTypes={['funcionario']}><Funcionario /></ProtectedRoute>}></Route>
+            <Route path='/admin/student' element={<ProtectedRoute allowedTypes={['funcionario']}><Estudantes /></ProtectedRoute>}></Route>
+            <Route path='/admin/parent' element={<ProtectedRoute allowedTypes={['funcionario']}><Encarregado /></ProtectedRoute>}></Route>
+            <Route path='/admin/declaracao' element={<ProtectedRoute allowedTypes={['funcionario']}><Declaracao /></ProtectedRoute>}></Route>
+            <Route path='/admin/certificado' element={<ProtectedRoute allowedTypes={['funcionario']}><Certificado /></ProtectedRoute>}></Route>
+            <Route path='/admin/boletim' element={<ProtectedRoute allowedTypes={['funcionario']}><Boletim /></ProtectedRoute>}></Route>
+            <Route path='/admin/ask' element={<ProtectedRoute allowedTypes={['funcionario']}><Solicitacao /></ProtectedRoute>}></Route>
+            <Route path='/admin/turmas' element={<ProtectedRoute allowedTypes={['funcionario']}><Turmas /></ProtectedRoute>}></Route>
+            <Route path='/admin/library' element={<ProtectedRoute allowedTypes={['funcionario']}><LibraryAdmin /></ProtectedRoute>}></Route>
+            <Route path='/admin/history' element={<ProtectedRoute allowedTypes={['funcionario']}><Histories /></ProtectedRoute>}></Route>
+            <Route path='/admin/setting' element={<ProtectedRoute allowedTypes={['funcionario']}><Settings /></ProtectedRoute>}></Route>
+            <Route path='/admin/notas' element={<ProtectedRoute allowedTypes={['funcionario']}><GradeLaunching /></ProtectedRoute>}></Route>
+            <Route path='/admin/auth' element={<AuthAdmin />}></Route>
+            <Route path='/agent/account' element={<ProtectedRoute allowedTypes={['funcionario']}><Accounts /></ProtectedRoute>}></Route>
+            <Route path='/admin/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>
+            <Route path='/agent/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>
 
-                    {/***ALUNO** */}
-                    <Route path='/student/dashboard' element={<ProtectedRoute allowedTypes={['aluno']}><DashboardsStudents /></ProtectedRoute>}></Route>
-                    <Route path='/student/document' element={<ProtectedRoute allowedTypes={['aluno']}><DocumentsCliente /></ProtectedRoute>}></Route>
-                    <Route path='/student/ask' element={<ProtectedRoute allowedTypes={['aluno']}><AskStudent /></ProtectedRoute>}></Route>
-                    <Route path='/student/grades' element={<ProtectedRoute allowedTypes={['aluno']}><Grades /></ProtectedRoute>}></Route>
-                    <Route path='/student/schedule' element={<ProtectedRoute allowedTypes={['aluno']}><Schedule /></ProtectedRoute>}></Route>
-                    <Route path='/student/attendance' element={<ProtectedRoute allowedTypes={['aluno']}><Attendance /></ProtectedRoute>}></Route>
-                    <Route path='/student/auth' element={<AuthStudent />}></Route>
-                    <Route path='/student/yasmin' element={<ProtectedRoute allowedTypes={['aluno']}><YasminChat /></ProtectedRoute>}></Route>
+            {/***ALUNO** */}
+            <Route path='/student/dashboard' element={<ProtectedRoute allowedTypes={['aluno']}><DashboardsStudents /></ProtectedRoute>}></Route>
+            <Route path='/student/document' element={<ProtectedRoute allowedTypes={['aluno']}><DocumentsCliente /></ProtectedRoute>}></Route>
+            <Route path='/student/ask' element={<ProtectedRoute allowedTypes={['aluno']}><AskStudent /></ProtectedRoute>}></Route>
+            <Route path='/student/grades' element={<ProtectedRoute allowedTypes={['aluno']}><Grades /></ProtectedRoute>}></Route>
+            <Route path='/student/schedule' element={<ProtectedRoute allowedTypes={['aluno']}><Schedule /></ProtectedRoute>}></Route>
+            <Route path='/student/attendance' element={<ProtectedRoute allowedTypes={['aluno']}><Attendance /></ProtectedRoute>}></Route>
+            <Route path='/student/auth' element={<AuthStudent />}></Route>
+            <Route path='/student/yasmin' element={<ProtectedRoute allowedTypes={['aluno']}><YasminChat /></ProtectedRoute>}></Route>
 
-                    {/***ENCARREGADO** */}
-                    <Route path='/parent/dashboard' element={<ProtectedRoute allowedTypes={['encarregado']}><DashboardEncarregado /></ProtectedRoute>}></Route>
-                    <Route path='/parent/children' element={<ProtectedRoute allowedTypes={['encarregado']}><Children /></ProtectedRoute>}></Route>
-                    <Route path='/parent/ask' element={<ProtectedRoute allowedTypes={['encarregado']}><SolicitacaoParent /></ProtectedRoute>}></Route>
-                    <Route path='/parent/document' element={<ProtectedRoute allowedTypes={['encarregado']}><Documentos /></ProtectedRoute>}></Route>
-                    <Route path='/parent/actionstudent' element={<ProtectedRoute allowedTypes={['encarregado']}><ChildrenActions /></ProtectedRoute>}></Route>
-                    <Route path='/parent/auth' element={<AuthParent />}></Route>
-                    <Route path='/parent/yasmin' element={<ProtectedRoute allowedTypes={['encarregado']}><YasminChat /></ProtectedRoute>}></Route>
+            {/***ENCARREGADO** */}
+            <Route path='/parent/dashboard' element={<ProtectedRoute allowedTypes={['encarregado']}><DashboardEncarregado /></ProtectedRoute>}></Route>
+            <Route path='/parent/children' element={<ProtectedRoute allowedTypes={['encarregado']}><Children /></ProtectedRoute>}></Route>
+            <Route path='/parent/ask' element={<ProtectedRoute allowedTypes={['encarregado']}><SolicitacaoParent /></ProtectedRoute>}></Route>
+            <Route path='/parent/document' element={<ProtectedRoute allowedTypes={['encarregado']}><Documentos /></ProtectedRoute>}></Route>
+            <Route path='/parent/actionstudent' element={<ProtectedRoute allowedTypes={['encarregado']}><ChildrenActions /></ProtectedRoute>}></Route>
+            <Route path='/parent/auth' element={<AuthParent />}></Route>
+            <Route path='/parent/yasmin' element={<ProtectedRoute allowedTypes={['encarregado']}><YasminChat /></ProtectedRoute>}></Route>
 
-                    {/*** COMUM ***/}
-                    <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
+            {/*** COMUM ***/}
+            <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
 
-                    {/***PUBLICO** */}{/* */}
-                    <Route path='/' index element={<MainSite />}></Route>{/* */}
-                    <Route path='/public/site' element={<MainSite />}></Route>{/* */}
-                    <Route path='/public/library' element={<LIbrary />}></Route>{/* */}
-                    <Route path='/public/library/buy' element={"/public/library/buy"}></Route>{/* */}
-
-
-                </Routes>
-            </BRouter>
-        </>
+            {/***PUBLICO** */}{/* */}
+            <Route path='/' index element={<MainSite />}></Route>{/* */}
+            <Route path='/public/site' element={<MainSite />}></Route>{/* */}
+            <Route path='/public/library' element={<LIbrary />}></Route>{/* */}
+            <Route path='/public/library/buy' element={"/public/library/buy"}></Route>{/* */}
+        </Routes>
     )
 }
+
 export default Routers

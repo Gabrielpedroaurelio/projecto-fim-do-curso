@@ -9,7 +9,7 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .TabButton {
@@ -20,7 +20,7 @@
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -61,7 +61,7 @@
     justify-content: space-between;
     align-items: flex-start;
     padding: 2rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
     background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
 }
 
@@ -105,8 +105,8 @@
 
 .ModelCard {
     position: relative;
-    background: white;
-    border: 2px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -159,10 +159,10 @@
 
 .ModelMeta {
     font-size: 0.813rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-bottom: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--border-color);
 }
 
 .ModelActions {
@@ -245,8 +245,8 @@
 }
 
 .Table thead tr {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-bottom: 2px solid #e2e8f0;
+    background: var(--bg-page);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .Table th {
@@ -260,7 +260,7 @@
 }
 
 .Table tbody tr {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.2s ease;
 }
 
@@ -304,14 +304,33 @@
 }
 
 .StatusFinished {
-    background: #d1fae5;
-    color: #065f46;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
 }
 
 .StatusDraft {
-    background: #fef3c7;
-    color: #92400e;
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
 }
+
+/* Dark Mode Specific Overrides */
+:global(body.dark-mode) .CardHeader {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, transparent 100%);
+}
+
+:global(body.dark-mode) .TabActive {
+    background: rgba(14, 165, 233, 0.15);
+}
+
+:global(body.dark-mode) .Table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+:global(body.dark-mode) .BtnDuplicate {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
 
 /* Action Buttons */
 .ActionButtons {

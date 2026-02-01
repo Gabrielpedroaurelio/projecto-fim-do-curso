@@ -31,7 +31,7 @@ export default function Funcionario() {
                     email: emp.email,
                     class: emp.cargo_nome || 'N/A',
                     img_path: emp.img_path,
-                    status: (emp.is_online || Math.random() > 0.5) ? 'online' : 'offline',
+                    status: emp.is_online ? 'online' : 'offline',
                     lastSeen: 'Há pouco tempo'
                 })))
             } catch (error) {
@@ -67,7 +67,7 @@ export default function Funcionario() {
             <main className="ContainerMain">
                 <Header text1={"Recursos Humanos"} text2={"Lista de Funcionários"} onSearch={setSearchTerm} />
                 {loading ? (
-                    <div className="loading"><Loading/></div>
+                    <div className="loading"><Loading /></div>
                 ) : (
                     <DataTable
                         title="Lista de Funcionários"

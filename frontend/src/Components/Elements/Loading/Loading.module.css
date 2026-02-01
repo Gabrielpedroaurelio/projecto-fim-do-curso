@@ -13,11 +13,9 @@
     z-index: 10000;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .loaderContainer {
-        background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-    }
+/* Dark mode support - Reacting to global theme class */
+:global(body.dark-mode) .loaderContainer {
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
 }
 
 /* --- Glass Card --- */
@@ -42,14 +40,12 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-@media (prefers-color-scheme: dark) {
-    .loaderContent {
-        background: rgba(30, 41, 59, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow:
-            0 25px 50px -12px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-    }
+:global(body.dark-mode) .loaderContent {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 /* --- Harmonic Animation Structure --- */
@@ -154,10 +150,8 @@
     animation: fadeInOut 2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-    .subText {
-        color: #94a3b8;
-    }
+:global(body.dark-mode) .subText {
+    color: #94a3b8;
 }
 
 /* --- Keyframes --- */

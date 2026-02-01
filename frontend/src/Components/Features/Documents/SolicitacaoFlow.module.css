@@ -41,8 +41,8 @@
 }
 
 .step.active .stepIcon {
-    border-color: #10b981;
-    background: #10b981;
+    border-color: var(--primary);
+    background: var(--primary);
     color: white;
     transform: scale(1.1);
 }
@@ -122,8 +122,8 @@
 
 .searchBox button {
     padding: 0 2rem;
-    background: var(--green-primay);
-    color: var(--text-main);
+    background: var(--primary);
+    color: white;
     border: none;
     border-radius: var(--radius-sm);
     font-weight: 600;
@@ -274,8 +274,7 @@
 }
 
 .badgeSuccess {
-    background: #10b981;
-    /* Emerald 500 */
+    background: var(--primary);
     color: white;
     font-size: 0.7rem;
     padding: 4px 10px;
@@ -304,6 +303,45 @@
 
 .premiumOption .payIcon {
     color: #f59e0b;
+}
+
+/* Dark Mode Overrides */
+:global(body.dark-mode) .premiumOption {
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.1), rgba(30, 41, 59, 0.6));
+    border-color: #f59e0b;
+}
+
+:global(body.dark-mode) .premiumOption.selected {
+    border-color: #fbbf24;
+    background: rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+}
+
+:global(body.dark-mode) .rupAviso {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: #f59e0b;
+}
+
+:global(body.dark-mode) .missingDataForm {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: #0ea5e9;
+}
+
+:global(body.dark-mode) .alertInfo {
+    color: #38bdf8;
+}
+
+:global(body.dark-mode) .alertInfo p {
+    color: #38bdf8;
+}
+
+:global(body.dark-mode) .paymentOption.selected {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--primary);
+}
+
+:global(body.dark-mode) .successIcon {
+    background: var(--primary);
 }
 
 .stepDescription {
@@ -399,8 +437,8 @@
 .btnNext,
 .btnSubmit {
     padding: 0.8rem 2.5rem;
-    background: var(--green-primay);
-    color: var(--text-main);
+    background: var(--primary);
+    color: white;
     border: none;
     border-radius: var(--radius-sm);
     font-weight: 600;
@@ -686,8 +724,8 @@
 
 .btnConfirm {
     padding: 0.8rem 1.5rem;
-    background: var(--green-primay);
-    color: var(--text-main);
+    background: var(--primary);
+    color: white;
     border: none;
     border-radius: var(--radius-sm);
     font-weight: 600;

@@ -248,9 +248,9 @@ body.dark-mode .body {
     -webkit-backdrop-filter: var(--glass-blur);
     backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-color);
-    width: 90%;
-    max-width: 1000px;
-    height: 85vh;
+    width: 95%;
+    max-width: 1400px;
+    height: 95vh;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -297,7 +297,7 @@ body.dark-mode .body {
 
 .modalBody {
     flex: 1;
-    background-color: #f3f3f3;
+    background-color: #2d2d2d;
     overflow: hidden;
     position: relative;
     padding: 0;

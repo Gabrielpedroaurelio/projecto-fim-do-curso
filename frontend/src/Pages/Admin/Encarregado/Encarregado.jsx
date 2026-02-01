@@ -29,7 +29,7 @@ export default function Encarregado() {
                     email: g.email || 'N/A',
                     phone: g.telefone ? (Array.isArray(g.telefone) ? g.telefone.join(', ') : g.telefone) : 'N/A',
                     img_path: g.img_path,
-                    status: (g.is_online || Math.random() > 0.5) ? 'online' : 'offline',
+                    status: g.is_online ? 'online' : 'offline',
                     lastSeen: 'Disponível'
                 })))
             } catch (error) {
@@ -65,7 +65,7 @@ export default function Encarregado() {
             <main className="ContainerMain">
                 <Header text1={"Administração"} text2={"Lista de Encarregados"} onSearch={setSearchTerm} />
                 {loading ? (
-                    <div className="loading"><Loading/></div>
+                    <div className="loading"><Loading /></div>
                 ) : (
                     <DataTable
                         title="Lista de Encarregados"

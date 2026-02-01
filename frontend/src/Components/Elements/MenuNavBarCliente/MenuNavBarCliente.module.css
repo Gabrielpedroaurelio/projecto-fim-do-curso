@@ -135,12 +135,12 @@ body.dark-mode .containerMenu {
 
 .menu nav a:hover {
     background-color: var(--bg-input);
-    color: #0ea5e9;
+    color: var(--primary);
 }
 
 .menu nav a.active {
     background-color: var(--bg-input);
-    color: #0ea5e9;
+    color: var(--primary);
     font-weight: 600;
 }
 

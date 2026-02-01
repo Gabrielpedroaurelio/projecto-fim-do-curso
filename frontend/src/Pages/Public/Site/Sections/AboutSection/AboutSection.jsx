@@ -2,13 +2,16 @@ import style from './AboutSection.module.css';
 import aboutImg from '../../../../../assets/images/escola02.jpg';
 import { FaCheck } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
+import { useScrollReveal } from '../../../../../hooks/useScrollReveal';
 
 export default function AboutSection() {
+    const sectionRef = useScrollReveal();
+
     return (
-        <section className={style.AboutSection}>
-            <div className={style.Container}>
+        <section className={style.AboutSection} ref={sectionRef}>
+            <div className={`${style.Container} reveal`}>
                 {/* Image Col */}
-                <div className={style.ImageCol}>
+                <div className={`${style.ImageCol} reveal-left`}>
                     <img src={aboutImg} alt="Sobre Nós" className={style.MainImage} />
                     <div className={style.FloatingBadge}>
                         <div className={style.BadgeIcon}>
@@ -22,7 +25,7 @@ export default function AboutSection() {
                 </div>
 
                 {/* Text Col */}
-                <div className={style.TextCol}>
+                <div className={`${style.TextCol} reveal-right`}>
                     <span className={style.SubTitle}>Sobre Nós</span>
                     <h2 className={style.Title}>Quem Somos?</h2>
                     <p className={style.Description}>
@@ -46,7 +49,7 @@ export default function AboutSection() {
                         </li>
                     </ul>
 
-            
+
                 </div>
             </div>
         </section>

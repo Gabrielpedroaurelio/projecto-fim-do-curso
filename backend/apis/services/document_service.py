@@ -170,8 +170,13 @@ class DocumentService:
         pdf_content = PDFService.render_to_pdf(template_name, context)
         
         if pdf_content:
+            # Organização estruturada: [BI]/documentos/[TIPO]/[ANO]/[MES]/
+            tipo_path = tipo_base.split('(')[0].strip().replace(' ', '_')
+            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, tipo_path)
+            
             filename = f"doc_{doc_uuid}.pdf"
-            relative_path = PDFService.save_pdf(pdf_content, filename)
+            relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
+            
             solicitacao.caminho_arquivo = relative_path
             solicitacao.status_solicitacao = 'aguardando_assinatura'
             solicitacao.save()
@@ -188,6 +193,24 @@ class DocumentService:
         """
         from apis.services.academic_service import AcademicService
         return AcademicService.get_boletim_aluno(aluno, classe)
+
+    @staticmethod
+    def _get_document_path(aluno, tipo_slug):
+        """
+        Gera o caminho estruturado: [BI_OU_MATRICULA]/documentos/[TIPO]/[ANO]/[MES]/
+        """
+        # 1. Identificador do Aluno (BI preferencial)
+        aluno_folder = aluno.numero_bi or aluno.numero_matricula or str(aluno.id_aluno)
+        aluno_folder = aluno_folder.replace('/', '_').replace(' ', '_') # Sanitização básica
+        
+        # 2. Data
+        now = timezone.now()
+        year = str(now.year)
+        month = f"{now.month:02d}"
+        
+        # 3. Construir path relativo (sempre com forward slashes para o DB)
+        path = f"{aluno_folder}/documentos/{tipo_slug}/{year}/{month}"
+        return path
 
     @staticmethod
     def assinar_e_aprovar(solicitacao_id, funcionario_id):
@@ -234,8 +257,9 @@ class DocumentService:
         pdf_content = PDFService.render_to_pdf('pdf/rup_comprovativo.html', context)
         
         if pdf_content:
+            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, "RUPS")
             filename = f"rup_{solicitacao.uuid_documento}.pdf"
-            relative_path = PDFService.save_pdf(pdf_content, filename)
+            relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
             return relative_path
         return None
 

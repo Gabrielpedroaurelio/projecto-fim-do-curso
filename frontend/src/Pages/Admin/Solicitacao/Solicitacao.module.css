@@ -20,7 +20,7 @@
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -141,7 +141,7 @@
     display: flex;
     align-items: center;
     background: var(--bg-input);
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
@@ -260,10 +260,12 @@
     font-size: 0.875rem;
     box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
 }
-.Avatar img{
+
+.Avatar img {
     height: 100%;
     width: 100%;
 }
+
 /* Status Badges */
 .StatusBadge {
     display: inline-flex;
@@ -298,6 +300,27 @@
 .StatusDefault {
     background: #f1f5f9;
     color: #475569;
+}
+
+/* Dark Mode Overrides for Status */
+:global(body.dark-mode) .StatusPending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+
+:global(body.dark-mode) .StatusProcessing {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+:global(body.dark-mode) .StatusRejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+:global(body.dark-mode) .StatusDefault {
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
 }
 
 /* Action Buttons */
@@ -418,8 +441,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #e2e8f0;
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -509,7 +532,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 2px solid var(--border-color);
     background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
 }
 
@@ -562,7 +585,7 @@
 .FormGroup select {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     font-size: 0.95rem;
     color: var(--text-main);
@@ -575,7 +598,7 @@
     outline: none;
     border-color: #0ea5e9;
     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-    background: white;
+    background: var(--bg-card);
 }
 
 .FormGroup input::placeholder {
@@ -593,14 +616,14 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 2px solid #f1f5f9;
+    border-top: 2px solid var(--border-color);
 }
 
 .CancelButton {
     flex: 1;
     padding: 0.75rem 1.5rem;
-    background: white;
-    border: 2px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     color: #64748b;
     font-weight: 600;
@@ -611,7 +634,7 @@
 
 .CancelButton:hover {
     border-color: #cbd5e1;
-    background: #f8fafc;
+    background: var(--bg-input);
     color: #334155;
 }
 

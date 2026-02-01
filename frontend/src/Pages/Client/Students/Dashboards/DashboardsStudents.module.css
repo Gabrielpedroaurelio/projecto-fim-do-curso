@@ -206,7 +206,16 @@
     display: flex;
     gap: 1.5rem;
     min-width: max-content;
-    padding: 5px 20px 5px 0;
+    padding: 5px auto 5px auto;
+    flex-wrap: wrap;
+    
+    
+}
+.gridCards>div{
+  
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 310px;
 }
 
 /* Staggered animation for cards */

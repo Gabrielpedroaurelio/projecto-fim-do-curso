@@ -8,6 +8,17 @@
     gap: 60px;
     position: relative;
     overflow: hidden;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .container {
@@ -28,6 +39,19 @@
     border-radius: 100px;
     margin-bottom: 24px;
     backdrop-filter: blur(10px);
+    animation: slideDown 0.8s ease-out 0.2s backwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .badge span {
@@ -48,6 +72,19 @@
     letter-spacing: -0.03em;
     font-family: 'Open Sans', sans-serif;
     /* Ensure clean sans */
+    animation: slideUp 0.8s ease-out 0.4s backwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .gradientText {
@@ -68,12 +105,14 @@
     /* Muted text */
     max-width: 600px;
     margin-bottom: 40px;
+    animation: slideUp 0.8s ease-out 0.6s backwards;
 }
 
 .ctaGroup {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    animation: slideUp 0.8s ease-out 0.8s backwards;
 }
 
 .primaryBtn {
@@ -152,6 +191,31 @@
     box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    animation: float 6s ease-in-out infinite, slideInRight 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .cardHeader {
@@ -199,7 +263,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
- 
+
 }
 
 .skeletonLine {

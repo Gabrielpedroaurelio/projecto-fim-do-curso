@@ -33,7 +33,7 @@ export default function Estudantes() {
                     class: student.turma_codigo || 'N/A',
                     email: student.email,
                     img_path: student.img_path,
-                    status: (student.is_online || Math.random() > 0.5) ? 'online' : 'offline', // Mocking online status if not real
+                    status: student.is_online ? 'online' : 'offline', // Using real online status from backend
                     lastSeen: 'Disponível'
                 })))
             } catch (error) {
@@ -69,7 +69,7 @@ export default function Estudantes() {
             <main className="ContainerMain">
                 <Header text1={"Administração"} text2={"Lista de Estudantes"} onSearch={setSearchTerm} />
                 {loading ? (
-                    <div className="loading"><Loading/></div>
+                    <div className="loading"><Loading /></div>
                 ) : (
                     <DataTable
                         title="Lista de Estudantes"

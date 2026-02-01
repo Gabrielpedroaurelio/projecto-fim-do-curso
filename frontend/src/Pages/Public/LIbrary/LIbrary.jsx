@@ -12,8 +12,20 @@ import axios from 'axios';
 
 // Instance for public requests without Auth Token
 const publicApi = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/',
+  baseURL: 'http://127.0.0.1:8000/api/v1/',
 });
+
+const BASE_URL_MEDIA = 'http://127.0.0.1:8000/media';
+
+const normalizeUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+
+  // Ensure we don't double up /media if it's already there
+  const cleanPath = url.startsWith('/media/') ? url.replace('/media/', '') : (url.startsWith('media/') ? url.replace('media/', '') : url);
+
+  return `${BASE_URL_MEDIA}${cleanPath.startsWith('/') ? '' : '/'}${cleanPath}`;
+};
 
 export default function LIbrary() {
   const [category, setCategory] = useState({ id: 'Todas', nome: 'Todas' });
@@ -87,9 +99,9 @@ export default function LIbrary() {
     author: b.editora || 'Editora não informada',
     category: b.categoria_nome,
     recommended: b.recomendado,
-    cover: b.img_path,
-    pdf: b.caminho_arquivo,
-    caminho_arquivo: b.caminho_arquivo,
+    cover: normalizeUrl(b.img_path),
+    pdf: normalizeUrl(b.caminho_arquivo),
+    caminho_arquivo: normalizeUrl(b.caminho_arquivo),
     excerpt: b.excerpt || 'Resumo não disponível.'
   });
 
@@ -166,12 +178,17 @@ export default function LIbrary() {
                 <button onClick={() => setSelectedBook(null)} className={style.closeBtn}>×</button>
               </div>
               <div className={style.modalBody}>
-                <iframe
-                  src={selectedBook.caminho_arquivo || selectedBook.pdf}
-                  title="Leitor de PDF"
-                  className={style.pdfViewer}
-                ></iframe>
-                <object data="" type=""></object>
+                {selectedBook.pdf ? (
+                  <iframe
+                    src={`${selectedBook.pdf}#toolbar=0&navpanes=0&scrollbar=1`}
+                    title="Leitor de PDF"
+                    className={style.pdfViewer}
+                  ></iframe>
+                ) : (
+                  <div className={style.errorPlaceholder}>
+                    Documento não disponível para visualização.
+                  </div>
+                )}
               </div>
               <div className={style.modalFooter}>
                 <button

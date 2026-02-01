@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
+import Loading from '../Elements/Loading/Loading';
 
 /**
  * Componente para proteger rotas baseado em autenticação e tipo de usuário
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ allowedTypes, children }) => {
                 background: 'var(--bg-main)',
                 color: 'var(--primary)'
             }}>
-                <div className="loader">Carregando...</div>
+                <Loading/>
             </div>
         );
     }

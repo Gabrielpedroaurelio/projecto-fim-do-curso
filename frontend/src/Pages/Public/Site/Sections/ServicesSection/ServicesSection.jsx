@@ -1,6 +1,7 @@
 import style from './ServicesSection.module.css';
-import { FaComputer, FaCalculator,FaNetworkWired } from "react-icons/fa6";
+import { FaComputer, FaCalculator, FaNetworkWired } from "react-icons/fa6";
 import { BsGraphUpArrow } from "react-icons/bs";
+import { useScrollReveal } from '../../../../../hooks/useScrollReveal';
 
 const courses = [
     {
@@ -30,23 +31,31 @@ const courses = [
 ];
 
 export default function ServicesSection() {
+    const sectionRef = useScrollReveal();
+
     return (
-        <section className={style.services} id="servicos">
+        <section className={style.services} id="servicos" ref={sectionRef}>
             <div className={style.container}>
-                <div className={style.header}>
+                <div className={`${style.header} reveal`}>
                     <h2 className={style.title}>Nossos Cursos</h2>
                     <p className={style.subtitle}>Formação Profissional de Excelência para o Mercado Global</p>
                 </div>
 
                 <div className={style.grid}>
                     {courses.map((course, index) => (
-                        <div key={index} className={style.card}>
+                        <div
+                            key={index}
+                            className={`${style.card} ${index === 0 ? 'reveal-left' :
+                                    index === courses.length - 1 ? 'reveal-right' :
+                                        'reveal'
+                                } delay-${(index + 1) * 100}`}
+                        >
                             <div className={style.iconWrapper} style={{ '--glow': course.glowColor }}>
                                 {course.icon}
                             </div>
                             <h3 className={style.cardTitle}>{course.title}</h3>
                             <p className={style.cardDescription}>{course.description}</p>
-                          {/*  <div className={style.cardFooter}>
+                            {/*  <div className={style.cardFooter}>
                                 <button className={style.learnMore}>Saiba mais</button>
                             </div>
                             */}

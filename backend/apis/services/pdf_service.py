@@ -77,5 +77,6 @@ class PDFService:
         with open(file_path, 'wb') as f:
             f.write(pdf_content)
             
-        # Retorna o caminho relativo para salvar no banco de dados
-        return os.path.join(sub_dir, filename)
+        # Retorna o caminho relativo para salvar no banco de dados (sempre forward slash)
+        rel_path = os.path.join(sub_dir, filename).replace('\\', '/')
+        return rel_path

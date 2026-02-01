@@ -1,7 +1,7 @@
 import React from 'react';
 import style from './Loading.module.css';
 
-const Loading = ({ message = "Sistema de Gestão Escolar", subMessage = "Processando informações..." }) => {
+const Loading = ({ message = "Sistema de Gestão de Declarações Escolares", subMessage = "Processando informações..." }) => {
     return (
         <div className={style.loaderContainer}>
             <div className={style.loaderContent}>
