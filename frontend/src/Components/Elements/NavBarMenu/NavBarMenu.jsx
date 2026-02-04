@@ -14,14 +14,14 @@ import { RiBillLine } from "react-icons/ri";
 import { CiFileOn, CiSettings } from 'react-icons/ci';
 import favicon from '../../../assets/images/favicon.ico'
 
-import { useAuth } from '../../../Context/AuthContext';
+//import { useAuth } from '../../../Context/AuthContext';
 import { FaGraduationCap } from 'react-icons/fa6';
 
 export default function NavBarMenu() {
-    const { user } = useAuth();
-    const isProfessor = user?.cargo?.toLowerCase().includes('professor') || user?.cargo?.toLowerCase().includes('docente');
+   // const { user } = useAuth();
+    /*const isProfessor = user?.cargo?.toLowerCase().includes('professor') || user?.cargo?.toLowerCase().includes('docente');
     const isAdmin = user?.cargo?.toLowerCase().includes('administrador');
-
+*/
     return (
         <>
             <aside className={style.Sidebar}>
@@ -40,20 +40,20 @@ export default function NavBarMenu() {
                             </Link>
                         </li>
 
-                        {(isProfessor || isAdmin) && (
+                        {/*(isProfessor || isAdmin) && (
                             <li>
                                 <Link to={"/admin/notas"}>
                                     <FaGraduationCap />
                                     <span>Lançar Notas</span>
                                 </Link>
                             </li>
-                        )}
+                        )*/}
 
                         <li>
                             <Link to={"/admin/ask"}>
                                 <BsCart3 />
                                 <span>Solicitações</span>
-                                <span className={style.Badge}>435</span>
+                                <span className={style.Badge}></span>
                             </Link>
                         </li>
                         <li>
@@ -65,6 +65,9 @@ export default function NavBarMenu() {
                         <li>
                             <Link to={"/agent/yasmin"}>
                                 <FiTrendingUp />
+                                <FaAtom />
+
+                                
                                 <span>Yasmin</span>
                             </Link>
                         </li>

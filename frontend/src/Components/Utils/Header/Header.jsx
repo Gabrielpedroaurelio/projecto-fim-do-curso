@@ -5,6 +5,10 @@ import style from './Header.module.css'
 import { useState } from "react"
 export default function Header({ titlepage, usuario, controllerBarSearch }) {
     const [hasNotification,setHasNotification]=useState(false)
+    console.log(usuario);
+    console.log(controllerBarSearch);
+    console.log(setHasNotification());
+    
     return (
 
         <>

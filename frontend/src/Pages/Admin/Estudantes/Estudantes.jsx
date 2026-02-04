@@ -67,7 +67,7 @@ export default function Estudantes() {
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
-                <Header text1={"Administração"} text2={"Lista de Estudantes"} onSearch={setSearchTerm} />
+                <Header text1={"Administração"} text2={"Estudantes"} onSearch={setSearchTerm} />
                 {loading ? (
                     <div className="loading"><Loading /></div>
                 ) : (

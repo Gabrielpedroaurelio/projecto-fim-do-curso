@@ -14,7 +14,8 @@
     gap: 8px;
     flex-shrink: 0;
 }
-
+.SideNav button{
+}
 .NavButton {
     display: flex;
     align-items: center;
@@ -37,13 +38,13 @@
 }
 
 .NavActive {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)) !important;
+    background: linear-gradient(135deg, #00b7ff, #24abff) !important;
     color: white !important;
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 body.dark-mode .NavActive {
-    box-shadow: 0 4px 12px rgba(138, 180, 248, 0.2);
+    box-shadow: 0 4px 12px #24abff;
 }
 
 .NavIcon {

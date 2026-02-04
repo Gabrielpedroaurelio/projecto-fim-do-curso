@@ -63,7 +63,7 @@ export default function Encarregado() {
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
-                <Header text1={"Administração"} text2={"Lista de Encarregados"} onSearch={setSearchTerm} />
+                <Header text1={"Administração"} text2={"Encarregados"} onSearch={setSearchTerm} />
                 {loading ? (
                     <div className="loading"><Loading /></div>
                 ) : (

@@ -71,7 +71,7 @@ const ChildrenActions = () => {
           <div className={style.childHeader}>
             <div className={style.avatarLarge}>
               {child.img_path ? (
-                <img src={child.img_path} alt={child.nome_completo} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                <img src={`http://localhost:8000${child.img_path}`} alt={child.nome_completo} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
               ) : (
                 <RiUser3Line />
               )}

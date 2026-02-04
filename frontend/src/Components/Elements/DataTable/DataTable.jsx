@@ -46,11 +46,11 @@ export default function DataTable({
             <div className={style.TableHeader}>
                 <div className={style.TitleSection}>
                     <h2>{title}</h2>
-                    <p>Home / {title.split(' ')[0]}</p>
+                  
                 </div>
                 {onAdd && (
                     <button className={style.AddButton} onClick={onAdd}>
-                        {addButtonLabel || `Adicionar ${title.split(' ')[2] || 'Item'}`}
+                        {addButtonLabel || `Exportar ${title.split(' ')[2] || 'Item'}`}
                     </button>
                 )}
             </div>

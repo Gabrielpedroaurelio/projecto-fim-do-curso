@@ -8,7 +8,7 @@ import Loading from '../../../Components/Elements/Loading/Loading'
 
 const columns = [
     { label: "Nome do Funcionário", key: "name" },
-    { label: "ID", key: "roll" },
+    { label: "Código", key: "roll" },
     { label: "Email", key: "email" },
     { label: "Cargo", key: "class" },
     { label: "Estado", key: "status" },
@@ -65,7 +65,7 @@ export default function Funcionario() {
         <div className="ContainerGeneral">
             <NavBarMenu />
             <main className="ContainerMain">
-                <Header text1={"Recursos Humanos"} text2={"Lista de Funcionários"} onSearch={setSearchTerm} />
+                <Header text1={"Recursos Humanos"} text2={"Funcionários"} onSearch={setSearchTerm} />
                 {loading ? (
                     <div className="loading"><Loading /></div>
                 ) : (

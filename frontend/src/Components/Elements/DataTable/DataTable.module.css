@@ -1,7 +1,7 @@
 /* DataTable Container */
 .DataTableContainer {
-    padding: 0;
-    width: 90%;
+    padding:20px 0 0 0;
+    width: 96%;
     margin: 0 auto;
 }
 
@@ -147,7 +147,7 @@
 
 /* Table Wrapper */
 .TableWrapper {
-    overflow-x: auto;
+    overflow-x: scroll;
 }
 
 .TableWrapper::-webkit-scrollbar {
@@ -208,7 +208,7 @@
 }
 
 .Table td {
-    padding: 1rem 1.5rem;
+    /*padding: 1rem 1.5rem;*/
     font-size: 0.875rem;
     color: var(--text-main);
 }

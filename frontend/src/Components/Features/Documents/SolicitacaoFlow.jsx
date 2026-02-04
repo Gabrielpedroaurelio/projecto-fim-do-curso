@@ -100,8 +100,8 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             setStudentInfo(updated);
             setIsEditingMissing(false);
             setError('');
-        } catch (err) {
-            setError("Erro ao atualizar dados do aluno.");
+        } catch (error) {
+            setError(`Erro ao atualizar dados do aluno. <br> Erro: ${error}`);
         } finally {
             setLoading(false);
         }
@@ -587,13 +587,15 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                         <p>Formulário de RUP válido por <strong>24 horas</strong>.</p>
 
                                         {userType === 'funcionario' ? (
-                                            <button
+                                   <a href="">
+                                             <button
                                                 className={style.btnDownload}
                                                 // Assuming we have an endpoint or logic to get the RUP PDF URL
                                                 onClick={() => window.open(`${api.defaults.baseURL}solicitacoes/${result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao}/imprimir_rup/`, '_blank')}
                                             >
                                                 Imprimir Formulário RUP para Requisitante
                                             </button>
+                                   </a>
                                         ) : (
                                             <button className={style.btnDownload} onClick={() => window.open(`${api.defaults.baseURL}solicitacoes/${result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao}/imprimir_rup/`, '_blank')}>
                                                 Baixar Formulário RUP (PDF)
