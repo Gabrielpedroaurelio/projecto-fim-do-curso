@@ -24,7 +24,7 @@ class DocumentoViewSet(viewsets.ModelViewSet):
     ).all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id_aluno', 'tipo_documento']
+    filterset_fields = ['id_aluno']
     search_fields = ['tipo_documento', 'uuid_documento']
     ordering_fields = ['data_emissao']
     ordering = ['-data_emissao']
@@ -33,6 +33,17 @@ class DocumentoViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return DocumentoListSerializer
         return DocumentoSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tipo_documento = self.request.query_params.get('tipo_documento')
+        
+        if tipo_documento:
+            # Se o tipo_documento for uma categoria base, fazemos a busca por aproximação
+            # Isso resolve o problema de tabelas vazias no Admin quando se clica em "Declarações"
+            queryset = queryset.filter(tipo_documento__icontains=tipo_documento)
+            
+        return queryset
     
     @action(detail=False, methods=['get'])
     def para_encarregado(self, request):

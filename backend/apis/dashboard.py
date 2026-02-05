@@ -1,4 +1,4 @@
-
+import json
 from django.db.models import Count, Avg, Sum
 from django.db.models.functions import TruncMonth
 from apis.models import (
@@ -67,18 +67,37 @@ def dashboard_callback(request, context):
             
         col_labels = [item['id_turma__id_curso__nome_curso'] for item in alunos_por_curso if item['id_turma__id_curso__nome_curso']]
         col_data = [item['total'] for item in alunos_por_curso if item['id_turma__id_curso__nome_curso']]
+
+        col_chart_data = {
+            "labels": col_labels,
+            "datasets": [{
+                "label": "Total de Alunos",
+                "data": col_data,
+                "backgroundColor": "#0ea5e9", # Sky 500
+                "borderColor": "#0284c7",
+                "borderWidth": 1,
+                "borderRadius": 8,
+            }]
+        }
         
-        # 2. GRÁFICO DE SETOR (PIE): Distribuição por Gênero
+        # 2. GRÁFICO DE SETOR (DOUGHNUT): Distribuição por Gênero
         # ---------------------------------------------------------------------
         alunos_por_genero = Aluno.objects.values('genero').annotate(total=Count('id_aluno'))
         pie_labels = [item['genero'] for item in alunos_por_genero if item['genero']]
         pie_data = [item['total'] for item in alunos_por_genero if item['genero']]
+
+        pie_chart_data = {
+            "labels": pie_labels,
+            "datasets": [{
+                "data": pie_data,
+                "backgroundColor": ["#3b82f6", "#f43f5e", "#8b5cf6"], # Blue, Rose, Violet
+                "hoverOffset": 10,
+                "borderWidth": 0,
+            }]
+        }
         
-        # 3. GRÁFICO DE LINHA: Evolução de Matrículas (Simulado por ID ou Data se houver)
-        # Como Aluno não tem 'created_at' explícito no código visto, vamos usar 'Nota' por mês 
-        # como proxy de atividade, ou tentar Matrículas se tiver data.
-        # Vamos usar Notas lançadas por mês nos últimos 6 meses.
-        
+        # 3. GRÁFICO DE LINHA: Atividade Acadêmica
+        # ---------------------------------------------------------------------
         from django.utils import timezone
         last_6_months = timezone.now() - datetime.timedelta(days=180)
         notas_por_mes = Nota.objects.filter(data_lancamento__gte=last_6_months) \
@@ -90,47 +109,35 @@ def dashboard_callback(request, context):
         line_labels = [item['month'].strftime('%b/%Y') for item in notas_por_mes]
         line_data = [item['total'] for item in notas_por_mes]
 
+        line_chart_data = {
+            "labels": line_labels,
+            "datasets": [{
+                "label": "Notas Lançadas",
+                "data": line_data,
+                "borderColor": "#8b5cf6", # Violet 500
+                "backgroundColor": "rgba(139, 92, 246, 0.1)",
+                "fill": True,
+                "tension": 0.4, # Linhas curvas "Premium"
+                "pointBackgroundColor": "#8b5cf6",
+                "pointRadius": 4,
+            }]
+        }
+
         charts = [
             {
-                "title": "Alunos por Curso (Top Cursos)",
-                "type": "bar", # Unfold usa 'bar' para colunas verticais se configurado, ou horizontal.
-                "labels": col_labels,
-                "datasets": [
-                    {
-                        "label": "Total de Alunos",
-                        "data": col_data,
-                        "backgroundColor": "#10B981", # Emerald 500
-                        "borderColor": "#059669",
-                        "borderWidth": 1,
-                    }
-                ]
+                "title": "Alunos por Curso",
+                "type": "bar",
+                "json_data": json.dumps(col_chart_data)
             },
             {
                 "title": "Distribuição por Gênero",
-                "type": "doughnut", # ou 'pie'
-                "labels": pie_labels,
-                "datasets": [
-                    {
-                        "data": pie_data,
-                        "backgroundColor": ["#3B82F6", "#EC4899", "#6366F1"], # Blue, Pink, Indigo
-                        "hoverOffset": 4
-                    }
-                ]
+                "type": "doughnut",
+                "json_data": json.dumps(pie_chart_data)
             },
-             {
-                "title": "Atividade Acadêmica (Notas Lançadas/Mês)",
+            {
+                "title": "Atividade Acadêmica (Notas/Mês)",
                 "type": "line",
-                "labels": line_labels,
-                "datasets": [
-                    {
-                        "label": "Notas Lançadas",
-                        "data": line_data,
-                        "borderColor": "#F59E0B", # Amber
-                        "backgroundColor": "rgba(245, 158, 11, 0.2)",
-                        "fill": True,
-                        "tension": 0.4
-                    }
-                ]
+                "json_data": json.dumps(line_chart_data)
             }
         ]
 
@@ -141,7 +148,6 @@ def dashboard_callback(request, context):
 
     except Exception as e:
         print(f"Erro no Dashboard: {e}")
-        # Fallback silencioso
         context.update({"kpis": [], "charts": []})
 
     return context

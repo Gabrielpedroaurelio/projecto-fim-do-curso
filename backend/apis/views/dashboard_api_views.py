@@ -11,51 +11,90 @@ class DashboardStatsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # 1. KPIs
-        total_solicitacoes = SolicitacaoDocumento.objects.count()
-        declaracoes_emitidas = SolicitacaoDocumento.objects.filter(status_solicitacao='aprovado').count()
-        
-        # Novos alunos (últimos 30 dias)
-        um_mes_atras = timezone.now() - timedelta(days=30)
-        novos_alunos = Aluno.objects.filter(criado_em__gte=um_mes_atras).count()
-        
-        # Receita total (Faturas pagas)
-        receita_total = Fatura.objects.filter(status='pago').aggregate(total=Sum('total'))['total'] or 0
-        
-        # 2. Dados de Engajamento de Usuários (Últimos 6 meses)
-        # Comparação de logins ou atividade de Alunos, Funcionários, Encarregados
-        engagement_data = []
-        for i in range(5, -1, -1):
-            date = timezone.now() - timedelta(days=i*30)
-            month_name = date.strftime('%b')
-            
-            # Filtra logins por mês e tipo de usuario
-            alunos_logins = HistoricoLogin.objects.filter(
-                id_aluno__isnull=False,
-                hora_entrada__year=date.year,
-                hora_entrada__month=date.month
-            ).count()
-            
-            funcionarios_logins = HistoricoLogin.objects.filter(
-                id_funcionario__isnull=False,
-                hora_entrada__year=date.year,
-                hora_entrada__month=date.month
-            ).count()
-            
-            encarregados_logins = HistoricoLogin.objects.filter(
-                id_encarregado__isnull=False,
-                hora_entrada__year=date.year,
-                hora_entrada__month=date.month
-            ).count()
+        # Definição dos períodos (Mês atual vs Mês anterior, ou 30 dias)
+        agora = timezone.now()
+        trinta_dias_atras = agora - timedelta(days=30)
+        sessenta_dias_atras = agora - timedelta(days=60)
 
-            engagement_data.append({
-                'name': month_name, 
-                'Alunos': alunos_logins,
-                'Funcionarios': funcionarios_logins,
-                'Encarregados': encarregados_logins
-            })
+        # --- 1. KPIs ---
+        
+        # 1.1 Total Solicitações
+        total_solicitacoes = SolicitacaoDocumento.objects.count() # Total geral
+        # Para percentual: (novos últimos 30 dias vs penúltimos 30 dias)
+        solicitacoes_atual = SolicitacaoDocumento.objects.filter(data_solicitacao__gte=trinta_dias_atras).count()
+        solicitacoes_anterior = SolicitacaoDocumento.objects.filter(
+            data_solicitacao__gte=sessenta_dias_atras, 
+            data_solicitacao__lt=trinta_dias_atras
+        ).count()
 
-        # 3. Comparação de Solicitações por Tipo (Últimos 6 meses)
+        # 1.2 Declarações Emitidas (Tudo que não está pendente ou rejeitado é considerado "em processamento/emitido")
+        STATUS_EFETIVOS = ['pago', 'aguardando_assinatura', 'impresso', 'disponivel']
+        
+        declaracoes_emitidas = SolicitacaoDocumento.objects.filter(status_solicitacao__in=STATUS_EFETIVOS).count()
+        declaracoes_atual = SolicitacaoDocumento.objects.filter(
+            status_solicitacao__in=STATUS_EFETIVOS, 
+            data_solicitacao__gte=trinta_dias_atras
+        ).count()
+        declaracoes_anterior = SolicitacaoDocumento.objects.filter(
+            status_solicitacao__in=STATUS_EFETIVOS, 
+            data_solicitacao__gte=sessenta_dias_atras, 
+            data_solicitacao__lt=trinta_dias_atras
+        ).count()
+
+        # 1.3 Novos Alunos
+        novos_alunos_total = Aluno.objects.count()
+        novos_alunos_atual = Aluno.objects.filter(criado_em__gte=trinta_dias_atras).count()
+        novos_alunos_anterior = Aluno.objects.filter(
+            criado_em__gte=sessenta_dias_atras, 
+            criado_em__lt=trinta_dias_atras
+        ).count()
+
+        # 1.4 Receita (Apenas solicitações que foram pagas/confirmadas)
+        # Excluímos 'pendente' (não pago) e 'rejeitado' (cancelado)
+        receita_total = SolicitacaoDocumento.objects.filter(
+            status_solicitacao__in=STATUS_EFETIVOS
+        ).aggregate(total=Sum('valor_rupe'))['total'] or 0
+        
+        receita_atual = SolicitacaoDocumento.objects.filter(
+            status_solicitacao__in=STATUS_EFETIVOS, 
+            data_solicitacao__gte=trinta_dias_atras
+        ).aggregate(total=Sum('valor_rupe'))['total'] or 0
+        
+        receita_anterior = SolicitacaoDocumento.objects.filter(
+            status_solicitacao__in=STATUS_EFETIVOS, 
+            data_solicitacao__gte=sessenta_dias_atras, 
+            data_solicitacao__lt=trinta_dias_atras
+        ).aggregate(total=Sum('valor_rupe'))['total'] or 0
+
+        # --- 2. Dados de Engajamento (Setor/Pie Chart) ---
+        # Total de logins únicos ou total de acessos por tipo de usuário
+        # Aqui vamos contar o total de logins registrados no histórico GLOBAL (ou últimos 6 meses se preferir filtrar)
+        
+        # Opcional: Filtro de últimos 6 meses para o gráfico de setor refletir relevância recente
+        seis_meses_atras = agora - timedelta(days=180)
+        
+        alunos_logins = HistoricoLogin.objects.filter(
+            id_aluno__isnull=False, 
+            hora_entrada__gte=seis_meses_atras
+        ).count()
+        
+        funcionarios_logins = HistoricoLogin.objects.filter(
+            id_funcionario__isnull=False, 
+            hora_entrada__gte=seis_meses_atras
+        ).count()
+        
+        encarregados_logins = HistoricoLogin.objects.filter(
+            id_encarregado__isnull=False, 
+            hora_entrada__gte=seis_meses_atras
+        ).count()
+
+        engagement_data = [
+            {'name': 'Alunos', 'value': alunos_logins},
+            {'name': 'Funcionários', 'value': funcionarios_logins},
+            {'name': 'Encarregados', 'value': encarregados_logins},
+        ]
+
+        # --- 3. Comparação de Solicitações (Mantido Area Chart) ---
         requests_comparison_data = []
         for i in range(5, -1, -1):
             date = timezone.now() - timedelta(days=i*30)
@@ -92,15 +131,25 @@ class DashboardStatsAPIView(APIView):
 
         return Response({
             'kpis': {
-                'total_solicitacoes': total_solicitacoes,
-                'declaracoes_emitidas': declaracoes_emitidas,
-                'novos_alunos': novos_alunos,
-                'receita_total': float(receita_total),
-                'percentuais': {
-                    'solicitacoes': 22.2, 
-                    'declaracoes': 104.5,
-                    'alunos': 12.3,
-                    'receita': 14.8
+                'total_solicitacoes': {
+                    'total': total_solicitacoes,
+                    'current': solicitacoes_atual,
+                    'previous': solicitacoes_anterior
+                },
+                'declaracoes_emitidas': {
+                    'total': declaracoes_emitidas,
+                    'current': declaracoes_atual,
+                    'previous': declaracoes_anterior
+                },
+                'novos_alunos': {
+                    'total': novos_alunos_total,
+                    'current': novos_alunos_atual,
+                    'previous': novos_alunos_anterior
+                },
+                'receita_total': {
+                    'total': float(receita_total),
+                    'current': float(receita_atual),
+                    'previous': float(receita_anterior)
                 }
             },
             'engagement_data': engagement_data,

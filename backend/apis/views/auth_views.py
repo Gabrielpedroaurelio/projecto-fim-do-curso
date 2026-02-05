@@ -375,9 +375,7 @@ def update_profile_view(request):
         if not user:
             return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
-        # Atualizar campos
-        if 'nome' in request.data:
-            user.nome_completo = request.data['nome']
+        # Atualizar campos (apenas email, telefone e imagem permitidos conforme pedido)
         if 'email' in request.data:
             user.email = request.data['email']
         if 'img_path' in request.FILES:

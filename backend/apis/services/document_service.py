@@ -170,9 +170,8 @@ class DocumentService:
         pdf_content = PDFService.render_to_pdf(template_name, context)
         
         if pdf_content:
-            # Organização estruturada: [BI]/documentos/[TIPO]/[ANO]/[MES]/
-            tipo_path = tipo_base.split('(')[0].strip().replace(' ', '_')
-            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, tipo_path)
+            # A própria função _get_document_path agora cuida da categorização baseada no tipo
+            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, solicitacao.tipo_documento)
             
             filename = f"doc_{doc_uuid}.pdf"
             relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
@@ -195,21 +194,25 @@ class DocumentService:
         return AcademicService.get_boletim_aluno(aluno, classe)
 
     @staticmethod
-    def _get_document_path(aluno, tipo_slug):
+    def _get_document_path(aluno, tipo_base):
         """
-        Gera o caminho estruturado: [BI_OU_MATRICULA]/documentos/[TIPO]/[ANO]/[MES]/
+        Gera o caminho estruturado: estudantes/[ID_ALUNO]/documentos/[CATEGORIA]/
         """
-        # 1. Identificador do Aluno (BI preferencial)
-        aluno_folder = aluno.numero_bi or aluno.numero_matricula or str(aluno.id_aluno)
-        aluno_folder = aluno_folder.replace('/', '_').replace(' ', '_') # Sanitização básica
+        # 1. Identificar categoria simplificada
+        categoria = 'OUTROS'
+        tipo_upper = tipo_base.upper()
+        if 'DECLARAÇÃO' in tipo_upper: categoria = 'DECLARACOES'
+        elif 'CERTIFICADO' in tipo_upper: categoria = 'CERTIFICADOS'
+        elif 'BOLETIM' in tipo_upper or 'APROVEITAMENTO' in tipo_upper: categoria = 'BOLETIM_NOTAS'
+        elif 'RUP' in tipo_upper: categoria = 'FINANCEIRO'
+
+        # 2. Pasta do aluno baseada no ID para estabilidade (evita quebra se mudar nome)
+        # Mas mantemos um sufixo do nome para facilidade de navegação manual
+        nome_breve = aluno.nome_completo.split(' ')[0]
+        aluno_folder = f"{aluno.id_aluno}_{nome_breve}"
         
-        # 2. Data
-        now = timezone.now()
-        year = str(now.year)
-        month = f"{now.month:02d}"
-        
-        # 3. Construir path relativo (sempre com forward slashes para o DB)
-        path = f"{aluno_folder}/documentos/{tipo_slug}/{year}/{month}"
+        # 3. Construir path relativo
+        path = f"estudantes/{aluno_folder}/documentos/{categoria}"
         return path
 
     @staticmethod
@@ -257,7 +260,8 @@ class DocumentService:
         pdf_content = PDFService.render_to_pdf('pdf/rup_comprovativo.html', context)
         
         if pdf_content:
-            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, "RUPS")
+            # "RUP" vai cair na categoria FINANCEIRO no novo _get_document_path
+            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, "RUP")
             filename = f"rup_{solicitacao.uuid_documento}.pdf"
             relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
             return relative_path
