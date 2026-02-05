@@ -133,8 +133,35 @@
     .StatCard,
     .CardHeader svg,
     .StatCard h2,
-    .TrendUp span {
+    .TrendUp span,
+    .TrendDown span {
         transition: none !important;
         animation: none !important;
     }
+}
+
+.TrendDown {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+
+.TrendDown span {
+    color: #ef4444;
+    font-weight: 500;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.StatCard:hover .TrendDown span {
+    background: rgba(239, 68, 68, 0.2);
+    transform: translateX(2px);
 }

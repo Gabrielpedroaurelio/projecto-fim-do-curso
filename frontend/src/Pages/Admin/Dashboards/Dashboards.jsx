@@ -10,7 +10,8 @@ import api from '../../../Services/api'
 
 // IMPORTAÇÕES PARA OS GRAFICOS
 import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+    PieChart, Pie, Cell
 } from 'recharts';
 import Loading from '../../../Components/Elements/Loading/Loading'
 
@@ -51,6 +52,15 @@ export default function Dashboards() {
     // Destructuring new data keys
     const { kpis, requests_comparison_data, engagement_data, recent_activities } = stats
 
+    const calculatePercentage = (current, previous) => {
+        if (previous === 0) return current > 0 ? "+100%" : "0%";
+        const percent = ((current - previous) / previous) * 100;
+        return (percent > 0 ? "+" : "") + percent.toFixed(1) + "%";
+    }
+
+    // Cores para o gráfico de setor
+    const PIE_COLORS = ['#8884d8', '#82ca9d', '#ffc658'];
+
     const filteredActivities = recent_activities.filter(activity =>
         activity.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         activity.tipo_documento.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,26 +76,26 @@ export default function Dashboards() {
                     <Cards
                         icon={<FaFileInvoice size={40} />}
                         title={"Total Solicitações"}
-                        value={kpis.total_solicitacoes.toLocaleString()}
-                        value_percentual={(kpis.percentuais.solicitacoes) + "%"}
+                        value={kpis.total_solicitacoes.total.toLocaleString()}
+                        value_percentual={calculatePercentage(kpis.total_solicitacoes.current, kpis.total_solicitacoes.previous)}
                     />
                     <Cards
                         icon={<FaCircleCheck size={40} />}
                         title={"Declarações Emitidas"}
-                        value={kpis.declaracoes_emitidas.toLocaleString()}
-                        value_percentual={(kpis.percentuais.declaracoes) + "%"}
+                        value={kpis.declaracoes_emitidas.total.toLocaleString()}
+                        value_percentual={calculatePercentage(kpis.declaracoes_emitidas.current, kpis.declaracoes_emitidas.previous)}
                     />
                     <Cards
                         icon={<FaUserGraduate size={40} />}
                         title={"Alunos"}
-                        value={kpis.novos_alunos.toLocaleString()}
-                        value_percentual={(kpis.percentuais.alunos) + "%"}
+                        value={kpis.novos_alunos.total.toLocaleString()}
+                        value_percentual={calculatePercentage(kpis.novos_alunos.current, kpis.novos_alunos.previous)}
                     />
                     <Cards
                         icon={<RiBillLine size={40} />}
                         title={"Receita Total"}
-                        value={`Kz ${kpis.receita_total.toLocaleString()}`}
-                        value_percentual={(kpis.percentuais.receita) + "%"}
+                        value={`${kpis.receita_total.total.toLocaleString()},00Kz`}
+                        value_percentual={calculatePercentage(kpis.receita_total.current, kpis.receita_total.previous)}
                     />
                 </div>
                 <div className={style.ChartsRow}>
@@ -121,7 +131,7 @@ export default function Dashboards() {
                                         cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }}
                                         contentStyle={{
                                             borderRadius: '12px',
-                                            border: '1px solid var(--border-color)',
+                                            border: '0.1px solid var(--border-color)',
                                             backgroundColor: 'var(--bg-card)',
                                             color: 'var(--text-main)',
                                             boxShadow: 'var(--shadow-hover)'
@@ -133,7 +143,7 @@ export default function Dashboards() {
                                         dataKey="Declaracao"
                                         name="Declaração"
                                         stroke="#3b82f6"
-                                        strokeWidth={3}
+                                        strokeWidth={1}
                                         fillOpacity={1}
                                         fill="url(#colorDecl)"
                                     />
@@ -142,7 +152,7 @@ export default function Dashboards() {
                                         dataKey="Certificado"
                                         name="Certificado"
                                         stroke="#f97316"
-                                        strokeWidth={3}
+                                        strokeWidth={1}
                                         fillOpacity={1}
                                         fill="url(#colorCert)"
                                     />
@@ -151,7 +161,7 @@ export default function Dashboards() {
                                         dataKey="Boletim"
                                         name="Boletim"
                                         stroke="#22c55e"
-                                        strokeWidth={3}
+                                        strokeWidth={1}
                                         fillOpacity={1}
                                         fill="url(#colorBol)"
                                     />
@@ -160,29 +170,30 @@ export default function Dashboards() {
                         </div>
                     </div>
 
-                    {/* Gráfico 2: Engajamento de Usuários (AreaChart) */}
+                    {/* Gráfico 2: Engajamento de Usuários (PieChart) */}
                     <div className={style.PerformanceChart}>
                         <div className={style.ChartHeader}>
                             <h3>Engajamento de Usuários</h3>
+                            <p className="text-sm text-gray-500">Distribuição por Tipo</p>
                         </div>
                         <div className="h-[250px] w-full flex items-center justify-center mt-4">
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={engagement_data}>
-                                    <defs>
-                                        <linearGradient id="colorAlunos" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                                        </linearGradient>
-                                        <linearGradient id="colorFuncs" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                                            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                                        </linearGradient>
-                                        <linearGradient id="colorEncs" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8} />
-                                            <stop offset="95%" stopColor="#ffc658" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <XAxis dataKey="name" hide />
+                                <PieChart>
+                                    <Pie
+                                        data={engagement_data}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                    >
+                                        {engagement_data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                        ))}
+                                    </Pie>
                                     <Tooltip
                                         contentStyle={{
                                             borderRadius: '12px',
@@ -191,10 +202,8 @@ export default function Dashboards() {
                                             color: 'var(--text-main)',
                                         }}
                                     />
-                                    <Area type="monotone" dataKey="Alunos" stackId="1" stroke="#8884d8" fill="url(#colorAlunos)" />
-                                    <Area type="monotone" dataKey="Funcionarios" stackId="1" stroke="#82ca9d" fill="url(#colorFuncs)" />
-                                    <Area type="monotone" dataKey="Encarregados" stackId="1" stroke="#ffc658" fill="url(#colorEncs)" />
-                                </AreaChart>
+                                    <Legend iconType="circle" verticalAlign="bottom" height={36} />
+                                </PieChart>
                             </ResponsiveContainer>
                         </div>
                     </div>

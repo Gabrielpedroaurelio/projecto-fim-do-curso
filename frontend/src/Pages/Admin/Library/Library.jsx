@@ -83,6 +83,16 @@ export default function Library() {
         (book.editora && book.editora.toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
+    const [showPdfModal, setShowPdfModal] = useState(false)
+    const [pdfUrl, setPdfUrl] = useState(null)
+    const [selectedBookTitle, setSelectedBookTitle] = useState('')
+
+    const handleOpenPdf = (book) => {
+        setPdfUrl(book.caminho_arquivo)
+        setSelectedBookTitle(book.titulo)
+        setShowPdfModal(true)
+    }
+
     return (
         <div className="ContainerGeneral">
             <NavBarMenu />
@@ -106,7 +116,7 @@ export default function Library() {
 
                 {loading ? (
                     <div className="flex items-center justify-center p-20">
-                        <p><Loading/></p>
+                        <p><Loading /></p>
                     </div>
                 ) : (
                     <div className={style.BookGrid}>
@@ -127,7 +137,12 @@ export default function Library() {
                                     <p className={style.Author}>{book.editora || 'Editora N/A'}</p>
                                     <div className={style.BookMeta}>
                                         <span><FaCalendarAlt /> {new Date(book.data_upload).getFullYear()}</span>
-                                        <a href={book.caminho_arquivo} download={book.titulo} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium">Ver PDF</a>
+                                        <button
+                                            onClick={() => handleOpenPdf(book)}
+                                            className="text-primary text-sm font-medium hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        >
+                                            Ver PDF
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -141,8 +156,8 @@ export default function Library() {
                 )}
 
                 {showModal && (
-                    <div className={style.ModalOverlay}>
-                        <div className={style.ModalContent}>
+                    <div className={style.ModalOverlay} onClick={() => setShowModal(false)}>
+                        <div className={style.ModalContent} onClick={(e) => e.stopPropagation()}>
                             <div className={style.ModalHeader}>
                                 <h2>Registar Novo Livro</h2>
                                 <button className={style.CloseBtn} onClick={() => setShowModal(false)}>
@@ -214,6 +229,39 @@ export default function Library() {
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* PDF Reader Modal */}
+                {showPdfModal && pdfUrl && (
+                    <div className={style.ModalOverlay} onClick={() => setShowPdfModal(false)} style={{ zIndex: 1000 }}>
+                        <div
+                            className={style.ModalContent}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                width: '90%',
+                                height: '90vh',
+                                maxWidth: '1200px',
+                                display: 'flex',
+                                flexDirection: 'column'
+                            }}
+                        >
+                            <div className={style.ModalHeader}>
+                                <h2>Lendo: {selectedBookTitle}</h2>
+                                <button className={style.CloseBtn} onClick={() => setShowPdfModal(false)}>
+                                    <RiCloseFill />
+                                </button>
+                            </div>
+                            <div style={{ flex: 1, padding: '10px', background: '#f8fafc' }}>
+                                <iframe
+                                    src={pdfUrl}
+                                    title="PDF Reader"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 'none', borderRadius: '8px' }}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}

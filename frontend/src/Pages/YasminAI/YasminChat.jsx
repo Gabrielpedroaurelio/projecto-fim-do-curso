@@ -42,7 +42,10 @@ export default function YasminChat() {
             // Determinar o papel (role) baseado no tipo de usuário
             const role = user?.tipo_usuario === 'aluno' ? 'student' : (user?.tipo_usuario === 'encarregado' ? 'parent' : 'admin');
 
-            const response = await yasminService.sendMessage(textToSend, role, user?.id);
+            // Obter o token JWT do localStorage
+            const userToken = localStorage.getItem('access_token');
+
+            const response = await yasminService.sendMessage(textToSend, role, user?.id, userToken);
 
             const aiMsg = {
                 role: 'ai',
@@ -130,7 +133,9 @@ export default function YasminChat() {
                                                 {msg.role === 'ai' ? <FaAtom size={20} /> : <RiUser3Line size={20} />}
                                             </div>
                                             <div className={style.bubble}>
-                                                {msg.content}
+                                                {typeof msg.content === 'string'
+                                                    ? msg.content
+                                                    : msg.content?.text || JSON.stringify(msg.content)}
                                             </div>
                                         </div>
                                     ))}

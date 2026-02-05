@@ -10,7 +10,7 @@ export default function Cards({ icon, value, title, value_percentual }) {
                 {icon}
             </div>
             <h2>{value}</h2>
-            <div className={style.TrendUp}>
+            <div className={value_percentual && value_percentual.includes('+') ? style.TrendUp : style.TrendDown}>
                 <span>{value_percentual}</span> vs mês passado
             </div>
         </div>

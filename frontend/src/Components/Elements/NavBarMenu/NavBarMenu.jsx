@@ -64,10 +64,7 @@ export default function NavBarMenu() {
                         </li>
                         <li>
                             <Link to={"/agent/yasmin"}>
-                                <FiTrendingUp />
-                                <FaAtom />
-
-                                
+                                <FaAtom />                              
                                 <span>Yasmin</span>
                             </Link>
                         </li>

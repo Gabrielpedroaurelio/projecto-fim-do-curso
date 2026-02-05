@@ -60,6 +60,7 @@ const GradeLaunching = () => {
             }
         };
         fetchStudents();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedAssignment]);
 
     const fetchExistingGrades = async (assignment, currentGrades) => {
@@ -83,6 +84,7 @@ const GradeLaunching = () => {
             students.forEach(s => currentGrades[s.id_aluno] = '');
             fetchExistingGrades(selectedAssignment, currentGrades);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [trimestre, tipoNota]);
 
     const handleGradeChange = (studentId, value) => {
@@ -104,7 +106,7 @@ const GradeLaunching = () => {
                 trimestre: trimestre,
                 tipo_nota: tipoNota,
                 notas: Object.entries(grades)
-                    .filter(([_, val]) => val !== '')
+                    .filter(([, val]) => val !== '')
                     .map(([id, val]) => ({
                         id_aluno: parseInt(id),
                         valor: parseFloat(val)
@@ -173,7 +175,7 @@ const GradeLaunching = () => {
 
                     <div className={style.tableWrapper}>
                         {loading ? (
-                            <p className={style.empty}><Loading/></p>
+                            <p className={style.empty}><Loading /></p>
                         ) : selectedAssignment ? (
                             <form onSubmit={handleSave}>
                                 <table className={style.gradesTable}>

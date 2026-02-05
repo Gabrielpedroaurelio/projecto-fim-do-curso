@@ -37,12 +37,12 @@
     box-shadow:
         0 25px 50px -12px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(255, 255, 255, 0.5) inset;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 0px solid rgba(255, 255, 255, 0.3);
 }
 
 :global(body.dark-mode) .loaderContent {
     background: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 0px solid rgba(255, 255, 255, 0.05);
     box-shadow:
         0 25px 50px -12px rgba(0, 0, 0, 0.3),
         0 0 0 1px rgba(255, 255, 255, 0.1) inset;

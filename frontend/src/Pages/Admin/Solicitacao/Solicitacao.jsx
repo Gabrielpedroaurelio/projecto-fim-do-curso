@@ -73,13 +73,6 @@ export default function Solicitacao() {
         setShowViewModal(true)
     }
 
-    const handleDownload = (item) => {
-        console.log('Download:', item)
-    }
-
-    const handleDelete = (item) => {
-        console.log('Eliminar:', item)
-    }
 
     const getStatusBadge = (status) => {
         const statusClasses = {

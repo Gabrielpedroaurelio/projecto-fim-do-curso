@@ -15,13 +15,14 @@ import {
 
 import style from './Header.module.css'
 import { useAuth } from '../../../Context/AuthContext';
+import { useTheme } from '../../../Context/ThemeContextData';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../../Services/api';
 
 export default function Header({ text1, text2, onSearch }) {
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
-    const [isDarkMode, setIsDarkMode] = useState(false)
     const [showNotifications, setShowNotifications] = useState(false)
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
     const [notifications, setNotifications] = useState([])
@@ -73,17 +74,7 @@ export default function Header({ text1, text2, onSearch }) {
         }
     }
 
-    // Load theme preference on mount
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('site-theme')
-        const prefersDark = savedTheme === 'dark'
-        setIsDarkMode(prefersDark)
-        if (prefersDark) {
-            document.body.classList.add('dark-mode')
-        } else {
-            document.body.classList.remove('dark-mode')
-        }
-    }, [])
+
 
     // Click outside to close tabs
     useEffect(() => {
@@ -113,17 +104,7 @@ export default function Header({ text1, text2, onSearch }) {
         }
     }, [isSidebarOpen])
 
-    const toggleTheme = () => {
-        const newTheme = !isDarkMode
-        setIsDarkMode(newTheme)
-        if (newTheme) {
-            document.body.classList.add('dark-mode')
-            localStorage.setItem('site-theme', 'dark')
-        } else {
-            document.body.classList.remove('dark-mode')
-            localStorage.setItem('site-theme', 'light')
-        }
-    }
+
 
     const handleLogout = async () => {
         await logout();
@@ -169,8 +150,12 @@ export default function Header({ text1, text2, onSearch }) {
                     />
                 </div>
                 <div className={style.ActionIcons}>
-                    <button className={style.IconButton} onClick={toggleTheme} title={isDarkMode ? 'Modo Claro' : 'Modo Escuro'}>
-                        {isDarkMode ? <RiSunLine /> : <RiMoonLine />}
+                    <button
+                        className={style.IconButton}
+                        onClick={toggleTheme}
+                        title={theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
+                    >
+                        {theme === 'dark' ? <RiSunLine /> : <RiMoonLine />}
                     </button>
 
                     <div className={style.NotificationWrapper} ref={notificationRef}>

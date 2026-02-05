@@ -7,7 +7,7 @@ import Cards from '../../../../Components/Elements/Cards/Cards'
 import CardsDocments from '../../../../Components/Elements/CardsDocuments/CardsDocuments';
 import { RiUser3Line, RiBillLine, RiCalendarCheckLine, RiNotification3Line, RiFileList3Line, RiBarChartFill } from 'react-icons/ri'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
@@ -85,7 +85,15 @@ const DashboardEncarregado = () => {
               </div>
               <div className={style.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={performance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <LineChart data={performance} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <defs>
+                      {COLORS.map((color, idx) => (
+                        <linearGradient key={`gradient-${idx}`} id={`colorGrad${idx}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+                          <stop offset="95%" stopColor={color} stopOpacity={0} />
+                        </linearGradient>
+                      ))}
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
                     <XAxis
                       dataKey="nome"
@@ -104,7 +112,6 @@ const DashboardEncarregado = () => {
                       tick={{ fill: 'var(--text-secondary)' }}
                     />
                     <Tooltip
-                      cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                       contentStyle={{
                         backgroundColor: 'var(--bg-card)',
                         border: '1px solid var(--border-color)',
@@ -114,12 +121,16 @@ const DashboardEncarregado = () => {
                       }}
                       formatter={(value) => [`${value} Valores`, 'Média']}
                     />
-                    <Bar dataKey="media" radius={[8, 8, 0, 0]} barSize={50} animationDuration={1500}>
-                      {Array.isArray(performance) && performance.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Bar>
-                  </BarChart>
+                    <Line
+                      type="monotone"
+                      dataKey="media"
+                      stroke="#8b5cf6"
+                      strokeWidth={3}
+                      dot={{ fill: '#8b5cf6', r: 5 }}
+                      activeDot={{ r: 7 }}
+                      animationDuration={1500}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>

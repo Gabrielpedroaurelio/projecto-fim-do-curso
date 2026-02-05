@@ -15,14 +15,16 @@ export const yasminService = {
      * @param {string} message - A mensagem do usuário
      * @param {string} role - O papel do usuário (student, admin, parent)
      * @param {string} userId - ID do usuário (opcional)
+     * @param {string} userToken - Token JWT do usuário logado (opcional)
      * @returns {Promise<Object>} - Resposta da IA e histórico
      */
-    sendMessage: async (message, role = 'student', userId = null) => {
+    sendMessage: async (message, role = 'student', userId = null, userToken = null) => {
         try {
             const response = await yasminApi.post('/chat', {
                 message,
                 role,
-                user_id: userId
+                user_id: userId,
+                user_token: userToken
             });
             return response.data;
         } catch (error) {
@@ -39,7 +41,7 @@ export const yasminService = {
             const response = await yasminApi.get('/');
             return response.data;
         } catch (error) {
-            return { status: 'offline',action:error };
+            return { status: 'offline', action: error };
         }
     }
 };

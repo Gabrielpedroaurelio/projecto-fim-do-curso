@@ -29,6 +29,9 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [pendingSolicitacao, setPendingSolicitacao] = useState(null);
 
+    // Success modal state
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+
     const docOptions = [
         { id: 'DECLARAÇÃO', label: 'Declaração de Matrícula (Simples)' },
         { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento (Com Notas)' },
@@ -63,7 +66,11 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             const missing = {};
             let hasMissing = false;
             mandatoryFields.forEach(field => {
-                if (!studentInfo[field.key]) {
+                const value = studentInfo[field.key];
+                // Verifica se o valor está null, undefined, ou string vazia (após trim)
+                const isEmpty = value === null || value === undefined ||
+                    (typeof value === 'string' && value.trim() === '');
+                if (isEmpty) {
                     missing[field.key] = '';
                     hasMissing = true;
                 }
@@ -218,7 +225,8 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             // Fluxo normal (RUP para User/Funcionario que escolheu RUP)
             setResult(data);
             setStep(4);
-            if (onComplete) onComplete(data);
+            // Don't call onComplete immediately, let changes be viewed
+            // if (onComplete) onComplete(data);
 
         } catch (err) {
             console.error(err);
@@ -244,15 +252,40 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             // Mesclar resultados
             const finalResult = { ...pendingSolicitacao, ...confirmResponse.data, confirmed: true };
 
+            // Auto-open PDF if available
+            if (finalResult.download_url || finalResult.caminho_arquivo) {
+                const url = finalResult.download_url || finalResult.caminho_arquivo;
+                // Try to open in new tab
+                window.open(url, '_blank');
+            }
+
             setResult(finalResult);
             setShowConfirmModal(false);
-            setStep(4);
-            if (onComplete) onComplete(finalResult);
+            setShowSuccessModal(true); // Show success modal instead of going directly to step 4
+            // if (onComplete) onComplete(finalResult); 
         } catch (err) {
             console.error("Erro detalhado:", err.response);
             const msg = err.response?.data?.error || "Erro ao confirmar pagamento.";
             setError(msg);
             alert(`Falha na confirmação: ${msg}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Helper to print RUP
+    const handlePrintRUP = async (id) => {
+        try {
+            setLoading(true);
+            const response = await api.get(`/solicitacoes/${id}/imprimir_rup/`);
+            if (response.data.download_url) {
+                window.open(response.data.download_url, '_blank');
+            } else {
+                alert("Erro ao obter URL do RUP.");
+            }
+        } catch (error) {
+            console.error("Erro ao imprimir RUP", error);
+            alert("Não foi possível gerar o RUP.");
         } finally {
             setLoading(false);
         }
@@ -301,6 +334,65 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 disabled={loading}
                             >
                                 {loading ? 'A confirmar...' : 'Confirmar Pagamento'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Modal - Shows after payment confirmation */}
+            {showSuccessModal && result && (
+                <div className={style.modalOverlay}>
+                    <div className={`${style.modalContent} ${style.successModal}`}>
+                        <div className={style.successIcon}>
+                            <RiCheckLine />
+                        </div>
+                        <h2>Operação Realizada com Sucesso!</h2>
+                        <p className={style.successMessage}>
+                            O pagamento foi confirmado e o documento foi gerado automaticamente.
+                        </p>
+
+                        <div className={style.successDetails}>
+                            <div className={style.detailItem}>
+                                <RiFileList3Line />
+                                <div>
+                                    <span>Documento</span>
+                                    <strong>{result.solicitacao?.tipo_documento || result.tipo_documento}</strong>
+                                </div>
+                            </div>
+                            <div className={style.detailItem}>
+                                <RiUser3Line />
+                                <div>
+                                    <span>Aluno</span>
+                                    <strong>{result.solicitacao?.aluno_nome || result.aluno_nome}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={style.modalActions}>
+                            <button
+                                className={style.btnSecondary}
+                                onClick={() => {
+                                    setShowSuccessModal(false);
+                                    setStep(1);
+                                    // Reset form
+                                    setStudentInfo(fixedStudent);
+                                    setSelectedDoc('');
+                                    setSelectedClass('');
+                                    setPaymentMethod('');
+                                    setResult(null);
+                                }}
+                            >
+                                Nova Solicitação
+                            </button>
+                            <button
+                                className={style.btnPrimary}
+                                onClick={() => {
+                                    setShowSuccessModal(false);
+                                    setStep(4);
+                                }}
+                            >
+                                <RiCheckLine /> Ver Resultado
                             </button>
                         </div>
                     </div>
@@ -567,7 +659,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                             <div className={style.rupAviso} style={{ borderColor: 'var(--success-color)' }}>
                                 <RiPrinterLine color="var(--success-color)" />
                                 <div>
-                                    <h4>Documento Final Pronto</h4>
+                                    <h4>Operação Realizada com Sucesso</h4>
                                     <p>O pagamento foi confirmado e o documento gerado com certificação digital.</p>
                                     <button
                                         className={style.btnDownload}
@@ -585,22 +677,15 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                     <div>
                                         <h4>RUP Gerado</h4>
                                         <p>Formulário de RUP válido por <strong>24 horas</strong>.</p>
+                                        <p style={{ fontSize: '0.9em', color: '#666' }}>O documento será listado no painel do aluno.</p>
 
-                                        {userType === 'funcionario' ? (
-                                   <a href="">
-                                             <button
-                                                className={style.btnDownload}
-                                                // Assuming we have an endpoint or logic to get the RUP PDF URL
-                                                onClick={() => window.open(`${api.defaults.baseURL}solicitacoes/${result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao}/imprimir_rup/`, '_blank')}
-                                            >
-                                                Imprimir Formulário RUP para Requisitante
-                                            </button>
-                                   </a>
-                                        ) : (
-                                            <button className={style.btnDownload} onClick={() => window.open(`${api.defaults.baseURL}solicitacoes/${result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao}/imprimir_rup/`, '_blank')}>
-                                                Baixar Formulário RUP (PDF)
-                                            </button>
-                                        )}
+                                        <button
+                                            className={style.btnDownload}
+                                            onClick={() => handlePrintRUP(result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao)}
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Preparando...' : 'Imprimir Formulário RUP (PDF)'}
+                                        </button>
                                     </div>
                                 </div>
                             ) : (
@@ -611,8 +696,21 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                         <div className={style.instruction}>
                             {userType === 'funcionario' && result.confirmed
                                 ? <p>Entregue o documento impresso ao Diretor para assinatura manual se necessário.</p>
-                                : <p>O documento oficial estará disponível após a confirmação do pagamento e assinatura do Diretor.</p>
+                                : <p>O documento oficial estará disponível após a confirmação do pagamento e aprovação.</p>
                             }
+                        </div>
+
+                        {/* Final Close Button */}
+                        <div className={style.actions} style={{ justifyContent: 'center', marginTop: '2rem' }}>
+                            <button
+                                className={style.btnSubmit} // Reuse submit styling for main action
+                                onClick={() => {
+                                    if (onComplete) onComplete(result);
+                                }}
+                                style={{ background: 'var(--text-main)', width: 'auto', padding: '0 2rem' }}
+                            >
+                                Fechar e Voltar
+                            </button>
                         </div>
                     </div>
                 )}

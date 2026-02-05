@@ -17,7 +17,9 @@ const DocumentsCliente = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const response = await api.get(`/solicitacoes/minhas/?id_aluno=${user.id}`);
+        // Filtra apenas solicitações com status que permitem download (pagas/processadas)
+        const statusFilter = 'pago,disponivel,aguardando_assinatura,impresso';
+        const response = await api.get(`/solicitacoes/minhas/?id_aluno=${user.id}&status_solicitacao__in=${statusFilter}`);
         setDocuments(response.data.results || response.data);
         setLoading(false);
       } catch (error) {
@@ -42,6 +44,26 @@ const DocumentsCliente = () => {
       case 'aguardando_assinatura': return 'statusProcessing';
       case 'impresso': return 'statusProcessing';
       default: return 'statusPending';
+    }
+  };
+
+  const handlePrintRUP = async (id) => {
+    try {
+      const response = await api.get(`/solicitacoes/${id}/imprimir_rup/`);
+      if (response.data.download_url) {
+        // Força o download do PDF em vez de abrir em nova aba
+        const link = document.createElement('a');
+        link.href = response.data.download_url;
+        link.download = `RUP_Solicitacao_${id}.pdf`; // Nome do arquivo
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert("Erro ao obterURL do RUP.");
+      }
+    } catch (error) {
+      console.error("Erro ao imprimir RUP", error);
+      alert("Não foi possível gerar o RUP.");
     }
   };
 
@@ -73,7 +95,7 @@ const DocumentsCliente = () => {
                   <h1>Meus Documentos</h1>
                   <p>Gerencie suas solicitações e baixe documentos oficiais.</p>
                 </div>
-             
+
               </header>
 
               <div className={style.tableContainer}>
@@ -112,13 +134,17 @@ const DocumentsCliente = () => {
                             <div className="flex gap-2">
                               {/* Lógica de botões baseada no status */}
                               {doc.status_solicitacao === 'disponivel' && (
-                                <button className={style.actionBtn} title="Baixar">
+                                <button className={style.actionBtn} title="Baixar" onClick={() => window.open(`http://localhost:8000/media/${doc.caminho_pdf}`, '_blank')}>
                                   <RiDownload2Line />
                                 </button>
                               )}
                               {doc.status_solicitacao === 'pendente' && (
-                                <button className={style.payBtn} title="Pagar RUP">
-                                  Pagar
+                                <button
+                                  className={style.payBtn}
+                                  title="Baixar RUP"
+                                  onClick={() => handlePrintRUP(doc.id_solicitacao)}
+                                >
+                                  Baixar RUP
                                 </button>
                               )}
                             </div>

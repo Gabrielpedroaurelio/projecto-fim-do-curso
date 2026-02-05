@@ -93,8 +93,10 @@ export default function Settings() {
     const handleSaveConfig = async () => {
         setLoading(true)
         try {
-            if (config?.id_configuracao) {
-                await api.patch(`configuracao-sistema/${config.id_configuracao}/`, config)
+            // A model no backend usa 'id' (do BaseModel) e não 'id_configuracao'
+            const configId = config?.id
+            if (configId) {
+                await api.patch(`configuracao-sistema/${configId}/`, config)
             } else {
                 const response = await api.post('configuracao-sistema/', config)
                 setConfig(response.data)
@@ -102,6 +104,7 @@ export default function Settings() {
             alert('Configurações da instituição salvas!')
         } catch (error) {
             console.error("Erro ao salvar configurações:", error)
+            alert('Erro ao guardar as configurações da instituição.')
         } finally {
             setLoading(false)
         }
@@ -219,7 +222,8 @@ export default function Settings() {
                                         <input
                                             type="text"
                                             value={profileData.nome}
-                                            onChange={(e) => setProfileData({ ...profileData, nome: e.target.value })}
+                                            disabled
+                                            title="O nome só pode ser alterado pela administração"
                                         />
                                     </div>
                                     <div className={style.InputGroup}>
@@ -388,6 +392,7 @@ export default function Settings() {
                                         <label>Senha Atual</label>
                                         <input
                                             type="password"
+                                            placeholder="Digite sua senha atual"
                                             value={passwords.senha_atual}
                                             onChange={(e) => setPasswords({ ...passwords, senha_atual: e.target.value })}
                                         />
@@ -396,24 +401,39 @@ export default function Settings() {
                                         <label>Nova Senha</label>
                                         <input
                                             type="password"
+                                            placeholder="Mínimo 8 caracteres"
                                             value={passwords.nova_senha}
                                             onChange={(e) => setPasswords({ ...passwords, nova_senha: e.target.value })}
                                         />
                                     </div>
                                 </div>
-                                <div className={style.ToggleGroup}>
-                                    <label className={style.ToggleLabel}>
-                                        <span>Autenticação em duas etapas (2FA)</span>
-                                        <input type="checkbox" defaultChecked />
-                                    </label>
-                                    <p className={style.HelperText}>Aumenta a segurança exigindo código via email.</p>
+
+                                <div className={style.SecurityInfoCards}>
+                                    <div className={style.SecurityCard}>
+                                        <h4>Segurança da Conta</h4>
+                                        <p>Mantenha sua senha segura e não a compartilhe com terceiros. Recomendamos trocar a senha a cada 90 dias.</p>
+                                    </div>
+
+                                    <div className={style.ToggleGroup}>
+                                        <label className={style.ToggleLabel}>
+                                            <span>Autenticação em duas etapas (2FA)</span>
+                                            <input type="checkbox" defaultChecked />
+                                        </label>
+                                        <p className={style.HelperText}>Aumenta a segurança exigindo um código de verificação enviado ao seu email em cada novo login.</p>
+                                    </div>
+
+                                    <div className={style.SessionsInfo}>
+                                        <h4>Sessões Ativas</h4>
+                                        <p>Você está atualmente conectado como <strong>{user?.nome}</strong> ({user?.tipo}).</p>
+                                    </div>
                                 </div>
+
                                 <button
                                     className={style.SaveButton}
                                     onClick={handleChangePassword}
                                     disabled={loading}
                                 >
-                                    {loading ? 'Salvando...' : 'Atualizar Segurança'}
+                                    {loading ? 'Processando...' : 'Atualizar Segurança'}
                                 </button>
                             </div>
                         )}
