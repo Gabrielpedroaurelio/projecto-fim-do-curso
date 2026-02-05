@@ -2,7 +2,7 @@ fastapi
 uvicorn
 langchain
 langchain-community
-langchain-ollama
+langchain-google-genai
 python-dotenv
 requests
 pypdf

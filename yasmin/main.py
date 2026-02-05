@@ -37,6 +37,7 @@ class ChatMessage(BaseModel):
     message: str
     user_id: Optional[Any] = None
     role: Optional[str] = "student" # student or admin
+    user_token: Optional[str] = None  # Token JWT do usuário logado
 
 @app.get("/")
 async def root():
@@ -48,14 +49,43 @@ async def chat(msg: ChatMessage):
         # Passando a mensagem e o contexto para o agente
         response = agent_executor.invoke({
             "input": msg.message,
-            "role": msg.role
+            "role": msg.role,
+            "user_token": msg.user_token
         })
         
+        # Garantir que a resposta seja sempre uma string
+        output = response["output"]
+        
+        # Extrair texto de diferentes formatos possíveis
+        if isinstance(output, list):
+            # Se for uma lista de objetos de conteúdo
+            text_parts = []
+            for item in output:
+                if isinstance(item, dict):
+                    # Extrair o campo 'text' se existir
+                    if 'text' in item:
+                        text_parts.append(item['text'])
+                    else:
+                        text_parts.append(str(item))
+                else:
+                    text_parts.append(str(item))
+            output_text = ' '.join(text_parts)
+        elif isinstance(output, dict):
+            # Se for um dicionário, tentar extrair o texto
+            output_text = output.get("text", output.get("content", str(output)))
+        elif isinstance(output, str):
+            output_text = output
+        else:
+            # Converter qualquer outro tipo para string
+            output_text = str(output)
+        
         return {
-            "response": response["output"],
+            "response": output_text.strip(),
             "chat_history": response.get("chat_history", [])
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
