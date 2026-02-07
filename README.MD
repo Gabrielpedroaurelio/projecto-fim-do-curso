@@ -136,7 +136,8 @@ npm run dev
 ## 📞 Suporte
 
 Para suporte técnico ou dúvidas sobre a implementação, contacte a equipa de desenvolvimento.
-
+Tel\Whatsapp: 934519321
+email: gabrielpedroaurelio1@gmail.com
 ---
 *Desenvolvido por Gabriel Pedro Aurélio.*
 ## Ferramenta de IA usada
