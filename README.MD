@@ -21,7 +21,7 @@ A plataforma serve múltiplos perfis de usuários — desde administradores e fu
 *   **Biblioteca Digital**: Gestão de acervo, empréstimos e catálogo online para estudantes.
 
 ### 💰 Módulo Financeiro
-*   **Gestão de Pagamentos**: Processamento de propinas e emolumentos.
+
 *   **Integração com Multicaixa Express**: Pagamentos automáticos e reconciliação bancária.
 *   **Emissão de RUP**: Geração de Referência Única de Pagamento para depósitos e transferências.
 *   **Relatórios Financeiros**: Dashboards de receitas e inadimplência.
