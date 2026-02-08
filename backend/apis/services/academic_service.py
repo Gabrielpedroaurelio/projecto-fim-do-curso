@@ -66,7 +66,7 @@ class AcademicService:
         if not classe and aluno.id_turma:
             classe = aluno.id_turma.id_classe
 
-        if not classe:
+        if not classe or not aluno.id_turma or not aluno.id_turma.id_curso:
             return []
 
         # Tentar buscar a matriz curricular ativa para o curso e classe
