@@ -19,7 +19,10 @@ class DocumentService:
         
         # 1. Validar categoria
         categorias_permitidas = ['DECLARAÇÃO', 'CERTIFICADO', 'BOLETIM']
-        tipo_base = tipo_documento.split('(')[0].strip().upper()
+        tipo_base = tipo_documento.upper()
+        
+        # Verificar se é um boletim específico (1, 2, 3)
+        is_boletim = 'BOLETIM' in tipo_base
         
         # Correção: Verificar se ALGUMA categoria permitida está contida no tipo base
         if not any(cat in tipo_base for cat in categorias_permitidas):
@@ -141,6 +144,7 @@ class DocumentService:
         
         doc_uuid = uuid.uuid4()
         solicitacao.uuid_documento = doc_uuid
+        solicitacao.save() # Persistir no banco ANTES de passar para o contexto e salvar o PDF
         
         # Contexto para o template
         context = {
@@ -166,6 +170,15 @@ class DocumentService:
                 template_name = 'pdf/declaracao_aproveitamento.html'
             elif 'BOLETIM' in tipo_base:
                 template_name = 'pdf/boletim.html'
+                # Extrair o número do trimestre do tipo_documento (ex: "BOLETIM_1" -> 1)
+                try:
+                    trimester = tipo_base.split('_')[-1]
+                    if trimester in ['1', '2', '3']:
+                        context['trimestre_selecionado'] = trimester
+                    else:
+                        context['trimestre_selecionado'] = '1' # Default para o 1º se não especificado
+                except:
+                    context['trimestre_selecionado'] = '1'
             
         pdf_content = PDFService.render_to_pdf(template_name, context)
         
@@ -273,43 +286,60 @@ class DocumentService:
         Funcionário confirma o pagamento, gera o documento final (com assinatura digital)
         e marca como impresso para assinatura manual.
         """
-        solicitacao = SolicitacaoDocumento.objects.get(id_solicitacao=solicitacao_id)
-        
-        # 1. Atualizar Fatura
-        fatura = Fatura.objects.filter(id_aluno=solicitacao.id_aluno, status='pendente').last()
-        if fatura:
-            fatura.status = 'paga'
-            fatura.data_pagamento = timezone.now().date()
-            fatura.save()
+        if not funcionario_id:
+            raise ValueError("ID do funcionário responsável é obrigatório para confirmar o pagamento.")
             
-        # 2. Atualizar Solicitação
-        solicitacao.status_solicitacao = 'pago'
-        solicitacao.save()
+        try:
+            solicitacao = SolicitacaoDocumento.objects.get(id_solicitacao=solicitacao_id)
+        except SolicitacaoDocumento.DoesNotExist:
+            raise ValueError(f"Solicitação ID {solicitacao_id} não encontrada.")
         
-        # 3. Gerar Documento Final (PDF com Assinatura Digital)
-        # O método gerar_pdf_documento já deve incluir a lógica da assinatura digital no template
-        caminho_pdf = DocumentService.gerar_pdf_documento(solicitacao_id, funcionario_id)
-        
-        if caminho_pdf:
-            # 4. Marcar como Disponível imediatamente (Fluxo Instantâneo)
-            solicitacao.status_solicitacao = 'disponivel'
-            solicitacao.data_aprovacao = timezone.now()
-            solicitacao.id_funcionario_id = funcionario_id # Quem confirmou/aprovou
+        try:
+            # 1. Atualizar Fatura
+            fatura = Fatura.objects.filter(id_aluno=solicitacao.id_aluno, status='pendente').last()
+            if fatura:
+                fatura.status = 'paga'
+                fatura.data_pagamento = timezone.now().date()
+                fatura.save()
+                
+            # 2. Atualizar Solicitação
+            solicitacao.status_solicitacao = 'pago'
             solicitacao.save()
             
-            # 5. Criar registro oficial de Documento para aparecer nas listagens
-            from apis.models import Documento, Funcionario
-            funcionario = Funcionario.objects.get(id_funcionario=funcionario_id)
+            # 3. Gerar Documento Final (PDF com Assinatura Digital)
+            # O método gerar_pdf_documento já deve incluir a lógica da assinatura digital no template
+            caminho_pdf = DocumentService.gerar_pdf_documento(solicitacao_id, funcionario_id)
             
-            Documento.objects.create(
-                id_aluno=solicitacao.id_aluno,
-                tipo_documento=solicitacao.tipo_documento,
-                caminho_pdf=solicitacao.caminho_arquivo,
-                uuid_documento=solicitacao.uuid_documento,
-                criado_por=funcionario,
-                data_emissao=timezone.now()
-            )
+            # 3.1 Recarregar a solicitação para garantir que temos o uuid_documento e o caminho_arquivo atualizados
+            solicitacao.refresh_from_db()
+            
+            if caminho_pdf:
+                # 4. Marcar como Disponível imediatamente (Fluxo Instantâneo)
+                solicitacao.status_solicitacao = 'disponivel'
+                solicitacao.data_aprovacao = timezone.now()
+                solicitacao.id_funcionario_id = funcionario_id # Quem confirmou/aprovou
+                solicitacao.save()
+                
+                # 5. Criar registro oficial de Documento para aparecer nas listagens
+                from apis.models import Documento, Funcionario
+                funcionario = Funcionario.objects.get(id_funcionario=funcionario_id)
+                
+                Documento.objects.create(
+                    id_aluno=solicitacao.id_aluno,
+                    tipo_documento=solicitacao.tipo_documento,
+                    caminho_pdf=solicitacao.caminho_arquivo,
+                    uuid_documento=solicitacao.uuid_documento,
+                    criado_por=funcionario,
+                    data_emissao=timezone.now()
+                )
 
-            return caminho_pdf
-            
-        raise Exception("Erro ao gerar o documento PDF final.")
+                return caminho_pdf
+            else:
+                raise Exception("Erro ao gerar o conteúdo do PDF.")
+                
+        except Exception as e:
+            # Capturar erro original para depuração
+            import traceback
+            print(f"ERRO CRÍTICO NA GERAÇÃO DE DOCUMENTO: {str(e)}")
+            print(traceback.format_exc())
+            raise Exception(f"Erro ao processar documento: {str(e)}")

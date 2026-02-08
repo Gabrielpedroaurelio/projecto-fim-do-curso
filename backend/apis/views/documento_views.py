@@ -205,9 +205,13 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
     def confirmar_pagamento(self, request, pk=None):
         """Confirmar pagamento manual e gerar documento final"""
         funcionario_id = request.data.get('id_funcionario')
-        # Fallback para o usuário logado se for funcionário
-        if not funcionario_id and hasattr(request.user, 'funcionario'):
-             funcionario_id = request.user.funcionario.id_funcionario
+        if not funcionario_id:
+            # Tentar pegar do perfil injetado pelo SchoolJWTAuthentication
+            if hasattr(request, 'user_type') and request.user_type == 'funcionario':
+                funcionario_id = getattr(request, 'profile_id', None)
+            # Fallback para o objeto user se ele for do tipo Funcionario
+            elif hasattr(request.user, 'id_funcionario'):
+                funcionario_id = request.user.id_funcionario
              
         try:
             caminho_pdf = DocumentService.confirmar_pagamento_funcionario(pk, funcionario_id)
