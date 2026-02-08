@@ -33,10 +33,11 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const docOptions = [
-        { id: 'DECLARAÇÃO', label: 'Declaração de Matrícula (Simples)' },
-        { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento (Com Notas)' },
-        { id: 'CERTIFICADO', label: 'Certificado de Habilitações' },
-        { id: 'BOLETIM', label: 'Boletim de Notas' }
+        { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento' },
+        { id: 'CERTIFICADO', label: 'Certificado' },
+        { id: 'BOLETIM_1', label: 'Boletim (I Trimestre)' },
+        { id: 'BOLETIM_2', label: 'Boletim (II Trimestre)' },
+        { id: 'BOLETIM_3', label: 'Boletim (III Trimestre)' }
     ];
 
     // Fields to check
@@ -264,8 +265,13 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             setShowSuccessModal(true); // Show success modal instead of going directly to step 4
             // if (onComplete) onComplete(finalResult); 
         } catch (err) {
-            console.error("Erro detalhado:", err.response);
-            const msg = err.response?.data?.error || "Erro ao confirmar pagamento.";
+            console.error("ERRO AO CONFIRMAR PAGAMENTO:", {
+                status: err.response?.status,
+                data: err.response?.data,
+                config: err.config
+            });
+
+            const msg = err.response?.data?.error || err.response?.data?.detail || "Erro ao confirmar pagamento.";
             setError(msg);
             alert(`Falha na confirmação: ${msg}`);
         } finally {
