@@ -1,90 +1,208 @@
-{% extends "pdf/base_documento.html" %}
+<!DOCTYPE html>
+<html lang="pt">
 
-{% block content %}
-<div class="title" style="margin-bottom: 10px;">DECLARAÇÃO DE APROVEITAMENTO</div>
+<head>
+    <meta charset="UTF-8">
+    <!-- Metadados de Segurança para Detecção de Fraude -->
+    <meta name="subject" content="Autenticidade: {{ solicitacao.uuid_documento }}">
+    <meta name="keywords" content="IPMAIOMBE, {{ solicitacao.uuid_documento }}, {{ aluno.numero_matricula }}">
+    <meta name="author" content="Sistema de Gestão Escolar IP Maiombe">
+    <title>Declaração de Aproveitamento - IP MAIOMBE</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.0cm;
+        }
 
-<div style="text-align: justify; line-height: 1.8;">
-    <p>
-        Declara-se que <strong>{{ aluno.nome_completo }}</strong>,
-        filho de {{ aluno.nome_pai|default:"[Pai não informado]" }} e de {{ aluno.nome_mae|default:"[Mãe não informado]"
-        }},
-        nascido aos {{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{
-        aluno.data_nascimento|date:"Y" }},
-        natural de {{ aluno.naturalidade|default:"..." }}, província de {{ aluno.provincia_naturalidade|default:"..."
-        }},
-        portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>,
-        passado pelo arquivo nacional de identificação aos {{ aluno.data_emissao_bilhete|date:"d/m/Y"|default:"..." }},
-        <strong>Frequentou</strong> o ano lectivo de <strong>{{ aluno.id_turma.ano }}</strong> à
-        <strong>{{ solicitacao.classe_solicitada.nivel }}ª Classe</strong>;
-        turma: <strong>{{ aluno.id_turma.codigo_turma }}</strong> Nº <strong>[Nº]</strong>,
-        curriculum regular; Curso: <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>,
-        Área de formação: <strong>{{ aluno.id_turma.id_curso.id_area_formacao.nome_area }}</strong>,
-        registado com o processo individual nº <strong>{{ aluno.numero_matricula }}</strong> nos nossos arquivos,
-        tendo obtido os seguintes resultados parcelares:
-    </p>
-</div>
+        body {
+            font-family: Times-Roman, 'Times New Roman', serif;
+            -pdf-encoding: utf-8;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
 
-<table style="width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #000; font-size: 9pt;">
-    <thead>
-        <tr style="background-color: #f2f2f2;">
-            <th style="border: 1px solid #000; padding: 5px; text-align: left;" rowspan="2">DISCIPLINAS</th>
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;" colspan="3">MÉDIAS TRIMESTRAIS</th>
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;" rowspan="2">MÉDIA FINAL</th>
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;" rowspan="2">OBSERVAÇÃO</th>
-        </tr>
-        <tr style="background-color: #f2f2f2;">
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;">1º TRIM</th>
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;">2º TRIM</th>
-            <th style="border: 1px solid #000; padding: 5px; text-align: center;">3º TRIM</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in notas_finais %}
-        <tr>
-            <td style="border: 1px solid #000; padding: 5px;">{{ item.disciplina }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.1.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.2.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{{ item.trimestres.3.MT|floatformat:0
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold;">{{ item.media_final
-                }}</td>
-            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-size: 8pt;">{{ item.resultado }}
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6" style="border: 1px solid #000; padding: 10px; text-align: center; color: #777;">
-                Resultados não disponíveis no sistema.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        .header-main {
+            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
 
-<p style="margin-top: 15px;">A presente declaração destina-se a efeitos legais.</p>
+        .republic-text {
+            font-size: 12pt;
+            font-weight: bold;
+            margin: 2px 0;
+        }
 
-<p style="text-align: justify; margin-top: 20px;">
-    Por ser verdade e me ter sido solicitado mandei passar a presente declaração, que vai por mim assinada e autenticada
-    com o carimbo a óleo em uso nesta Instituição.
-</p>
+        .governo-text {
+            font-size: 10pt;
+            margin: 2px 0;
+        }
 
-<div style="margin-top: 30px; text-align: center; font-weight: bold; text-transform: uppercase;">
-    SECRETARIA PEDAGÓGICA DO IPM Nº 3035/MAIOMBE-SEQUELE, aos {{ hoje|date:"d" }} de {{ hoje|date:"F" }} de {{
-    hoje|date:"Y" }}.
-</div>
+        .school-header {
+            margin-top: 5px;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 5px 0;
+        }
 
-<div class="signature" style="margin-top: 50px;">
-    <div class="signature-line"></div>
-    <strong>O DIRECTOR GERAL</strong><br>
-    <br>
-    <br>
-    <strong>DOMINGOS PAULO ROMEU</strong>
-</div>
+        .school-name {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0;
+        }
 
-<div class="verification" style="font-size: 8pt; margin-top: 40px;">
-    <strong>Código de Autenticidade:</strong> {{ solicitacao.uuid_documento }}<br>
-    A autenticidade deste documento pode ser verificada no portal: {{ site_url }}/verificar
-</div>
-{% endblock %}
+        .document-container {
+            margin-top: 15px;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .body-text {
+            text-align: justify;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        table.nota-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table.nota-table th,
+        table.nota-table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        table.nota-table th {
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .nota-col {
+            text-align: center;
+            width: 35%;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 1px solid black;
+            display: inline-block;
+            width: 350px;
+            padding-top: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            border-top: 0.5pt solid #eee;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-main">
+        <p class="republic-text">República de Angola</p>
+        <p class="governo-text">Ministério da Educação</p>
+        <p class="governo-text">Governo Provincial de Cabinda</p>
+        <div class="school-header">
+            <h1 class="school-name">Instituto Politécnico do Maiombe</h1>
+        </div>
+    </div>
+
+    <div class="document-container">
+        <div class="title">DECLARAÇÃO DE APROVEITAMENTO</div>
+
+        <div class="body-text">
+            Declara-se que <strong>{{ aluno.nome_completo }}</strong>,
+            filho de {{ aluno.nome_pai|default:"[Pai não informado]" }} e de {{ aluno.nome_mae|default:"[Mãe não
+            informada]" }},
+            nascido aos {{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{
+            aluno.data_nascimento|date:"Y" }},
+            natural de {{ aluno.naturalidade|default:"..." }}, província de {{
+            aluno.provincia_naturalidade|default:"..." }},
+            portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>,
+            passado pelo arquivo nacional de identificação aos {{ aluno.data_emissao_bilhete|date:"d/m/Y"|default:"..."
+            }}.
+            <strong>Frequentou</strong> o ano lectivo de <strong>{{ aluno.id_turma.ano }}</strong> à
+            <strong>{{ solicitacao.classe_solicitada.nivel }}ª Classe</strong>;
+            turma: <strong>{{ aluno.id_turma.codigo_turma }}</strong>, nº{{ aluno.numero_chamada|default:"[Nº]" }};
+            curriculum regular; o Curso: <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>;
+            Área de Formação: <strong>{{ aluno.id_turma.id_curso.id_area_formacao.nome_area }}</strong>,
+            registado com o processo individual nº <strong>{{ aluno.numero_matricula }}</strong> nos nossos arquivos,
+            tendo obtido os seguintes resultados parcelares:
+        </div>
+
+        <table class="nota-table">
+            <thead>
+                <tr>
+                    <th>DISCIPLINAS</th>
+                    <th class="nota-col">NOTAS FINAIS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in notas_finais %}
+                <tr>
+                    <td>{{ item.disciplina }}</td>
+                    <td class="nota-col">{{ item.media_final }} ({{ item.media_final_extenso }} valores)</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" style="text-align: center; padding: 15px;">Resultados não disponíveis no sistema.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p style="font-size: 15px;">A presente declaração destina-se a efeitos legais.</p>
+
+        <div class="body-text" style="margin-top: 30px;">
+            Por ser verdade e me ter sido solicitado mandei passar a presente <strong>Declaração</strong>, que vai por
+            mim assinada e autenticada com o carimbo a óleo em uso nesta Instituição.
+        </div>
+
+        <div
+            style="text-align: right; font-weight: bold; text-transform: uppercase; margin-top: 40px; font-size: 14px;">
+            SECRETARIA PEDAGÓGICA DO IP Nº 3050/MAIOMBE - SEQUELE, aos {{ hoje|date:"d" }} de {{ hoje|date:"F" }} de {{
+            hoje|date:"Y" }}.
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-line">
+                O DIRECTOR GERAL<br>
+                DOMINGOS PAULO ROMEU
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Verificação de Autenticidade: <strong>{{ site_url }}/v/{{ solicitacao.uuid_documento }}</strong><br>
+        Bairro Chibodo, Cabinda, Angola | Autenticidade: {{ solicitacao.uuid_documento|default:"[UUID]" }}
+    </div>
+</body>
+
+</html>
