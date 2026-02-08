@@ -397,8 +397,8 @@ class DocumentoAdmin(ModelAdmin):
 
     @display(description='Arquivo')
     def ver_arquivo(self, obj):
-        if obj.arquivo:
-            return format_html('<a href="{}" target="_blank">Baixar</a>', obj.arquivo.url)
+        if obj.caminho_pdf:
+            return format_html('<a href="{}" target="_blank">Baixar</a>', obj.caminho_pdf.url)
         return '-'
 
 @admin.register(SolicitacaoDocumento)
@@ -413,9 +413,16 @@ class SolicitacaoDocumentoAdmin(ModelAdmin):
 
     @display(description='Status')
     def status_badge(self, obj):
-        colors = {'pendente': 'warning', 'aprovado': 'success', 'rejeitado': 'danger', 'entregue': 'info'}
+        colors = {
+            'pendente': 'warning', 
+            'pago': 'success', 
+            'aguardando_assinatura': 'info', 
+            'impresso': 'secondary',
+            'disponivel': 'success',
+            'rejeitado': 'danger'
+        }
         color = colors.get(obj.status_solicitacao, 'secondary')
-        return format_html('<span class="badge badge-{}">{}</span>', color, obj.status_solicitacao.upper())
+        return format_html('<span class="badge badge-{}">{}</span>', color, obj.status_solicitacao.replace('_', ' ').upper())
 
 # =============================================================================
 # 7. BIBLIOTECA
@@ -423,15 +430,8 @@ class SolicitacaoDocumentoAdmin(ModelAdmin):
 
 @admin.register(Categoria)
 class CategoriaAdmin(ModelAdmin):
-    list_display = ['nome_categoria', 'descricao_curta']
+    list_display = ['nome_categoria']
     search_fields = ['nome_categoria']
-    
-    def descricao_curta(self, obj):
-        return '-' # obj.descricao does not exist in model either? model has nome_categoria.
-        # Removing implementation if field missing, but kept method signature.
-        # Actually checking Categoria model: nome_categoria. No descricao.
-        # Removing method usage in list_display is safer.
-        return obj.descricao[:50] + '...' if obj.descricao else '-'
 
 @admin.register(Livro)
 class LivroAdmin(ModelAdmin):
@@ -440,9 +440,9 @@ class LivroAdmin(ModelAdmin):
     search_fields = ['titulo']
     autocomplete_fields = ['id_categoria']
 
-    @display(description='Categoria', ordering='id_categoria__nome')
+    @display(description='Categoria', ordering='id_categoria__nome_categoria')
     def categoria_nome(self, obj):
-        return obj.id_categoria.nome
+        return obj.id_categoria.nome_categoria if obj.id_categoria else '-'
 
     @display(description='Preço')
     def preco_formatado(self, obj):
