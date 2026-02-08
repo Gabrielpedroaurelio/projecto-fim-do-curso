@@ -1,7 +1,7 @@
 # 🎓 Sistema Integrado de Gestão Escolar (SIGE)
 
 ![Status do Projeto](https://img.shields.io/badge/Status-Em_Desenvolvimento-blue)
-![Versão](https://img.shields.io/badge/Versão-2.0.0-green)
+![Versão](https://img.shields.io/badge/Versão-1.0.0-green)
 ![Licença](https://img.shields.io/badge/Licença-Proprietária-red)
 
 ## 📋 Sobre o Projeto
