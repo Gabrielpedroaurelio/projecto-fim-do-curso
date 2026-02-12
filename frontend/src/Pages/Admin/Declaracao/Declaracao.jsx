@@ -6,10 +6,11 @@ import '../../../assets/style/global.style.css'
 import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
 import api from '../../../Services/api'
 import Loading from '../../../Components/Elements/Loading/Loading'
+import DocumentPreviewModal from '../../../Components/Elements/DocumentPreviewModal/DocumentPreviewModal'
 
 // Sample templates data (Keeping static for now)
 const templatesData = [
-    { id: 1, name: "Declaração de Matrícula", description: "Modelo padrão para declaração de matrícula", lastModified: "2024-01-10", isActive: true },
+    { id: 1, name: "Declaração de Matrícula", description: "Modelo padrão para declaração de matrícula", lastModified: "2024-01-10", isActive: false },
     { id: 2, name: "Declaração de Frequência", description: "Comprova frequência do aluno", lastModified: "2023-12-15", isActive: false },
     { id: 3, name: "Declaração de Conclusão", description: "Certifica conclusão de curso", lastModified: "2023-11-20", isActive: false },
     { id: 4, name: "Declaração de Transferência", description: "Para transferência entre escolas", lastModified: "2023-10-05", isActive: false },
@@ -20,6 +21,7 @@ export default function Declaracao() {
     const [searchTerm, setSearchTerm] = useState('')
     const [documents, setDocuments] = useState([])
     const [loading, setLoading] = useState(true)
+    const [previewModal, setPreviewModal] = useState({ isOpen: false, url: '', title: '' })
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -73,7 +75,11 @@ export default function Declaracao() {
 
     const handleViewDocument = (doc) => {
         if (doc.caminho_pdf) {
-            window.open(doc.caminho_pdf, '_blank')
+            setPreviewModal({
+                isOpen: true,
+                url: doc.caminho_pdf,
+                title: `Declaração - ${doc.aluno_nome}`
+            })
         }
     }
 
@@ -125,7 +131,7 @@ export default function Declaracao() {
                                 </div>
 
                                 {/* Models Grid */}
-                                <div className={style.ModelsGrid}>
+                                <div className={`${style.ModelsGrid} ${style.ContainerDisabled}`}>
                                     {filteredTemplates.map(model => (
                                         <div key={model.id} className={style.ModelCard}>
                                             {model.isActive && (
@@ -192,7 +198,7 @@ export default function Declaracao() {
                                 <div className={style.TableWrapper}>
                                     {loading ? (
                                         <div className="flex items-center justify-center p-10">
-                                            <Loading/>
+                                            <Loading />
                                         </div>
                                     ) : (
                                         <table className={style.Table}>
@@ -265,6 +271,12 @@ export default function Declaracao() {
                     </div>
                 </div>
             </main>
+            <DocumentPreviewModal
+                isOpen={previewModal.isOpen}
+                onClose={() => setPreviewModal(prev => ({ ...prev, isOpen: false }))}
+                pdfUrl={previewModal.url}
+                title={previewModal.title}
+            />
         </div>
     )
 }
