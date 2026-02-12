@@ -28,17 +28,21 @@ class DocumentService:
         if not any(cat in tipo_base for cat in categorias_permitidas):
             raise ValueError(f"Tipo de documento '{tipo_base}' não permitido. Use: {', '.join(categorias_permitidas)}")
 
-        # 2. Obter dados do aluno e classe atual
+        # 2. Obter dados do aluno e classe atual (ou histórica)
         try:
+            from apis.models import Aluno, Classe, Matricula
             aluno = Aluno.objects.select_related('id_turma__id_classe').get(id_aluno=aluno_id)
         except Aluno.DoesNotExist:
             raise ValueError("Aluno não encontrado.")
 
-        if not aluno.id_turma or not aluno.id_turma.id_classe:
-             # Se aluno não tem turma/classe definida, talvez permitir apenas se for antigo? 
-             # Por segurança, exigir turma.
-             # raise ValueError("Aluno sem turma/classe associada.")
-             pass # Vamos seguir, mas validações de nivel podem falhar se nao tiver classe
+        nivel_atual = None
+        if aluno.id_turma and aluno.id_turma.id_classe:
+            nivel_atual = aluno.id_turma.id_classe.nivel
+        else:
+            # Buscar na última matrícula se não tem turma ativa
+            ultima_mat = Matricula.objects.filter(id_aluno=aluno).select_related('id_turma__id_classe').order_by('-data_matricula').first()
+            if ultima_mat and ultima_mat.id_turma:
+                nivel_atual = ultima_mat.id_turma.id_classe.nivel
 
         classe_solicitada_obj = None
         if classe_id:
@@ -48,26 +52,19 @@ class DocumentService:
                 raise ValueError("Classe solicitada inválida.")
 
         # 3. Validação de Regras de Negócio (Nível)
-        if aluno.id_turma and aluno.id_turma.id_classe and classe_solicitada_obj:
-            nivel_atual = aluno.id_turma.id_classe.nivel
+        if nivel_atual is not None and classe_solicitada_obj:
             nivel_solicitado = classe_solicitada_obj.nivel
 
             if 'DECLARAÇÃO' in tipo_base:
-                # Declaração: Máximo permitida = Classe Atual - 1
-                # Exceção: Se for declaração de frequência pode ser da atual.
-                # Mas a regra diz: "Ex: aluno da 12ª só pede até 11ª" (Declaração de Habilitações/Notas)
-                # Vamos assumir que se pediu classe específica é com notas.
-                if nivel_solicitado >= nivel_atual:
-                    #raise ValueError(f"Declarações com notas permitidas apenas para classes anteriores (Máx: {nivel_atual - 1}ª).")
-                    pass # Relaxando validação por enquanto para permitir testes, ou implementar estrito?
-                    # O usuário pediu: "Declaração: Máximo permitida = Classe Atual - 1"
-                    if nivel_solicitado > (nivel_atual - 0): # Ajuste se permitir atual
-                         pass 
-                
+                # Regra: Máximo permitida = Classe Atual (se frequência) ou Classe Atual - 1 (se conclusão)
+                # Para simplificar, permitimos até a classe atual se for Declaração de Frequência
+                if nivel_solicitado > nivel_atual:
+                    raise ValueError(f"Não é possível solicitar declaração para uma classe futura ({nivel_solicitado}ª) baseada no seu histórico ({nivel_atual}ª).")
+            
             if 'BOLETIM' in tipo_base:
                 # Boletim: Permitida Classe Atual ou inferior
                 if nivel_solicitado > nivel_atual:
-                    raise ValueError(f"Boletim não disponível para classe futura baseada na matricula atual ({nivel_atual}ª).")
+                    raise ValueError(f"Boletim não disponível para classe futura baseada na matricula ({nivel_atual}ª).")
 
             if 'CERTIFICADO' in tipo_base:
                 # Apenas se aprovado na última classe do ciclo (12ª ou 13ª)
@@ -158,15 +155,31 @@ class DocumentService:
         template_name = 'pdf/declaracao_matricula.html'
         tipo_base = solicitacao.tipo_documento.upper()
 
-        if 'CERTIFICADO' in tipo_base:
-            template_name = 'pdf/certificado.html'
-        elif 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base:
-            # Se for aproveitamento ou boletim, carregar as notas
+        if 'CERTIFICADO' in tipo_base or 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base:
+            # Carregar as notas para todos os documentos que precisam de dados acadêmicos
             context['notas_finais'] = DocumentService._get_notas_finais_aluno(
                 solicitacao.id_aluno, 
                 solicitacao.classe_solicitada
             )
-            if 'APROVEITAMENTO' in tipo_base:
+            
+            # Extrair curso e classe de forma robusta para os labels do template
+            # Tenta pegar da nota, senão da turma do aluno, senão da classe solicitada
+            curso_obj = None
+            classe_obj = solicitacao.classe_solicitada
+            
+            if context['notas_finais']:
+                # No AcademicService.get_boletim_aluno, a lógica de curso/classe já foi processada
+                # Mas para garantir que os labels apareçam, vamos reforçar aqui
+                if solicitacao.id_aluno.id_turma:
+                    curso_obj = solicitacao.id_aluno.id_turma.id_curso
+                    classe_obj = classe_obj or solicitacao.id_aluno.id_turma.id_classe
+
+            context['curso'] = curso_obj
+            context['classe'] = classe_obj
+
+            if 'CERTIFICADO' in tipo_base:
+                template_name = 'pdf/certificado.html'
+            elif 'APROVEITAMENTO' in tipo_base:
                 template_name = 'pdf/declaracao_aproveitamento.html'
             elif 'BOLETIM' in tipo_base:
                 template_name = 'pdf/boletim.html'
