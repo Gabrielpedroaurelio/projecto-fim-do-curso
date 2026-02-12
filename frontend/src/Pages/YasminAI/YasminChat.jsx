@@ -15,11 +15,33 @@ import { useAuth } from '../../Context/AuthContext';
 import yasminService from '../../Services/yasminService';
 
 export default function YasminChat() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
+
+    // State for menu type to ensure stability
+    const [menuType, setMenuType] = useState('student');
+    const [isStaff, setIsStaff] = useState(false);
+
+    useEffect(() => {
+        if (!loading) {
+            // Robust check for user type
+            const type = user?.tipo_usuario?.toLowerCase() || localStorage.getItem('user_type')?.toLowerCase();
+
+            if (type === 'funcionario' || type === 'admin' || type === 'professor' || type === 'secretaria') {
+                setIsStaff(true);
+            } else {
+                setIsStaff(false);
+                if (type === 'encarregado') {
+                    setMenuType('parent');
+                } else {
+                    setMenuType('student');
+                }
+            }
+        }
+    }, [user, loading]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +62,7 @@ export default function YasminChat() {
 
         try {
             // Determinar o papel (role) baseado no tipo de usuário
-            const role = user?.tipo_usuario === 'aluno' ? 'student' : (user?.tipo_usuario === 'encarregado' ? 'parent' : 'admin');
+            const role = isStaff ? 'admin' : (menuType === 'parent' ? 'parent' : 'student');
 
             // Obter o token JWT do localStorage
             const userToken = localStorage.getItem('access_token');
@@ -71,22 +93,21 @@ export default function YasminChat() {
         }
     };
 
-    // Determinar o tipo de usuário e layout
-    const isStaff = user?.tipo_usuario === 'funcionario';
-
-    // Normalizar o tipo para o MenuNavBarCliente
-    let menuType = 'student';
-    if (user?.tipo_usuario === 'aluno') menuType = 'student';
-    else if (user?.tipo_usuario === 'encarregado') menuType = 'parent';
-
     // Classes de container baseadas no tipo de usuário
     const generalContainerClass = isStaff ? 'ContainerGeneral' : 'containelGeralclient';
     const mainContainerClass = isStaff ? 'ContainerMain' : 'containelMainclient';
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                {/* <Loading /> */}
+            </div>
+        );
+    }
+
     return (
         <div className={generalContainerClass}>
-            {/*isStaff ? <MenuNavBarCliente user={menuType} /> : <NavBarMenu />*/}
-            {user?.tipo_usuario === "funcionario" ? <NavBarMenu /> : <MenuNavBarCliente user={menuType} />}
+            {isStaff ? <NavBarMenu /> : <MenuNavBarCliente user={menuType} />}
 
 
             <main className={mainContainerClass}>
