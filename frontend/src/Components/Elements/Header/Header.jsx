@@ -39,7 +39,15 @@ export default function Header({ text1, text2, onSearch }) {
             setNotifications(response.data.results || response.data)
             setUnreadCount((response.data.results || response.data).filter(n => !n.lida).length)
         } catch (error) {
-            console.error("Erro ao buscar notificações:", error)
+            // Se for erro de autenticação (401), não precisamos inundar o console
+            // O interceptor já deve tentar o refresh, se falhar aqui é porque a sessão caiu.
+            if (error.response?.status === 401) {
+                console.warn("Sessão expirada ao buscar notificações.")
+            } else if (error.code === 'ERR_NETWORK') {
+                console.error("Backend offline. Certifique-se que o Django (python manage.py runserver) está rodando.")
+            } else {
+                console.error("Erro ao buscar notificações:", error)
+            }
         } finally {
             setLoadingNotifs(false)
         }
@@ -49,7 +57,10 @@ export default function Header({ text1, text2, onSearch }) {
         if (user) {
             fetchNotifications()
             // Polling opcional a cada 1 minuto
-            const interval = setInterval(fetchNotifications, 60000)
+            const interval = setInterval(() => {
+                // Verificar se o servidor está respondendo antes de tentar
+                fetchNotifications()
+            }, 60000)
             return () => clearInterval(interval)
         }
     }, [user])

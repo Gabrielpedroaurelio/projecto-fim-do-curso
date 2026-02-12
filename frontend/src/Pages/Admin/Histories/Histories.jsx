@@ -88,9 +88,9 @@ export default function Histories() {
 
                         {/* Table */}
                         <div className={style.TableWrapper}>
-                            {loading ? (
-                                <div className="loading p-10 text-center"><Loading/></div>
-                            ) : (
+                            {/*loading ? (
+                                <div className="loading p-10 text-center"></div>
+                            ) : ( */}
                                 <table className={style.Table}>
                                     <thead>
                                         <tr>
@@ -155,7 +155,7 @@ export default function Histories() {
                                         )}
                                     </tbody>
                                 </table>
-                            )}
+                            {/*)*/}
                         </div>
 
                         {/* Pagination footer */}

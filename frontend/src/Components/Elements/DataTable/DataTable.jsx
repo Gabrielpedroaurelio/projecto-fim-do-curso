@@ -50,7 +50,9 @@ export default function DataTable({
                 </div>
                 {onAdd && (
                     <button className={style.AddButton} onClick={onAdd}>
-                        {addButtonLabel || `Exportar ${title.split(' ')[2] || 'Item'}`}
+                        {
+                            
+                        addButtonLabel || `Exportar ${title.split(' ')[2] || 'Item'}`}
                     </button>
                 )}
             </div>

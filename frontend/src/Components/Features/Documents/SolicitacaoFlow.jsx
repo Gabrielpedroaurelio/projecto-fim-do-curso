@@ -132,7 +132,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
 
         if (selectedDoc === 'DECLARAÇÃO' || selectedDoc === 'DECLARAÇÃO_SIMPLES' || selectedDoc === 'DECLARAÇÃO_APROVEITAMENTO' || selectedDoc.includes('DECLARAÇÃO')) {
             filtered = classes.filter(c => c.nivel < currentLevel);
-        } else if (selectedDoc === 'BOLETIM') {
+        } else if (selectedDoc === 'BOLETIM_3' || selectedDoc === "BOLETIM_2" || selectedDoc === "BOLETIM_1") {
             filtered = classes.filter(c => c.nivel <= currentLevel);
         } else if (selectedDoc === 'CERTIFICADO') {
             filtered = classes.filter(c => c.nivel === 13);
@@ -422,59 +422,70 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             </div>
 
             <div className={style.stepContent}>
-                {step === 1 && (
-                    <div className={style.stepIn}>
-                        <h2>Identificar Estudante</h2>
+                {
+                   // useLayoutEffect(() => {
+                        step === 1 && (
+                            <div className={style.stepIn}>
+                                <h2>Identificar Estudante</h2>
 
-                        {userType === 'encarregado' && myStudents.length > 0 ? (
-                            <div className={style.searchBox} style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <p>Selecione um dos seus educandos abaixo:</p>
-                                <select
-                                    className={style.selectField}
-                                    onChange={handleStudentSelect}
-                                    defaultValue=""
-                                >
-                                    <option value="" disabled>Escolha o aluno...</option>
-                                    {myStudents.map(student => (
-                                        <option key={student.id_aluno} value={student.id_aluno}>
-                                            {student.nome_completo} ({student.classe_nivel}ª Classe)
-                                        </option>
-                                    ))}
-                                </select>
+                                {
 
-                                <button
-                                    className={style.btnNext}
-                                    onClick={confirmStudentSelection}
-                                    disabled={!studentInfo}
-                                    style={{ marginTop: '1rem' }}
-                                >
-                                    Avançar <RiArrowRightLine />
-                                </button>
-                                {error && <p className={style.errorMsg}>{error}</p>}
+
+                                    userType === 'encarregado' && myStudents.length > 0 ? (
+                                        <div className={style.searchBox} style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                            <p>Selecione um dos seus educandos abaixo:</p>
+                                            <select
+                                                className={style.selectField}
+                                                onChange={handleStudentSelect}
+                                                defaultValue=""
+                                            >
+                                                <option value="" disabled>Escolha o aluno...</option>
+                                                {myStudents.map(student => (
+                                                    <option key={student.id_aluno} value={student.id_aluno}>
+                                                        {student.nome_completo} ({student.classe_nivel}ª Classe)
+                                                    </option>
+                                                ))}
+                                            </select>
+
+                                            <button
+                                                className={style.btnNext}
+                                                onClick={confirmStudentSelection}
+                                                disabled={!studentInfo}
+                                                style={{ marginTop: '1rem' }}
+                                            >
+                                                Avançar <RiArrowRightLine />
+                                            </button>
+                                            {error && <p className={style.errorMsg}>{error}</p>}
+                                        </div>
+                                    ) : (
+                                        /* Search Box - Default for Funcionario or Fallback */
+                                        <div className={style.searchBox} style={userType === 'funcionario' ? { marginTop: 0 } : {}}>
+                                            <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                                                {userType === 'funcionario' ? 'Pesquisar Aluno por BI' : 'Pesquisar por BI'}
+                                            </h4>
+                                            <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Digite o número do BI..."
+                                                    value={biSearch}
+                                                    onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
+                                                    style={{ flex: 1 }}
+                                                />
+                                                <button onClick={searchStudent} disabled={loading}>
+                                                    {loading ? '...' : <RiSearchLine />}
+                                                </button>
+                                            </div>
+                                            {error && <p className={style.errorMsg}>{error}</p>}
+                                        </div>
+                                    )
+
+                                }
                             </div>
-                        ) : (
-                            /* Search Box - Default for Funcionario or Fallback */
-                            <div className={style.searchBox} style={userType === 'funcionario' ? { marginTop: 0 } : {}}>
-                                <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                                    {userType === 'funcionario' ? 'Pesquisar Aluno por BI' : 'Pesquisar por BI'}
-                                </h4>
-                                <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                                    <input
-                                        type="text"
-                                        placeholder="Digite o número do BI..."
-                                        value={biSearch}
-                                        onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
-                                        style={{ flex: 1 }}
-                                    />
-                                    <button onClick={searchStudent} disabled={loading}>
-                                        {loading ? '...' : <RiSearchLine />}
-                                    </button>
-                                </div>
-                                {error && <p className={style.errorMsg}>{error}</p>}
-                            </div>
-                        )}
-                    </div>
-                )}
+
+                        )
+                   // }, [userType])
+                }
+
 
                 {step === 2 && studentInfo && (
                     <div className={style.stepIn}>

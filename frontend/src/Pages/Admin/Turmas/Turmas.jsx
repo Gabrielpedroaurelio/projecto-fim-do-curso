@@ -71,7 +71,7 @@ export default function Turmas() {
                         data={turmas}
                         columns={columns}
                         onAdd={handleAdd}
-                        addButtonLabel="Criar Turma"
+                        addButtonLabel="Criar_Turma"
                         /* onEdit={handleEdit}
                           onDelete={handleDelete}*/
                         searchPlaceholder="Pesquisar por código ou curso..."
