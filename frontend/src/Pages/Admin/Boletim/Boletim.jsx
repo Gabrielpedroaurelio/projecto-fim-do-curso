@@ -6,10 +6,11 @@ import '../../../assets/style/global.style.css'
 import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'react-icons/fa'
 import api from '../../../Services/api'
 import Loading from '../../../Components/Elements/Loading/Loading'
+import DocumentPreviewModal from '../../../Components/Elements/DocumentPreviewModal/DocumentPreviewModal'
 
 // Sample templates data (Keeping static for now as there is no backend model)
 const templatesData = [
-    { id: 1, name: "Modelo Padrão 2024", description: "Modelo oficial do boletim escolar", lastModified: "2024-01-10", isActive: true },
+    { id: 1, name: "Modelo Padrão 2024", description: "Modelo oficial do boletim escolar", lastModified: "2024-01-10", isActive: false },
     { id: 2, name: "Modelo Simplificado", description: "Versão reduzida para impressão", lastModified: "2023-12-15", isActive: false },
     { id: 3, name: "Modelo Detalhado", description: "Com notas e observações completas", lastModified: "2023-11-20", isActive: false },
 ]
@@ -19,6 +20,7 @@ export default function Boletim() {
     const [searchTerm, setSearchTerm] = useState('')
     const [documents, setDocuments] = useState([])
     const [loading, setLoading] = useState(true)
+    const [previewModal, setPreviewModal] = useState({ isOpen: false, url: '', title: '' })
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -71,7 +73,11 @@ export default function Boletim() {
 
     const handleViewDocument = (doc) => {
         if (doc.caminho_pdf) {
-            window.open(doc.caminho_pdf, '_blank')
+            setPreviewModal({
+                isOpen: true,
+                url: doc.caminho_pdf,
+                title: `Boletim - ${doc.aluno_nome}`
+            })
         }
     }
 
@@ -123,7 +129,7 @@ export default function Boletim() {
                                 </div>
 
                                 {/* Models Grid */}
-                                <div className={style.ModelsGrid}>
+                                <div className={`${style.ModelsGrid} ${style.ContainerDisabled}`}>
                                     {filteredTemplates.map(model => (
                                         <div key={model.id} className={style.ModelCard}>
                                             {model.isActive && (
@@ -190,7 +196,7 @@ export default function Boletim() {
                                 <div className={style.TableWrapper}>
                                     {loading ? (
                                         <div className="flex items-center justify-center p-10">
-                                            <Loading/>
+                                            <Loading />
                                         </div>
                                     ) : (
                                         <table className={style.Table}>
@@ -263,6 +269,12 @@ export default function Boletim() {
                     </div>
                 </div>
             </main>
+            <DocumentPreviewModal
+                isOpen={previewModal.isOpen}
+                onClose={() => setPreviewModal(prev => ({ ...prev, isOpen: false }))}
+                pdfUrl={previewModal.url}
+                title={previewModal.title}
+            />
         </div>
     )
 }

@@ -3,174 +3,48 @@
 
 {% block extrahead %}
 {{ block.super }}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    body{
-        background-color: #1f2937;
+    :root {
+        --primary: #0ea5e9;
+        --primary-soft: #7dd3fc;
+        --primary-dark: #0369a1;
+        --bg-page: #f8fafc;
+        --bg-card: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --radius-md: 12px;
+        --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
     }
+
+    /* Dark Mode Support (if admin has theme switch or system pref) */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-page: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --primary-soft: #60a5fa;
+        }
+    }
+
+    body {
+        font-family: 'Outfit', sans-serif !important;
+        background-color: var(--bg-page);
+        color: var(--text-main);
+        margin: 0;
+        line-height: 1.5;
+    }
+
     .grade-launch-container {
         max-width: 1400px;
         margin: 0 auto;
         padding: 2rem;
-    }
-
-    .filter-section {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-        display: block;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        color: #1f2937;
-        font-size: 0.875rem;
-    }
-
-    .form-group select {
-        width: 100%;
-        padding: 0.625rem 0.75rem;
-        border: 1px solid #080808;
-        border-radius: 8px;
-        background: #1f2937;
-        color: #f9fafb;
-        font-size: 0.875rem;
-        transition: all 0.2s;
-    }
-
-    .form-group select:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        background: #1f2937;
-    }
-
-    .form-group select:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        background: #f3f4f6;
-    }
-
-    .help-text {
-        font-size: 0.75rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-    }
-
-    .error-text {
-        font-size: 0.75rem;
-        color: #ef4444;
-        margin-top: 0.25rem;
-    }
-
-    .students-table-wrapper {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .students-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .students-table thead {
-        background: #f9fafb;
-    }
-
-    .students-table th {
-        padding: 1rem;
-        text-align: left;
-        font-weight: 600;
-        font-size: 0.875rem;
-        color: #1f2937;
-        border-bottom: 2px solid #e5e7eb;
-    }
-
-    .students-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #f3f4f6;
-        color: #374151;
-        font-size: 0.875rem;
-    }
-
-    .students-table tbody tr:hover {
-        background: #f9fafb;
-    }
-
-    .students-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    .grade-input {
-        width: 100px;
-        padding: 0.5rem;
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        background: #ffffff;
-        color: #1f2937;
-        font-size: 0.875rem;
-        text-align: center;
-        font-weight: 500;
-    }
-
-    .grade-input:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-
-    .btn {
-        padding: 0.625rem 1.25rem;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-primary {
-        background: #10b981;
-        color: #ffffff;
-    }
-
-    .btn-primary:hover {
-        background: #059669;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-secondary {
-        background: #f3f4f6;
-        color: #374151;
-        border: 1px solid #d1d5db;
-    }
-
-    .btn-secondary:hover {
-        background: #e5e7eb;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 1.5rem;
     }
 
     .page-header {
@@ -178,21 +52,205 @@
     }
 
     .page-header h1 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 0.5rem 0;
     }
 
     .page-header p {
-        color: #6b7280;
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* Card styling */
+    .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-soft);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .filter-section {
+        padding: 1.5rem;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: var(--text-main);
         font-size: 0.875rem;
+    }
+
+    .form-group select,
+    .form-group input ,input[type="number"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-card);
+        /* Ensure input isn't transparent */
+        color: var(--text-main);
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        box-sizing: border-box;
+        /* Fix sizing issues */
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .form-group select:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--bg-page);
+    }
+
+    .help-text {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        gap: 0.5rem;
+        font-family: inherit;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 6px -1px var(--primary-soft);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px -1px var(--primary-soft);
+    }
+
+    .btn-secondary {
+        background: var(--bg-page);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        background: var(--border-color);
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    /* Table Styles */
+    .students-table-wrapper {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .students-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .students-table th {
+        background: var(--bg-page);
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .students-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+        vertical-align: middle;
+    }
+
+    .students-table tr:hover td {
+        background-color: var(--bg-page);
+        /* Subtle hover effect */
+    }
+
+    .students-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .grade-input {
+        width: 80px !important;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    /* Alert Styles */
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
     }
 
     .empty-state {
         text-align: center;
-        padding: 3rem 1rem;
-        color: #6b7280;
+        padding: 4rem 2rem;
+        color: var(--text-muted);
     }
 
     .empty-state-icon {
@@ -201,81 +259,23 @@
         opacity: 0.5;
     }
 
-    .empty-state h3 {
-        color: #374151;
-        margin-bottom: 0.5rem;
+    /* Custom scrollbar for better look */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
 
-    .alert {
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+    ::-webkit-scrollbar-track {
+        background: transparent;
     }
 
-    .alert-success {
-        background: #d1fae5;
-        border: 1px solid #10b981;
-        color: #065f46;
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
     }
 
-    .alert-error {
-        background: #fee2e2;
-        border: 1px solid #ef4444;
-        color: #dc2626;
-    }
-
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-
-        .filter-section,
-        .students-table-wrapper {
-            background: #1f2937;
-            border-color: #374151;
-        }
-
-        .form-group label,
-        .students-table th,
-        .page-header h1 {
-            color: #f9fafb;
-        }
-
-        .form-group select,
-        .grade-input {
-            background: #374151;
-            color: #f9fafb;
-            border-color: #4b5563;
-        }
-
-        .students-table td {
-            color: #e5e7eb;
-            border-bottom-color: #374151;
-        }
-
-        .students-table thead {
-            background: #374151;
-        }
-
-        .students-table tbody tr:hover {
-            background: #374151;
-        }
-
-        .page-header p,
-        .help-text {
-            color: #9ca3af;
-        }
-
-        .btn-secondary {
-            background: #374151;
-            color: #f9fafb;
-            border-color: #4b5563;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
     }
 </style>
 <script>
@@ -295,48 +295,59 @@
         const inputs = document.querySelectorAll('.grade-input');
         let isValid = true;
 
+        // Remove existing error highlights first
         inputs.forEach(input => {
-            const value = parseFloat(input.value);
-            if (input.value !== '' && (value < 0 || value > 20)) {
-                input.style.borderColor = '#ef4444';
-                isValid = false;
-            } else {
-                input.style.borderColor = '#d1d5db';
+            input.style.borderColor = '';
+            input.classList.remove('input-error');
+        });
+
+        inputs.forEach(input => {
+            const value = input.value.trim();
+            if (value !== '') {
+                const numericValue = parseFloat(value);
+                if (isNaN(numericValue) || numericValue < 0 || numericValue > 20) {
+                    input.style.borderColor = 'var(--error)';
+                    input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.2)';
+                    isValid = false;
+                }
             }
         });
 
         if (!isValid) {
-            alert('Por favor, insira notas válidas entre 0 e 20.');
+            alert('Por favor, verifique as notas. Elas devem ser números entre 0 e 20.');
         }
 
         return isValid;
     }
 </script>
-<a href="/admin/apis/nota/">Voltar para notas</a>
+<a href="/admin/apis/nota/"
+    style="display:inline-block; margin: 1rem 2rem; color: var(--text-muted); text-decoration: none;">&larr; Voltar para
+    notas</a>
 {% endblock %}
 
 {% block content %}
 <div class="grade-launch-container">
-    
+
     <div class="page-header">
         <h1>Lançamento de Notas em Massa</h1>
-        <p>Selecione os filtros abaixo para carregar a lista de alunos e lançar as notas de forma eficiente.</p>
+        <p>Gerencie as notas dos alunos filtrando por turma, disciplina e avaliação.</p>
     </div>
 
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">
+        <!-- Simple icon based on message tag, usually backend handles classes but adding a generic icon for visual flair -->
         <span>{{ message }}</span>
     </div>
     {% endfor %}
     {% endif %}
 
     <!-- Filters Section -->
-    <div class="filter-section">
+    <div class="card filter-section">
         <form method="get">
             <div class="filter-grid">
                 <div class="form-group">
-                    <label for="id_turma">Turma *</label>
+                    <label for="id_turma">Turma</label>
                     <select id="id_turma" name="id_turma" onchange="updateFilters()" required>
                         <option value="">Selecione uma turma...</option>
                         {% for turma in turmas %}
@@ -348,7 +359,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_disciplina">Disciplina *</label>
+                    <label for="id_disciplina">Disciplina</label>
                     <select id="id_disciplina" name="id_disciplina" {% if not selected_turma %}disabled{% endif %}
                         required>
                         <option value="">Selecione uma disciplina...</option>
@@ -359,12 +370,12 @@
                         {% endfor %}
                     </select>
                     {% if not selected_turma %}
-                    <span class="help-text">Selecione uma turma primeiro</span>
+                    <span class="help-text">Necessário selecionar a turma primeiro.</span>
                     {% endif %}
                 </div>
 
                 <div class="form-group">
-                    <label for="tipo_avaliacao">Tipo de Avaliação *</label>
+                    <label for="tipo_avaliacao">Tipo de Avaliação</label>
                     <select name="tipo_avaliacao" id="tipo_avaliacao" required>
                         <option value="">Selecione o tipo...</option>
                         {% for code, name in tipos_avaliacao %}
@@ -374,7 +385,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="trimestre">Trimestre *</label>
+                    <label for="trimestre">Trimestre</label>
                     <select name="trimestre" id="trimestre" required>
                         <option value="">Selecione o trimestre...</option>
                         {% for code, name in trimestres %}
@@ -387,7 +398,7 @@
 
             <div class="action-buttons">
                 <button type="submit" class="btn btn-primary">
-                    Carregar Alunos
+                    <span>Carregar Alunos</span>
                 </button>
             </div>
         </form>
@@ -395,66 +406,76 @@
 
     <!-- Students List -->
     {% if alunos_notas %}
-    <div class="students-table-wrapper">
+    <div class="card students-table-wrapper">
         <form method="post" onsubmit="return validateForm()">
             {% csrf_token %}
+            <!-- Hidden inputs to maintain context -->
             <input type="hidden" name="id_turma" value="{{ selected_turma }}">
             <input type="hidden" name="id_disciplina" value="{{ selected_disciplina }}">
             <input type="hidden" name="tipo_avaliacao" value="{{ selected_tipo }}">
             <input type="hidden" name="trimestre" value="{{ selected_trimestre }}">
 
-            <table class="students-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40%;">Aluno</th>
-                        <th style="width: 20%;">Matrícula</th>
-                        <th style="width: 20%;">Nota Atual</th>
-                        <th style="width: 20%;">Nova Nota (0-20)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in alunos_notas %}
-                    <tr>
-                        <td>
-                            <strong>{{ item.aluno.nome_completo }}</strong>
-                        </td>
-                        <td>
-                            {{ item.aluno.numero_matricula|default:"—" }}
-                        </td>
-                        <td>
-                            {% if item.nota_valor %}
-                            <span
-                                style="color: {% if item.nota_valor >= 10 %}#10b981{% else %}#ef4444{% endif %}; font-weight: 600;">
-                                {{ item.nota_valor }}
-                            </span>
-                            {% else %}
-                            <span style="color: #9ca3af;">—</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <input type="number" name="nota_{{ item.aluno.id_aluno }}" value="{{ item.nota_valor }}"
-                                step="0.5" min="0" max="20" class="grade-input" placeholder="0-20">
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%;">Aluno</th>
+                            <th style="width: 15%;">Matrícula</th>
+                            <th style="width: 25%;">Nota Atual</th>
+                            <th style="width: 25%;">Nova Nota (0-20)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in alunos_notas %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.aluno.nome_completo }}</strong>
+                            </td>
+                            <td>
+                                <span style="font-family: monospace; color: var(--text-muted);">{{ item.aluno.numero_matricula|default:"—" }}</span>
+                            </td>
+                            <td>
+                                {% if item.nota_valor %}
+                                <span style="
+                                        display: inline-block;
+                                        padding: 0.25rem 0.75rem;
+                                        border-radius: 999px;
+                                        background: {% if item.nota_valor >= 10 %}#dcfce7{% else %}#fee2e2{% endif %};
+                                        color: {% if item.nota_valor >= 10 %}#166534{% else %}#991b1b{% endif %};
+                                        font-weight: 600;
+                                        font-size: 0.875rem;
+                                    ">
+                                    {{ item.nota_valor }}
+                                </span>
+                                {% else %}
+                                <span style="color: var(--text-muted);">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <input type="number" name="nota_{{ item.aluno.id_aluno }}" value="{{ item.nota_valor }}"
+                                    step="0.5" min="0" max="20" class="grade-input" placeholder="-" autocomplete="off">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-            <div class="action-buttons" style="padding: 1.5rem;">
+            <div class="action-buttons" style="padding: 1.5rem; border-top: 1px solid var(--border-color);">
                 <a href="{% url 'admin:apis_nota_changelist' %}" class="btn btn-secondary">
-                     Cancelar
+                    Cancelar
                 </a>
                 <button type="submit" class="btn btn-primary">
-                     Salvar Notas ({{ alunos_notas|length }} alunos)
+                    Salvar Notas ({{ alunos_notas|length }} alunos)
                 </button>
             </div>
         </form>
     </div>
     {% elif selected_turma and selected_disciplina and selected_tipo and selected_trimestre %}
-    <div class="empty-state">
+    <div class="card empty-state">
         <div class="empty-state-icon">📭</div>
         <h3>Nenhum aluno encontrado</h3>
-        <p>Não há alunos matriculados nesta turma ou os filtros selecionados não retornaram resultados.</p>
+        <p>Não há alunos matriculados nesta turma que correspondam aos filtros selecionados.</p>
     </div>
     {% endif %}
 </div>

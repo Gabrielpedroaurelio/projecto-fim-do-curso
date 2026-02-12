@@ -60,28 +60,122 @@ class AcademicService:
         Calcula as notas detalhadas (MAC, PP, PT) e médias por trimestre.
         Retorna estrutura pronta para a Declaração de Aproveitamento e Boletim.
         """
-        from apis.models import MatrizCurricularDisciplina, Nota, MatrizCurricular
+        from apis.models import MatrizCurricularDisciplina, Nota, MatrizCurricular, Matricula
 
-        # Se nenhuma classe for especificada, usa a classe da turma atual do aluno
-        if not classe and aluno.id_turma:
-            classe = aluno.id_turma.id_classe
-
-        if not classe or not aluno.id_turma or not aluno.id_turma.id_curso:
-            return []
-
-        # Tentar buscar a matriz curricular ativa para o curso e classe
-        matriz = MatrizCurricular.objects.filter(
-            id_curso=aluno.id_turma.id_curso,
-            id_classe=classe,
-            ativo=True
-        ).first()
-
-        # Se não achar matriz específica da classe, tenta genericamente (fallback)
+        # 1. Identificar a Curso e a Matriz Curricular
+        matriz = None
+        
+        # Prioridade 1: Matriz direta da turma do aluno
+        if aluno.id_turma and aluno.id_turma.id_matriz_curricular:
+            matriz = aluno.id_turma.id_matriz_curricular
+            if not classe:
+                classe = aluno.id_turma.id_classe
+        
+        # Prioridade 2: Buscar por Curso e Classe se matriz não definida na turma
         if not matriz:
-             # Fallback ou retorno vazio. 
-             # Para sistemas legados sem matriz, talvez precisássemos iterar sobre Disciplinas do Curso
-             # Mas vamos assumir que a Matriz é necessária para o boletim correto.
-             return []
+            curso = None
+            if aluno.id_turma:
+                curso = aluno.id_turma.id_curso
+                if not classe:
+                    classe = aluno.id_turma.id_classe
+            
+            if not curso or not classe:
+                ultima_matricula = Matricula.objects.filter(id_aluno=aluno).select_related('id_turma__id_curso', 'id_turma__id_classe').order_by('-data_matricula').first()
+                if ultima_matricula and ultima_matricula.id_turma:
+                    curso = curso or ultima_matricula.id_turma.id_curso
+                    classe = classe or ultima_matricula.id_turma.id_classe
+            
+            if curso and classe:
+                matriz = MatrizCurricular.objects.filter(id_curso=curso, id_classe=classe, ativo=True).first()
+                if not matriz:
+                    matriz = MatrizCurricular.objects.filter(id_curso=curso, id_classe=classe).first()
+
+        if not matriz:
+            # Fallback: Se não tem matriz, busca todas as disciplinas que o aluno tem nota
+            notas_aluno = Nota.objects.filter(id_aluno=aluno).select_related('id_disciplina')
+            if not notas_aluno.exists():
+                return []
+                
+            resultados = []
+            disciplinas_processadas = set()
+            
+            # Agrupar notas por disciplina
+            for nota in notas_aluno:
+                disc = nota.id_disciplina
+                if disc.id_disciplina in disciplinas_processadas:
+                    continue
+                    
+                disciplinas_processadas.add(disc.id_disciplina)
+                
+                # Buscar todas as notas desta disciplina
+                notas_disc = [n for n in notas_aluno if n.id_disciplina_id == disc.id_disciplina]
+                
+                # Estrutura por trimestre (None indica que não foi lançada)
+                grades = {
+                    '1': {'MAC': None, 'PP': None, 'PT': None, 'MT': None},
+                    '2': {'MAC': None, 'PP': None, 'PT': None, 'MT': None},
+                    '3': {'MAC': None, 'PP': None, 'PT': None, 'MT': None}
+                }
+                
+                teve_nota = {'1': False, '2': False, '3': False}
+
+                for n in notas_disc:
+                    # Normalizar trimestre (Ex: "1º Trimestre" -> "1", "1" -> "1")
+                    t_raw = str(n.trimestre) if n.trimestre else ''
+                    t_key = t_raw.split('º')[0].strip() if 'º' in t_raw else t_raw.strip()
+                    
+                    if t_key in grades and n.tipo_nota in grades[t_key]:
+                        grades[t_key][n.tipo_nota] = float(n.valor)
+                        teve_nota[t_key] = True
+
+                # Calcular Médias Trimestrais (MT = (MAC + PP + PT) / 3)
+                for t in grades:
+                    g = grades[t]
+                    if teve_nota[t]:
+                        # Consideramos 0 para notas não lançadas se o trimestre teve algum lançamento
+                        v_mac = g['MAC'] if g['MAC'] is not None else 0.0
+                        v_pp = g['PP'] if g['PP'] is not None else 0.0
+                        v_pt = g['PT'] if g['PT'] is not None else 0.0
+                        
+                        mt = (v_mac + v_pp + v_pt) / 3
+                        g['MT'] = round(mt, 1)
+
+                # Média Final
+                soma_mt = sum(grades[t]['MT'] for t in grades if grades[t]['MT'] is not None)
+                count_mt = sum(1 for t in grades if grades[t]['MT'] is not None)
+                
+                if count_mt > 0:
+                    media_final = soma_mt / count_mt
+                else:
+                    media_final = 0.0
+
+                def nota_para_extenso(n):
+                    nomes = {
+                        0: 'Zero', 1: 'Um', 2: 'Dois', 3: 'Três', 4: 'Quatro', 5: 'Cinco',
+                        6: 'Seis', 7: 'Sete', 8: 'Oito', 9: 'Nove', 10: 'Dez',
+                        11: 'Onze', 12: 'Doze', 13: 'Treze', 14: 'Catorze', 15: 'Quinze',
+                        16: 'Dezasseis', 17: 'Dezassete', 18: 'Dezoito', 19: 'Dezanove', 20: 'Vinte'
+                    }
+                    inteiro = int(round(n))
+                    return nomes.get(inteiro, str(inteiro))
+
+                status_disciplina = '---'
+                if count_mt == 3:
+                    status_disciplina = 'Aprovado' if round(media_final) >= 10 else 'Reprovado'
+
+                resultados.append({
+                    'id_disciplina': disc.id_disciplina,
+                    'disciplina': disc.nome,
+                    'coeficiente': 1.0, # Default já que não temos matriz
+                    'trimestres': grades,
+                    'media_final': f"{media_final:.1f}",
+                    'media_final_valor': media_final,
+                    'media_final_extenso': nota_para_extenso(media_final),
+                    'resultado': status_disciplina,
+                    'count_mt': count_mt
+                })
+            
+            return resultados
 
         disciplinas_matriz = MatrizCurricularDisciplina.objects.filter(
             id_matriz_curricular=matriz
@@ -92,58 +186,41 @@ class AcademicService:
         for m_disc in disciplinas_matriz:
             notas_disc = Nota.objects.filter(id_aluno=aluno, id_disciplina=m_disc.id_disciplina)
             
-            # Estrutura por trimestre
+            # Estrutura por trimestre (None indica que não foi lançada)
             grades = {
-                '1': {'MAC': 0.0, 'PP': 0.0, 'PT': 0.0, 'MT': 0.0},
-                '2': {'MAC': 0.0, 'PP': 0.0, 'PT': 0.0, 'MT': 0.0},
-                '3': {'MAC': 0.0, 'PP': 0.0, 'PT': 0.0, 'MT': 0.0}
+                '1': {'MAC': None, 'PP': None, 'PT': None, 'MT': None},
+                '2': {'MAC': None, 'PP': None, 'PT': None, 'MT': None},
+                '3': {'MAC': None, 'PP': None, 'PT': None, 'MT': None}
             }
             
-            # Flags para saber se houve lançamento no trimestre
             teve_nota = {'1': False, '2': False, '3': False}
 
             for n in notas_disc:
-                # Normalizar trimestre (Ex: "1º Trimestre" -> "1") ou verificar se já é "1"
-                t_key = str(n.trimestre).split('º')[0] if n.trimestre else ''
-                # Fallback para caso tenha sido salvo apenas "1"
-                if t_key == n.trimestre:
-                     t_key = str(n.trimestre).strip()
-
+                # Normalizar trimestre (Ex: "1º Trimestre" -> "1", "1" -> "1")
+                t_raw = str(n.trimestre) if n.trimestre else ''
+                t_key = t_raw.split('º')[0].strip() if 'º' in t_raw else t_raw.strip()
+                
                 if t_key in grades and n.tipo_nota in grades[t_key]:
                     grades[t_key][n.tipo_nota] = float(n.valor)
                     teve_nota[t_key] = True
 
-            # Calcular Médias Trimestrais (MT = (MAC + PP + PT) / 3) ou regra específica
-            # Regra Comum: MT = (MAC + PP + PT) / 3
-            # Ajuste: Se faltar alguma nota (ex: PP), deve dividir por 3 ou apenas pelas lançadas?
-            # Geralmente em sistemas escolares divide-se por 3 fixo se o trimestre já fechou, 
-            # ou calcula-se parcial. Vamos assumir divisão por 3 para MT oficial.
-            
+            # Calcular Médias Trimestrais (MT = (MAC + PP + PT) / 3)
             for t in grades:
                 g = grades[t]
-                # Se tivermos as 3 notas, cálculo direto. Se faltar, considera 0.
-                if teve_nota[t]: 
-                    # Se quiser ignorar zeros não lançados, a lógica seria diferente.
-                    # As regras angolanas geralmente exigem MAC, PP e PT.
-                    mt = (g['MAC'] + g['PP'] + g['PT']) / 3
+                if teve_nota[t]:
+                    # Consideramos 0 para notas não lançadas se o trimestre teve algum lançamento
+                    v_mac = g['MAC'] if g['MAC'] is not None else 0.0
+                    v_pp = g['PP'] if g['PP'] is not None else 0.0
+                    v_pt = g['PT'] if g['PT'] is not None else 0.0
+                    
+                    mt = (v_mac + v_pp + v_pt) / 3
                     g['MT'] = round(mt, 1)
 
-            # Média Final (MF = (MT1 + MT2 + MT3) / 3)
-            # Somar apenas trimestres com média > 0 ou dividir por 3 sempre?
-            # Se estamos no 1º trimestre, a MF não deve ser calculada ainda ou deve ser parcial?
-            # Vamos calcular baseada nos trimestres que têm MT gerada.
-            
-            soma_mt = sum(grades[t]['MT'] for t in grades if grades[t]['MT'] > 0)
-            count_mt = sum(1 for t in grades if grades[t]['MT'] > 0)
-            
-            # Se já tiver notas nos 3 trimestres, divide por 3.
-            # Se for parcial, mostra a média atual acumulada? 
-            # Regra padrão: MF é calculada ao final. Mas para visualização parcial:
+            # Média Final
+            soma_mt = sum(grades[t]['MT'] for t in grades if grades[t]['MT'] is not None)
+            count_mt = sum(1 for t in grades if grades[t]['MT'] is not None)
             
             if count_mt > 0:
-                # Opção A: Média Parcial (soma / qtd_trimestres_com_nota)
-                # Opção B: Média Projetada (soma / 3) -> Penaliza quem ainda não teve nota
-                # Vamos usar Opção A para visualização durante o ano, mas Opção B para Aprovação Final.
                 media_final = soma_mt / count_mt
             else:
                 media_final = 0.0
@@ -159,20 +236,19 @@ class AcademicService:
                 return nomes.get(inteiro, str(inteiro))
 
             status_disciplina = '---'
-            if count_mt == 3: # Só define status final se tiver os 3 trimestres (ou forçado encerramento)
-                # Regra de aprovação: MF >= 10 (ou 9.5 arredondado)
+            if count_mt == 3:
                 status_disciplina = 'Aprovado' if round(media_final) >= 10 else 'Reprovado'
 
             resultados.append({
                 'id_disciplina': m_disc.id_disciplina.id_disciplina,
                 'disciplina': m_disc.id_disciplina.nome,
-                'coeficiente': m_disc.coeficiente,
+                'coeficiente': float(m_disc.coeficiente),
                 'trimestres': grades,
                 'media_final': f"{media_final:.1f}",
                 'media_final_valor': media_final,
                 'media_final_extenso': nota_para_extenso(media_final),
                 'resultado': status_disciplina,
-                'count_mt': count_mt # Útil para saber se o ano fechou
+                'count_mt': count_mt
             })
 
         return resultados

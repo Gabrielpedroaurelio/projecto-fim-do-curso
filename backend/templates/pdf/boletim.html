@@ -1,96 +1,64 @@
 {% load custom_filters %}
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-ao">
 
 <head>
     <meta charset="UTF-8">
-    <!-- Metadados de Segurança para Detecção de Fraude -->
-    <meta name="subject" content="Autenticidade: {{ solicitacao.uuid_documento }}">
-    <meta name="keywords" content="IPMAIOMBE, {{ solicitacao.uuid_documento }}, {{ aluno.numero_matricula }}">
-    <meta name="author" content="Sistema de Gestão Escolar IP Maiombe">
-    <title>Boletim de Notas - IP MAIOMBE</title>
+    <title>Boletim de Notas - {{ aluno.nome_completo|default:"Aluno" }}</title>
     <style>
-        @page {
-            size: A4;
-            margin: 1.0cm;
-        }
-
         body {
-            font-family: Helvetica, Arial, sans-serif;
-            -pdf-encoding: utf-8;
-            font-size: 9pt;
-            line-height: 1.3;
-            color: #000;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header-main {
-            text-align: center;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .republic-text {
-            font-size: 11pt;
-            font-weight: bold;
-            margin: 2px 0;
-        }
-
-        .governo-text {
-            font-size: 9pt;
-            margin: 2px 0;
-        }
-
-        .school-header {
-            margin-top: 10px;
-            border-top: 1px solid #000;
-            border-bottom: 1px solid #000;
-            padding: 5px 0;
-        }
-
-        .school-name {
-            font-size: 13pt;
-            font-weight: bold;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            padding: 10px;
         }
 
         .report-card {
             background-color: white;
-            padding-top: 20px;
+            width: 100%;
+            padding: 10px;
+
+        }
+
+        .header {
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .doc-title {
             text-align: center;
             font-weight: bold;
             text-decoration: underline;
-            margin-bottom: 15px;
-            font-size: 14pt;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         .info-grid {
             width: 100%;
             border: 1px solid black;
             margin-bottom: 10px;
-            font-size: 11px;
+            font-size: 12px;
             border-collapse: collapse;
         }
 
         .info-grid td {
             border: 1px solid black;
-            padding: 4px;
+            padding: 5px;
         }
 
         .main-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 10px;
+            font-size: 11px;
         }
 
         .main-table th,
         .main-table td {
             border: 1px solid black;
-            height: 22px;
+            height: 25px;
             text-align: center;
         }
 
@@ -100,148 +68,126 @@
             width: 35%;
         }
 
-        .footer-sigs {
-            margin-top: 25px;
-            width: 100%;
-        }
-
-        .sig-table {
-            width: 100%;
-            border: none;
-        }
-
-        .sig-table td {
-            border: none;
-            width: 33.33%;
-            text-align: center;
-            vertical-align: top;
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
             font-size: 10px;
+            width: 20px;
         }
 
-        .sig-line {
-            border-top: 1pt solid black;
-            margin: 0 10px;
+        .footer-sigs {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .sig-box {
+            width: 30%;
+            border-top: 1px solid black;
             padding-top: 5px;
+            display: inline-block;
         }
 
         .obs-area {
             margin-top: 10px;
             border: 1px solid black;
             padding: 5px;
-            height: 35px;
-            font-size: 10px;
-        }
-
-        .footer-info {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 8pt;
-            color: #666;
-            border-top: 0.5pt solid #eee;
-            padding-top: 5px;
+            height: 40px;
+            font-size: 11px;
         }
     </style>
 </head>
 
 <body>
-    <div class="header-main">
-        <p class="republic-text">República de Angola</p>
-        <p class="governo-text">Ministério da Educação</p>
-        <p class="governo-text">Governo Provincial de Cabinda</p>
-        <div class="school-header">
-            <h1 class="school-name">Instituto Politécnico do Maiombe</h1>
-        </div>
-    </div>
 
     <div class="report-card">
-        <div class="doc-title">
-            BOLETIM DE NOTAS -
-            {% if trimestre_selecionado == '1' %}Iº TRIMESTRE
-            {% elif trimestre_selecionado == '2' %}IIº TRIMESTRE
-            {% elif trimestre_selecionado == '3' %}IIIº TRIMESTRE
-            {% else %}Iº TRIMESTRE{% endif %}
+        <div class="header">
+            REPÚBLICA DE ANGOLA<br>
+            MINISTÉRIO DA EDUCAÇÃO<br>
+            INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE
         </div>
+
+        <div class="doc-title">BOLETIM DE NOTAS ({{ trimestre_selecionado }}º TRIMESTRE)</div>
 
         <table class="info-grid">
             <tr>
-                <td colspan="5"><strong>Nome do (a) Aluno (a):</strong> {{ aluno.nome_completo }}</td>
+                <td colspan="6"><strong>Nome do (a) Aluno (a):</strong> {{ aluno.nome_completo }}</td>
             </tr>
             <tr>
-                <td style="width: 35%;"><strong>Curso:</strong> {{ aluno.id_turma.id_curso.nome_curso }}</td>
-                <td style="width: 15%;"><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma }}</td>
-                <td style="width: 15%;"><strong>Classe:</strong> {{
-                    solicitacao.classe_solicitada.nivel|default:aluno.id_turma.id_classe.nivel|default:"--" }}ª</td>
-                <td style="width: 35%;" colspan="2"><strong>N.º Processo:</strong> {{ aluno.numero_matricula }}</td>
-                </td>
+                <td style="width: 40%;"><strong>Curso:</strong> {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
+                <td style="width: 15%;"><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"---" }}</td>
+                <td style="width: 10%;"><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
+                <td style="width: 10%;"><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
+                <td style="width: 15%;"><strong>Sala:</strong> {{ aluno.id_turma.sala|default:"---" }}</td>
             </tr>
             <tr>
-                <td><strong>Ano Lectivo:</strong> {{ aluno.id_turma.ano }}</td>
-                <td colspan="4" style="text-align: center;"><strong>ENSINO TÉCNICO-PROFISSIONAL</strong></td>
+                <td><strong>Ano Lectivo:</strong> {{ hoje|date:"Y" }}</td>
+                <td colspan="5" style="text-align: center;"><strong>ENSINO TÉCNICO-PROFISSIONAL</strong></td>
+            </tr>
+            <tr>
+                <td><strong>TRIMESTRE:</strong> {{ trimestre_selecionado }}º</td>
+                <td colspan="5"><strong>Periodo: </strong> {{ aluno.id_turma.periodo }}</td>
             </tr>
         </table>
 
         <table class="main-table">
             <thead>
-                <tr style="background-color: #f2f2f2;">
+                <tr>
                     <th>DISCIPLINAS</th>
                     <th>MAC</th>
-                    <th>NPP</th>
+                    <th>NPP1</th>
                     <th>NPT</th>
-                    <th>MT</th>
-                    <th>RESULTADO</th>
+                    <th>CT1</th>
+                    <th>COMPORTAMENTO</th>
+                    <th>FALTAS</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in notas_finais %}
+                {% for nota in notas_finais %}
+                {% with tri=nota.trimestres|get_item:trimestre_selecionado %}
                 <tr>
-                    <td class="subject-name">{{ item.disciplina }}</td>
-                    {% with t=trimestre_selecionado|default:"1" %}
-                    <td>{{ item.trimestres|get_item:t|get_item:'MAC'|default:"-" }}</td>
-                    <td>{{ item.trimestres|get_item:t|get_item:'PP'|default:"-" }}</td>
-                    <td>{{ item.trimestres|get_item:t|get_item:'PT'|default:"-" }}</td>
-                    <td>{{ item.trimestres|get_item:t|get_item:'MT'|default:"-" }}</td>
-                    {% endwith %}
-                    <td>{{ item.resultado }}</td>
+                    <td class="subject-name">{{ nota.disciplina }}</td>
+                    <td>{{ tri.MAC|default:"---" }}</td>
+                    <td>{{ tri.PP|default:"---" }}</td>
+                    <td>{{ tri.PT|default:"---" }}</td>
+                    <td>{{ tri.MT|default:"---" }}</td>
+                    <td>Bom</td>
+                    <td>0</td>
                 </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" style="padding: 10px;">Lançamentos não encontrados para este período.</td>
-                </tr>
+                {% endwith %}
                 {% endfor %}
+                <tr style="font-weight: bold;">
+                    <td class="subject-name">Médias e Total de Faltas</td>
+                    <td colspan="4"></td>
+                    <td>---</td>
+                    <td>0</td>
+                </tr>
             </tbody>
         </table>
 
         <div class="obs-area">
-            <strong>OBS.:</strong> Documento emitido eletronicamente via Sistema de Gestão Escolar.
+            <strong>OBS.:</strong> Documento gerado eletronicamente em {{ hoje|date:"d/m/Y H:i" }}. Cod: {{ solicitacao.uuid_documento|truncatechars:8 }}
         </div>
 
-        <div style="font-size: 10px; font-weight: bold; margin-top: 15px;">
-            CABINDA, {{ hoje|date:"d" }} de {{ hoje|date:"F" }} de {{ hoje|date:"Y" }}
+        <div style="font-size: 11px; font-weight: bold; margin-top: 15px;">
+            INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE, {{ hoje|date:"d/m/Y" }}
         </div>
 
-        <div style="text-align: center; font-weight: bold; margin-top: 15px; font-size: 11px;">Assinaturas</div>
+        <div style="text-align: center; font-weight: bold; margin-top: 10px; font-size: 12px;">Assinaturas</div>
 
-        <div class="footer-sigs">
-            <table class="sig-table">
-                <tr>
-                    <td>
-                        <div class="sig-line">O Director de Turma</div>
-                    </td>
-                    <td>
-                        <div class="sig-line">O Subdirector Pedagógico</div>
-                    </td>
-                    <td>
-                        <div class="sig-line">O Encarregado de Educação</div>
-                    </td>
-                </tr>
-            </table>
+        <div class="footer-sigs" style="width: 100%; display: table;">
+            <div style="display: table-row;">
+                <div class="sig-box" style="display: table-cell;">O Director de Turma</div>
+                <div style="width: 5%; display: table-cell;"></div>
+                <div class="sig-box" style="display: table-cell;">O Subdirector Pedagógico</div>
+                <div style="width: 5%; display: table-cell;"></div>
+                <div class="sig-box" style="display: table-cell;">O Encarregado de Educação</div>
+            </div>
         </div>
     </div>
 
-    <div class="footer-info">
-        Verificação de Autenticidade: <strong>{{ site_url }}/v/{{ solicitacao.uuid_documento }}</strong><br>
-        ID Único: {{ solicitacao.uuid_documento|default:"[UUID]" }}
-    </div>
 </body>
 
 </html>
