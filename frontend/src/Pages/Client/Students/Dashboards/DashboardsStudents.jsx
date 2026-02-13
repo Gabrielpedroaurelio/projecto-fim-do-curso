@@ -86,7 +86,7 @@ const DashboardsStudents = () => {
         ]);
 
         setStats(boletimResponse.data);
-
+        console.log(boletimResponse.data)
         // Contar documentos por tipo
         const docs = documentsResponse.data.results || documentsResponse.data || [];
         const counts = {
