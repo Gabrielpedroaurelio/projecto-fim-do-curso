@@ -135,6 +135,7 @@ class SolicitacaoDocumento(models.Model):
         indexes = [
             models.Index(fields=['status_solicitacao']),
             models.Index(fields=['id_aluno']),
+            models.Index(fields=['data_solicitacao']),
         ]
     
     def __str__(self):

@@ -116,11 +116,12 @@
                 <td colspan="6"><strong>Nome do (a) Aluno (a):</strong> {{ aluno.nome_completo }}</td>
             </tr>
             <tr>
-                <td style="width: 40%;"><strong>Curso:</strong> {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
-                <td style="width: 15%;"><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"---" }}</td>
-                <td style="width: 10%;"><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
-                <td style="width: 10%;"><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
-                <td style="width: 15%;"><strong>Sala:</strong> {{ aluno.id_turma.sala|default:"---" }}</td>
+                <td style="width: 40%;"><strong>Curso:</strong>
+                    {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
+                <td ><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"N/A" }}</td>
+                <td ><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
+                <td ><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
+                <td ><strong>Sala:</strong> {{ aluno.id_turma.sala|default:"N/A" }}</td>
             </tr>
             <tr>
                 <td><strong>Ano Lectivo:</strong> {{ hoje|date:"Y" }}</td>
@@ -149,10 +150,10 @@
                 {% with tri=nota.trimestres|get_item:trimestre_selecionado %}
                 <tr>
                     <td class="subject-name">{{ nota.disciplina }}</td>
-                    <td>{{ tri.MAC|default:"---" }}</td>
-                    <td>{{ tri.PP|default:"---" }}</td>
-                    <td>{{ tri.PT|default:"---" }}</td>
-                    <td>{{ tri.MT|default:"---" }}</td>
+                    <td>{{ tri.MAC|default_if_none:"N/A" }}</td>
+                    <td>{{ tri.PP|default_if_none:"N/A" }}</td>
+                    <td>{{ tri.PT|default_if_none:"N/A" }}</td>
+                    <td>{{ tri.MT|default_if_none:"N/A" }}</td>
                     <td>Bom</td>
                     <td>0</td>
                 </tr>
@@ -168,7 +169,7 @@
         </table>
 
         <div class="obs-area">
-            <strong>OBS.:</strong> Documento gerado eletronicamente em {{ hoje|date:"d/m/Y H:i" }}. Cod: {{ solicitacao.uuid_documento|truncatechars:8 }}
+            <strong>OBS.:</strong> Documento gerado eletronicamente em {{ hoje|date:"d/m/Y H:i" }}. Cod: {{solicitacao.uuid_documento|truncatechars:8 }}
         </div>
 
         <div style="font-size: 11px; font-weight: bold; margin-top: 15px;">

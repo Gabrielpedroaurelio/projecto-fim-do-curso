@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Count, Sum, Avg, Q
+from django.db.models import Count, Sum, Avg, Q, Case, When, IntegerField
+from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from datetime import timedelta
 from apis.models import Aluno, SolicitacaoDocumento, Fatura, Nota, Turma, HistoricoLogin
@@ -94,39 +95,50 @@ class DashboardStatsAPIView(APIView):
             {'name': 'Encarregados', 'value': encarregados_logins},
         ]
 
-        # --- 3. Comparação de Solicitações (Mantido Area Chart) ---
+        # --- 3. Comparação de Solicitações (Otimizado) ---
+        # Usar agregação para reduzir queries (de 18+ para 1)
+        start_date = agora - timedelta(days=180)
+        
+        stats = SolicitacaoDocumento.objects.filter(
+            data_solicitacao__gte=start_date
+        ).annotate(
+            month=TruncMonth('data_solicitacao')
+        ).values('month').annotate(
+            Declaracao=Count('id_solicitacao', filter=Q(tipo_documento__icontains='Declaração')),
+            Certificado=Count('id_solicitacao', filter=Q(tipo_documento__icontains='Certificado')),
+            Boletim=Count('id_solicitacao', filter=Q(tipo_documento__icontains='Boletim'))
+        ).order_by('month')
+
+        # Dicionário auxiliar para preencher meses vazios
+        stats_dict = {
+            s['month'].strftime('%Y-%m'): s 
+            for s in stats if s['month']
+        }
+
         requests_comparison_data = []
         for i in range(5, -1, -1):
-            date = timezone.now() - timedelta(days=i*30)
+            date = agora - timedelta(days=i*30)
+            key = date.strftime('%Y-%m')
             month_name = date.strftime('%b')
             
-            declaracoes = SolicitacaoDocumento.objects.filter(
-                tipo_documento__icontains='Declaração',
-                data_solicitacao__year=date.year,
-                data_solicitacao__month=date.month
-            ).count()
+            data = stats_dict.get(key, {
+                'Declaracao': 0,
+                'Certificado': 0,
+                'Boletim': 0
+            })
             
-            certificados = SolicitacaoDocumento.objects.filter(
-                tipo_documento__icontains='Certificado',
-                data_solicitacao__year=date.year,
-                data_solicitacao__month=date.month
-            ).count()
-            
-            boletins = SolicitacaoDocumento.objects.filter(
-                tipo_documento__icontains='Boletim',
-                data_solicitacao__year=date.year,
-                data_solicitacao__month=date.month
-            ).count()
-
             requests_comparison_data.append({
                 'name': month_name,
-                'Declaracao': declaracoes,
-                'Certificado': certificados,
-                'Boletim': boletins
+                'Declaracao': data['Declaracao'],
+                'Certificado': data['Certificado'],
+                'Boletim': data['Boletim']
             })
 
         # 4. Atividades Recentes (Últimas 5 solicitações)
-        recent_solicitacoes = SolicitacaoDocumento.objects.all().order_by('-data_solicitacao')[:5]
+        # Otimização: select_related para evitar N+1 no serializer
+        recent_solicitacoes = SolicitacaoDocumento.objects.select_related(
+            'id_aluno'
+        ).all().order_by('-data_solicitacao')[:5]
         serializer = SolicitacaoDocumentoListSerializer(recent_solicitacoes, many=True, context={'request': request})
 
         return Response({
