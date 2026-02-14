@@ -21,7 +21,7 @@
             text-align: center;
             text-transform: uppercase;
             font-size: 14px;
-            margin-bottom: 20px;
+           
             font-weight: bold;
         }
 
@@ -44,8 +44,7 @@
             border-collapse: collapse;
             margin: 20px 0;
         }
-
-        th,
+         th,
         td {
             border: 1px solid black;
             padding: 2px;
@@ -65,19 +64,19 @@
 
         .legal-note {
             font-size: 15px;
-            margin-top: 5px;
+          
         }
 
         .location-date {
             text-align: right;
             font-weight: bold;
             text-transform: uppercase;
-            margin-top: 10px;
+           
             font-size: 14px;
         }
 
         .signature-section {
-            margin-top: 20px;
+            
             text-align: center;
         }
 
@@ -106,7 +105,7 @@
         <div class="title">DECLARAÇÃO DE APROVEITAMENTO</div>
 
         <div class="body-text">
-            Declara-se que <strong>{{ aluno.nome_completo }}</strong>, {{ aluno.genero|yesno:"filho,filha" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>, nascido aos <strong>{{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{ aluno.data_nascimento|date:"Y" }}</strong>, natural de <strong>{{ aluno.naturalidade|default:"[Naturalidade]" }}</strong>, província de <strong>{{ aluno.provincia_naturalidade|default:"[Província]" }}</strong>, portador do Bilhete de Identidade nº<strong>{{ aluno.numero_bi }}</strong>, passado pelo arquivo nacional de identificação aos <strong>{{ aluno.data_emissao_bilhete|date:"d" }} de {{ aluno.data_emissao_bilhete|date:"F" }} de {{ aluno.data_emissao_bilhete|date:"Y" }}</strong>. <strong>Frequentou</strong> o ano lectivo de <strong>{{ hoje|date:"Y" }}</strong> à <strong>{{ solicitacao.classe_solicitada.nivel|default:aluno.id_turma.id_classe.nivel }}ª Classe</strong>; turma:<strong>{{ aluno.id_turma.codigo_turma }}</strong>, nº {{ aluno.numero_pauta|default:aluno.id_aluno }}; curriculum regular; o Curso: <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>; Área de Formação: <strong>{{ aluno.id_turma.id_curso.area_formacao|default:"Informática" }}</strong>, registado com o processo individual nº <strong>{{ aluno.numero_matricula }}</strong> nos nossos arquivos, tendo obtido os seguintes resultados parcelares:
+            Declara-se que <strong>{{ aluno.nome_completo }}</strong>, {{ aluno.genero|yesno:"filho,filha" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>, nascido aos <strong>{{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{ aluno.data_nascimento|date:"Y" }}</strong>, natural de <strong>{{ aluno.naturalidade|default:"[Naturalidade]" }}</strong>, província de <strong>{{ aluno.provincia_naturalidade|default:"[Província]" }}</strong>, portador do Bilhete de Identidade nº<strong>{{ aluno.numero_bi }}</strong>, passado pelo arquivo nacional de identificação aos <strong>{{ aluno.data_emissao_bilhete|date:"d" }} de {{ aluno.data_emissao_bilhete|date:"F" }} de {{ aluno.data_emissao_bilhete|date:"Y" }}</strong>. <strong>Frequentou</strong> o ano lectivo de <strong>{{ ano_letivo }}</strong> à <strong>{{ solicitacao.classe_solicitada.nivel|default:aluno.id_turma.id_classe.nivel }}ª Classe</strong>; turma:<strong>{{ turma_frequentada.codigo_turma }}</strong>, nº {{ aluno.numero_pauta|default:aluno.id_aluno }}; curriculum regular; o Curso: <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>; Área de Formação: <strong>{{ aluno.id_turma.id_curso.area_formacao|default:"Informática" }}</strong>, registado com o processo individual nº <strong>{{ aluno.numero_matricula }}</strong> nos nossos arquivos, tendo obtido os seguintes resultados parcelares:
         </div>
 
         <table>
@@ -124,7 +123,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="2" style="text-align: center;">Nenhum resultado lançado.</td>
+                    <td colspan="2" style="text-align: center;">O aluno não Possui Notas.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -132,20 +131,20 @@
 
         <div class="legal-note">A presente declaração destina-se a efeitos legais.</div>
 
-        <div class="body-text" style="margin-top: 30px;">
+        <div class="body-text" >
             Por ser verdade e me ter sido solicitado mandei passar a presente <strong>Declaração</strong>, que vai por
             mim assinada e autenticada com o carimbo a óleo em uso nesta Instituição.
         </div>
 
         <div class="location-date">
             SECRETARIA PEDAGÓGICA DO IP Nº 3050/MAIOMBE - SEQUELE, aos {{ hoje|date:"d" }} de {{ hoje|date:"F"|upper }}
-            de {{ hoje|date:"Y" }}. -
+            de {{ hoje|date:"Y" }}. 
         </div>
 
         <div class="signature-section">
             <div class="signature-line">
-                O DIRECTOR GERAL<br>
-                [Nome do Diretor Aqui]
+                O DIRECTOR GERAL<hr>
+               DOMINGOS PAULO ROMEU
             </div>
         </div>
     </div>

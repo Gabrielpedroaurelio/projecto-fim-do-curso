@@ -64,18 +64,38 @@ class AcademicService:
 
         # 1. Identificar a Curso e a Matriz Curricular
         matriz = None
+        target_turma = None
         
-        # Prioridade 1: Matriz direta da turma do aluno
-        if aluno.id_turma and aluno.id_turma.id_matriz_curricular:
+        # LOGICA CORRIGIDA: Priorizar a CLASSE SOLICITADA se fornecida
+        if classe:
+            # Tentar encontrar histórico de turma para esta classe
+            from apis.models import HistoricoTurmaAluno
+            historico = HistoricoTurmaAluno.objects.filter(id_aluno=aluno, id_classe=classe).order_by('-data_inicio').first()
+            
+            if historico and historico.id_turma and historico.id_turma.id_matriz_curricular:
+                matriz = historico.id_turma.id_matriz_curricular
+                target_turma = historico.id_turma
+            
+            # Se não achou histórico, tentar buscar Matriz Ativa para Curso + Classe
+            if not matriz and aluno.id_turma:
+                curso = aluno.id_turma.id_curso # Assume curso atual
+                matriz = MatrizCurricular.objects.filter(id_curso=curso, id_classe=classe, ativo=True).first()
+                if not matriz:
+                    matriz = MatrizCurricular.objects.filter(id_curso=curso, id_classe=classe).first()
+        
+        # Se ainda não temos matriz (ou classe não foi fornecida), usar a da turma atual
+        if not matriz and aluno.id_turma and aluno.id_turma.id_matriz_curricular:
             matriz = aluno.id_turma.id_matriz_curricular
+            target_turma = aluno.id_turma
             if not classe:
                 classe = aluno.id_turma.id_classe
-        
-        # Prioridade 2: Buscar por Curso e Classe se matriz não definida na turma
+
+        # Fallback antigas logicas se ainda nao tiver matriz
         if not matriz:
             curso = None
             if aluno.id_turma:
                 curso = aluno.id_turma.id_curso
+                target_turma = aluno.id_turma # Tentativa de fixar turma atual
                 if not classe:
                     classe = aluno.id_turma.id_classe
             
@@ -84,6 +104,7 @@ class AcademicService:
                 if ultima_matricula and ultima_matricula.id_turma:
                     curso = curso or ultima_matricula.id_turma.id_curso
                     classe = classe or ultima_matricula.id_turma.id_classe
+                    target_turma = ultima_matricula.id_turma # Fixar turma da matricula
             
             if curso and classe:
                 matriz = MatrizCurricular.objects.filter(id_curso=curso, id_classe=classe, ativo=True).first()
@@ -92,7 +113,11 @@ class AcademicService:
 
         if not matriz:
             # Fallback: Se não tem matriz, busca todas as disciplinas que o aluno tem nota
-            notas_aluno = Nota.objects.filter(id_aluno=aluno).select_related('id_disciplina')
+            query_filters = {'id_aluno': aluno}
+            if target_turma:
+                query_filters['id_turma'] = target_turma
+                
+            notas_aluno = Nota.objects.filter(**query_filters).select_related('id_disciplina')
             if not notas_aluno.exists():
                 return []
                 
@@ -184,7 +209,11 @@ class AcademicService:
         resultados = []
         
         for m_disc in disciplinas_matriz:
-            notas_disc = Nota.objects.filter(id_aluno=aluno, id_disciplina=m_disc.id_disciplina)
+            # CORRECAO: Filtrar notas pela turma alvo (Histórica ou Atual)
+            if target_turma:
+                notas_disc = Nota.objects.filter(id_aluno=aluno, id_disciplina=m_disc.id_disciplina, id_turma=target_turma)
+            else:
+                notas_disc = Nota.objects.filter(id_aluno=aluno, id_disciplina=m_disc.id_disciplina)
             
             # Estrutura por trimestre (None indica que não foi lançada)
             grades = {

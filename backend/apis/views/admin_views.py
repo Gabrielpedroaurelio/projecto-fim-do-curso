@@ -47,6 +47,14 @@ class GradeLaunchView(View):
                         if nota_value < 0 or nota_value > 20:
                             raise ValueError(f"Nota inválida para o aluno {aluno.nome_completo}")
 
+                        # Mapeamento de tipo_avaliacao para tipo_nota
+                        map_tipo_nota = {
+                            'Avaliação Continua': 'MAC',
+                            'Prova do Professor': 'PP',
+                            'Prova Trimestral': 'PT'
+                        }
+                        tipo_nota_mapped = map_tipo_nota.get(tipo_avaliacao)
+
                         # Buscar ou criar nota
                         nota_obj, created = Nota.objects.update_or_create(
                             id_aluno=aluno,
@@ -56,6 +64,7 @@ class GradeLaunchView(View):
                             id_turma=turma,
                             defaults={
                                 'valor': nota_value,
+                                'tipo_nota': tipo_nota_mapped,
                                 # 'id_professor': request.user.funcionario if hasattr(request.user, 'funcionario') else None 
                                 # Assumindo que o usuário logado no admin pode não ser um funcionario linkado diretamente
                             }
@@ -125,6 +134,7 @@ class GradeLaunchView(View):
                  nota = Nota.objects.filter(
                      id_aluno=aluno,
                      id_disciplina_id=id_disciplina,
+                     id_turma_id=id_turma,
                      tipo_avaliacao=tipo_avaliacao,
                      trimestre=trimestre
                  ).first()

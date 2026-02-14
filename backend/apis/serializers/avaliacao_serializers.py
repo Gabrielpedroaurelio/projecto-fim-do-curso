@@ -67,7 +67,7 @@ class NotaSerializer(serializers.ModelSerializer):
         fields = [
             'id_nota', 'id_aluno', 'aluno_nome', 'id_disciplina', 'disciplina_nome',
             'id_professor', 'professor_nome', 'id_turma', 'turma_codigo',
-            'tipo_avaliacao', 'valor', 'data_lancamento'
+            'tipo_avaliacao', 'tipo_nota', 'trimestre', 'valor', 'data_lancamento'
         ]
         read_only_fields = ['id_nota', 'data_lancamento']
 
