@@ -134,6 +134,7 @@ class GradeLaunchView(View):
                  nota = Nota.objects.filter(
                      id_aluno=aluno,
                      id_disciplina_id=id_disciplina,
+                     id_turma_id=id_turma,
                      tipo_avaliacao=tipo_avaliacao,
                      trimestre=trimestre
                  ).first()
