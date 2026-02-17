@@ -1,16 +1,14 @@
 .InfrastructureSection {
     padding: 100px 5%;
     background-color: var(--bg-page);
-    /* Adaptive background */
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal leak */
     color: var(--text-title);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .OverlayPattern {
-    /* Optional geometric pattern if desired, currently kept simple for clean look */
     display: none;
 }
 
@@ -21,8 +19,9 @@
     z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
+    gap: clamp(40px, 5vw, 80px);
     align-items: center;
+    padding: 0 15px;
 }
 
 .TextContent h2 {
@@ -48,15 +47,19 @@
 
 .FacilityItem {
     background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 24px;
     border-radius: 16px;
     border: 1px solid var(--border-color);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .FacilityItem:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(168, 199, 250, 0.2);
+    background: var(--bg-card);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
 }
 
 .FacilityItem h4 {
@@ -64,7 +67,6 @@
     font-weight: 600;
     margin-bottom: 8px;
     display: flex;
-    align-items: center;
     align-items: center;
     gap: 12px;
     color: var(--text-title);
@@ -78,7 +80,7 @@
 .FacilityItem p {
     font-size: 0.95rem;
     margin: 0;
-    color: #5e6166;
+    color: var(--text-muted);
 }
 
 .LibraryBtn {
@@ -125,10 +127,33 @@
 @media (max-width: 900px) {
     .Container {
         grid-template-columns: 1fr;
+        gap: 40px;
     }
 
     .ImageGrid {
         order: -1;
-        margin-bottom: 40px;
+        margin-bottom: 60px;
+    }
+    
+    .TextContent h2 {
+        text-align: center;
+    }
+    
+    .TextContent p {
+        text-align: center;
+    }
+    
+    .LibraryBtn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .ImageGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ImageGrid img:nth-child(2) {
+        transform: translateY(0);
     }
 }
