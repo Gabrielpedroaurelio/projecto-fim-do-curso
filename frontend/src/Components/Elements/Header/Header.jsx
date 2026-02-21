@@ -129,8 +129,9 @@ export default function Header({ text1, text2, onSearch }) {
     };
 
     const getInitials = (name) => {
-        if (!name) return '??';
-        const parts = name.split(' ');
+        const finalName = name || user?.nome_completo;
+        if (!finalName) return '??';
+        const parts = finalName.trim().split(' ');
         if (parts.length >= 2) {
             return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
         }
@@ -230,7 +231,7 @@ export default function Header({ text1, text2, onSearch }) {
                             )}
                         </div>
                         <div className={style.InfoSmall}>
-                            <h4>{user?.nome || 'Usuário'}</h4>
+                            <h4>{user?.nome || user?.nome_completo || 'Usuário'}</h4>
                             <span>{userRoleDisplay[user?.tipo] || 'Membro'}</span>
                         </div>
                     </div>
@@ -246,7 +247,7 @@ export default function Header({ text1, text2, onSearch }) {
                                     )}
                                 </div>
                                 <div className={style.ProfileInfo}>
-                                    <h4>{user?.nome || 'Usuário'}</h4>
+                                    <h4>{user?.nome || user?.nome_completo || 'Usuário'}</h4>
                                     <span>{user?.email || 'email@exemplo.com'}</span>
                                 </div>
                             </div>

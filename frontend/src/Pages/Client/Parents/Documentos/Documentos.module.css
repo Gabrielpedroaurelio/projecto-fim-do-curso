@@ -113,37 +113,170 @@
     border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
-.actionBtn {
-    width: 40px;
-    height: 40px;
-    background: var(--green-primay);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
+/* Barra de Filtros */
+.filtersBar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.searchField {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0.75rem;
+    background: var(--bg-card);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.3s;
+}
+
+.searchField:focus-within {
+    border-color: var(--green-primay);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.searchField input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.searchField svg {
+    color: var(--text-muted);
     font-size: 1.1rem;
 }
 
-.actionBtn:hover {
-    transform: translateY(-4px);
-    filter: brightness(1.1);
-    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
-}
-
-.viewBtn {
-    background: var(--bg-input);
+.docType {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     color: var(--text-main);
-    border: 1px solid var(--border-color);
 }
 
-.viewBtn:hover {
-    background: var(--text-main);
-    color: var(--bg-card);
-    border-color: var(--text-main);
+.docType svg {
+    color: var(--green-primay);
+    font-size: 1.25rem;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    margin-right: 0.5rem;
+    opacity: 0.8;
+}
+
+.actionsGroup {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.emptyMsg {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Modal PDF */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modalContent {
+    background: var(--bg-card);
+    width: 90%;
+    height: 90%;
+    max-width: 1000px;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modalHeader {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-input);
+}
+
+.modalHeader h3 {
+    margin: 0;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+.modalBody {
+    flex: 1;
+    background: #f3f4f6;
+}
+
+.pdfViewer {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.modalFooter {
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.downloadBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--green-primay);
+    color: white;
+    padding: 0.75rem 1.75rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.3s;
+}
+
+.downloadBtn:hover {
+    filter: brightness(1.1);
 }
 
 @media (max-width: 768px) {

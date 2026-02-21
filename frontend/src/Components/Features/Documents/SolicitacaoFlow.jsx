@@ -16,7 +16,6 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [selectedDoc, setSelectedDoc] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
     const [classes, setClasses] = useState([]);
-    const [availableClasses, setAvailableClasses] = useState([]);
 
     const [paymentMethod, setPaymentMethod] = useState('');
     const [result, setResult] = useState(null);
@@ -63,28 +62,9 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     }, []);
 
     useEffect(() => {
-        if (studentInfo) {
-            const missing = {};
-            let hasMissing = false;
-            mandatoryFields.forEach(field => {
-                const value = studentInfo[field.key];
-                // Verifica se o valor está null, undefined, ou string vazia (após trim)
-                const isEmpty = value === null || value === undefined ||
-                    (typeof value === 'string' && value.trim() === '');
-                if (isEmpty) {
-                    missing[field.key] = '';
-                    hasMissing = true;
-                }
-            });
-            if (hasMissing) {
-                setMissingFields(missing);
-                setIsEditingMissing(true);
-            } else {
-                setMissingFields({});
-                setIsEditingMissing(false);
-            }
-        }
-    }, [studentInfo, mandatoryFields]);
+        // Desativado: Não travar mais a solicitação por falta de dados (Pai/Mãe/etc)
+        setIsEditingMissing(false);
+    }, [studentInfo]);
 
     const handleMissingFieldChange = (key, value) => {
         setMissingFields(prev => ({ ...prev, [key]: value }));
@@ -115,30 +95,42 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
         }
     };
 
-    useEffect(() => {
+    const availableClasses = useMemo(() => {
         // Filtra classes baseado na regra de negócio e no aluno selecionado
         if (!studentInfo || !selectedDoc || classes.length === 0) {
-            setAvailableClasses([]);
-            return;
+            return [];
         }
 
-        const currentLevel = parseInt(studentInfo.classe_nivel || 0);
+        // Extração robusta do nível da classe
+        const currentLevel = parseInt(
+            studentInfo.classe_nivel || 
+            studentInfo.perfil?.id_turma?.id_classe?.nivel ||
+            studentInfo.aluno?.id_turma?.id_classe?.nivel ||
+            studentInfo.turma_detalhes?.classe?.nivel || 
+            studentInfo.id_turma?.id_classe?.nivel || 
+            0
+        );
+
         let filtered = [];
 
-        // Regras Reais:
-        // Declaração: Máximo permitida = Classe Atual - 1 (ex: aluno da 12ª só pede até 11ª)
-        // Boletim: Permitida Classe Atual ou inferior
-        // Certificado: Apenas se aprovado na última classe do ciclo (13ª) ou Ex-aluno finalizado
-
-        if (selectedDoc === 'DECLARAÇÃO' || selectedDoc === 'DECLARAÇÃO_SIMPLES' || selectedDoc === 'DECLARAÇÃO_APROVEITAMENTO' || selectedDoc.includes('DECLARAÇÃO')) {
+        // Regras:
+        // Declaração: < currentLevel
+        // Boletim: <= currentLevel
+        // Certificado: == 13
+        const docUpper = selectedDoc.toUpperCase();
+        
+        if (docUpper.includes('DECLARAÇÃO')) {
             filtered = classes.filter(c => c.nivel < currentLevel);
-        } else if (selectedDoc === 'BOLETIM_3' || selectedDoc === "BOLETIM_2" || selectedDoc === "BOLETIM_1") {
+        } else if (docUpper.includes('BOLETIM')) {
             filtered = classes.filter(c => c.nivel <= currentLevel);
-        } else if (selectedDoc === 'CERTIFICADO') {
+        } else if (docUpper.includes('CERTIFICADO')) {
             filtered = classes.filter(c => c.nivel === 13);
+        } else {
+            // Fallback para outros documentos (se houver)
+            filtered = classes.filter(c => c.nivel <= currentLevel);
         }
 
-        setAvailableClasses(filtered.sort((a, b) => b.nivel - a.nivel));
+        return filtered.sort((a, b) => b.nivel - a.nivel);
     }, [selectedDoc, studentInfo, classes]);
 
     useEffect(() => {
@@ -472,7 +464,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                                     style={{ flex: 1 }}
                                                 />
                                                 <button onClick={searchStudent} disabled={loading}>
-                                                    {loading ? '...' : <RiSearchLine />}
+                                                    {loading ? 'Pesquisando...' : <RiSearchLine />}
                                                 </button>
                                             </div>
                                             {error && <p className={style.errorMsg}>{error}</p>}
@@ -496,10 +488,24 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                     {studentInfo.img_path ? <img src={studentInfo.img_path} alt="" /> : <RiUser3Line />}
                                 </div>
                                 <div className={style.details}>
-                                    <h3>{studentInfo.nome_completo}</h3>
+                                    <h3>{studentInfo.nome_completo || studentInfo.nome}</h3>
                                     <p><strong>BI:</strong> {studentInfo.numero_bi}</p>
                                     <p><strong>Matrícula:</strong> {studentInfo.numero_matricula}</p>
-                                    <p><strong>Actual:</strong> {studentInfo.classe_nivel || 'Classe N/A'}ª Classe - {studentInfo.curso_nome || 'Curso N/A'}</p>
+                                    <p>
+                                        <strong>Actual:</strong> {
+                                            studentInfo.classe_nivel || 
+                                            studentInfo.turma_detalhes?.classe?.nivel || 
+                                            studentInfo.id_turma?.id_classe?.nivel || 
+                                            '?'
+                                        }ª Classe - {
+                                            studentInfo.curso_nome || 
+                                            studentInfo.perfil?.id_turma?.id_curso?.nome_curso ||
+                                            studentInfo.aluno?.id_turma?.id_curso?.nome_curso ||
+                                            studentInfo.turma_detalhes?.curso?.nome || 
+                                            studentInfo.id_turma?.id_curso?.nome_curso || 
+                                            'Curso N/A'
+                                        }
+                                    </p>
                                 </div>
                                 <div className={style.actionsTop}>
                                     <button className={style.btnWrongData} onClick={() => {

@@ -11,8 +11,22 @@ const DocumentsCliente = () => {
   const { user } = useAuth();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showRequestForm, setShowRequestForm] = useState(false);
-  const [shouldRefresh, setShouldRefresh] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState(null);
+
+  // Determinar base de media dinamicamente
+  const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000/media'
+    : 'https://piih.apedrodevelopers.ao/media';
+
+  const normalizeUrl = (url) => {
+    if (!url) return null;
+    if (typeof url !== 'string') return url.url || null; // Lida com objetos FileField se vierem assim
+    if (url.startsWith('http')) return url;
+    
+    // Remove prefixos redundantes
+    const cleanPath = url.replace(/^\/media\//, '').replace(/^media\//, '');
+    return `${MEDIA_BASE}/${cleanPath.replace(/^\//, '')}`;
+  };
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -22,17 +36,25 @@ const DocumentsCliente = () => {
         const response = await api.get(`/solicitacoes/minhas/?id_aluno=${user.id}&status_solicitacao__in=${statusFilter}`);
         setDocuments(response.data.results || response.data);
         setLoading(false);
+        
       } catch (error) {
         console.error("Erro ao buscar documentos:", error);
         setLoading(false);
       }
     };
     if (user?.id) fetchDocuments();
-  }, [user, shouldRefresh]);
+  }, [user]);
 
-  const handleRequestComplete = () => {
-    setShowRequestForm(false);
-    setShouldRefresh(prev => !prev);
+
+  const handleDownload = (doc) => {
+    const url = normalizeUrl(doc.caminho_arquivo || doc.caminho_pdf);
+    if (!url) return;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${doc.tipo_documento}_${doc.id_solicitacao}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const getStatusColor = (status) => {
@@ -73,29 +95,17 @@ const DocumentsCliente = () => {
       <main className='containelMainclient'>
         <Header text1="Estudante" text2="Meus Documentos" />
         <div className={style.container}>
-
-          {showRequestForm ? (
-            <div className={style.requestSection}>
-              <button className={style.backBtn} onClick={() => setShowRequestForm(false)}>
-                &larr; Voltar para Meus Documentos
-              </button>
-              <div className={style.formWrapper}>
-                <h2>Nova Solicitação de Documento</h2>
-                <SolicitacaoFlow
-                  userType="aluno"
-                  fixedStudent={user} // Passa o próprio aluno como fixo
-                  onComplete={handleRequestComplete}
-                />
-              </div>
-            </div>
-          ) : (
-            <>
-              <header className={style.header}>
+            <header className={style.header}>
                 <div>
                   <h1>Meus Documentos</h1>
                   <p>Gerencie suas solicitações e baixe documentos oficiais.</p>
                 </div>
-
+                <div className={style.statsSummary}>
+                    <div className={style.statItem}>
+                        <span>Total de Pedidos</span>
+                        <strong>{documents.length}</strong>
+                    </div>
+                </div>
               </header>
 
               <div className={style.tableContainer}>
@@ -111,32 +121,59 @@ const DocumentsCliente = () => {
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr><td colSpan="5">Carregando seus documentos...</td></tr>
+                      <tr><td colSpan="5" className="py-10 text-center text-muted">Carregando seus documentos...</td></tr>
                     ) : documents.length > 0 ? (
                       documents.map((doc) => (
                         <tr key={doc.id_solicitacao}>
                           <td>
-                            <div className="flex items-center gap-2">
-                              <RiFileList3Line className="text-emerald-500" />
-                              {doc.tipo_documento}
+                            <div className={style.docInfo}>
+                              <div className={style.docIcon}>
+                                <RiFileList3Line />
+                              </div>
+                              <div className={style.docText}>
+                                <strong>{doc.tipo_documento}</strong>
+                                <span>Ref: #{doc.id_solicitacao}</span>
+                              </div>
                             </div>
                           </td>
-                          <td>{new Date(doc.data_solicitacao).toLocaleDateString()}</td>
+                          <td>
+                            <div className={style.dateInfo}>
+                                {new Date(doc.data_solicitacao).toLocaleDateString('pt-AO')}
+                                <span>{new Date(doc.data_solicitacao).toLocaleTimeString('pt-AO', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                          </td>
                           <td>
                             <span className={`${style.statusBadge} ${style[getStatusColor(doc.status_solicitacao)]}`}>
-                              {doc.status_solicitacao}
+                              {doc.status_solicitacao.replace(/_/g, ' ')}
                             </span>
                           </td>
                           <td>
-                            {doc.data_expiracao_rup ? new Date(doc.data_expiracao_rup).toLocaleDateString() : '-'}
+                            {doc.data_expiracao_rup ? (
+                                <div className={style.rupInfo}>
+                                    {new Date(doc.data_expiracao_rup).toLocaleDateString('pt-AO')}
+                                    {new Date(doc.data_expiracao_rup) < new Date() && <span className={style.expired}>Expirado</span>}
+                                </div>
+                            ) : '-'}
                           </td>
                           <td>
-                            <div className="flex gap-2">
-                              {/* Lógica de botões baseada no status */}
-                              {doc.status_solicitacao === 'disponivel' && (
-                                <button className={style.actionBtn} title="Baixar" onClick={() => window.open(`http://localhost:8000/media/${doc.caminho_pdf}`, '_blank')}>
-                                  <RiDownload2Line />
-                                </button>
+                            <div className={style.actionsGroup}>
+                              {['disponivel', 'aguardando_assinatura', 'impresso'].includes(doc.status_solicitacao) && (
+                                <>
+                                  <button 
+                                    className={`${style.actionBtn} ${style.viewBtn}`} 
+                                    title="Visualizar"
+                                    onClick={() => setSelectedDoc(doc)}
+                                  >
+                                    <RiEyeLine />
+                                  </button>
+                                  <button 
+                                    className={style.actionBtn} 
+                                    title="Baixar" 
+                                    onClick={() => handleDownload(doc)}
+                                  >
+                                    <RiDownload2Line />
+                                  </button>
+                                </>
                               )}
                               {doc.status_solicitacao === 'pendente' && (
                                 <button
@@ -144,7 +181,7 @@ const DocumentsCliente = () => {
                                   title="Baixar RUP"
                                   onClick={() => handlePrintRUP(doc.id_solicitacao)}
                                 >
-                                  Baixar RUP
+                                  <RiDownload2Line /> RUP
                                 </button>
                               )}
                             </div>
@@ -157,11 +194,44 @@ const DocumentsCliente = () => {
                   </tbody>
                 </table>
               </div>
-            </>
-          )}
-
         </div>
       </main>
+
+      {/* Modal Visualizador (Igual Biblioteca) */}
+      {selectedDoc && (
+        <div className={style.modalOverlay} onClick={() => setSelectedDoc(null)}>
+          <div className={style.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={style.modalHeader}>
+              <div className={style.modalTitleInfo}>
+                <RiFileList3Line />
+                <h3>{selectedDoc.tipo_documento}</h3>
+              </div>
+              <button onClick={() => setSelectedDoc(null)} className={style.closeBtn}>×</button>
+            </div>
+            <div className={style.modalBody}>
+              {selectedDoc.caminho_arquivo || selectedDoc.caminho_pdf ? (
+                <iframe
+                  src={`${normalizeUrl(selectedDoc.caminho_arquivo || selectedDoc.caminho_pdf)}#toolbar=1&navpanes=0&scrollbar=1`}
+                  title="Visualizador de PDF"
+                  className={style.pdfViewer}
+                ></iframe>
+              ) : (
+                <div className={style.errorPlaceholder}>
+                  Documento não disponível para visualização automática.
+                </div>
+              )}
+            </div>
+            <div className={style.modalFooter}>
+              <button
+                className={style.actionBtn}
+                onClick={() => handleDownload(selectedDoc)}
+              >
+                <RiDownload2Line size={20} style={{ marginRight: '8px' }} /> Baixar Documento Oficial
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
