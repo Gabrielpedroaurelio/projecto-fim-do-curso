@@ -66,7 +66,8 @@ class SolicitacaoDocumentoListSerializer(serializers.ModelSerializer):
         model = SolicitacaoDocumento
         fields = [
             'id_solicitacao', 'tipo_documento', 'rupe', 'aluno_nome', 'aluno_img',
-            'status_solicitacao', 'data_solicitacao'
+            'status_solicitacao', 'data_solicitacao', 'caminho_arquivo', 
+            'valor_rupe', 'data_expiracao_rup'
         ]
 
     def get_aluno_img(self, obj):

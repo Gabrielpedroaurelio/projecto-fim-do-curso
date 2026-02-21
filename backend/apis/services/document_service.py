@@ -301,7 +301,9 @@ class DocumentService:
         if pdf_content:
             # "RUP" vai cair na categoria FINANCEIRO no novo _get_document_path
             structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, "RUP")
-            filename = f"rup_{solicitacao.uuid_documento}.pdf"
+            import random
+            random_suffix = random.randint(1000, 9999)
+            filename = f"rup_{solicitacao.rupe}_{random_suffix}.pdf"
             relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
             return relative_path
         return None
