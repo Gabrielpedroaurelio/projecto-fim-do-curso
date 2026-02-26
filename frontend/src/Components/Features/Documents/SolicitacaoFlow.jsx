@@ -32,8 +32,12 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const docOptions = [
-        { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento' },
-        { id: 'CERTIFICADO', label: 'Certificado' },
+        { id: 'DECLARAÇÃO_EMPREGO', label: 'Declaração (Efeito de Emprego)' },
+        { id: 'DECLARAÇÃO_PASSAPORTE', label: 'Declaração (Efeito de Passaporte)' },
+        { id: 'DECLARAÇÃO_MATRICULA', label: 'Declaração (Efeito de Matrícula)' },
+        { id: 'DECLARAÇÃO_OUTROS', label: 'Declaração (Outros Fins)' },
+        { id: 'DECLARAÇÃO_APROVEITAMENTO', label: 'Declaração de Aproveitamento (Com Notas)' },
+        { id: 'CERTIFICADO', label: 'Certificado de Conclusão' },
         { id: 'BOLETIM_1', label: 'Boletim (I Trimestre)' },
         { id: 'BOLETIM_2', label: 'Boletim (II Trimestre)' },
         { id: 'BOLETIM_3', label: 'Boletim (III Trimestre)' }
@@ -120,7 +124,13 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
         const docUpper = selectedDoc.toUpperCase();
         
         if (docUpper.includes('DECLARAÇÃO')) {
-            filtered = classes.filter(c => c.nivel < currentLevel);
+            if (docUpper.includes('APROVEITAMENTO')) {
+                // Com notas: apenas classes passadas
+                filtered = classes.filter(c => c.nivel < currentLevel);
+            } else {
+                // Sem notas: permite a classe actual (igual ao boletim)
+                filtered = classes.filter(c => c.nivel <= currentLevel);
+            }
         } else if (docUpper.includes('BOLETIM')) {
             filtered = classes.filter(c => c.nivel <= currentLevel);
         } else if (docUpper.includes('CERTIFICADO')) {

@@ -476,59 +476,69 @@ def gerar_declaracao_sem_notas(aluno_id, efeito=""):
     
     Args:
         aluno_id: ID do aluno
-        efeito: String vazia por padrão, será usado para definir o propósito da declaração
+        efeito: Propósito da declaração (ex: Passaporte, Emprego)
     
     Returns:
         dict: Dados estruturados para o template da declaração simples
     """
     from apis.models import Aluno, FaltaAluno
+    from django.utils import timezone
     import logging
     
     logger = logging.getLogger(__name__)
+    hoje = timezone.now()
     
     try:
         # 1. Buscar dados do aluno
         aluno = Aluno.objects.select_related(
             'id_turma', 
             'id_turma__id_classe', 
-            'id_turma__id_curso'
+            'id_turma__id_curso',
+            'id_turma__id_curso__id_area_formacao'
         ).get(id_aluno=aluno_id)
         
         # 2. Validar se o aluno tem turma associada
         if not aluno.id_turma:
             raise ValueError("Aluno não possui turma associada")
         
-        # 3. Estruturar dados da declaração
+        # 3. Lógica de Status Temporal (Frequenta vs Frequentou)
+        # Se a turma for do ano actual, usa "Frequenta"
+        ano_atual = hoje.year
+        ano_turma = aluno.id_turma.ano_letivo or aluno.id_turma.ano or str(ano_atual)
+        
+        status_temporal = "Frequenta"
+        if str(ano_atual) not in str(ano_turma):
+            status_temporal = "Frequentou"
+            
+        # 4. Estruturar dados da declaração
         dados_declaracao = {
             'aluno': aluno,
             'turma': aluno.id_turma,
             'classe': aluno.id_turma.id_classe,
             'curso': aluno.id_turma.id_curso,
-            'ano_letivo': '2024',  # Pode ser dinâmico
-            'efeito': efeito,  # Parâmetro para futuro uso
-            'data_emissao': '16/06/2025',  # Pode ser dinâmico
-            'tipo_declaracao': 'Frequência Escolar'  # Pode ser ajustado
+            'ano_letivo': ano_turma,
+            'efeito': efeito,
+            'status_temporal': status_temporal,
+            'data_emissao': hoje.strftime('%d/%m/%Y'),
+            'hoje': hoje,
+            'tipo_declaracao': f'Declaração para fins de {efeito}' if efeito else 'Declaração de Frequência'
         }
         
-        # 4. Buscar informações adicionais (faltas, etc.)
-        faltas_ano = FaltaAluno.objects.filter(
-            id_aluno=aluno,
-            data_falta__year=2024  # Pode ser dinâmico
-        ).count()
+        # 5. Buscar informações adicionais (faltas, etc.) - Usando o ano da sala
+        # Extrair o primeiro ano se for "2024/2025"
+        ano_busca = ano_turma.split('/')[0] if '/' in str(ano_turma) else ano_turma
+        
+        try:
+            faltas_ano = FaltaAluno.objects.filter(
+                id_aluno=aluno,
+                data_falta__year=int(ano_busca)
+            ).count()
+        except (ValueError, TypeError):
+            faltas_ano = 0
         
         dados_declaracao['total_faltas'] = faltas_ano
         
-        # 5. Determinar status da frequência
-        if faltas_ano == 0:
-            dados_declaracao['status_frequencia'] = 'Excelente (sem faltas)'
-        elif faltas_ano <= 5:
-            dados_declaracao['status_frequencia'] = 'Boa'
-        elif faltas_ano <= 10:
-            dados_declaracao['status_frequencia'] = 'Regular'
-        else:
-            dados_declaracao['status_frequencia'] = 'Precisa de melhoria'
-        
-        logger.info(f"Declaração sem notas gerada para {aluno.nome_completo} - {aluno.id_turma.codigo_turma}")
+        logger.info(f"Declaração sem notas gerada para {aluno.nome_completo} - {aluno.id_turma.codigo_turma} ({status_temporal})")
         
         return dados_declaracao
         

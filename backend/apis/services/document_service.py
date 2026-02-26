@@ -177,12 +177,24 @@ class DocumentService:
             'hoje': timezone.now(),
             'ano_letivo': ano_letivo,
             'turma_frequentada': turma_frequentada,
-            'site_url': settings.SITE_URL if hasattr(settings, 'SITE_URL') else 'http://localhost:8000'
+            'turma': turma_frequentada,
+            'classe': solicitacao.classe_solicitada or (turma_frequentada.id_classe if turma_frequentada else None),
+            'curso': (solicitacao.id_aluno.id_turma.id_curso if solicitacao.id_aluno.id_turma else None) or (turma_frequentada.id_curso if turma_frequentada else None),
+            'site_url': settings.SITE_URL if hasattr(settings, 'settings.SITE_URL') else 'http://localhost:8000'
         }
         
         # Selecionar template e carregar notas se necessário
         template_name = 'pdf/declaracao_matricula.html'
         tipo_base = solicitacao.tipo_documento.upper()
+
+        # Determinar status temporal (Frequenta vs Frequentou)
+        ano_atual = timezone.now().year
+        ano_turma = str(ano_letivo)
+        status_temporal = "Frequenta"
+        if str(ano_atual) not in ano_turma:
+            status_temporal = "Frequentou"
+        
+        context['status_temporal'] = status_temporal
 
         if 'CERTIFICADO' in tipo_base:
             template_name = 'pdf/certificado.html'
@@ -205,6 +217,23 @@ class DocumentService:
                         context['trimestre_selecionado'] = '1' # Default para o 1º se não especificado
                 except:
                     context['trimestre_selecionado'] = '1'
+        elif 'DECLARAÇÃO' in tipo_base:
+            # Para declarações sem notas (Emprego, Passaporte, etc.)
+            template_name = 'pdf/declaracao_sem_notas.html'
+            # Extrair efeito se especificado (ex: DECLARAÇÃO_EMPREGO -> Emprego)
+            if '_' in tipo_base:
+                efeito_raw = tipo_base.split('_')[-1]
+                # Mapa de normalização de termos
+                mapa_efeitos = {
+                    'EMPREGO': 'fins de emprego',
+                    'PASSAPORTE': 'fins de passaporte',
+                    'MATRICULA': 'fins de matrícula',
+                    'MATRÍCULA': 'fins de matrícula',
+                    'OUTROS': 'fins legais'
+                }
+                context['efeito'] = mapa_efeitos.get(efeito_raw, efeito_raw.lower())
+            else:
+                context['efeito'] = 'fins legais'
             
         pdf_content = PDFService.render_to_pdf(template_name, context)
         
