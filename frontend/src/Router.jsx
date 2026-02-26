@@ -38,6 +38,7 @@ import GradeLaunching from './Pages/Admin/Grades/GradeLaunching'
 
 import ProtectedRoute from './Components/Security/ProtectedRoute'
 import Profile from './Pages/Common/Profile/Profile';
+import NotFound from './Pages/Public/NotFound/NotFound';
 
 const Routers = () => {
     return (
@@ -89,6 +90,9 @@ const Routers = () => {
             <Route path='/public/site' element={<MainSite />}></Route>{/* */}
             <Route path='/public/library' element={<LIbrary />}></Route>{/* */}
             <Route path='/public/library/buy' element={"/public/library/buy"}></Route>{/* */}
+
+            {/* Rota 404 - Not Found */}
+            <Route path='*' element={<NotFound />}></Route>
         </Routes>
     )
 }

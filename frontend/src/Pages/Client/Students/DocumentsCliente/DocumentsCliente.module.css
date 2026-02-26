@@ -37,7 +37,7 @@
     font-size: 1.1rem;
 }
 .newRequestBtn{
-    background-color: #0ea5e9;
+    background-color: var(--primary);
     color: #fff;
     font-weight: 500;
     padding: 10px;
@@ -136,7 +136,7 @@
 .actionBtn {
     width: 38px;
     height: 38px;
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: var(--radius-sm);
@@ -146,26 +146,26 @@
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
+    box-shadow: 0 4px 6px var(--primary-soft);
 }
 
 .actionBtn:hover {
     transform: translateY(-2px);
     filter: brightness(1.1);
-    box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 6px 12px var(--primary-soft);
 }
 
 .viewBtn {
     background: var(--bg-input);
-    color: #0ea5e9;
+    color: var(--primary);
     border: 1px solid var(--border-color);
     box-shadow: none;
 }
 
 .viewBtn:hover {
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
-    border-color: #0ea5e9;
+    border-color: var(--primary);
 }
 
 @media (max-width: 768px) {
@@ -225,7 +225,7 @@
 
 .modalTitleInfo svg {
     font-size: 1.5rem;
-    color: #0ea5e9;
+    color: var(--primary);
 }
 
 .modalHeader h3 {
@@ -283,8 +283,8 @@
 .docIcon {
     width: 40px;
     height: 40px;
-    background: rgba(14, 165, 233, 0.1);
-    color: #0ea5e9;
+    background: var(--primary-soft);
+    color: var(--primary);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -385,5 +385,5 @@
 
 .statItem strong {
     font-size: 1.25rem;
-    color: #0ea5e9;
+    color: var(--primary);
 }

@@ -81,19 +81,19 @@ export default function Dashboards() {
                     />
                     <Cards
                         icon={<FaCircleCheck size={40} />}
-                        title={"Declarações Emitidas"}
+                        title={"Documentos Emitidos"}
                         value={kpis.declaracoes_emitidas.total.toLocaleString()}
                         value_percentual={calculatePercentage(kpis.declaracoes_emitidas.current, kpis.declaracoes_emitidas.previous)}
                     />
                     <Cards
                         icon={<FaUserGraduate size={40} />}
-                        title={"Alunos"}
+                        title={"Nossos Alunos"}
                         value={kpis.novos_alunos.total.toLocaleString()}
                         value_percentual={calculatePercentage(kpis.novos_alunos.current, kpis.novos_alunos.previous)}
                     />
                     <Cards
                         icon={<RiBillLine size={40} />}
-                        title={"Receita Total"}
+                        title={"Receita Total das Solicitações"}
                         value={`${kpis.receita_total.total.toLocaleString()},00Kz`}
                         value_percentual={calculatePercentage(kpis.receita_total.current, kpis.receita_total.previous)}
                     />

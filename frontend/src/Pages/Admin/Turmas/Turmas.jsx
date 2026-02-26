@@ -70,7 +70,7 @@ export default function Turmas() {
                         externalSearchTerm={searchTerm}
                         data={turmas}
                         columns={columns}
-                        onAdd={handleAdd}
+                        onAdd={false}
                         addButtonLabel="Criar_Turma"
                         /* onEdit={handleEdit}
                           onDelete={handleDelete}*/

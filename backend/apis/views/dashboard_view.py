@@ -24,15 +24,5 @@ def custom_dashboard_view(request):
     # Popula os dados do dashboard (KPIs e Gráficos)
     context = dashboard_callback(request, context)
     
-    # Serializar dados dos gráficos para JSON string para usar no template
-    import json
-    if 'charts' in context:
-        for chart in context['charts']:
-            # Preparar o objeto 'data' esperado pelo Chart.js (labels e datasets)
-            chart_data = {
-                'labels': chart.get('labels', []),
-                'datasets': chart.get('datasets', [])
-            }
-            chart['json_data'] = json.dumps(chart_data)
-
+    # Os dados já vêm serializados corretamente do dashboard_callback
     return render(request, 'admin/academic_dashboard.html', context)

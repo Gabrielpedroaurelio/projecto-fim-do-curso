@@ -44,7 +44,7 @@
 }
 
 .SearchBox:focus-within {
-    border-color: #0ea5e9;
+    border-color: var(--primary);
 }
 
 .SearchBox svg {
@@ -89,7 +89,7 @@
 }
 
 .Table tr:hover td {
-    background-color: rgba(14, 165, 233, 0.02);
+    background-color: var(--primary-light);
 }
 
 .UserCell {
@@ -101,7 +101,7 @@
 .Avatar {
     width: 36px;
     height: 36px;
-    background-color: #0ea5e9;
+    background-color: var(--primary);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -163,7 +163,7 @@
 .DeviceCell svg,
 .BrowserCell svg {
     font-size: 1rem;
-    color: #0ea5e9;
+    color: var(--primary);
 }
 
 .EmptyState {
@@ -200,8 +200,8 @@
 }
 
 .Pagination button:hover:not(:disabled) {
-    border-color: #0ea5e9;
-    color: #0ea5e9;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .Pagination button:disabled {
@@ -210,9 +210,9 @@
 }
 
 .ActivePage {
-    background-color: #0ea5e9 !important;
+    background-color: var(--primary) !important;
     color: white !important;
-    border-color: #0ea5e9 !important;
+    border-color: var(--primary) !important;
 }
 
 @keyframes fadeIn {

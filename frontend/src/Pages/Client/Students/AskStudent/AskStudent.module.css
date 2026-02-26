@@ -56,7 +56,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #0ea5e9, #00a3ff);
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
 }
 
 .formGroup {
@@ -92,9 +92,9 @@
 .input:focus,
 .textarea:focus,
 .select:focus {
-    border-color: #0ea5e9;
+    border-color: var(--primary);
     background: var(--bg-card);
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    box-shadow: 0 0 0 4px var(--primary-soft);
 }
 
 .textarea {
@@ -106,7 +106,7 @@
 .submitBtn {
     width: 100%;
     padding: 1.125rem;
-    background: linear-gradient(135deg, #0ea5e9 0%, #00a3ff 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
     border: none;
     border-radius: var(--radius-md);
@@ -118,12 +118,12 @@
     justify-content: center;
     align-items: center;
     gap: 0.75rem;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 12px var(--primary-soft);
 }
 
 .submitBtn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+    box-shadow: 0 6px 20px var(--primary-soft);
     filter: brightness(1.1);
 }
 

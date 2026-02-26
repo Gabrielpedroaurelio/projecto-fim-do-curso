@@ -113,7 +113,7 @@ body.dark-mode .Sidebar::-webkit-scrollbar-thumb {
 }
 
 .Sidebar .Badge {
-    background-color: #0ea5e9;
+    background-color: var(--primary);
     color: white;
     font-size: 0.7rem;
     padding: 2px 6px;

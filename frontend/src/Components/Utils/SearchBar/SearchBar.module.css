@@ -85,13 +85,13 @@ body.dark-mode .SearchBar input,
 /* Focus / subtle glow */
 .SearchBar:focus-within {
     background: #f0f0f099;
-    border-color: #0ea5e9;
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
     transform: translateY(-1px);
 }
 
 .SearchBar:focus-within svg {
-    color: #0ea5e9;
+    color: var(--primary);
 }
 
 .SearchBar input:focus {

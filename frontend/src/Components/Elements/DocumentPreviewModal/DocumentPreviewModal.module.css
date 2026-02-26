@@ -50,7 +50,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 4px;
@@ -60,7 +60,7 @@
 }
 
 .DownloadBtn:hover {
-    background: #0284c7;
+    background: var(--primary-dark);
 }
 
 .CloseBtn {

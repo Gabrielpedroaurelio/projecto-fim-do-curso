@@ -116,7 +116,7 @@ body.dark-mode .body {
 .containerCategory button.is_selected {
     background-color: var(--primary);
     color: #ffffff;
-    box-shadow: 0 8px 16px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 8px 16px var(--primary-soft);
     border-color: var(--primary);
     font-weight: 600;
 }
@@ -258,7 +258,7 @@ body.dark-mode .body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #0ea5e9;
+    background-color: var(--primary);
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -269,7 +269,7 @@ body.dark-mode .body {
 }
 
 .downloadBtn:hover {
-    background-color: #0284c7;
+    background-color: var(--primary-dark);
 }
 
 @keyframes slideUp {

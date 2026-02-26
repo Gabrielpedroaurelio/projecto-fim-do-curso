@@ -141,7 +141,7 @@ export default function Solicitacao() {
                             {/* Header Controls */}
                             <div className={style.CardHeader}>
                                 <div className={style.HeaderLeft}>
-                                    <h3 className="text-gradient">Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
+                                    <h3 className="text-gradientf">Solicitações de {tabs.find(t => t.id === activeTab)?.label}</h3>
                                     <p className={style.Subtitle}>Gerir e acompanhar solicitações de documentos</p>
                                 </div>
                                 <div className={style.HeaderActions}>

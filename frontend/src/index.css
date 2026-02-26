@@ -15,8 +15,8 @@
     --border-color: #e2e8f0;
 
     /* Accents */
-    --accent-indigo: #0ea5e9;
-    --accent-emerald: #0ea5e9;
+    --accent-indigo: var(--primary);
+    --accent-emerald: var(--primary);
     --accent-rose: #f43f5e;
     --accent-amber: #f59e0b;
 
