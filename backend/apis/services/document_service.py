@@ -198,6 +198,13 @@ class DocumentService:
 
         if 'CERTIFICADO' in tipo_base:
             template_name = 'pdf/certificado.html'
+            from apis.services.academic_service import AcademicService
+            historico_cert = AcademicService.get_historico_certificado_tecnico(solicitacao.id_aluno)
+            context.update(historico_cert)
+            # Sufixos de género para o texto do certificado (evita if/else no template)
+            genero = solicitacao.id_aluno.genero or 'M'
+            context['sufixo_nascido']   = 'a' if genero == 'F' else 'o'
+            context['sufixo_portador']  = 'a' if genero == 'F' else 'o'
         elif 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base:
             # Se for aproveitamento ou boletim, carregar as notas
             context['notas_finais'] = DocumentService._get_notas_finais_aluno(

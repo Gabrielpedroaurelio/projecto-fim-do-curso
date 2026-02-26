@@ -224,7 +224,11 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
                 'download_url': pdf_url
             }, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            import traceback
+            print("==== ERRO confirmar_pagamento ====")
+            print(traceback.format_exc())
+            print("=================================")
+            return Response({'error': str(e), 'detalhe': traceback.format_exc()}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['get'])
     def imprimir_rup(self, request, pk=None):
