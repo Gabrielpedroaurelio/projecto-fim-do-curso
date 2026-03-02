@@ -45,10 +45,10 @@ export default function ServicesSection() {
                     {courses.map((course, index) => (
                         <div
                             key={index}
-                            className={`${style.card} ${index === 0 ? 'reveal-left' :
-                                    index === courses.length - 1 ? 'reveal-right' :
-                                        'reveal'
-                                } delay-${(index + 1) * 100}`}
+                            className={`${style.card} reveal ${
+                                index === 0 ? 'reveal-left' :
+                                index === courses.length - 1 ? 'reveal-right' : ''
+                            } delay-${(index + 1) * 100}`}
                         >
                             <div className={style.iconWrapper} style={{ '--glow': course.glowColor }}>
                                 {course.icon}

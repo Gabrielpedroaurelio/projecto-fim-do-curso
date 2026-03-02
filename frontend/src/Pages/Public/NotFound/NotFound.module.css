@@ -1,0 +1,155 @@
+.container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fafc; /* Slate 50 - Fundo profissional neutro */
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.content {
+    text-align: center;
+    z-index: 10;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.errorIcon {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon {
+    font-size: 60px;
+    color: #10b981; /* O verde agora é apenas um detalhe */
+    z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.2));
+}
+
+.pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #10b981;
+    border-radius: 50%;
+    animation: professionalPulse 3s infinite;
+}
+
+.title {
+    font-size: 6rem;
+    font-weight: 800;
+    color: #0f172a; /* Slate 900 - Muito mais profissional */
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.divider {
+    width: 40px;
+    height: 4px;
+    background: #10b981;
+    margin: 1.5rem auto;
+    border-radius: 2px;
+}
+
+.subtitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b; /* Slate 800 */
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    color: #64748b; /* Slate 500 */
+    max-width: 380px;
+    margin: 0 auto 2.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 2rem;
+    background: #0f172a; /* Botão escuro para contraste profissional */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background: #10b981; /* Verde apenas no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+.btnIcon {
+    font-size: 1.1rem;
+}
+
+/* Animações Premium */
+@keyframes professionalPulse {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Decorações Geométricas Subtis */
+.decoration1, .decoration2 {
+    position: absolute;
+    background: linear-gradient(135deg, #10b981 0%, transparent 100%);
+    opacity: 0.03;
+    filter: blur(60px);
+}
+
+.decoration1 {
+    top: -10%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+}
+
+.decoration2 {
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+}
+
+.decoration3 {
+    position: absolute;
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    top: 10%;
+    right: 5%;
+    animation: spin 60s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

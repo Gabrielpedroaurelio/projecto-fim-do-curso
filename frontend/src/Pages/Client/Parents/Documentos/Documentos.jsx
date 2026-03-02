@@ -5,7 +5,7 @@ import style from './Documentos.module.css';
 import '../../../../assets/style/global.style.css'
 import MenuNavBarCliente from '../../../../Components/Elements/MenuNavBarCliente/MenuNavBarCliente'
 import Header from '../../../../Components/Elements/Header/Header'
-import { RiFileList3Line, RiDownloadLine, RiEyeLine } from 'react-icons/ri';
+import { RiFileList3Line, RiDownloadLine, RiEyeLine, RiSearchLine, RiFilter3Line } from 'react-icons/ri';
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
 import Loading from '../../../../Components/Elements/Loading/Loading';
@@ -20,7 +20,8 @@ const Documentos = () => {
       try {
         if (user?.id) {
           const response = await api.get(`/documentos/para_encarregado/?id_encarregado=${user.id}`);
-          setDocuments(response.data);
+          // Garantir que carregamos os resultados paginados se existirem
+          setDocuments(response.data.results || response.data);
         }
       } catch (error) {
         console.error("Erro ao carregar documentos:", error);
@@ -31,13 +32,34 @@ const Documentos = () => {
     fetchDocs();
   }, [user]);
 
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000/media'
+    : '/media';
+
+  const normalizeUrl = (url) => {
+    if (!url) return null;
+    if (typeof url !== 'string') return url.url || null;
+    if (url.startsWith('http')) return url;
+    const cleanPath = url.replace(/^\/media\//, '').replace(/^media\//, '');
+    return `${MEDIA_BASE}/${cleanPath.replace(/^\//, '')}`;
+  };
+
   const handleDownload = (doc) => {
-    if (doc.caminho_pdf) {
-      window.open(`http://localhost:8000${doc.caminho_pdf}`, '_blank');
+    const url = normalizeUrl(doc.caminho_pdf || doc.caminho_arquivo);
+    if (url) {
+      window.open(url, '_blank');
     } else {
-      alert("Arquivo PDF não disponível.");
+      alert("Arquivo não disponível.");
     }
   };
+
+  const filteredDocs = documents.filter(doc => 
+    doc.tipo_documento?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    doc.aluno_nome?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className='containelGeralclient'>
@@ -51,43 +73,63 @@ const Documentos = () => {
             <p>Aceda e faça o download de documentos oficiais, boletins de notas e certificados de todos os seus educandos.</p>
           </header>
 
+          <div className={style.filtersBar}>
+            <div className={style.searchField}>
+              <RiSearchLine />
+              <input 
+                type="text" 
+                placeholder="Pesquisar por aluno ou documento..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
           <div className={style.tableContainer}>
             {loading ? (
               <p><Loading/></p>
-            ) : documents.length > 0 ? (
+            ) : filteredDocs.length > 0 ? (
               <table className={style.table}>
                 <thead>
                   <tr>
                     <th>Educando</th>
-                    <th>Designação do Documento</th>
+                    <th>Documento</th>
                     <th>Emissão</th>
                     <th>Estado</th>
                     <th>Operações</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {documents.map((doc) => (
+                  {filteredDocs.map((doc) => (
                     <tr key={doc.id_documento}>
                       <td><strong>{doc.aluno_nome || 'Aluno'}</strong></td>
                       <td>
-                        <div className="flex items-center gap-3">
-                          <RiFileList3Line className="text-emerald-500 text-xl" />
+                        <div className={style.docType}>
+                          <RiFileList3Line />
                           <span>{doc.tipo_documento}</span>
                         </div>
                       </td>
-                      <td>{new Date(doc.data_emissao).toLocaleDateString()}</td>
+                      <td>{new Date(doc.data_emissao).toLocaleDateString('pt-BR')}</td>
                       <td>
                         <span className={`${style.statusBadge} ${style.statusReady}`}>
-                          <span className="w-2 h-2 rounded-full bg-current mr-2 opacity-50" />
-                          Pronto
+                          <span className={style.dot} />
+                          Disponível
                         </span>
                       </td>
                       <td>
-                        <div className="flex gap-2">
-                          <button className={`${style.actionBtn} ${style.viewBtn} `} title="Visualizar" onClick={() => handleDownload(doc)}>
+                        <div className={style.actionsGroup}>
+                          <button 
+                            className={`${style.actionBtn} ${style.viewBtn}`} 
+                            title="Visualizar" 
+                            onClick={() => setSelectedDoc(doc)}
+                          >
                             <RiEyeLine />
                           </button>
-                          <button className={style.actionBtn} title="Baixar" onClick={() => handleDownload(doc)}>
+                          <button 
+                            className={style.actionBtn} 
+                            title="Baixar" 
+                            onClick={() => handleDownload(doc)}
+                          >
                             <RiDownloadLine />
                           </button>
                         </div>
@@ -97,10 +139,34 @@ const Documentos = () => {
                 </tbody>
               </table>
             ) : (
-              <p>Nenhum documento disponível para download.</p>
+              <p className={style.emptyMsg}>Nenhum documento encontrado.</p>
             )}
           </div>
         </div>
+
+        {/* Modal de Visualização de PDF */}
+        {selectedDoc && (
+          <div className={style.modalOverlay} onClick={() => setSelectedDoc(null)}>
+            <div className={style.modalContent} onClick={e => e.stopPropagation()}>
+              <div className={style.modalHeader}>
+                <h3><RiEyeLine /> {selectedDoc.tipo_documento} ({selectedDoc.aluno_nome})</h3>
+                <button onClick={() => setSelectedDoc(null)} className={style.closeBtn}>×</button>
+              </div>
+              <div className={style.modalBody}>
+                <iframe
+                  src={`${normalizeUrl(selectedDoc.caminho_pdf || selectedDoc.caminho_arquivo)}#toolbar=1&navpanes=0&scrollbar=1`}
+                  title="Visualizador de PDF"
+                  className={style.pdfViewer}
+                ></iframe>
+              </div>
+              <div className={style.modalFooter}>
+                <button onClick={() => handleDownload(selectedDoc)} className={style.downloadBtn}>
+                  <RiDownloadLine /> Baixar Documento
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

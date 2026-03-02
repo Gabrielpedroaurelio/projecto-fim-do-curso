@@ -53,10 +53,13 @@ class DocumentService:
             nivel_solicitado = classe_solicitada_obj.nivel
 
             if 'DECLARAÇÃO' in tipo_base:
+
                 # Declaração: Máximo permitida = Classe Atual - 1
                 # Exceção: Se for declaração de frequência pode ser da atual.
                 # Mas a regra diz: "Ex: aluno da 12ª só pede até 11ª" (Declaração de Habilitações/Notas)
                 # Vamos assumir que se pediu classe específica é com notas.
+                valor_doc = 2000.00 # Valor base exemplo, poderia vir de uma tabela de Preços
+
                 if nivel_solicitado >= nivel_atual:
                     #raise ValueError(f"Declarações com notas permitidas apenas para classes anteriores (Máx: {nivel_atual - 1}ª).")
                     pass # Relaxando validação por enquanto para permitir testes, ou implementar estrito?
@@ -66,6 +69,7 @@ class DocumentService:
                 
             if 'BOLETIM' in tipo_base:
                 # Boletim: Permitida Classe Atual ou inferior
+                valor_doc = 400.00
                 if nivel_solicitado > nivel_atual:
                     raise ValueError(f"Boletim não disponível para classe futura baseada na matricula atual ({nivel_atual}ª).")
 
@@ -73,7 +77,8 @@ class DocumentService:
                 # Apenas se aprovado na última classe do ciclo (12ª ou 13ª)
                 # Aqui precisaria verificar histórico de aprovação.
                 # Por simplicidade verificamos se o solicitado é 12 ou 13.
-                if nivel_solicitado not in [12, 13]:
+                valor_doc = 2000.00
+                if nivel_solicitado not in [13]:
                     raise ValueError("Certificado apenas para 12ª ou 13ª classe.")
         
         # 4. Gerar RUP
@@ -81,7 +86,6 @@ class DocumentService:
         rup_code = f"{timestamp}-{aluno_id}"
         
         expiracao = timezone.now() + timedelta(hours=24)
-        valor_doc = 2500.00 # Valor base exemplo, poderia vir de uma tabela de Preços
         
         solicitacao = SolicitacaoDocumento.objects.create(
             id_aluno_id=aluno_id,
@@ -146,20 +150,61 @@ class DocumentService:
         solicitacao.uuid_documento = doc_uuid
         solicitacao.save() # Persistir no banco ANTES de passar para o contexto e salvar o PDF
         
+        # Calcular Ano Letivo e Turma (Histórico ou Atual)
+        ano_letivo = timezone.now().year
+        turma_frequentada = solicitacao.id_aluno.id_turma # Default para atual
+
+        if solicitacao.id_aluno.id_turma and solicitacao.id_aluno.id_turma.ano:
+             ano_letivo = solicitacao.id_aluno.id_turma.ano
+
+        if solicitacao.classe_solicitada:
+             from apis.models import HistoricoTurmaAluno
+             historico = HistoricoTurmaAluno.objects.filter(
+                 id_aluno=solicitacao.id_aluno, 
+                 id_classe=solicitacao.classe_solicitada
+             ).order_by('-data_inicio').first()
+             
+             if historico:
+                 if historico.ano_letivo:
+                    ano_letivo = historico.ano_letivo
+                 if historico.id_turma:
+                    turma_frequentada = historico.id_turma
+        
         # Contexto para o template
         context = {
             'aluno': solicitacao.id_aluno,
             'solicitacao': solicitacao,
             'hoje': timezone.now(),
-            'site_url': settings.SITE_URL if hasattr(settings, 'SITE_URL') else 'http://localhost:8000'
+            'ano_letivo': ano_letivo,
+            'turma_frequentada': turma_frequentada,
+            'turma': turma_frequentada,
+            'classe': solicitacao.classe_solicitada or (turma_frequentada.id_classe if turma_frequentada else None),
+            'curso': (solicitacao.id_aluno.id_turma.id_curso if solicitacao.id_aluno.id_turma else None) or (turma_frequentada.id_curso if turma_frequentada else None),
+            'site_url': settings.SITE_URL if hasattr(settings, 'settings.SITE_URL') else 'http://localhost:8000'
         }
         
         # Selecionar template e carregar notas se necessário
         template_name = 'pdf/declaracao_matricula.html'
         tipo_base = solicitacao.tipo_documento.upper()
 
+        # Determinar status temporal (Frequenta vs Frequentou)
+        ano_atual = timezone.now().year
+        ano_turma = str(ano_letivo)
+        status_temporal = "Frequenta"
+        if str(ano_atual) not in ano_turma:
+            status_temporal = "Frequentou"
+        
+        context['status_temporal'] = status_temporal
+
         if 'CERTIFICADO' in tipo_base:
             template_name = 'pdf/certificado.html'
+            from apis.services.academic_service import AcademicService
+            historico_cert = AcademicService.get_historico_certificado_tecnico(solicitacao.id_aluno)
+            context.update(historico_cert)
+            # Sufixos de género para o texto do certificado (evita if/else no template)
+            genero = solicitacao.id_aluno.genero or 'M'
+            context['sufixo_nascido']   = 'a' if genero == 'F' else 'o'
+            context['sufixo_portador']  = 'a' if genero == 'F' else 'o'
         elif 'BOLETIM' in tipo_base or 'APROVEITAMENTO' in tipo_base:
             # Se for aproveitamento ou boletim, carregar as notas
             context['notas_finais'] = DocumentService._get_notas_finais_aluno(
@@ -179,6 +224,23 @@ class DocumentService:
                         context['trimestre_selecionado'] = '1' # Default para o 1º se não especificado
                 except:
                     context['trimestre_selecionado'] = '1'
+        elif 'DECLARAÇÃO' in tipo_base:
+            # Para declarações sem notas (Emprego, Passaporte, etc.)
+            template_name = 'pdf/declaracao_sem_notas.html'
+            # Extrair efeito se especificado (ex: DECLARAÇÃO_EMPREGO -> Emprego)
+            if '_' in tipo_base:
+                efeito_raw = tipo_base.split('_')[-1]
+                # Mapa de normalização de termos
+                mapa_efeitos = {
+                    'EMPREGO': 'fins de emprego',
+                    'PASSAPORTE': 'fins de passaporte',
+                    'MATRICULA': 'fins de matrícula',
+                    'MATRÍCULA': 'fins de matrícula',
+                    'OUTROS': 'fins legais'
+                }
+                context['efeito'] = mapa_efeitos.get(efeito_raw, efeito_raw.lower())
+            else:
+                context['efeito'] = 'fins legais'
             
         pdf_content = PDFService.render_to_pdf(template_name, context)
         
@@ -275,7 +337,9 @@ class DocumentService:
         if pdf_content:
             # "RUP" vai cair na categoria FINANCEIRO no novo _get_document_path
             structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, "RUP")
-            filename = f"rup_{solicitacao.uuid_documento}.pdf"
+            import random
+            random_suffix = random.randint(1000, 9999)
+            filename = f"rup_{solicitacao.rupe}_{random_suffix}.pdf"
             relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
             return relative_path
         return None

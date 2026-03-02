@@ -16,7 +16,7 @@ from .avaliacao_views import (
 from .documento_views import DocumentoViewSet, SolicitacaoDocumentoViewSet
 from .biblioteca_views import CategoriaViewSet, LivroViewSet
 from .financeiro_views import FaturaViewSet, PagamentoViewSet
-from .auditoria_views import HistoricoLoginViewSet
+from .auditoria_views import HistoricoLoginViewSet, HistoricoViewSet
 from .notificacao_views import NotificacaoViewSet
 from .backup_views import BackupViewSet, ConfiguracaoSistemaViewSet
 from .dashboard_api_views import DashboardStatsAPIView
@@ -42,6 +42,7 @@ __all__ = [
     # Financeiro
     'FaturaViewSet', 'PagamentoViewSet',
     'HistoricoLoginViewSet',
+    'HistoricoViewSet',
     'BackupViewSet', 'ConfiguracaoSistemaViewSet',
     'DashboardStatsAPIView',
     'NotificacaoViewSet',

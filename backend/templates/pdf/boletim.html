@@ -39,7 +39,7 @@
         .info-grid {
             width: 100%;
             border: 1px solid black;
-            margin-bottom: 10px;
+
             font-size: 12px;
             border-collapse: collapse;
         }
@@ -50,6 +50,7 @@
         }
 
         .main-table {
+
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
@@ -57,8 +58,12 @@
 
         .main-table th,
         .main-table td {
+            
             border: 1px solid black;
+            /*
             height: 25px;
+            */
+            padding: 5px;
             text-align: center;
         }
 
@@ -97,6 +102,14 @@
             height: 40px;
             font-size: 11px;
         }
+
+        .blue {
+            color: rgb(0, 119, 255);
+        }
+
+        .red {
+            color: #ff0000;
+        }
     </style>
 </head>
 
@@ -104,31 +117,37 @@
 
     <div class="report-card">
         <div class="header">
+          <div style="width: 10px; height: 10px; margin: auto; overflow: hidden;">
+              <img src="/static/image/insigna_angola.png" alt="Insignia" style="height:100%; width: 100%;  ">
+          </div>
+            
+            
             REPÚBLICA DE ANGOLA<br>
             MINISTÉRIO DA EDUCAÇÃO<br>
             INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE
         </div>
 
-        <div class="doc-title">BOLETIM DE NOTAS ({{ trimestre_selecionado }}º TRIMESTRE)</div>
+        <div class="doc-title">BOLETIM DE NOTAS ( {{ trimestre_selecionado }} º TRIMESTRE)</div>
 
         <table class="info-grid">
             <tr>
                 <td colspan="6"><strong>Nome do (a) Aluno (a):</strong> {{ aluno.nome_completo }}</td>
             </tr>
             <tr>
-                <td style="width: 40%;"><strong>Curso:</strong> {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
-                <td style="width: 15%;"><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"---" }}</td>
-                <td style="width: 10%;"><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
-                <td style="width: 10%;"><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
-                <td style="width: 15%;"><strong>Sala:</strong> {{ aluno.id_turma.sala|default:"---" }}</td>
+                <td style="width: 40%;"><strong>Curso:</strong>
+                    {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
+                <td><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"N/A" }}</td>
+                <td><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
+                <td><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
+                <td><strong>Sala:</strong> {{ turma.id_sala.numero_sala|default:"N/A" }}</td>
             </tr>
             <tr>
-                <td><strong>Ano Lectivo:</strong> {{ hoje|date:"Y" }}</td>
+                <td><strong>Ano Lectivo:</strong> {{ ano_letivo }}</td><!--o ano não deve ser o actual mais sim o ano da turma-->
                 <td colspan="5" style="text-align: center;"><strong>ENSINO TÉCNICO-PROFISSIONAL</strong></td>
             </tr>
             <tr>
                 <td><strong>TRIMESTRE:</strong> {{ trimestre_selecionado }}º</td>
-                <td colspan="5"><strong>Periodo: </strong> {{ aluno.id_turma.periodo }}</td>
+                <td colspan="5"><strong>Periodo: </strong> {{ turma.id_periodo.periodo|default:"[Periodo]" }}</td>
             </tr>
         </table>
 
@@ -136,39 +155,42 @@
             <thead>
                 <tr>
                     <th>DISCIPLINAS</th>
-                    <th>MAC</th>
-                    <th>NPP1</th>
-                    <th>NPT</th>
-                    <th>CT1</th>
-                    <th>COMPORTAMENTO</th>
-                    <th>FALTAS</th>
+                    <th>MAC{{ trimestre_selecionado }}</th>
+                    <th>NPP{{ trimestre_selecionado }}</th>
+                    <th>NPT{{ trimestre_selecionado }}</th>
+                    <th>CT{{ trimestre_selecionado }}</th>
+ 
                 </tr>
             </thead>
             <tbody>
+               
                 {% for nota in notas_finais %}
                 {% with tri=nota.trimestres|get_item:trimestre_selecionado %}
                 <tr>
-                    <td class="subject-name">{{ nota.disciplina }}</td>
-                    <td>{{ tri.MAC|default:"---" }}</td>
-                    <td>{{ tri.PP|default:"---" }}</td>
-                    <td>{{ tri.PT|default:"---" }}</td>
-                    <td>{{ tri.MT|default:"---" }}</td>
-                    <td>Bom</td>
-                    <td>0</td>
+
+
+                    <td class="subject-name">{{ nota.disciplina }} </td>
+                    <td class=" {%if tri.PP >= 10 %}blue{% else%}red{% endif %}"> {{ tri.MAC }} </td>
+                    <td class=" {%if tri.PP >= 10 %}blue{% else%}red{% endif %}"> {{ tri.PP|default_if_none:"N/A" }} </td>
+                    <td class="{%if tri.PT >= 10 %}blue{% else%}red{% endif %}"> {{ tri.PT|default_if_none:"N/A" }} </td>
+                    <td class="{%if tri.MT >= 10 %}blue{% else%}red{% endif %}"> {{ tri.MT|default_if_none:"N/A" }} </td>
+
+                     
                 </tr>
                 {% endwith %}
                 {% endfor %}
                 <tr style="font-weight: bold;">
-                    <td class="subject-name">Médias e Total de Faltas</td>
-                    <td colspan="4"></td>
-                    <td>---</td>
-                    <td>0</td>
+                    <td class="subject-name">Condição do Aluno para o Trimestre</td>
+                    <td colspan="4">   </td>
+                    
+                    
                 </tr>
             </tbody>
         </table>
 
         <div class="obs-area">
-            <strong>OBS.:</strong> Documento gerado eletronicamente em {{ hoje|date:"d/m/Y H:i" }}. Cod: {{ solicitacao.uuid_documento|truncatechars:8 }}
+            <strong>OBS.:</strong> Documento gerado eletronicamente em {{ hoje|date:"d/m/Y H:i" }}. Cod:
+            {{solicitacao.uuid_documento|truncatechars:8 }}
         </div>
 
         <div style="font-size: 11px; font-weight: bold; margin-top: 15px;">

@@ -1,13 +1,13 @@
 :root {
     --fundo-login: #e0e0e0;
 
-    --bs-green: #0ea5e9;
+    --bs-green: var(--primary);
     --bs-teal: #22d3ee;
     --bs-cyan: #0dcaf0;
     --bs-white: #fff;
     --bs-gray: #6c757d;
     --bs-gray-dark: #343a40;
-    --bs-success: #0ea5e9;
+    --bs-success: var(--primary);
     --bs-info: #0dcaf0;
     --bs-warning: #ffc107;
     --bs-danger: #dc3545;
@@ -61,14 +61,14 @@ body.dark-mode {
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --text-inverted: #0f172a;
-    --text-primary: #6366f1;
+    --text-primary: var(--primary);
 
-    --accent-indigo: #6366f1;
+    --accent-indigo: var(--primary);
     --accent-violet: #8b5cf6;
     --accent-fuchsia: #d946ef;
 
     /* Primary colors adapted for dark mode */
-    --primary: #6366f1;
+    --primary: var(--accent-indigo);
     --primary-soft: rgba(99, 102, 241, 0.1);
     --primary-dark: #4f46e5;
     --primary-light: rgba(99, 102, 241, 0.2);

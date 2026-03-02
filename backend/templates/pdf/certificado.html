@@ -1,146 +1,263 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-ao">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Certificado de Habilitações - {{ aluno.nome_completo|default:"Aluno" }}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Certificado de Habilitações - {{ aluno.nome_completo|default:"Aluno" }}
+    </title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            line-height: 1.4;
-            color: #000;
-            background-color: white;
-        }
+      /* ============================================
+           CERTIFICADO DE HABILITAÇÕES - ESTILOS
+           Compatível com xhtml2pdf/pisa (sem flexbox)
+        ============================================ */
 
-        .cert-container {
-            width: 100%;
-            margin: auto;
-            padding: 20px;
-            position: relative;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        line-height: 1.4;
+        color: #000;
+        background-color: white;
+      }
 
-        .header {
-            text-align: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
+      .cert-container {
+        width: 100%;
+        margin: auto;
+        padding: 20px;
+      }
 
-        .title {
-            text-align: center;
-            font-weight: bold;
-            text-decoration: underline;
-            margin-bottom: 15px;
-        }
+      /* --- Cabeçalho Institucional --- */
+      .header {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
 
-        .intro-text {
-            text-align: justify;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
+      .header .decreto {
+        font-weight: normal;
+        font-size: 11px;
+        text-transform: none;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 12px;
-        }
+      /* --- Título --- */
+      .title {
+        text-align: center;
+        font-weight: bold;
+        text-decoration: underline;
+        font-size: 14px;
+        margin-top: 8px;
+        margin-bottom: 10px;
+      }
 
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 5px;
-            text-align: left;
-        }
+      /* --- Texto Introdutório --- */
+      .intro-text {
+        text-align: justify;
+        font-size: 12px;
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
 
-        th {
-            background-color: #f2f2f2;
-            text-align: center;
-        }
+      /* --- Tabela de Classificações --- */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        font-size: 11px;
+      }
 
-        .center {
-            text-align: center;
-        }
+      th,
+      td {
+        border: 0.5px solid #000;
+        padding: 4px 6px;
+        text-align: left;
+        vertical-align: middle;
+      }
 
-        .bold {
-            font-weight: bold;
-        }
+      th {
+        background-color: #e8e8e8;
+        text-align: center;
+        font-weight: bold;
+      }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 13px;
-        }
+      .center {
+        text-align: center;
+      }
+      .bold {
+        font-weight: bold;
+      }
 
-        .sigs {
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
-            text-align: center;
-            font-size: 12px;
-        }
+      /* --- Linhas de grupo de componente --- */
+      .row-componente {
+        background-color: #f0f0f0;
+        font-weight: bold;
+        font-size: 10px;
+        text-transform: uppercase;
+      }
 
-        .sig-box {
-            width: 45%;
-            border-top: 1px solid #000;
-            padding-top: 5px;
-            display: inline-block;
-        }
+      /* --- Linhas de classificações finais (PC, EC, PAP) --- */
+      .row-final {
+        font-weight: bold;
+        background-color: #fafafa;
+      }
+
+      /* --- Linha da Classificação Final do Curso (CFC) --- */
+      .row-cfc {
+        font-weight: bold;
+        background-color: #dceeff;
+      }
+
+      /* --- Rodapé --- */
+      .footer {
+        margin-top: 10px;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      /* --- Secção de assinaturas (usar tabela para compatibilidade PDF) --- */
+      .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 40px;
+      }
+
+      .sig-box {
+        width: 45%;
+        text-align: center;
+        font-size: 12px;
+        vertical-align: bottom;
+        padding-top: 5px;
+        border-top: 1px solid #000;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="cert-container">
-        <div class="header">
-            REPÚBLICA DE ANGOLA<br>
-            MINISTÉRIO DA EDUCAÇÃO<br>
-            INSTITUTO POLITÉCNICO Nº 3050 IBE-MAIOMBE - SEQUELE<br>
-            (Criado pelo Decreto Executivo nº 5354/25 de 16 de Julho)
-        </div>
+      <!-- CABEÇALHO INSTITUCIONAL -->
+      <div class="header">
+        <img
+          src="/static/image/insigna_angola.png"
+          alt="Insignia"
+          style="height: 55px; margin-bottom: 4px"
+        /><br />
+        REPÚBLICA DE ANGOLA<br />
+        MINISTÉRIO DA EDUCAÇÃO<br />
+        INSTITUTO POLITÉCNICO Nº 3050 IBE-MAIOMBE - SEQUELE<br />
+        <span class="decreto"
+          >(Criado pelo Decreto Executivo nº 5354/25 de 16 de Julho)</span
+        >
+      </div>
 
-        <div class="title">CERTIFICADO DE HABILITAÇÕES</div>
+      <!-- TÍTULO -->
+      <div class="title">CERTIFICADO DE HABILITAÇÕES</div>
 
-        <div class="intro-text">
-            O Director do Instituto, <strong>[Nome do Diretor]</strong> e o Subdirector Pedagógico, <strong>[Nome doSubdirector]</strong>, certificam de acordo com o art. 25º e 27º dos Estatutos do Subsistema do Ensino Técnico Profissional, Aprovado pelo Decreto Presidencial nº 90/04, de 3 de Dezembro de 2004, que <strong>{{ aluno.nome_completo }}</strong>, {{ aluno.genero|yesno:"filha,filho" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong> nascido aos <strong>{{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{ aluno.data_nascimento|date:"Y" }}</strong>, natural de <strong>{{ aluno.naturalidade|default:aluno.municipio_residencia }}</strong>, província de <strong>{{ aluno.provincia_naturalidade|default:aluno.provincia_residencia }}</strong>, portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>, emitido pelo arquivo de identificação de <strong>{{  aluno.naturalidade|default:"[Local]" }}</strong> aos <strong>{{ aluno.data_emissao_bilhete|date:"d/m/Y" }}</strong>. <strong>Concluiu</strong>, em regime regular, no ano lectivo de <strong>{{ hoje|date:"Y" }}</strong> o IIº Ciclo do Ensino Secundário Técnico-Profissional, o <strong>Curso {{ curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</strong>, da Área de Formação de  <strong>{{ curso.id_area_formacao.nome_area|default:aluno.id_turma.id_curso.id_area_formacao.nome_area  }}</strong>, com a média Final de <strong>[Nota Final] valores</strong>, tendo obtido as seguintes classificações, conforme consta sob processo individual n.º <strong>{{ aluno.numero_matricula }}</strong>.
-        </div>
+      <!-- TEXTO INTRODUTÓRIO -->
+      <div class="intro-text">
+        O Director do Instituto, <strong>Domingos Paulo Romeu</strong> e o
+        Subdirector Pedagógico, <strong>Gabriel Rufino Chivimbi</strong>,
+        certificam de acordo com o art. 25º e 27º dos Estatutos do Subsistema do
+        Ensino Técnico Profissional, Aprovado pelo Decreto Presidencial nº
+        90/04, de 3 de Dezembro de 2004, que
+        <strong>{{ aluno.nome_completo }}</strong>, {{ aluno.genero|yesno:"filha,filho" }} de
+        <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de
+        <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>, nascid{{ sufixo_nascido }} aos
+        <strong>{{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{ aluno.data_nascimento|date:"Y" }}</strong>, natural de <strong>{{ aluno.naturalidade|default:aluno.municipio_residencia }}</strong>, província de
+        <strong>{{ aluno.provincia_naturalidade|default:aluno.provincia_residencia }}</strong>, portador{{ sufixo_portador }} do Bilhete de Identidade nº   <strong>{{ aluno.numero_bi }}</strong>, emitido pelo arquivo de identificação de <strong>{{ aluno.naturalidade|default:"[Local]" }}</strong>        aos <strong>{{ aluno.data_emissao_bilhete|date:"d/m/Y" }}</strong>.        <strong>Concluiu</strong>, em regime regular, no ano lectivo de
+        <strong>{{ ano_letivo }}</strong>
+        o IIº Ciclo do Ensino Secundário Técnico-Profissional, o
+        <strong
+          >Curso {{ curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso  }}</strong>, da Área de Formação de
+        <strong
+          >{{ curso.id_area_formacao.nome_area|default:aluno.id_turma.id_curso.id_area_formacao.nome_area }}<strong>, com a média Final de <strong>{{ cfc }} valores</strong>, tendo obtido
+        as seguintes classificações, conforme consta sob processo individual n.º
+        <strong>{{ aluno.numero_matricula }}</strong>.
+      </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>COMPONENTES DE FORMAÇÃO</th>
-                    <th class="center">MÉDIA FINAL</th>
-                    <th>MÉDIA POR EXTENSO</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for nota in notas_finais %}
-                <tr>
-                    <td>{{ nota.disciplina }}</td>
-                    <td class="center">{{ nota.media_final }}</td>
-                    <td>({{ nota.media_final_extenso }} valores)</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" class="center">Dados disciplinares não disponíveis.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <!-- TABELA DE CLASSIFICAÇÕES -->
+      <table>
+        <thead>
+          <tr>
+            <th>COMPONENTES DE FORMAÇÃO</th>
+            <th class="center" style="width: 12%">MÉDIA FINAL</th>
+            <th style="width: 30%">MÉDIA POR EXTENSO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for componente in componentes %}
+          <tr class="row-componente">
+            <td colspan="3">{{ componente.nome }}</td>
+          </tr>
+          {% for disc in componente.disciplinas %}
+          <tr>
+            <td>{{ disc.nome }}</td>
+            <td class="center">{{ disc.media_final }}</td>
+            <td>({{ disc.media_final_extenso }})</td>
+          </tr>
+          {% endfor %} {% empty %}
+          <tr>
+            <td colspan="3" class="center">
+              Sem histórico de disciplinas disponível.
+            </td>
+          </tr>
+          {% endfor %}
 
-        <div class="footer">
-            Para efeitos legais e de harmonia com a legislação em vigor, lhe é passado o presente CERTIFICADO, que vai
-            por nós assinado e autenticado com carimbo em uso neste Instituto.<br><br>
-            <strong>INSTITUTO POLITÉCNICO Nº 3050 IBE-SEQUELE, AOS {{ hoje|date:"d" }} DE {{ hoje|date:"F"|upper }} DE
-                {{ hoje|date:"Y" }}.</strong>
-        </div>
+          <!-- Linha de separação visual -->
+          <tr>
+            <td colspan="3" style="border: none; height: 4px"></td>
+          </tr>
 
-        <div class="sigs" style="width: 100%;">
-            <div class="sig-box">O SUBDIRECTOR PEDAGÓGICO<br>[Nome do Subdirector]</div>
-            <div style="width: 5%; display: inline-block;"></div>
-            <div class="sig-box">O DIRECTOR<br>[Nome do Diretor]</div>
-        </div>
+          <!-- Classificações Finais -->
+          <tr class="row-final">
+            <td>Classificação Final do Plano Curricular (PC)</td>
+            <td class="center">{{ pc }}</td>
+            <td>({{ pc_extenso }})</td>
+          </tr>
+          <tr class="row-final">
+            <td>Classificação do Estágio Curricular (EC)</td>
+            <td class="center">{{ ec }}</td>
+            <td>({{ ec_extenso }})</td>
+          </tr>
+          <tr class="row-final">
+            <td>Classificação da Prova de Aptidão Profissional (PAP)</td>
+            <td class="center">{{ pap }}</td>
+            <td>({{ pap_extenso }})</td>
+          </tr>
+          <tr class="row-cfc">
+            <td>
+              <strong>Classificação Final do Curso (4xPC+PAP+EC)/6</strong>
+            </td>
+            <td class="center"><strong>{{ cfc }}</strong></td>
+            <td><strong>({{ cfc_extenso }})</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- RODAPÉ LEGAL -->
+      <div class="footer">
+        Para efeitos legais e de harmonia com a legislação em vigor, lhe é
+        passado o presente CERTIFICADO, que vai por nós assinado e autenticado
+        com carimbo em uso neste Instituto.<br /><br />
+        <strong
+          >INSTITUTO POLITÉCNICO Nº 3050 IBE-SEQUELE, AOS {{ hoje|date:"d" }} DE
+          {{ hoje|date:"F"|upper }} DE {{ hoje|date:"Y" }}.</strong
+        >
+      </div>
+
+      <!-- ASSINATURAS -->
+      <table class="sig-table">
+        <tr>
+          <td class="sig-box">
+            O SUBDIRECTOR PEDAGÓGICO<br />
+            Gabriel Rufino Chivimbi
+          </td>
+          <td style="width: 10%; border: none"></td>
+          <td class="sig-box">
+            O DIRECTOR<br />
+            Domingos Paulo Romeu
+          </td>
+        </tr>
+      </table>
     </div>
-</body>
-
+  </body>
 </html>

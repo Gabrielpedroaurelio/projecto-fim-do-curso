@@ -290,7 +290,7 @@ def me_view(request):
             serializer = AlunoDetailSerializer(user, context={'request': request})
             user_data = serializer.data
             
-            # Adicionar campos extras necessários para autenticação
+            user_data['nome'] = user.nome_completo
             user_data['tipo'] = 'aluno'
             user_data['id'] = user.id_aluno
             user_data['is_online'] = True

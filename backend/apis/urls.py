@@ -22,7 +22,7 @@ from apis.views import (
     DocumentoViewSet, SolicitacaoDocumentoViewSet,
     CategoriaViewSet, LivroViewSet,
     FaturaViewSet, PagamentoViewSet,
-    HistoricoLoginViewSet, BackupViewSet, ConfiguracaoSistemaViewSet,
+    HistoricoLoginViewSet, HistoricoViewSet, BackupViewSet, ConfiguracaoSistemaViewSet,
     DashboardStatsAPIView,
     MatrizCurricularViewSet, MatrizCurricularDisciplinaViewSet
 )
@@ -71,6 +71,7 @@ router.register(r'livros', LivroViewSet, basename='livro')
 router.register(r'faturas', FaturaViewSet, basename='fatura')
 router.register(r'pagamentos', PagamentoViewSet, basename='pagamento')
 router.register(r'historico-login', HistoricoLoginViewSet, basename='historico-login')
+router.register(r'historicos', HistoricoViewSet, basename='historico')
 router.register(r'backups', BackupViewSet, basename='backup')
 router.register(r'configuracao-sistema', ConfiguracaoSistemaViewSet, basename='configuracao-sistema')
 

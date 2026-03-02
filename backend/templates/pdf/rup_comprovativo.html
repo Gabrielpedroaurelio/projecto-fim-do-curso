@@ -1,7 +1,8 @@
 {% extends "pdf/base_documento.html" %}
 
 {% block content %}
-<div class="doc-title">Comprovativo de Solicitação / Nota de Pagamento</div>
+<div style="font-size: 9px !important;">
+<div class="doc-title" style="font-size: 14pt; margin-bottom: 10px;">Comprovativo de Solicitação / Nota de Pagamento</div>
 
 <div style="border: 1.5pt solid #000; padding: 25px; margin: 20px 0;">
     <h3 style="margin-top: 0; text-align: center; color: #000; text-transform: uppercase;">Dados para Pagamento (RUP)
@@ -19,13 +20,11 @@
         </tr>
         <tr style="border-bottom: 0.5pt solid #eee;">
             <td style="padding: 12px;"><strong>Valor a Liquidar:</strong></td>
-            <td style="padding: 12px; font-size: 14pt; font-weight: bold;">{{ solicitacao.valor_rupe|stringformat:".2f"
-                }} KZ</td>
+            <td style="padding: 12px; font-size: 14pt; font-weight: bold;">{{ solicitacao.valor_rupe|stringformat:".2f" }} KZ</td>
         </tr>
         <tr>
             <td style="padding: 12px;"><strong>Válido até:</strong></td>
-            <td style="padding: 12px; color: #d32f2f; font-weight: bold;">{{ solicitacao.data_expiracao_rup|date:"d/m/Y
-                H:i" }}</td>
+            <td style="padding: 12px; color: #d32f2f; font-weight: bold;">{{ solicitacao.data_expiracao_rup|date:"d/m/Y H:i" }}</td>
         </tr>
     </table>
 </div>
@@ -69,5 +68,6 @@
 
 <div style="margin-top: 20px; font-size: 9pt; color: #666; font-style: italic;">
     Nota: Este documento serve apenas para instrução de pagamento. Não substitui o documento oficial final.
+</div>
 </div>
 {% endblock %}

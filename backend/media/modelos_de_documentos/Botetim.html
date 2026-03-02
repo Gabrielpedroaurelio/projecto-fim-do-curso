@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-ao">
+<head>
+    <meta charset="UTF-8">
+    <title>Boletim de Notas - Modelo Oficial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .report-card {
+            background-color: white;
+            width: 800px;
+            padding: 30px;
+            border: 1px solid #000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .doc-title {
+            text-align: center;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .info-grid {
+            width: 100%;
+            border: 1px solid black;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        .info-grid td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .main-table th, .main-table td {
+            border: 1px solid black;
+            height: 25px;
+            text-align: center;
+        }
+        .subject-name {
+            text-align: left !important;
+            padding-left: 5px;
+            width: 35%;
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 10px;
+            width: 20px;
+        }
+        .footer-sigs {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            font-size: 11px;
+        }
+        .sig-box {
+            width: 30%;
+            border-top: 1px solid black;
+            padding-top: 5px;
+        }
+        .obs-area {
+            margin-top: 10px;
+            border: 1px solid black;
+            padding: 5px;
+            height: 40px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-card">
+    <div class="header">
+        REPÚBLICA DE ANGOLA<br>
+        MINISTÉRIO DA EDUCAÇÃO<br>
+        INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE
+    </div>
+
+    <div class="doc-title">BOLETIM DE NOTAS</div>
+
+    <table class="info-grid">
+        <tr>
+            <td colspan="6"><strong>Nome do (a) Aluno (a):</strong> </td>
+        </tr>
+        <tr>
+            <td style="width: 40%;"><strong>Curso:</strong> Contabilidade e Gestão</td>
+            <td style="width: 15%;"><strong>Turma:</strong> </td>
+            <td style="width: 10%;"><strong>Classe:</strong></td>
+            <td style="width: 10%;"><strong>N.º:</strong> </td>
+            <td style="width: 15%;"><strong>Sala:</strong> </td>
+        </tr>
+        <tr>
+            <td><strong>Ano Lectivo:</strong> </td>
+            <td colspan="5" style="text-align: center;"><strong>ENSINO TÉCNICO-PROFISSIONAL</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TRIMESTRE</strong></td>
+            <td colspan="5"><strong>Periodo: </strong></td>
+        </tr>
+    </table>
+
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th>DISCIPLINAS</th>
+                <th>MAC</th>
+                <th>NPP1</th>
+                <th>NPT</th>
+                <th>CT1</th>
+                <th>COMPORTAMENTO</th>
+                <th>FALTAS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td class="subject-name">Língua Portuguesa</td><td></td><td></td><td></td><td></td><td></td><td rowspan="4" class="vertical-text">Justificadas</td></tr>
+            <tr><td class="subject-name">Língua Estrangeira</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Formação de Atitudes</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Educação Física</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Matemática</td><td></td><td></td><td></td><td></td><td></td><td rowspan="6" class="vertical-text">Injustificadas</td></tr>
+            <tr><td class="subject-name">Introdução a Economia</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Informática</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Contabilidade Financeira</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Documentação e Legis.</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="subject-name">Organização Gestão de</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="font-weight: bold;">
+                <td class="subject-name">Médias e Total de Faltas</td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="obs-area">
+        <strong>OBS.:</strong>
+    </div>
+
+    <div style="font-size: 11px; font-weight: bold; margin-top: 15px;">
+        INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE, _____/_____/_____
+    </div>
+
+    <div style="text-align: center; font-weight: bold; margin-top: 10px; font-size: 12px;">Assinaturas</div>
+
+    <div class="footer-sigs">
+        <div class="sig-box">O Director de Turma</div>
+        <div class="sig-box">O Subdirector Pedagógico</div>
+        <div class="sig-box">O Encarregado de Educação</div>
+    </div>
+</div>
+
+</body>
+</html>

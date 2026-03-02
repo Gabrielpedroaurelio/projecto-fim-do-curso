@@ -29,14 +29,14 @@
 }
 
 .TabButton:hover {
-    color: #0ea5e9;
-    background: rgba(14, 165, 233, 0.05);
+    color: var(--primary);
+    background: var(--primary-soft);
 }
 
 .TabActive {
-    color: #0ea5e9 !important;
-    border-bottom-color: #0ea5e9 !important;
-    background: rgba(14, 165, 233, 0.08);
+    color: var(--primary) !important;
+    border-bottom-color: var(--primary) !important;
+    background: var(--primary-soft);
 }
 
 .TabIcon {
@@ -63,7 +63,7 @@
     align-items: flex-start;
     padding: 2rem;
     border-bottom: 1px solid var(--border-color);
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
+ 
 }
 
 .HeaderLeft h3 {
@@ -92,17 +92,17 @@
     background: var(--bg-card);
     border: 2px solid var(--primary);
     border-radius: var(--radius-md);
-    color: #0ea5e9;
+    color: var(--primary);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .TemplateButton:hover {
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 12px var(--primary-soft);
 }
 
 .RequestButton {
@@ -110,19 +110,19 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background-color:#00b4fb;
     border: none;
     border-radius: var(--radius-md);
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+    box-shadow: 0 4px 12px var(--primary-soft);
 }
 
 .RequestButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+    box-shadow: 0 6px 20px var(--primary-soft);
 }
 
 /* Table Controls */
@@ -148,8 +148,8 @@
 }
 
 .SearchBox:focus-within {
-    border-color: #0ea5e9;
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .SearchBox svg {
@@ -183,11 +183,11 @@
 }
 
 .FilterDropdown:hover {
-    border-color: #0ea5e9;
+    border-color: var(--primary);
 }
 
 .FilterDropdown svg {
-    color: #0ea5e9;
+    color: var(--primary);
 }
 
 .FilterDropdown select {
@@ -231,7 +231,7 @@
 }
 
 .Table tbody tr:hover {
-    background: rgba(14, 165, 233, 0.03);
+    background: var(--primary-light);
 }
 
 .Table td {
@@ -258,7 +258,7 @@
     overflow: hidden;
     font-weight: 600;
     font-size: 0.875rem;
-    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+    box-shadow: 0 2px 8px var(--primary-soft);
 }
 
 .Avatar img {
@@ -278,7 +278,7 @@
 }
 
 .StatusApproved {
-    background: rgba(14, 165, 233, 0.1);
+    background: var(--primary-soft);
     color: var(--primary);
 }
 
@@ -355,15 +355,15 @@
 }
 
 .DownloadBtn {
-    background: rgba(14, 165, 233, 0.1);
-    color: #0ea5e9;
+    background: var(--primary-soft);
+    color: var(--primary);
 }
 
 .DownloadBtn:hover {
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 8px var(--primary-soft);
 }
 
 .DeleteBtn {
@@ -405,7 +405,7 @@
 .EmptyActionBtn {
     margin-top: 1rem;
     padding: 0.75rem 1.5rem;
-    background: #0ea5e9;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: var(--radius-md);
@@ -415,9 +415,9 @@
 }
 
 .EmptyActionBtn:hover {
-    background: #00a3ff;
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 12px var(--primary-soft);
 }
 
 /* Table Footer / Pagination */
@@ -451,9 +451,9 @@
 }
 
 .Pagination button:hover:not(:disabled) {
-    border-color: #0ea5e9;
-    color: #0ea5e9;
-    background: rgba(14, 165, 233, 0.05);
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
 }
 
 .Pagination button:disabled {
@@ -462,9 +462,9 @@
 }
 
 .ActivePage {
-    background: #0ea5e9 !important;
+    background: var(--primary) !important;
     color: white !important;
-    border-color: #0ea5e9 !important;
+    border-color: var(--primary) !important;
 }
 
 .PageArrow {
@@ -596,8 +596,8 @@
 .FormGroup input:focus,
 .FormGroup select:focus {
     outline: none;
-    border-color: #0ea5e9;
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
     background: var(--bg-card);
 }
 
@@ -649,12 +649,12 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    box-shadow: 0 4px 12px var(--primary-soft);
 }
 
 .SubmitButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+    box-shadow: 0 6px 20px var(--primary-soft);
 }
 
 /* Responsive Design */

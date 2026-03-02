@@ -5,7 +5,7 @@
     color: var(--text-main);
     min-height: 100vh;
     width: 100%;
-    padding: 0 0 64px 0;
+    padding: 0 0 clamp(40px, 8vw, 100px) 0;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
     transition: background-color 0.3s ease;
@@ -13,202 +13,137 @@
 
 body.dark-mode .body {
     background: var(--bg-gradient);
-    color: var(--text-main);
 }
 
-/* CAROUSEL SECTION (Full Bleed) */
 .recommendedBooks {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
     width: 100%;
-    margin: 40px 0 24px 0;
-    border: none;
-    box-shadow: none;
+    margin: clamp(40px, 10vw, 80px) 0 40px 0;
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .sectionHeader {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 0 5%;
-    /* Align with content centering roughly */
-    background: transparent;
-    border: none;
-    margin-bottom: 8px;
+    max-width: 1440px;
+    margin: 0 auto clamp(16px, 4vw, 32px) auto;
 }
 
 .sectionHeader h3 {
     font-weight: 700;
-    color: var(--text-main);
-    font-size: 1.5rem;
+    color: var(--text-title);
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
     letter-spacing: -0.02em;
 }
 
 .resourceGrid {
     display: flex;
-    padding: 32px 5%;
-    /* Horizontal padding for start/end items */
+    padding: 20px 5% 40px 5%;
     width: 100%;
     overflow-x: auto;
-    gap: 24px;
+    gap: 32px;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-}
-
-/* Ensure children snap */
-.resourceGrid>* {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-}
-
-/* Custom scrollbar for recommended books strip */
-.resourceGrid {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    justify-content: flex-start; /* Correct for horizontal scroll */
 }
 
 .resourceGrid::-webkit-scrollbar {
-    height: 6px;
+    height: 8px;
 }
 
 .resourceGrid::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 5%;
 }
 
 .resourceGrid::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 999px;
+    background: var(--primary);
+    border-radius: 10px;
+    opacity: 0.5;
 }
 
-.resourceGrid::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-/* CATEGORIES SECTION (Centered Container) */
-/* CATEGORIES SECTION (Transparent) */
 .BooksByCategory {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    width: 92%;
-    max-width: 1400px;
-    margin: 0 auto 40px auto;
-    border-radius: 0;
-    overflow: visible;
-    padding: 0 32px;
-    border: none;
-    box-shadow: none;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 5%;
 }
 
-.BooksByCategory>div h3 {
-    font-size: 1.5rem;
+.BooksByCategory h3 {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--text-title);
     margin-bottom: 24px;
-    animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.BooksByCategory .containerCategory {
+.containerCategory {
     display: flex;
     overflow-x: auto;
-    padding-bottom: 16px;
+    padding: 10px 0 20px 0;
     gap: 12px;
     scrollbar-width: none;
-    /* Hide scrollbar for cleaner look */
-    animation: fadeInUp 0.6s ease-out 0.1s forwards;
-    opacity: 0;
-    padding-top: 10px;
 }
 
-.BooksByCategory .containerCategory::-webkit-scrollbar {
+.containerCategory::-webkit-scrollbar {
     display: none;
 }
 
-.BooksByCategory .containerCategory button {
+.containerCategory button {
     font-size: 0.9rem;
     color: var(--text-muted);
     background-color: var(--bg-card);
-    padding: 10px 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 10px 24px;
     cursor: pointer;
-    border-radius: 9999px;
+    border-radius: 999px;
     font-weight: 500;
     border: 1px solid var(--border-color);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     white-space: nowrap;
 }
 
-.BooksByCategory .containerCategory button:hover {
-    background-color: #dee2e6;
-    color: var(--text-main);
-    border-color: #ced4da;
-    transform: translateY(-1px);
+.containerCategory button:hover {
+    background-color: var(--bg-card);
+    border-color: var(--primary);
+    color: var(--text-title);
+    transform: translateY(-2px);
 }
 
-.BooksByCategory .containerCategory button.is_selected {
-    background-color: #0ea5e9;
-    /* Sky Blue Accent kept as requested by general theme, but container is neutral */
+.containerCategory button.is_selected {
+    background-color: var(--primary);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
-    border-color: #0ea5e9;
+    box-shadow: 0 8px 16px var(--primary-soft);
+    border-color: var(--primary);
     font-weight: 600;
 }
 
-.BooksByCategory>div>.listEBooks {
-    display: flex;
-    /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));*/
-    flex-wrap: wrap;
-    margin-top: 32px;
-    gap: 24px;
+.listEBooks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: clamp(20px, 4vw, 40px);
+    margin-top: 40px;
     justify-items: center;
-    /* Center items in their grid cells */
-    animation: fadeInUp 0.8s ease-out 0.2s forwards;
-    opacity: 0;
+    padding: 10px;
+    
 }
 
-/* Entrance Animation */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+@media (max-width: 768px) {
+    .sectionHeader, .BooksByCategory {
+        padding: 0 20px;
     }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 900px) {
-
-    .recommendedBooks,
-    .BooksByCategory {
-        border-left: none;
-        border-right: none;
-        width: 100%;
-        border-radius: 0;
-        margin-bottom: 24px;
-    }
-
-    .BooksByCategory {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0 16px;
-    }
-
-    .sectionHeader {
-        padding: 16px 20px;
-    }
-
+    
     .resourceGrid {
-        padding: 24px 20px;
+        gap: 20px;
+        padding: 10px 20px 30px 20px;
     }
 
     .listEBooks {
-        justify-content: center;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
     }
 }
 
@@ -323,7 +258,7 @@ body.dark-mode .body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #0ea5e9;
+    background-color: var(--primary);
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -334,7 +269,7 @@ body.dark-mode .body {
 }
 
 .downloadBtn:hover {
-    background-color: #0284c7;
+    background-color: var(--primary-dark);
 }
 
 @keyframes slideUp {
@@ -347,4 +282,117 @@ body.dark-mode .body {
         transform: translateY(0);
         opacity: 1;
     }
+}
+.skeletonCard {
+    width: 200px;
+    height: 320px;
+    flex: 0 0 200px;
+    background: var(--bg-card);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.skeletonCover {
+    width: 100%;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.03);
+    position: relative;
+}
+
+.skeletonInfo {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeletonTitle {
+    width: 90%;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+}
+
+.skeletonAuthor {
+    width: 60%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.skeletonExcerpt {
+    width: 100%;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.834);
+    border-radius: 4px;
+}
+
+.skeletonCard::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.03) 50%, 
+        transparent 100%);
+    animation: facebookShimmer 1.5s infinite linear;
+    z-index: 10;
+}
+
+@keyframes facebookShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.emptyStateStrip, .emptyStateGrid {
+    width: 100vw;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+    color: var(--text-muted);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02); /* Grayish transparent background */
+    border: 1px dashed var(--border-color); /* Reverted to dashed */
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.emptyStateStrip p, .emptyStateGrid p {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-title);
+    letter-spacing: -0.02em;
+}
+
+.emptyStateStrip svg, .emptyStateGrid svg {
+    opacity: 0.3;
+    color: var(--text-muted); /* Gray icon */
+    margin-bottom: 24px;
+    /* Removed drop-shadow and pulse animation as requested */
+}
+
+.emptyStateGrid span {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.loading {
+    display: none; /* Hide the old text loading if still being used somewhere */
 }

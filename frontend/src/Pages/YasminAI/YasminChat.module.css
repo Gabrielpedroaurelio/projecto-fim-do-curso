@@ -106,8 +106,8 @@
     width: 80px;
     height: 80px;
     margin-bottom: 24px;
-    color: var(--primary);
-    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+    color: #00b4fb;
+    filter: drop-shadow(0 0 5px #00b4fb56);
 }
 
 .greeting h2 {
@@ -118,7 +118,7 @@
 }
 
 .textGradient {
-    background: linear-gradient(90deg, var(--primary), #8b5cf6, #d946ef);
+    background: linear-gradient(90deg, #00b4fb, #8b5cf6, #d946ef);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

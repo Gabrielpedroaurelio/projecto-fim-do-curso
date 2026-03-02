@@ -34,6 +34,18 @@ const Children = () => {
     fetchChildren();
   }, [user]);
 
+  const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000/media'
+    : '/media';
+
+  const normalizeUrl = (url) => {
+    if (!url) return null;
+    if (typeof url !== 'string') return url.url || null;
+    if (url.startsWith('http')) return url;
+    const cleanPath = url.replace(/^\/media\//, '').replace(/^media\//, '');
+    return `${MEDIA_BASE}/${cleanPath.replace(/^\//, '')}`;
+  };
+
   return (
     <div className='containelGeralclient'>
       <MenuNavBarCliente user={'parent'} />
@@ -59,7 +71,7 @@ const Children = () => {
                 >
                   <div className={style.avatar}>
                     {child.img_path ? (
-                      <img src={`http://localhost:8000${child.img_path}`} alt={child.nome_completo} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img src={normalizeUrl(child.img_path)} alt={child.nome_completo} className={style.avatarImage} />
                     ) : (
                       <RiUser3Line />
                     )}

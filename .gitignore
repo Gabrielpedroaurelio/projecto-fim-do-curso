@@ -1,11 +1,54 @@
-Arquivos-de-Planejamento/contents
-Arquivos-de-Planejamento/layouts
-Arquivos-de-Planejamento/Modelos_DB
-Arquivos-de-Planejamento/things
-Arquivos-de-Planejamento/cores.css
-Arquivos-de-Planejamento/prompts/
+# --- Arquivos de Planejamento ---
+Arquivos-de-Planejamento/
+docs/*.docx
 
- 
-frontend/node_modules
+# --- Python / Django ---
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+.python-version
 
-__pycache__/
+# --- Django Media & Static ---
+backend/media/
+backend/staticfiles/
+
+# --- Node / React ---
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+.eslintcache
+dist/
+build/
+frontend/dist/
+frontend/build/
+
+# --- Yasmin AI ---
+yasmin/.env
+yasmin/venv/
+yasmin/__pycache__/
+yasmin/yasmin_output/
+
+# --- Ambientes (.env) ---
+.env
+*.env
+!*.env.example
+!frontend/.env.production
+
+# --- IDEs / Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Sistema Operacional ---
+.DS_Store
+Thumbs.db

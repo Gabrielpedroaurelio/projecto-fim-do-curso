@@ -11,11 +11,19 @@ import AuroraBackground from "../Site/AuroraBackground";
 import axios from 'axios';
 
 // Instance for public requests without Auth Token
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://127.0.0.1:8000/api/v1/' 
+  : 'https://piih.apedrodevelopers.ao/api/v1/';
+
+const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://127.0.0.1:8000/media'
+  : 'https://piih.apedrodevelopers.ao/media';
+
 const publicApi = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1/',
+  baseURL: API_BASE,
 });
 
-const BASE_URL_MEDIA = 'http://127.0.0.1:8000/media';
+const BASE_URL_MEDIA = MEDIA_BASE;
 
 const normalizeUrl = (url) => {
   if (!url) return null;
@@ -124,13 +132,25 @@ export default function LIbrary() {
             <div className={style.listEBooksRecommendedBooks}>
               <div className={style.resourceGrid}>
                 {loading ? (
-                  <p>Carregando livros...</p>
+                  Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className={style.skeletonCard}>
+                      <div className={style.skeletonCover}></div>
+                      <div className={style.skeletonInfo}>
+                        <div className={style.skeletonTitle}></div>
+                        <div className={style.skeletonAuthor}></div>
+                        <div className={style.skeletonExcerpt}></div>
+                      </div>
+                    </div>
+                  ))
                 ) : recommended.length > 0 ? (
                   recommended.map(book => (
                     <BookCard key={book.id_livro} book={mapBook(book)} onView={handleView} onAdd={handleAdd} />
                   ))
                 ) : (
-                  <p>Nenhum livro recomendado no momento.</p>
+                  <div className={style.emptyStateStrip}>
+                    <FaBook size={40} className="mb-4 opacity-20" />
+                    <p>Nenhum livro recomendado no momento.</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -155,13 +175,26 @@ export default function LIbrary() {
 
                 <div className={style.listEBooks}>
                   {loading ? (
-                    <p>Carregando...</p>
+                    Array.from({ length: 8 }).map((_, i) => (
+                      <div key={i} className={style.skeletonCard}>
+                        <div className={style.skeletonCover}></div>
+                        <div className={style.skeletonInfo}>
+                          <div className={style.skeletonTitle}></div>
+                          <div className={style.skeletonAuthor}></div>
+                          <div className={style.skeletonExcerpt}></div>
+                        </div>
+                      </div>
+                    ))
                   ) : filtered.length > 0 ? (
                     filtered.map(book => (
                       <BookCard key={book.id_livro} book={mapBook(book)} onView={handleView} onAdd={handleAdd} />
                     ))
                   ) : (
-                    <p>Nenhum livro encontrado nesta categoria.</p>
+                    <div className={style.emptyStateGrid}>
+                      <FaBook size={60} className="mb-4 opacity-10" />
+                      <p>Nenhum livro encontrado nesta categoria.</p>
+                      <span>Tente buscar por outro termo ou selecione outra categoria.</span>
+                    </div>
                   )}
                 </div>
               </div>

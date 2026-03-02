@@ -12,12 +12,17 @@ import {
     FaCloudArrowDown,
     FaClockRotateLeft,
     FaUser,
-    FaTrash
+    FaTrash,
+    FaPalette,
+    FaListCheck,
+    FaBell,
+    FaMoon,
+    FaSun
 } from 'react-icons/fa6'
 
 export default function Settings() {
     const { user, setUser } = useAuth()
-    const [activeTab, setActiveTab] = useState('profile')
+    const [activeTab, setActiveTab] = useState('backup')
     const [isBackingUp, setIsBackingUp] = useState(false)
     const [backupProgress, setBackupProgress] = useState(0)
     const [backups, setBackups] = useState([])
@@ -28,21 +33,70 @@ export default function Settings() {
         telefone: user?.telefone || ''
     })
     const [loading, setLoading] = useState(false)
+    const [auditLogs, setAuditLogs] = useState([])
+    const [isDarkMode, setIsDarkMode] = useState(document.body.classList.contains('dark-mode'))
+    const [currentColor, setCurrentColor] = useState(localStorage.getItem('primary-color') || '#0ea5e9')
+
+    const palettes = [
+        { id: 'sky', color: '#0ea5e9' },
+        { id: 'indigo', color: '#6366f1' },
+        { id: 'emerald', color: '#10b981' },
+        { id: 'amber', color: '#f59e0b' },
+        { id: 'rose', color: '#ef4444' },
+    ]
 
     useEffect(() => {
         fetchConfig()
         fetchBackups()
+        
+        // Aplicar a cor salva no início
+        const savedColor = localStorage.getItem('primary-color')
+        if (savedColor) {
+            applyColor(savedColor)
+        }
     }, [])
+
+    const applyColor = (color) => {
+        // Aplicar no html e body para garantir que sobreponha variáveis do modo escuro
+        const targets = [document.documentElement, document.body]
+        targets.forEach(el => {
+            el.style.setProperty('--primary', color)
+            el.style.setProperty('--accent-indigo', color)
+            el.style.setProperty('--text-primary', color)
+            el.style.setProperty('--primary-soft', `${color}15`)
+        })
+    }
+
+    const handleColorChange = (color) => {
+        setCurrentColor(color)
+        localStorage.setItem('primary-color', color)
+        applyColor(color)
+    }
+
+    useEffect(() => {
+        if (activeTab === 'audit') {
+            fetchAuditLogs()
+        }
+    }, [activeTab])
 
     const fetchConfig = async () => {
         try {
             const response = await api.get('configuracao-sistema/')
             const data = response.data.results || response.data
-            if (data.length > 0) {
+            if (data && data.length > 0) {
                 setConfig(data[0])
             }
         } catch (error) {
             console.error("Erro ao carregar configurações:", error)
+        }
+    }
+
+    const fetchAuditLogs = async () => {
+        try {
+            const response = await api.get('historicos/')
+            setAuditLogs(response.data.results || response.data)
+        } catch (error) {
+            console.error("Erro ao carregar logs:", error)
         }
     }
 
@@ -90,10 +144,33 @@ export default function Settings() {
         }
     }
 
+    const handleLogoChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        const formData = new FormData()
+        formData.append('logo', file)
+
+        setLoading(true)
+        try {
+            const configId = config?.id
+            if (configId) {
+                const response = await api.patch(`configuracao-sistema/${configId}/`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+                setConfig(response.data)
+                alert('Logótipo atualizado!')
+            }
+        } catch (error) {
+            console.error("Erro ao carregar logótipo:", error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleSaveConfig = async () => {
         setLoading(true)
         try {
-            // A model no backend usa 'id' (do BaseModel) e não 'id_configuracao'
             const configId = config?.id
             if (configId) {
                 await api.patch(`configuracao-sistema/${configId}/`, config)
@@ -107,6 +184,18 @@ export default function Settings() {
             alert('Erro ao guardar as configurações da instituição.')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const toggleTheme = () => {
+        const newMode = !isDarkMode
+        setIsDarkMode(newMode)
+        if (newMode) {
+            document.body.classList.add('dark-mode')
+            localStorage.setItem('theme', 'dark')
+        } else {
+            document.body.classList.remove('dark-mode')
+            localStorage.setItem('theme', 'light')
         }
     }
 
@@ -161,10 +250,13 @@ export default function Settings() {
     }
 
     const tabs = [
-        { id: 'profile', label: 'Meu Perfil', icon: <FaUser /> },
-        { id: 'general', label: 'Instituição', icon: <FaBuilding /> },
         { id: 'backup', label: 'Backup', icon: <FaDatabase /> },
+        { id: 'appearance', label: 'Aparência', icon: <FaPalette /> },
+        { id: 'audit', label: 'Auditoria', icon: <FaListCheck /> },
         { id: 'security', label: 'Segurança', icon: <FaShieldHalved /> },
+        { id: 'notifications', label: 'Notificações', icon: <FaBell /> },
+        { id: 'general', label: 'Instituição', icon: <FaBuilding /> },
+        { id: 'profile', label: 'Meu Perfil', icon: <FaUser /> },
     ]
 
     return (
@@ -263,6 +355,30 @@ export default function Settings() {
                                     <h3>Informações da Instituição</h3>
                                     <p>Dados que aparecerão nos documentos emitidos</p>
                                 </div>
+                                
+                                <div className={style.LogoUploadSection}>
+                                    <div className={style.LogoPreview}>
+                                        {config?.logo ? (
+                                            <img src={config.logo} alt="Logo Instituição" />
+                                        ) : (
+                                            <FaBuilding />
+                                        )}
+                                    </div>
+                                    <div className={style.LogoInfo}>
+                                        <h4>Logótipo Oficial</h4>
+                                        <p>PNG recomendado para fundos transparentes (Max 2MB)</p>
+                                        <input
+                                            type="file"
+                                            id="logo-upload"
+                                            style={{ display: 'none' }}
+                                            onChange={handleLogoChange}
+                                        />
+                                        <label htmlFor="logo-upload" className={style.UploadSmallBtn}>
+                                            Substituir Logo
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <div className={style.FormGrid}>
                                     <div className={style.InputGroup}>
                                         <label>Nome da Escola</label>
@@ -312,6 +428,50 @@ export default function Settings() {
                                 >
                                     {loading ? 'Salvando...' : 'Salvar Alterações'}
                                 </button>
+                            </div>
+                        )}
+
+                        {activeTab === 'appearance' && (
+                            <div className={style.SettingSection}>
+                                <div className={style.SectionHeader}>
+                                    <h3>Aparência e Personalização</h3>
+                                    <p>Ajuste a interface do sistema ao seu gosto</p>
+                                </div>
+
+                                <div className={style.ThemeSelectors}>
+                                    <div 
+                                        className={`${style.ThemeCard} ${!isDarkMode ? style.ActiveTheme : ''}`}
+                                        onClick={() => isDarkMode && toggleTheme()}
+                                    >
+                                        <div className={style.ThemePreviewLight}>
+                                            <FaSun />
+                                        </div>
+                                        <span>Modo Claro</span>
+                                    </div>
+                                    <div 
+                                        className={`${style.ThemeCard} ${isDarkMode ? style.ActiveTheme : ''}`}
+                                        onClick={() => !isDarkMode && toggleTheme()}
+                                    >
+                                        <div className={style.ThemePreviewDark}>
+                                            <FaMoon />
+                                        </div>
+                                        <span>Modo Escuro</span>
+                                    </div>
+                                </div>
+
+                                <div className={style.ColorPaletteList}>
+                                    <h4>Esquema de Cores</h4>
+                                    <div className={style.ColorsGrid}>
+                                        {palettes.map(p => (
+                                            <div 
+                                                key={p.id}
+                                                className={`${style.ColorSwatch} ${currentColor === p.color ? style.ActiveSwatch : ''}`} 
+                                                style={{ backgroundColor: p.color }}
+                                                onClick={() => handleColorChange(p.color)}
+                                            ></div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         )}
 
@@ -381,6 +541,38 @@ export default function Settings() {
                             </div>
                         )}
 
+                        {activeTab === 'audit' && (
+                            <div className={style.SettingSection}>
+                                <div className={style.SectionHeader}>
+                                    <h3>Logs de Auditoria</h3>
+                                    <p>Monitorização das últimas ações realizadas no sistema</p>
+                                </div>
+                                <div className={style.LogsTableContainer}>
+                                    <table className={style.LogsTable}>
+                                        <thead>
+                                            <tr>
+                                                <th>Data/Hora</th>
+                                                <th>Utilizador</th>
+                                                <th>Ação</th>
+                                                <th>Detalhes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {auditLogs.map((log, i) => (
+                                                <tr key={i}>
+                                                    <td>{new Date(log.data_hora).toLocaleString()}</td>
+                                                    <td>{log.funcionario_nome || log.aluno_nome || "Sistema"}</td>
+                                                    <td><span className={style.ActionBadge}>{log.tipo_accao}</span></td>
+                                                    <td className={style.DetailsCell}>Alteração de registo de segurança</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    {auditLogs.length === 0 && <p className={style.EmptyState}>Nenhum log disponível.</p>}
+                                </div>
+                            </div>
+                        )}
+
                         {activeTab === 'security' && (
                             <div className={style.SettingSection}>
                                 <div className={style.SectionHeader}>
@@ -435,6 +627,39 @@ export default function Settings() {
                                 >
                                     {loading ? 'Processando...' : 'Atualizar Segurança'}
                                 </button>
+                            </div>
+                        )}
+
+                        {activeTab === 'notifications' && (
+                            <div className={style.SettingSection}>
+                                <div className={style.SectionHeader}>
+                                    <h3>Notificações e Alertas</h3>
+                                    <p>Escolha como deseja ser avisado sobre eventos importantes</p>
+                                </div>
+                                <div className={style.NotificationList}>
+                                    <div className={style.ToggleItem}>
+                                        <div className={style.ToggleLabel}>
+                                            <h4>Alertas Académicos</h4>
+                                            <p>Receber notificações sobre novas notas e faltas.</p>
+                                        </div>
+                                        <input type="checkbox" defaultChecked />
+                                    </div>
+                                    <div className={style.ToggleItem}>
+                                        <div className={style.ToggleLabel}>
+                                            <h4>Alertas Financeiros</h4>
+                                            <p>Avisar sobre pagamentos recebidos ou faturas expiradas.</p>
+                                        </div>
+                                        <input type="checkbox" defaultChecked />
+                                    </div>
+                                    <div className={style.ToggleItem}>
+                                        <div className={style.ToggleLabel}>
+                                            <h4>Notificações por Email</h4>
+                                            <p>Enviar resumo semanal de atividades para o email oficial.</p>
+                                        </div>
+                                        <input type="checkbox" />
+                                    </div>
+                                </div>
+                                <button className={style.SaveButton}>Guardar Preferências</button>
                             </div>
                         )}
                     </div>

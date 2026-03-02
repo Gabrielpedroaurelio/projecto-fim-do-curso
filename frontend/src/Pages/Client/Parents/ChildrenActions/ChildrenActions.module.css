@@ -43,47 +43,126 @@
 }
 
 .avatarLarge {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
+    background: var(--bg-input);
     border-radius: 50%;
-    background: var(--bg-page);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    color: var(--green-primay);
-    border: 2px solid var(--border-color);
+    font-size: 3rem;
+    color: var(--text-muted);
+    border: 3px solid var(--green-primay);
     overflow: hidden;
 }
 
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .headerInfo h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
+    font-size: 2rem;
     color: var(--text-main);
-    margin: 0;
+    margin-bottom: 0.5rem;
 }
 
 .headerInfo p {
-    font-size: 1rem;
     color: var(--text-muted);
-    margin-top: 0.25rem;
+    font-size: 1.1rem;
 }
 
+/* Seção de Histórico */
 .historySection {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    padding: 2.5rem;
     border-radius: var(--radius-md);
-    padding: 2rem;
+    border: 1px solid var(--border-color);
     box-shadow: var(--shadow-soft);
 }
 
-.historySection h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 1.5rem;
+.sectionHeader {
+    margin-bottom: 2rem;
 }
 
+.sectionHeader h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sectionHeader p {
+    color: var(--text-muted);
+}
+
+/* Barra de Filtros */
+.filtersBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.searchField {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s;
+}
+
+.searchField:focus-within {
+    border-color: var(--green-primay);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.searchField input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    outline: none;
+}
+
+.selectsGroup {
+    display: flex;
+    gap: 1rem;
+}
+
+.filterItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-card);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.filterItem select {
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Tabela e Dados */
 .tableContainer {
     overflow-x: auto;
 }
@@ -114,12 +193,176 @@
     border-bottom: none;
 }
 
-.statusBadge {
-    padding: 0.4rem 0.75rem;
+.docInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.docInfo small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.categoryBadge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--green-primay);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: fit-content;
+    margin-top: 0.5rem;
+}
+
+.dateInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+}
+
+.actionsGroup {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.viewBtnIcon, .downloadBtnIcon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+}
+
+.viewBtnIcon {
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.viewBtnIcon:hover {
+    background: var(--text-main);
+    color: white;
+}
+
+.downloadBtnIcon {
+    background: var(--green-primay);
+    color: white;
+    border: none;
+}
+
+.downloadBtnIcon:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.noAction {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Modal PDF */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modalContent {
+    background: var(--bg-card);
+    width: 90%;
+    height: 90%;
+    max-width: 1000px;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modalHeader {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-input);
+}
+
+.modalHeader h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+.modalBody {
+    flex: 1;
+    background: #e5e7eb;
+}
+
+.pdfViewer {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.modalFooter {
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.downloadBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--green-primay);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Estilos de Status legados adaptados */
+.statusBadge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 700;
-    text-transform: capitalize;
 }
 
 .emptyMsg {
@@ -129,7 +372,6 @@
     font-style: italic;
 }
 
-/* Status colors */
 .statusReady {
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;

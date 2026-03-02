@@ -58,19 +58,19 @@ const DashboardEncarregado = () => {
 
           <div className={style.gridCards}>
             <Cards
-              icon={<RiUser3Line />}
+              icon={<RiUser3Line size={50} />}
               title="Educandos Ativos"
               value={loading ? "..." : `${String(educandos.length).padStart(2, '0')} Alunos`}
               value_percentual={0}
             />
             <Cards
-              icon={<RiBarChartFill />}
+              icon={<RiBarChartFill size={40} />}
               title="Média do Grupo"
               value={loading ? "..." : (Array.isArray(performance) && performance.length > 0 ? (performance.reduce((acc, curr) => acc + (curr.media || 0), 0) / performance.length).toFixed(1) : "0.0")}
               value_percentual={0}
             />
             <Cards
-              icon={<RiNotification3Line />}
+              icon={<RiNotification3Line size={50} />}
               title="Notificações"
               value={loading ? "..." : `${String(unreadNotifications).padStart(2, '0')} Novas`}
               value_percentual={unreadNotifications > 0 ? 100 : 0}
@@ -141,9 +141,9 @@ const DashboardEncarregado = () => {
               <h2>Acesso Rápido a Serviços</h2>
             </div>
             <div className={style.gridCardsComp}>
-              <CardsDocments text="Solicitar Documento" icon={<RiBillLine />} url="/parent/ask" />
-              <CardsDocments text="Lista de Educandos" icon={<RiUser3Line />} url="/parent/children" />
-              <CardsDocments text="Repositório Digital" icon={<RiFileList3Line />} url="/parent/document" />
+              <CardsDocments text="Solicitar Documento" icon={<RiBillLine size={50} />} url="/parent/ask" />
+              <CardsDocments text="Lista de Educandos" icon={<RiUser3Line  size={50}/>} url="/parent/children" />
+              <CardsDocments text="Repositório Digital" icon={<RiFileList3Line size={50} />} url="/parent/document" />
             </div>
           </section>
         </div>

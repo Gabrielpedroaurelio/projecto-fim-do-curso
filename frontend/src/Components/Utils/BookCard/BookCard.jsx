@@ -43,14 +43,14 @@ export default function BookCard({ book, onView, onAdd }) {
       <div className={styles.cover}>
         {!loaded && <div className={styles.skeleton} aria-hidden />}
 
-        {book.pdf ? (
-          <object data={book.pdf} type="application/pdf" className={styles.object} onLoad={() => setLoaded(true)} aria-label={`${book.title} PDF`}>
-            {/* fallback will be img if object cannot render */}
-            <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={() => setLoaded(true)} onError={handleImgError} />
-          </object>
-        ) : (
-          <img src={cover} alt={`${book.title} capa`} loading="lazy" onLoad={() => setLoaded(true)} onError={handleImgError} />
-        )}
+        <img 
+          src={cover} 
+          alt={`${book.title} capa`} 
+          loading="lazy" 
+          onLoad={() => setLoaded(true)} 
+          onError={handleImgError} 
+          className={styles.coverImage}
+        />
 
         {book.recommended && <span className={styles.badge}>Recomendado</span>}
       </div>

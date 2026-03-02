@@ -123,7 +123,7 @@ export default function Boletim() {
                                         <h3>Modelos de Boletim</h3>
                                         <p className={style.Subtitle}>Gerir e personalizar modelos de boletim escolar</p>
                                     </div>
-                                    <button className={style.CreateButton} onClick={handleCreateModel}>
+                                    <button className={style.CreateButton} onClick={handleCreateModel}  style={{cursor:"not-allowed"}} disabled>
                                         + Criar Novo Modelo
                                     </button>
                                 </div>

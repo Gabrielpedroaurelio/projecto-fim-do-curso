@@ -9,6 +9,7 @@
     position: relative;
     overflow: hidden;
     animation: fadeIn 1s ease-out forwards;
+    margin-top: 80px;
 }
 
 @keyframes fadeIn {
@@ -62,10 +63,8 @@
 }
 
 .title {
-    font-size: clamp(3.5rem, 6vw, 5rem);
+    font-size: clamp(2.5rem, 8vw, 5rem);
     font-weight: 500;
-    /* Lighter weight for modern feel */
-    /* Lighter weight for modern feel */
     line-height: 1.1;
     color: var(--text-title);
     margin-bottom: 24px;
@@ -89,17 +88,17 @@
 
 .gradientText {
     /* Gemini/Google AI Gradient: Blue -> Purple -> Red/Pink */
-    background: linear-gradient(90deg, #4285f4 0%, #9b72cb 50%, #d96570 100%);
-    background-size: 200% auto;
+    background: linear-gradient(90deg, #4285f4 0%, #9b72cb 33%, #d96570 66%, #4285f4 100%);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 8s linear infinite;
+    animation: shine 5s linear infinite;
     display: inline-block;
 }
 
 .description {
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 2vw, 1.25rem);
     line-height: 1.6;
     color: var(--text-muted);
     /* Muted text */
@@ -299,13 +298,11 @@
 }
 
 @media (max-width: 1024px) {
-    .visualElement {
-        display: none;
-    }
-
     .hero {
+        flex-direction: column;
         padding-top: 120px;
         text-align: center;
+        gap: 40px;
     }
 
     .container {
@@ -319,5 +316,25 @@
 
     .ctaGroup {
         justify-content: center;
+    }
+
+    .visualElement {
+        min-height: 300px;
+        width: 100%;
+    }
+
+    .floatingCard {
+        transform: scale(0.8);
+        animation: float 6s ease-in-out infinite; /* Remove slideInRight for mobile to avoid clash */
+    }
+}
+
+@media (max-width: 480px) {
+    .floatingCard {
+        transform: scale(0.6);
+    }
+    
+    .hero {
+        padding-bottom: 60px;
     }
 }

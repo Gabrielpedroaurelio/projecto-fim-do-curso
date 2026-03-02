@@ -125,7 +125,7 @@ export default function Declaracao() {
                                         <h3>Modelos de Declaração</h3>
                                         <p className={style.Subtitle}>Gerir e personalizar modelos de declarações escolares</p>
                                     </div>
-                                    <button className={style.CreateButton} onClick={handleCreateModel}>
+                                    <button className={style.CreateButton} onClick={handleCreateModel}  style={{cursor:"not-allowed"}} disabled>
                                         + Criar Novo Modelo
                                     </button>
                                 </div>
