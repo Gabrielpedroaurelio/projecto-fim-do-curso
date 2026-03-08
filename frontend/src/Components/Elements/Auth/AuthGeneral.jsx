@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
 import fundo_login from '../../../assets/images/backgroundlogin.png'
-import fundo_login2 from '../../../assets/images/robot.png'
+import fundo_login2 from '../../../assets/images/backgroundEncaregados.png'
 import fundo_login3 from '../../../assets/images/img-login.jpg'
 import { useAuth } from '../../../Context/AuthContext';
 import { useState } from 'react';

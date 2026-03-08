@@ -140,12 +140,12 @@ const DashboardsStudents = () => {
                 value={animatedMediaGeral.toFixed(1)}
                 value_percentual={(stats.media_geral >= 10 ? 5 : -2) + "%"}
               />
-              <Cards
+              {/*<Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value={`${Math.round(animatedPresenca)}%`}
                 value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5) + "%"}
-              />
+              />*/}
               <Cards
                 icon={<RiArticleLine size={30} />}
                 title="Faltas Acumuladas"
