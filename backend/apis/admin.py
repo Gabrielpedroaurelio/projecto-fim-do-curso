@@ -385,7 +385,7 @@ class FaltaAlunoAdmin(ModelAdmin):
     def disciplina_sigla(self, obj):
         return obj.id_disciplina.sigla if obj.id_disciplina else '-'
 
-# =============================================================================
+#  =============================================================================
 # 6. DOCUMENTOS E SOLICITAÇÕES
 # =============================================================================
 
@@ -561,3 +561,14 @@ class NotificacaoAdmin(ModelAdmin):
 @admin.register(ConfiguracaoSistema)
 class ConfiguracaoSistemaAdmin(ModelAdmin):
     list_display = ['nome_instituicao', 'nif', 'telefone']
+    fieldsets = [
+        ('Dados da Instituição', {
+            'fields': ['nome_instituicao', 'nif', 'endereco', 'telefone', 'email_oficial', 'logo']
+        }),
+        ('Assinatura e Carimbo Oficiais', {
+            'fields': ['assinatura_director', 'carimbo_instituicao']
+        }),
+        ('Sistema', {
+            'fields': ['backup_automatico', 'frequencia_backup']
+        }),
+    ]

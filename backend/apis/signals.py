@@ -13,6 +13,7 @@ from apis.models.auditoria import Notificacao
 from apis.models.usuarios import Funcionario
 
 from apis.models.alunos import Aluno
+from apis.utils.auditoria_utils import registrar_evento
 
 
 
@@ -313,4 +314,21 @@ def salvar_historico_turma_aluno(sender, instance, created, **kwargs):
                 logger = logging.getLogger(__name__)
 
                 logger.error(f"Erro ao salvar histórico da turma ativa: {str(e)}")
+
+
+@receiver(post_save, sender=Aluno)
+def audit_aluno_save(sender, instance, created, **kwargs):
+    """Grava auditoria de Aluno"""
+    # Nota: Em sinais, não temos o request facilmente sem usar middleware 
+    # ou passar manualmente. Para contornar, podemos gravar como 'Sistema'
+    # ou tentar capturar se o request estiver disponível via thread locals (arrojado).
+    # Por agora, gravamos como acção do sistema se o request não for passado.
+    if created:
+        registrar_evento(None, 'CRIOU_ALUNO', dados_novos={'nome': instance.nome_completo}, aluno=instance)
+
+@receiver(post_save, sender=Funcionario)
+def audit_funcionario_save(sender, instance, created, **kwargs):
+    """Grava auditoria de Funcionário"""
+    if created:
+        registrar_evento(None, 'CRIOU_FUNCIONARIO', dados_novos={'nome': instance.nome_completo})
 

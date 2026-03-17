@@ -20,6 +20,8 @@ from .auditoria_views import HistoricoLoginViewSet, HistoricoViewSet
 from .notificacao_views import NotificacaoViewSet
 from .backup_views import BackupViewSet, ConfiguracaoSistemaViewSet
 from .dashboard_api_views import DashboardStatsAPIView
+from .report_views import ReportViewSet
+from .report_data_views import ReportDataViewSet
 
 __all__ = [
     # Auth
@@ -46,4 +48,6 @@ __all__ = [
     'BackupViewSet', 'ConfiguracaoSistemaViewSet',
     'DashboardStatsAPIView',
     'NotificacaoViewSet',
+    'ReportViewSet',
+    'ReportDataViewSet',
 ]

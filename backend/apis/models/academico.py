@@ -8,7 +8,7 @@ class Sala(BaseModel):
     id_sala = models.AutoField(primary_key=True)
     numero_sala = models.SmallIntegerField(verbose_name='Número da Sala')
     capacidade_alunos = models.IntegerField(verbose_name='Capacidade')
-    img_path = models.ImageField(upload_to="image/academico/sala/", verbose_name='Imagem da Sala', blank=True, null=True)
+    localizacao=models.CharField(max_length=50, verbose_name="Localização")
     
     class Meta:
         db_table = 'sala'

@@ -50,7 +50,7 @@ class EncarregadoSerializer(serializers.ModelSerializer):
         fields = [
             'id_encarregado', 'nome_completo', 'email', 'telefone',
             'provincia_residencia', 'municipio_residencia', 'bairro_residencia',
-            'numero_casa', 'senha_hash', 'img_path', 'is_online',
+            'numero_casa', 'senha_hash', 'img_path', 'is_online', 'modo_user',
             'criado_em', 'atualizado_em'
         ]
         read_only_fields = ['id_encarregado', 'criado_em', 'atualizado_em']

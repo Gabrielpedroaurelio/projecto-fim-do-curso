@@ -24,7 +24,9 @@ from apis.views import (
     FaturaViewSet, PagamentoViewSet,
     HistoricoLoginViewSet, HistoricoViewSet, BackupViewSet, ConfiguracaoSistemaViewSet,
     DashboardStatsAPIView,
-    MatrizCurricularViewSet, MatrizCurricularDisciplinaViewSet
+    MatrizCurricularViewSet, MatrizCurricularDisciplinaViewSet,
+    ReportViewSet,
+    ReportDataViewSet
 )
 
 # Criar router e registrar ViewSets
@@ -74,6 +76,18 @@ router.register(r'historico-login', HistoricoLoginViewSet, basename='historico-l
 router.register(r'historicos', HistoricoViewSet, basename='historico')
 router.register(r'backups', BackupViewSet, basename='backup')
 router.register(r'configuracao-sistema', ConfiguracaoSistemaViewSet, basename='configuracao-sistema')
+router.register(r'reports', ReportViewSet, basename='report')
+
+# Dados Brutos para Relatórios (Frontend Filtering)
+urlpatterns_reports = [
+    path('reports/data/solicitacoes/', ReportDataViewSet.as_view({'get': 'list_solicitacoes'}), name='report-data-solicitacoes'),
+    path('reports/data/alunos/', ReportDataViewSet.as_view({'get': 'list_alunos'}), name='report-data-alunos'),
+    path('reports/data/funcionarios/', ReportDataViewSet.as_view({'get': 'list_funcionarios'}), name='report-data-funcionarios'),
+    path('reports/data/auditoria/', ReportDataViewSet.as_view({'get': 'list_auditoria'}), name='report-data-auditoria'),
+    path('reports/data/logins/', ReportDataViewSet.as_view({'get': 'list_logins'}), name='report-data-logins'),
+    path('reports/config/', ReportDataViewSet.as_view({'get': 'get_config'}), name='report-config'),
+]
+
 
 # URLs
 router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
@@ -91,6 +105,9 @@ urlpatterns = [
     
     # Dashboard
     path('dashboard/stats/', DashboardStatsAPIView.as_view(), name='dashboard-stats'),
+    
+    # Relatórios
+    path('', include(urlpatterns_reports)),
     
     # Incluir rotas do router
     path('', include(router.urls)),

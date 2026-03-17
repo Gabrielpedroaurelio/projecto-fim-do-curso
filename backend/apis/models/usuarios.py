@@ -73,6 +73,12 @@ class Funcionario(BaseModel):
 
 class Encarregado(BaseModel):
     """Responsáveis pelos alunos (Pais/Tutores)"""
+    
+    STATUS_USER_CHOICES = [
+        ('Ativo', 'Ativo'),
+        ('Inativo', 'Inativo'),
+    ]
+    
     id_encarregado = models.AutoField(primary_key=True)
     nome_completo = models.CharField(max_length=150, verbose_name='Nome Completo')
     email = models.EmailField(max_length=150, unique=True, null=True, blank=True)
@@ -85,6 +91,7 @@ class Encarregado(BaseModel):
     img_path = models.ImageField(upload_to="image/encarregados/images/",null=True, blank=True, verbose_name='Foto')
 
     is_online = models.BooleanField(default=False)
+    modo_user = models.CharField(max_length=20, choices=STATUS_USER_CHOICES, default='Inativo', verbose_name='Modo Usuário')
     
     class Meta:
         db_table = 'encarregado'

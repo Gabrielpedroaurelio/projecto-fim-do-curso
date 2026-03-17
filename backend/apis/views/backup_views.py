@@ -8,12 +8,21 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from apis.models import ConfiguracaoSistema
 from apis.serializers.configuracao_serializers import ConfiguracaoSistemaSerializer
+from apis.utils.auditoria_utils import registrar_evento
 
 class ConfiguracaoSistemaViewSet(viewsets.ModelViewSet):
     """ViewSet para gerir as configurações do sistema"""
     queryset = ConfiguracaoSistema.objects.all()
     serializer_class = ConfiguracaoSistemaSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        registrar_evento(
+            self.request, 
+            'ACTUALIZOU_CONFIGURACAO', 
+            dados_novos=serializer.data
+        )
 
     def get_queryset(self):
         # Garante que sempre exista pelo menos uma configuração
@@ -73,6 +82,7 @@ class BackupViewSet(viewsets.ViewSet):
         try:
             # Tentar executar o backup real
             subprocess.run(command, env=env, check=True)
+            registrar_evento(self.request, 'BACKUP_CRIADO', dados_novos={'filename': filename})
             return Response({
                 'message': 'Backup realizado com sucesso',
                 'filename': filename
@@ -102,5 +112,78 @@ class BackupViewSet(viewsets.ViewSet):
         filepath = os.path.join(self.backup_dir, filename)
         if os.path.exists(filepath):
             os.remove(filepath)
+            registrar_evento(self.request, 'BACKUP_REMOVIDO', dados_anteriores={'filename': filename})
             return Response({'message': 'Backup removido'})
         return Response({'error': 'Ficheiro não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['post'])
+    def restore_backup(self, request):
+        """Restaura a base de dados a partir de um ficheiro existente"""
+        filename = request.data.get('filename')
+        if not filename:
+            return Response({'error': 'Nome do ficheiro não fornecido'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        filepath = os.path.join(self.backup_dir, filename)
+        if not os.path.exists(filepath):
+            return Response({'error': 'Ficheiro de backup não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        return self._execute_restore(filepath)
+
+    @action(detail=False, methods=['post'])
+    def upload_restore(self, request):
+        """Recebe um ficheiro SQL e restaura a base de dados"""
+        file_obj = request.FILES.get('file')
+        if not file_obj:
+            return Response({'error': 'Nenhum ficheiro enviado'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not file_obj.name.endswith('.sql'):
+            return Response({'error': 'Apenas ficheiros .sql são permitidos'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Salvar temporariamente para restaurar
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        temp_filename = f"upload_restore_{timestamp}.sql"
+        temp_path = os.path.join(self.backup_dir, temp_filename)
+        
+        try:
+            with open(temp_path, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
+            
+            result = self._execute_restore(temp_path)
+            return result
+        except Exception as e:
+            return Response({'error': f'Falha no upload: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def _execute_restore(self, filepath):
+        """Auxiliar para executar o comando psql de restauro"""
+        db_settings = settings.DATABASES['default']
+        
+        env = os.environ.copy()
+        env['PGPASSWORD'] = db_settings['PASSWORD']
+        
+        # Comando psql para restaurar
+        command = [
+            'psql',
+            '-h', db_settings['HOST'],
+            '-p', db_settings['PORT'],
+            '-U', db_settings['USER'],
+            '-d', db_settings['NAME'],
+            '-f', filepath
+        ]
+        
+        try:
+            # Em ambiente Windows/WAMP, o psql pode não estar no PATH global
+            # mas assumimos que o ambiente está configurado ou psql está acessível
+            subprocess.run(command, env=env, check=True)
+            registrar_evento(self.request, 'SISTEMA_RESTAURADO', dados_novos={'filepath': filepath})
+            return Response({'message': 'Base de dados restaurada com sucesso'})
+        except subprocess.CalledProcessError as e:
+            return Response({
+                'error': 'Falha ao executar comando de restauro',
+                'details': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({
+                'error': f'Erro inesperado: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

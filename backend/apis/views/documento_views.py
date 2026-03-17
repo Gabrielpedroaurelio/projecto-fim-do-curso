@@ -10,10 +10,10 @@ from apis.services.document_service import DocumentService
 
 from apis.models import Documento, SolicitacaoDocumento
 from apis.serializers import (
-    DocumentoSerializer, DocumentoListSerializer,
     SolicitacaoDocumentoSerializer, SolicitacaoDocumentoListSerializer,
     SolicitacaoDocumentoAprovarSerializer, SolicitacaoDocumentoRejeitarSerializer,
-    FaturaSerializer
+    FaturaSerializer, DocumentoVerificacaoSerializer, DocumentoListSerializer,
+    DocumentoSerializer
 )
 
 
@@ -23,6 +23,12 @@ class DocumentoViewSet(viewsets.ModelViewSet):
         'id_aluno', 'criado_por'
     ).all()
     permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get_permissions(self):
+        if self.action == 'verificar':
+            return []  # Acesso público
+        return super().get_permissions()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['id_aluno']
     search_fields = ['tipo_documento', 'uuid_documento']
@@ -64,6 +70,18 @@ class DocumentoViewSet(viewsets.ModelViewSet):
         serializer = DocumentoListSerializer(documentos, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'], url_path='verificar/(?P<uuid_doc>[^/.]+)')
+    def verificar(self, request, uuid_doc=None):
+        """Action pública para verificar autenticidade de um documento pelo UUID"""
+        try:
+            documento = Documento.objects.select_related(
+                'id_aluno', 'id_aluno__id_turma', 'id_aluno__id_turma__id_classe'
+            ).get(uuid_documento=uuid_doc)
+            serializer = DocumentoVerificacaoSerializer(documento, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Documento.DoesNotExist:
+            return Response({'error': 'Documento não encontrado ou inválido'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
     """ViewSet para SolicitacaoDocumento"""
@@ -71,6 +89,7 @@ class SolicitacaoDocumentoViewSet(viewsets.ModelViewSet):
         'id_aluno', 'id_encarregado', 'id_funcionario'
     ).all()
     permission_classes = [IsAuthenticated]
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['status_solicitacao', 'tipo_documento', 'id_aluno']
     search_fields = ['tipo_documento']

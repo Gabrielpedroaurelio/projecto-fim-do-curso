@@ -17,6 +17,8 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'False'
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split(' ')
 
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:5173')
+
 
 # Application definition
 
@@ -48,6 +50,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3573',
     'http://localhost:5173',
+    'http://192.168.44.245:5173',
 ]
 
 CORS_ALLOW_CREDENTIALS = True

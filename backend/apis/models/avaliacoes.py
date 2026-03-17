@@ -32,6 +32,7 @@ class Disciplina(BaseModel):
         blank=True,
         verbose_name='Tipo'
     )
+    sigla=models.CharField(max_length=10, verbose_name="Sigla da Disciplina", null=True)
     carga_horaria = models.IntegerField(null=True, blank=True, verbose_name='Carga Horária')
     id_coordenador = models.ForeignKey(
         Funcionario,

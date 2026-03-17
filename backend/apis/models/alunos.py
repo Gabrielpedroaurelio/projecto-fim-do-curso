@@ -19,6 +19,11 @@ class Aluno(BaseModel):
         ('Suspenso', 'Suspenso'),
     ]
     
+    STATUS_USER_CHOICES = [
+        ('Ativo', 'Ativo'),
+        ('Inativo', 'Inativo'),
+    ]
+    
     id_aluno = models.AutoField(primary_key=True)
     numero_bi = models.CharField(max_length=14, unique=True, null=True, blank=True, verbose_name='Número do BI')
     nome_completo = models.CharField(max_length=150, verbose_name='Nome Completo')
@@ -42,7 +47,7 @@ class Aluno(BaseModel):
     senha_hash = models.CharField(max_length=255, verbose_name='Senha', null=True, blank=True)
     genero = models.CharField(max_length=1, choices=GENERO_CHOICES, null=True, blank=True, default="F")
     status_aluno = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Activo', verbose_name='Estado')
-    modo_user = models.CharField(max_length=20, default='Inativo', verbose_name='Modo Usuário')
+    modo_user = models.CharField(max_length=20, choices=STATUS_USER_CHOICES, default='Inativo', verbose_name='Modo Usuário')
     id_turma = models.ForeignKey(Turma, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Turma')
     
 

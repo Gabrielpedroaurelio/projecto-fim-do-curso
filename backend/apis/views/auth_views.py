@@ -83,6 +83,19 @@ def login_view(request):
                     'status': user.status_funcionario,
                     'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
+                if user.status_funcionario != 'Activo':
+                    return Response(
+                        {'error': 'A sua conta de funcionário está inativa.'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+                
+                cargo_nome = user.id_cargo.nome_cargo if user.id_cargo else None
+                if cargo_nome not in ['Secretário']:
+                    return Response(
+                        {'error': 'Apenas funcionários com o cargo de Secretário podem aceder a este portal. Directores devem usar o painel administrativo.'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+
                 # Atualizar status online
                 user.is_online = True
                 user.save()
@@ -105,6 +118,11 @@ def login_view(request):
                     'status': user.status_aluno,
                     'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
+                if user.modo_user == 'Inativo':
+                    return Response(
+                        {'error': 'A sua conta de Aluno está inativa. Por favor, contacte a secretaria.'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
                 # Atualizar status online
                 user.is_online = True
                 user.save()
@@ -124,6 +142,11 @@ def login_view(request):
                     'email': user.email,
                     'img_path': request.build_absolute_uri(user.img_path.url) if user.img_path else None
                 }
+                if user.modo_user == 'Inativo':
+                    return Response(
+                        {'error': 'A sua conta de Encarregado está inativa. Por favor, contacte o administrador.'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
                 # Atualizar status online
                 user.is_online = True
                 user.save()
@@ -270,9 +293,29 @@ def me_view(request):
             elif isinstance(user, Aluno): user_type = 'aluno'
             elif isinstance(user, Encarregado): user_type = 'encarregado'
 
+        # Verificar se o usuário está inativo (apenas para Alunos e Encarregados)
+        if user_type in ['aluno', 'encarregado'] and getattr(user, 'modo_user', None) == 'Inativo':
+            return Response(
+                {'error': 'A sua conta está inativa. Sessão encerrada.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         user_data = {}
         
         if user_type == 'funcionario':
+            # Verificar restrições de funcionário (Status Activo e Cargo Secretário)
+            if user.status_funcionario != 'Activo':
+                return Response(
+                    {'error': 'A sua conta de funcionário está inativa.'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            if (user.id_cargo.nome_cargo if user.id_cargo else None) != 'Secretário':
+                return Response(
+                    {'error': 'Acesso negado. Apenas Secretários podem aceder ao sistema.'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
             user_data = {
                 'id': user.id_funcionario,
                 'tipo': 'funcionario',
