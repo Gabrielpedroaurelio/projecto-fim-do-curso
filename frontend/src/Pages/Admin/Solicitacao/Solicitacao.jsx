@@ -349,7 +349,7 @@ export default function Solicitacao() {
                                             <FaDownload />
                                             <span>Documento Gerado</span>
                                         </div>
-                                        <a href={`http://localhost:8000/media/${selectedSolicitacao.caminho_arquivo}`} target="_blank" rel="noopener noreferrer"
+                                        <a href={`${import.meta.env.VITE_API_BASE_URL?.replace(/\/api\/v1\/?$/, '/media') || 'http://localhost:8000/media'}/${selectedSolicitacao.caminho_arquivo}`} target="_blank" rel="noopener noreferrer"
                                             style={{ padding: '0.5rem 1rem', background: 'var(--green-primay)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600 }}>
                                             Baixar PDF
                                         </a>

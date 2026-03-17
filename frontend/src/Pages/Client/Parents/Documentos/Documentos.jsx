@@ -35,9 +35,9 @@ const Documentos = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8000/media'
-    : '/media';
+  const MEDIA_BASE = import.meta.env.VITE_API_BASE_URL 
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/v1\/?$/, '/media')
+    : 'http://localhost:8000/media';
 
   const normalizeUrl = (url) => {
     if (!url) return null;

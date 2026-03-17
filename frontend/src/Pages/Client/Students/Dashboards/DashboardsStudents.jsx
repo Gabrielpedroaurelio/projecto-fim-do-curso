@@ -140,12 +140,12 @@ const DashboardsStudents = () => {
                 value={animatedMediaGeral.toFixed(1)}
                 value_percentual={(stats.media_geral >= 10 ? 5 : -2) + "%"}
               />
-              {/*<Cards
+              <Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value={`${Math.round(animatedPresenca)}%`}
                 value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5) + "%"}
-              />*/}
+              />
               <Cards
                 icon={<RiArticleLine size={30} />}
                 title="Faltas Acumuladas"
@@ -273,13 +273,13 @@ const DashboardsStudents = () => {
             </div>
             <div className={style.quickAccessGrid}>
               <div className={style.revealItem}>
-                <CardsDocments text="Solicitações" icon={<RiFileList3Line size={50} />} url="/student/ask" />
+                <CardsDocments text="Solicitações" icon={<RiFileList3Line size={50} />} url="/student/ask" text_display={"Realizar Solicitação"} />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Notas e Avaliações" icon={<RiShieldUserLine size={50} />} url="/student/grades" />
+                <CardsDocments text="Notas e Avaliações" icon={<RiShieldUserLine size={50} />} url="/student/grades"  text_display={"Ver Notas"}/>
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Documentos" icon={<RiCalendarEventLine size={50} />} url="/student/document" />
+                <CardsDocments text="Documentos" icon={<RiCalendarEventLine size={50} />} url="/student/document" text_display={"Ver Documentos"}/>
               </div>
             </div>
           </section>

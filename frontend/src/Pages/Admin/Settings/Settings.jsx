@@ -17,7 +17,11 @@ import {
     FaListCheck,
     FaBell,
     FaMoon,
-    FaSun
+    FaSun,
+    FaPlus,
+    FaRotate,
+    FaXmark,
+    FaCircleInfo
 } from 'react-icons/fa6'
 
 export default function Settings() {
@@ -226,6 +230,52 @@ export default function Settings() {
         }
     }
 
+    const handleRestoreBackup = async (filename) => {
+        if (!window.confirm(`Tem certeza que deseja restaurar o sistema usando o backup "${filename}"? Esta ação irá sobrepor os dados atuais.`)) return
+        
+        setIsBackingUp(true)
+        setBackupProgress(50)
+        try {
+            await api.post('backups/restore_backup/', { filename })
+            setBackupProgress(100)
+            alert('Sistema restaurado com sucesso! Recarregue a página para ver as alterações.')
+        } catch (error) {
+            console.error("Erro ao restaurar backup:", error)
+            alert(error.response?.data?.error || 'Erro ao restaurar backup.')
+        } finally {
+            setIsBackingUp(false)
+            setBackupProgress(0)
+        }
+    }
+
+    const handleUploadRestore = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        if (!window.confirm('Tem certeza que deseja restaurar o sistema a partir deste ficheiro externo?')) return
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        setIsBackingUp(true)
+        setBackupProgress(40)
+        try {
+            await api.post('backups/upload_restore/', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            setBackupProgress(100)
+            alert('Sistema restaurado com sucesso a partir do ficheiro enviado!')
+            fetchBackups()
+        } catch (error) {
+            console.error("Erro no upload/restauro:", error)
+            alert(error.response?.data?.error || 'Erro ao processar o restauro.')
+        } finally {
+            setIsBackingUp(false)
+            setBackupProgress(0)
+        }
+    }
+
+
     const [passwords, setPasswords] = useState({
         senha_atual: '',
         nova_senha: ''
@@ -258,6 +308,18 @@ export default function Settings() {
         { id: 'general', label: 'Instituição', icon: <FaBuilding /> },
         { id: 'profile', label: 'Meu Perfil', icon: <FaUser /> },
     ]
+
+    const getActionStyle = (action) => {
+        const type = action?.toLowerCase() || ''
+        if (type.includes('cria') || type.includes('adiciona')) 
+            return { icon: <FaPlus />, class: style.BadgeSuccess, label: 'Criação' }
+        if (type.includes('edita') || type.includes('altera') || type.includes('atualiza')) 
+            return { icon: <FaRotate />, class: style.BadgeWarning, label: 'Edição' }
+        if (type.includes('elimina') || type.includes('remove') || type.includes('apaga')) 
+            return { icon: <FaXmark />, class: style.BadgeDanger, label: 'Eliminação' }
+        return { icon: <FaCircleInfo />, class: style.BadgeInfo, label: action }
+    }
+
 
     return (
         <div className="ContainerGeneral">
@@ -421,7 +483,7 @@ export default function Settings() {
                                         />
                                     </div>
                                 </div>
-                                <button
+                                <button 
                                     className={style.SaveButton}
                                     onClick={handleSaveConfig}
                                     disabled={loading}
@@ -503,6 +565,24 @@ export default function Settings() {
                                     </button>
                                 </div>
 
+                                <div className={style.ExternalRestoreBox}>
+                                    <div>
+                                        <h4>Restauração Externa</h4>
+                                        <p>Carregue um ficheiro SQL de backup para restaurar</p>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        id="restore-upload"
+                                        accept=".sql"
+                                        style={{ display: 'none' }}
+                                        onChange={handleUploadRestore}
+                                    />
+                                    <label htmlFor="restore-upload" className={style.UploadRestoreBtn}>
+                                        Carregar e Restaurar
+                                    </label>
+                                </div>
+
+
                                 {isBackingUp && (
                                     <div className={style.ProgressBarContainer}>
                                         <div className={style.ProgressBar} style={{ width: `${backupProgress}%` }}></div>
@@ -520,6 +600,12 @@ export default function Settings() {
                                             </div>
                                             <div className={style.BackupActions}>
                                                 <button
+                                                    className={style.RestoreLink}
+                                                    onClick={() => handleRestoreBackup(bkp.filename)}
+                                                >
+                                                    Restaurar
+                                                </button>
+                                                <button
                                                     className={style.DownloadLink}
                                                     onClick={() => window.open(bkp.url, '_blank')}
                                                 >
@@ -532,6 +618,7 @@ export default function Settings() {
                                                     <FaTrash />
                                                 </button>
                                             </div>
+
                                         </div>
                                     ))}
                                     {backups.length === 0 && (
@@ -551,21 +638,37 @@ export default function Settings() {
                                     <table className={style.LogsTable}>
                                         <thead>
                                             <tr>
-                                                <th>Data/Hora</th>
+                                                <th>Data e Hora</th>
                                                 <th>Utilizador</th>
-                                                <th>Ação</th>
-                                                <th>Detalhes</th>
+                                                <th>Operação</th>
+                                                <th>Descrição da Atividade</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {auditLogs.map((log, i) => (
-                                                <tr key={i}>
-                                                    <td>{new Date(log.data_hora).toLocaleString()}</td>
-                                                    <td>{log.funcionario_nome || log.aluno_nome || "Sistema"}</td>
-                                                    <td><span className={style.ActionBadge}>{log.tipo_accao}</span></td>
-                                                    <td className={style.DetailsCell}>Alteração de registo de segurança</td>
-                                                </tr>
-                                            ))}
+                                            {auditLogs.map((log, i) => {
+                                                const actionStyle = getActionStyle(log.tipo_accao)
+                                                return (
+                                                    <tr key={i}>
+                                                        <td className={style.DateCol}>
+                                                            {new Date(log.data_hora).toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                        </td>
+                                                        <td className={style.UserCol}>
+                                                            <div className={style.UserInfo}>
+                                                                <span className={style.UserInitial}>{(log.funcionario_nome || "S")[0]}</span>
+                                                                {log.funcionario_nome || log.aluno_nome || "Sistema"}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span className={`${style.ActionBadge} ${actionStyle.class}`}>
+                                                                {actionStyle.icon} {actionStyle.label}
+                                                            </span>
+                                                        </td>
+                                                        <td className={style.DetailsCell}>
+                                                            {log.detalhes || `Realizada operação de ${log.tipo_accao.toLowerCase()} no módulo de gestão.`}
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
                                         </tbody>
                                     </table>
                                     {auditLogs.length === 0 && <p className={style.EmptyState}>Nenhum log disponível.</p>}

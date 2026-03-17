@@ -7,6 +7,7 @@ import { FaCertificate, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from '
 import api from '../../../Services/api'
 import Loading from '../../../Components/Elements/Loading/Loading'
 import DocumentPreviewModal from '../../../Components/Elements/DocumentPreviewModal/DocumentPreviewModal'
+import Pagination from '../../../Components/Elements/Pagination/Pagination'
 
 // Sample templates data (Keeping static for now)
 const templatesData = [
@@ -21,6 +22,8 @@ export default function Certificado() {
     const [documents, setDocuments] = useState([])
     const [loading, setLoading] = useState(true)
     const [previewModal, setPreviewModal] = useState({ isOpen: false, url: '', title: '' })
+    const [currentPage, setCurrentPage] = useState(1)
+    const ITEMS_PER_PAGE = 8
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -40,6 +43,14 @@ export default function Certificado() {
         doc.aluno_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (doc.curso && doc.curso.toLowerCase().includes(searchTerm.toLowerCase()))
     )
+
+    const totalPages = Math.ceil(filteredDocuments.length / ITEMS_PER_PAGE)
+    const paginatedDocuments = filteredDocuments.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    )
+
+    useEffect(() => { setCurrentPage(1) }, [searchTerm])
 
     const filteredTemplates = templatesData.filter(template =>
         template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -199,6 +210,7 @@ export default function Certificado() {
                                             <Loading />
                                         </div>
                                     ) : (
+                                        <>
                                         <table className={style.Table}>
                                             <thead>
                                                 <tr>
@@ -211,7 +223,7 @@ export default function Certificado() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {filteredDocuments.map(doc => (
+                                                {paginatedDocuments.map(doc => (
                                                     <tr key={doc.id_documento}>
                                                         <td>
                                                             <div className={style.StudentCell}>
@@ -262,6 +274,8 @@ export default function Certificado() {
                                                 )}
                                             </tbody>
                                         </table>
+                                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+                                        </>
                                     )}
                                 </div>
                             </>
