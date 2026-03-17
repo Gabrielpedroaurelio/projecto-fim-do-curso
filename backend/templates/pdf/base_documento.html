@@ -184,10 +184,24 @@
     </div>
 
     <div class="footer">
-        Bairro Chibodo, Cabinda, Angola | Tel: +244 9XX XXX XXX | E-mail: secretaria@ipmaiombe.ao
-        <br>
-        Autenticidade: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{
-        hoje|date:"d/m/Y H:i" }}
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="text-align: left; vertical-align: middle; width: 80%;">
+                    Bairro Chibodo, Cabinda, Angola | Tel: +244 9XX XXX XXX | E-mail: secretaria@ipmaiombe.ao
+                    <br>
+                    Autenticidade: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{ hoje|date:"d/m/Y H:i" }}
+                    <br>
+                    Cód. Segurança: <strong style="font-family: monospace; font-size: 14px;">{{ codigo_seguranca|default:"N/A" }}</strong>
+                    <br>
+                    Verifique em: <span style="color: #0056b3;">{{ verificacao_url|default:"[URL-VERIFICACAO]" }}</span>
+                </td>
+                <td style="text-align: right; vertical-align: middle; width: 20%;">
+                    {% if qr_code_base64 %}
+                    <img src="{{ qr_code_base64 }}" style="width: 70px; height: 70px;" alt="QR Code">
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 

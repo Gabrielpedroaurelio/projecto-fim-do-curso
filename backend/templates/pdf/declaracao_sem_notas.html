@@ -76,8 +76,25 @@
                 Por ser verdade e me ter sido solicitado mandei passar a presente Declaração, que vai por mim assinada e autenticada com o carimbo a óleo em uso nesta Instituição.
             </p>
             <br><br>
-            <p class="footer">SECRETARIA PEDAGÓGICA DO IPM Nº 3050/MAIOMBE-SEQUELE, AOS 07 DE DEZEMBRO DE 2026</p>
+            <p class="footer">SECRETARIA PEDAGÓGICA DO IPM Nº 3050/MAIOMBE-SEQUELE, AOS {{ hoje|date:"d"|default:"07" }} DE {{ hoje|date:"F"|upper|default:"DEZEMBRO" }} DE {{ hoje|date:"Y"|default:"2026" }}</p>
             <br>
+            <div style="margin-top: 15px; border-top: 1px solid #000; padding-top: 10px; font-size: 11px; text-align: left;">
+                <table style="width: 100%; border: none;">
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; width: 80%; border: none;">
+                            <strong>Verificação de Autenticidade</strong><br>
+                            UUID Documento: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{ hoje|date:"d/m/Y H:i" }}<br>
+                            Código de Segurança: <strong style="font-family: monospace; font-size: 13px; color: #0056b3;">{{ codigo_seguranca|default:"N/A" }}</strong><br>
+                            Acesse: <span>{{ verificacao_url|default:"[URL-VERIFICACAO]" }}</span> para validar o documento.
+                        </td>
+                        <td style="text-align: right; vertical-align: middle; width: 20%; border: none;">
+                            {% if qr_code_base64 %}
+                            <img src="{{ qr_code_base64 }}" style="width: 80px; height: 80px;" alt="QR Code">
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div class="signature-section">
             <div class="signature-line">
                 O DIRECTOR GERAL<hr>
