@@ -1,6 +1,7 @@
 from django.db import models
 from .base import BaseModel
 from django.contrib.auth.hashers import make_password
+from apis.utils.upload_utils import upload_to_custom
 
 
 class Cargo(BaseModel):
@@ -44,12 +45,12 @@ class Funcionario(BaseModel):
     provincia_residencia = models.CharField(max_length=100, null=True, blank=True, verbose_name='Província')
     municipio_residencia = models.CharField(max_length=100, null=True, blank=True, verbose_name='Município')
     bairro_residencia = models.CharField(max_length=100, null=True, blank=True, verbose_name='Bairro')
-    senha_hash = models.CharField(max_length=255, verbose_name='Senha')
+    senha_hash = models.CharField(max_length=255, verbose_name='Senha', null=True, blank=True)
     status_funcionario = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Activo', verbose_name='Status')
     descricao = models.TextField(null=True, blank=True)
     data_admissao = models.DateField(null=True, blank=True, verbose_name='Data de Admissão')
     is_online = models.BooleanField(default=False, verbose_name='Online')
-    img_path = models.ImageField(upload_to="image/funcionario/images/",null=True, blank=True, verbose_name='Foto')
+    img_path = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Foto')
     
     class Meta:
         db_table = 'funcionario'
@@ -65,7 +66,20 @@ class Funcionario(BaseModel):
         return f"{self.nome_completo} - {self.codigo_identificacao}"
 
     def save(self, *args, **kwargs):
-        # Se a senha não estiver criptografada (não começa com o prefixo padrão do Django)
+        # Impedir múltiplos diretores activos (Geral e Pedagógico)
+        if self.id_cargo and self.status_funcionario == 'Activo':
+            cargos_unicos = ['DIRECTOR GERAL', 'DIRETOR GERAL', 'DIRECTOR PEDAGOGICO', 'DIRETOR PEDAGÓGICO']
+            if self.id_cargo.nome_cargo.upper() in cargos_unicos:
+                exists = Funcionario.objects.filter(
+                    id_cargo=self.id_cargo, 
+                    status_funcionario='Activo'
+                ).exclude(pk=self.id_funcionario).exists()
+                
+                if exists:
+                    from django.core.exceptions import ValidationError
+                    raise ValidationError(f"Já existe um {self.id_cargo.nome_cargo} activo no sistema.")
+
+        # Se a senha não estiver criptografada
         if self.senha_hash and not self.senha_hash.startswith('pbkdf2_sha256$'):
             self.senha_hash = make_password(self.senha_hash)
         super(Funcionario, self).save(*args, **kwargs)
@@ -87,8 +101,8 @@ class Encarregado(BaseModel):
     municipio_residencia = models.CharField(max_length=100, null=True, blank=True)
     bairro_residencia = models.CharField(max_length=100, null=True, blank=True)
     numero_casa = models.CharField(max_length=100, null=True, blank=True)
-    senha_hash = models.CharField(max_length=255, verbose_name='Senha')
-    img_path = models.ImageField(upload_to="image/encarregados/images/",null=True, blank=True, verbose_name='Foto')
+    senha_hash = models.CharField(max_length=255, verbose_name='Senha', null=True, blank=True)
+    img_path = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Foto')
 
     is_online = models.BooleanField(default=False)
     modo_user = models.CharField(max_length=20, choices=STATUS_USER_CHOICES, default='Inativo', verbose_name='Modo Usuário')

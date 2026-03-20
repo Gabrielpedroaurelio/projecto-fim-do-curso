@@ -1,40 +1,121 @@
-{% extends "pdf/base_documento.html" %}
+<!DOCTYPE html>
+<html lang="pt-ao">
+<head>
+    <meta charset="UTF-8">
+    <title>Declaração de Matrícula - {{ aluno.nome_completo }}</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 20px;
+            line-height: 1.6;
+            color: #000;
+        }
+        .header {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .body-text {
+            text-align: justify;
+            font-size: 15px;
+            margin-bottom: 20px;
+            text-indent: 50px;
+        }
+        .footer-info {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/static/image/insigna_angola.png" alt="Insignia" style="height: 60px; margin-bottom: 5px;"><br>
+        REPÚBLICA DE ANGOLA<br>
+        MINISTÉRIO DA EDUCAÇÃO<br>
+        INSTITUTO POLITÉCNICO MAIOMBE I.B. Nº 3050 - SEQUELE
+    </div>
 
-{% block content %}
-<div class="title">Declaração de Matrícula</div>
-<div class="doc-title">Declaração de Matrícula</div>
+    <div class="title">DECLARAÇÃO DE MATRÍCULA</div>
 
-<div class="date-area">
-    Cabinda, {{ hoje|date:"d" }} de {{ hoje|date:"F" }} de {{ hoje|date:"Y" }}
-</div>
+    <div class="body-text">
+        Para efeitos de <strong>{{ solicitacao.motivo|default:"os devidos efeitos" }}</strong>, declara-se que
+        <strong>{{ aluno.nome_completo }}</strong>,
+        {{ aluno.genero|yesno:"filho,filha" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de
+        <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>,
+        natural de <strong>{{ aluno.naturalidade|default:"[Naturalidade]" }}</strong>,
+        Província de <strong>{{ aluno.provincia_naturalidade|default:"[Província]" }}</strong>,
+        nascido aos <strong>{{ aluno.data_nascimento|date:"d/m/Y" }}</strong>,
+        portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>,
+        emitido em <strong>{{ aluno.data_emissao_bilhete|date:"d/m/Y" }}</strong>.
+    </div>
 
-<div style="text-indent: 50px; text-align: justify; line-height: 1.8;">
-    Para efeitos de <strong>{{ solicitacao.motivo|default:"os devidos efeitos" }}</strong>, declara-se que
-    <strong>{{ aluno.nome_completo }}</strong>,
-    {{ aluno.genero|yesno:"filho,filha" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de
-    <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>,
-    natural de <strong>{{ aluno.naturalidade|default:"[Naturalidade]" }}</strong>,
-    Província de <strong>{{ aluno.provincia_naturalidade|default:"[Província]" }}</strong>,
-    nascido aos <strong>{{ aluno.data_nascimento|date:"d/m/Y" }}</strong>,
-    portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>,
-    emitido em <strong>{{ aluno.data_emissao_bilhete|date:"d/m/Y" }}</strong>.
-</div>
+    <div class="body-text" style="text-indent: 0;">
+        Encontra-se regularmente matriculado neste Instituto no presente Ano Lectivo, frequentando a
+        <strong>{{ aluno.id_turma.id_classe.nivel }}ª Classe</strong>,
+        do Curso de <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>,
+        Turma <strong>{{ aluno.id_turma.codigo_turma }}</strong>,
+        Período <strong>{{ aluno.id_turma.periodo }}</strong>,
+        sob o Processo nº <strong>{{ aluno.numero_matricula }}</strong>.
+    </div>
 
-<div style="margin-top: 20px; text-align: justify; line-height: 1.8;">
-    Encontra-se regularmente matriculado neste Instituto no presente Ano Lectivo, frequentando a
-    <strong>{{ aluno.id_turma.id_classe.nivel }}ª Classe</strong>,
-    do Curso de <strong>{{ aluno.id_turma.id_curso.nome_curso }}</strong>,
-    Turma <strong>{{ aluno.id_turma.codigo_turma }}</strong>,
-    Período <strong>{{ aluno.id_turma.periodo }}</strong>,
-    sob o Processo nº <strong>{{ aluno.numero_matricula }}</strong>.
-</div>
+    <div class="body-text" style="text-indent: 0; margin-top: 30px;">
+        Por ser verdade e ter sido solicitado, mandou-se passar a presente declaração que vai por nós assinada e
+        autenticada com o carimbo a óleo em uso nesta instituição.
+    </div>
 
-<div style="margin-top: 40px; text-align: justify;">
-    Por ser verdade e ter sido solicitado, mandou-se passar a presente declaração que vai por nós assinada e
-    autenticada com o carimbo a óleo em uso nesta instituição.
-</div>
+    <div class="footer-info">
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="text-align: left; vertical-align: middle; width: 80%; border: none;">
+                    <strong>Verificação de Autenticidade</strong><br>
+                    UUID: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{ hoje|date:"d/m/Y H:i" }}<br>
+                    Cód. Segurança: <strong style="font-family: monospace; font-size: 13px; color: #0056b3;">{{ codigo_seguranca|default:"N/A" }}</strong><br>
+                    Valide em: <span>{{ verificacao_url|default:"[URL-VERIFICACAO]" }}</span>
+                </td>
+                <td style="text-align: right; vertical-align: middle; width: 20%; border: none;">
+                    {% if qr_code_base64 %}
+                    <img src="{{ qr_code_base64 }}" style="width: 70px; height: 70px;" alt="QR Code">
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
 
-<div style="margin-top: 40px; font-size: 10pt; color: #555;">
-    Cod. Validação: {{ solicitacao.uuid_documento }}
-</div>
-{% endblock %}
+    <!-- ASSINATURAS -->
+    <div style="margin-top: 50px; width: 100%;">
+        <table style="width: 100%; border: none; border-collapse: collapse;">
+            <tr>
+                <td style="text-align: center; width: 50%; border: none; vertical-align: bottom;">
+                    <p style="margin-bottom: 5px; font-size: 14px; font-weight: bold;">O DIRECTOR GERAL</p>
+                    <div style="height: 80px; text-align: center; position: relative;">
+                        {% if config.assinatura_director %}
+                        <img src="{{ config.assinatura_director.path }}" style="z-index: 10; position: absolute; left: 50%; transform: translateX(-50%); bottom: -10px; height: 100px; opacity: 0.9;" alt="Assinatura">
+                        {% endif %}
+                        <div style="width: 250px; border-top: 1px solid #000; margin: 40px auto 5px auto; position: relative; z-index: 5;"></div>
+                    </div>
+                    <p style="font-size: 14px;"><strong>{{ director_geral_nome|upper }}</strong></p>
+                </td>
+                <td style="text-align: center; width: 50%; border: none; vertical-align: middle;">
+                    <div style="height: 100px; text-align: center; position: relative;">
+                        {% if config.carimbo_instituicao %}
+                        <img src="{{ config.carimbo_instituicao.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); top: -10px; height: 120px; opacity: 0.8; z-index: 10;" alt="Carimbo">
+                        {% endif %}
+                        <p style="font-size: 12px; position: relative; z-index: 5; margin-top: 50px;">(Carimbo em uso)</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

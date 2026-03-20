@@ -134,12 +134,22 @@ class DashboardStatsAPIView(APIView):
                 'Boletim': data['Boletim']
             })
 
-        # 4. Atividades Recentes (Últimas 5 solicitações)
-        # Otimização: select_related para evitar N+1 no serializer
         recent_solicitacoes = SolicitacaoDocumento.objects.select_related(
             'id_aluno'
         ).all().order_by('-data_solicitacao')[:5]
         serializer = SolicitacaoDocumentoListSerializer(recent_solicitacoes, many=True, context={'request': request})
+
+        # 5. Auditoria Recente
+        from apis.models import Historico
+        audit_logs = Historico.objects.select_related('id_funcionario', 'id_aluno').order_by('-data_hora')[:5]
+        audit_data = [
+            {
+                'id': h.id_historico,
+                'user': h.id_funcionario.nome_completo if h.id_funcionario else h.id_aluno.nome_completo if h.id_aluno else 'Sistema',
+                'action': h.tipo_accao,
+                'time': h.data_hora
+            } for h in audit_logs
+        ]
 
         return Response({
             'kpis': {
@@ -166,5 +176,6 @@ class DashboardStatsAPIView(APIView):
             },
             'engagement_data': engagement_data,
             'requests_comparison_data': requests_comparison_data,
-            'recent_activities': serializer.data
+            'recent_activities': serializer.data,
+            'recent_audit_logs': audit_data
         })

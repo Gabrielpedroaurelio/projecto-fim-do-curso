@@ -2,6 +2,7 @@ from django.db import models
 from .usuarios import Funcionario, Encarregado
 from .alunos import Aluno
 from .base import BaseModel
+from apis.utils.upload_utils import upload_to_custom
 class Notificacao(models.Model):
     """Sistema de notificações do sistema"""
     TIPOS = (
@@ -40,9 +41,10 @@ class ConfiguracaoSistema(BaseModel):
     endereco = models.CharField(max_length=255, verbose_name='Endereço', null=True, blank=True)
     telefone = models.CharField(max_length=50, verbose_name='Telefone', null=True, blank=True)
     email_oficial = models.EmailField(verbose_name='Email Oficial', null=True, blank=True)
-    logo = models.ImageField(upload_to='config/logos/', null=True, blank=True, verbose_name='Logo')
-    assinatura_director = models.ImageField(upload_to='config/assinaturas/', null=True, blank=True, verbose_name='Assinatura do Director')
-    carimbo_instituicao = models.ImageField(upload_to='config/carimbos/', null=True, blank=True, verbose_name='Carimbo da Instituição')
+    director_geral = models.CharField(max_length=150, verbose_name='Director Geral', null=True, blank=True)
+    logo = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Logo')
+    assinatura_director = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Assinatura do Director')
+    carimbo_instituicao = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Carimbo da Instituição')
     
     # Configurações de Backup
     backup_automatico = models.BooleanField(default=True, verbose_name='Backup Automático')

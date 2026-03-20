@@ -207,19 +207,44 @@
                         {% endif %}
                     </td>
                 </tr>
+            </table>        <div style="margin-top: 30px; width: 100%;">
+            <table style="width: 100%; border: none; border-collapse: collapse; font-size: 11px;">
+                <tr>
+                    <td style="text-align: center; width: 33%; border: none; border-top: 1px solid #000; padding-top: 5px;">O Director de Turma</td>
+                    <td style="width: 5%; border: none;"></td>
+                    <td style="text-align: center; width: 33%; border: none; border-top: 1px solid #000; padding-top: 5px;">
+                        O Subdirector Pedagógico<br>
+                        <strong>{{ subdirector_ped_nome|upper }}</strong>
+                    </td>
+                    <td style="width: 5%; border: none;"></td>
+                    <td style="text-align: center; width: 33%; border: none; border-top: 1px solid #000; padding-top: 5px;">O Encarregado de Educação</td>
+                </tr>
             </table>
         </div>
 
-        <div style="text-align: center; font-weight: bold; margin-top: 10px; font-size: 12px;">Assinaturas</div>
-
-        <div class="footer-sigs" style="width: 100%; display: table;">
-            <div style="display: table-row;">
-                <div class="sig-box" style="display: table-cell;">O Director de Turma</div>
-                <div style="width: 5%; display: table-cell;"></div>
-                <div class="sig-box" style="display: table-cell;">O Subdirector Pedagógico</div>
-                <div style="width: 5%; display: table-cell;"></div>
-                <div class="sig-box" style="display: table-cell;">O Encarregado de Educação</div>
-            </div>
+        <div style="margin-top: 40px; width: 100%;">
+            <table style="width: 100%; border: none; border-collapse: collapse;">
+                <tr>
+                    <td style="text-align: center; width: 50%; border: none; vertical-align: bottom;">
+                        <p style="margin-bottom: 5px; font-size: 12px; font-weight: bold;">O DIRECTOR GERAL</p>
+                        <div style="height: 60px; text-align: center; position: relative;">
+                            {% if config.assinatura_director %}
+                            <img src="{{ config.assinatura_director.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); bottom: -5px; height: 80px; opacity: 0.9; z-index: 10;" alt="Assinatura">
+                            {% endif %}
+                            <div style="width: 200px; border-top: 1px solid #000; margin: 30px auto 5px auto; position: relative; z-index: 5;"></div>
+                        </div>
+                        <p style="font-size: 12px;"><strong>{{ director_geral_nome|upper }}</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 50%; border: none; vertical-align: middle;">
+                        <div style="height: 80px; text-align: center; position: relative;">
+                            {% if config.carimbo_instituicao %}
+                            <img src="{{ config.carimbo_instituicao.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); top: -10px; height: 100px; opacity: 0.8; z-index: 10;" alt="Carimbo">
+                            {% endif %}
+                            <p style="font-size: 10px; position: relative; z-index: 5; margin-top: 40px;">(Carimbo em uso)</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 

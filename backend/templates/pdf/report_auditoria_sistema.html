@@ -16,8 +16,21 @@
 </head>
 <body>
     <div class="header">
-        <h1>{{ title }}</h1>
-        <p>INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE</p>
+        <table style="width: 100%; border: none; margin-bottom: 5px;">
+            <tr>
+                <td style="width: 70px;">
+                    {% if config.logo %}
+                        <img src="{{ config.logo.path }}" style="height: 50px;" alt="Logo Escola">
+                    {% endif %}
+                </td>
+                <td style="text-align: center;">
+                    <h1>{{ title }}</h1>
+                    <p><strong>{{ config.nome_instituicao|upper }}</strong></p>
+                    <p style="font-size: 8px; color: #666;">NIF: {{ config.nif }} | Endereço: {{ config.endereco }}</p>
+                </td>
+                <td style="width: 70px;"></td>
+            </tr>
+        </table>
     </div>
 
     <table class="data-table">

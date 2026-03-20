@@ -123,6 +123,12 @@ def login_view(request):
                         {'error': 'A sua conta de Aluno está inativa. Por favor, contacte a secretaria.'},
                         status=status.HTTP_403_FORBIDDEN
                     )
+                
+                if user.status_aluno not in ['Activo', 'Finalizou']:
+                    return Response(
+                        {'error': f'O seu estado atual ({user.status_aluno}) não permite o acesso ao portal.'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
                 # Atualizar status online
                 user.is_online = True
                 user.save()

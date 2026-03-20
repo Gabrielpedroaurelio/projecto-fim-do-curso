@@ -10,9 +10,10 @@ from django.db.models import Count, Sum
 
 from apis.models import (
     SolicitacaoDocumento, Aluno, Funcionario, 
-    Historico, HistoricoLogin, Fatura
+    Historico, HistoricoLogin, Fatura, ConfiguracaoSistema, Turma
 )
 from apis.services.pdf_service import PDFService
+from apis.services.report_service import ReportService
 
 class ReportViewSet(viewsets.ViewSet):
     """
@@ -31,6 +32,8 @@ class ReportViewSet(viewsets.ViewSet):
         return response
 
     def _generate_pdf_response(self, template_name, context, filename):
+        config = ConfiguracaoSistema.objects.first()
+        context['config'] = config
         pdf_content = PDFService.render_to_pdf(template_name, context)
         response = HttpResponse(pdf_content, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}.pdf"'

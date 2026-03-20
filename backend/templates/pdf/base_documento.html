@@ -150,7 +150,7 @@
         <p class="governo-text">Governo Provincial de Cabinda</p>
 
         <div class="school-header">
-            <h1 class="school-name">Instituto Politécnico do Maiombe</h1>
+            <h1 class="school-name">{{ config.nome_instituicao|default:"Instituto Politécnico do Maiombe" }}</h1>
         </div>
     </div>
 
@@ -164,17 +164,17 @@
                 <td class="signature-box">
                     <p>O Diretor da Instituição</p>
                     <div style="height: 80px; display: flex; align-items: flex-end; justify-content: center;">
-                        {% if assinatura_diretor_path %}
-                        <img src="{{ assinatura_diretor_path }}" class="signature-image" alt="Assinatura">
+                        {% if config.assinatura_director %}
+                        <img src="{{ config.assinatura_director.path }}" class="signature-image" alt="Assinatura">
                         {% endif %}
                     </div>
                     <div class="signature-line"></div>
-                    <p><strong>[Nome do Diretor Aqui]</strong></p>
+                    <p><strong>{{ config.director_geral|default:"O Diretor Geral" }}</strong></p>
                 </td>
                 <td class="signature-box">
                     <div style="height: 80px;">
-                        {% if carimbo_escola_path %}
-                        <img src="{{ carimbo_escola_path }}" class="stamp-image" alt="Carimbo">
+                        {% if config.carimbo_instituicao %}
+                        <img src="{{ config.carimbo_instituicao.path }}" class="stamp-image" alt="Carimbo">
                         {% endif %}
                     </div>
                     <p>(Carimbo em uso)</p>
@@ -187,7 +187,7 @@
         <table style="width: 100%; border: none;">
             <tr>
                 <td style="text-align: left; vertical-align: middle; width: 80%;">
-                    Bairro Chibodo, Cabinda, Angola | Tel: +244 9XX XXX XXX | E-mail: secretaria@ipmaiombe.ao
+                    {{ config.endereco }} | Tel: {{ config.telefone }} | E-mail: {{ config.email_oficial }}
                     <br>
                     Autenticidade: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{ hoje|date:"d/m/Y H:i" }}
                     <br>

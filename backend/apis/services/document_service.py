@@ -190,21 +190,32 @@ class DocumentService:
             'site_url': settings.SITE_URL if hasattr(settings, 'settings.SITE_URL') else 'http://localhost:5173'
         }
         
-        # Injetar Assinatura e Carimbo Oficiais (Novo)
+        # Injetar Assinatura e Carimbo Oficiais (Caminhos Fixos conforme solicitado)
+        import os
+        assinatura_path = os.path.join(settings.MEDIA_ROOT, 'image/system/assinatura.jpg')
+        carimbo_path = os.path.join(settings.MEDIA_ROOT, 'image/system/carimbo.jpg')
+        
+        if os.path.exists(assinatura_path):
+            context['assinatura_diretor_path'] = assinatura_path
+        if os.path.exists(carimbo_path):
+            context['carimbo_escola_path'] = carimbo_path
+            
+        context['nome_diretor'] = "DOMINGOS PAULO ROMEU" # Nome fixo conforme template do usuário
+        
         from apis.models import ConfiguracaoSistema
         config = ConfiguracaoSistema.objects.first()
         if config:
-            if config.assinatura_director:
-                context['assinatura_diretor_path'] = config.assinatura_director.path
-            if config.carimbo_instituicao:
-                context['carimbo_escola_path'] = config.carimbo_instituicao.path
-            context['nome_diretor'] = config.nome_instituicao # Ou adicionar campo nome_director se preferir
             context['escola'] = {
                 'nome': config.nome_instituicao,
                 'nif': config.nif,
                 'telefone': config.telefone,
                 'email': config.email_oficial,
                 'endereco': config.endereco
+            }
+        else:
+            context['escola'] = {
+                'nome': "Instituto Politécnico do Maiombe",
+                'email': "secretaria@ipmaiombe.ao"
             }
         
         # Gerar QR Code para verificação
@@ -304,7 +315,15 @@ class DocumentService:
             
             # 1. Atualizar Solicitação
             solicitacao.caminho_arquivo = relative_path
-            solicitacao.status_solicitacao = 'aguardando_assinatura'
+            
+            # Automação de Status baseada no tipo
+            if 'CERTIFICADO' in tipo_base:
+                solicitacao.status_solicitacao = 'aguardando_assinatura'
+            else:
+                # Documentos simples (Boletim, Declaração) são liberados instantaneamente
+                solicitacao.status_solicitacao = 'disponivel'
+                solicitacao.data_aprovacao = timezone.now()
+            
             solicitacao.save()
             
             # 2. Criar/Atualizar Registro de Documento para Verificação Pública

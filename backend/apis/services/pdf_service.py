@@ -19,6 +19,27 @@ class PDFService:
         Renderiza um template HTML para um arquivo binário PDF em memória usando xhtml2pdf.
         Injeta a camada de segurança se UUID e Código forem fornecidos.
         """
+        from apis.models import ConfiguracaoSistema, Funcionario
+        config = ConfiguracaoSistema.objects.first()
+        
+        # Buscar Diretores Ativos automaticamente
+        director_geral = Funcionario.objects.filter(
+            id_cargo__nome_cargo__icontains='Director Geral', 
+            status_funcionario='Activo'
+        ).first()
+        
+        subdirector_pedagogico = Funcionario.objects.filter(
+            id_cargo__nome_cargo__icontains='Pedagogico', 
+            status_funcionario='Activo'
+        ).first()
+
+        # Garantir que os dados estão disponíveis no template
+        if 'config' not in context_dict:
+            context_dict['config'] = config
+        
+        context_dict['director_geral_nome'] = director_geral.nome_completo if director_geral else "DOMINGOS PAULO ROMEU"
+        context_dict['subdirector_ped_nome'] = subdirector_pedagogico.nome_completo if subdirector_pedagogico else "GABRIEL RUFINO CHIVIMBI"
+            
         template = get_template(template_src)
         html = template.render(context_dict)
         result = BytesIO()
@@ -59,10 +80,6 @@ class PDFService:
             
         pdf_bytes = result.getvalue()
         
-        # Obter configurações da instituição para assinatura/carimbo
-        from apis.models import ConfiguracaoSistema
-        config = ConfiguracaoSistema.objects.first()
-        
         if doc_uuid and control_code:
             pdf_bytes = PDFService.inject_security_layer(pdf_bytes, doc_uuid, control_code, config)
             
@@ -94,22 +111,19 @@ class PDFService:
         })
         writer.add_metadata(new_metadata)
 
-        # 2. Proteção contra Cópia e Edição
-        # Owner password é necessária para definir permissões. User password vazia permite abrir sem senha.
+        # 2. Proteção contra Cópia e Edição conforme solicitado pelo usuário
+        # Owner password é necessária para definir permissões.
         owner_pwd = f"IPM-SECURITY-{uuid.uuid4().hex[:8]}"
         
-        # Permissões: 
-        # 0x04 = Impressão permitida
-        # 0x08 = Modificação não permitida
-        # 0x10 = Extração de texto (Cópia) não permitida
-        # Deixamos apenas o bit de impressão (4) ligado se quisermos ser restritos.
-        # No pypdf, use o argumento permissions_flag
-        # flag = 4 (apenas impressão)
+        # Permissões PDF (Bitwise):
+        # Bit 3 (4) = Permite Impressão (Baixa resolução)
+        # Bit 12 (2048) = Permite Impressão (Alta resolução)
+        # 4 | 2048 = 2052. Todos os outros bits (Cópia, Edição, Comentário) = 0.
         
         writer.encrypt(
             user_password="", 
             owner_password=owner_pwd,
-            permissions_flag=4 # Apenas impressão permitida
+            permissions_flag=2052 # Apenas leitura e impressão permitidas
         )
 
         output = BytesIO()

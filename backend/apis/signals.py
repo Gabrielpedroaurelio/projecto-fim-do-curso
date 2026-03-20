@@ -66,24 +66,26 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
         # Se o status mudou
 
         if instance.status_solicitacao == 'pago':
-
-            # Notificar Diretor (Simplificado: Notificar todos os admins ou funcionário específico)
-
+            # 1. Notificar 
             Notificacao.objects.create(
-
-                titulo="RUP Pago - Documento Pendente",
-
-                mensagem=f"O pagamento para {instance.tipo_documento} de {instance.id_aluno.nome_completo} foi confirmado. O documento pode ser gerado.",
-
-                tipo='info',
-
-                # Idealmente vincular a um perfil de Diretor/Secretaria. 
-
-                # Como não temos Diretor model explícito aqui, deixamos sem destinatário específico ou criamos logica futura.
-
-                # Para MVP, vamos assumir que o admin vê todas ou notificamos um funcionario padrão se existir.
-
+                titulo="Pagamento Confirmado",
+                mensagem=f"O pagamento de {instance.tipo_documento} foi confirmado. O documento está sendo gerado.",
+                tipo='success',
+                id_aluno=instance.id_aluno,
+                id_encarregado=instance.id_encarregado
             )
+            
+            # 2. Disparar Geração Automática
+            from apis.services.document_service import DocumentService
+            try:
+                # Mudamos para 'processando' para evitar gatilhos duplicados se houver delay
+                # Nota: instance.save() aqui dispararia o sinal novamente, então usamos update
+                SolicitacaoDocumento.objects.filter(id_solicitacao=instance.id_solicitacao).update(status_solicitacao='processando')
+                
+                DocumentService.gerar_pdf_documento(instance.id_solicitacao)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Erro na geração automática: {str(e)}")
 
             
 
@@ -154,6 +156,12 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
                 id_encarregado=instance.id_encarregado
 
             )
+            
+        # Auditoria de mudança de status (Apenas se não for criação)
+        if not created:
+             registrar_evento(None, 'ALTEROU_STATUS_DOC', 
+                              dados_novos={'status': instance.status_solicitacao, 'doc': instance.tipo_documento},
+                              aluno=instance.id_aluno)
 
 
 
@@ -205,6 +213,11 @@ def notify_nova_nota(sender, instance, created, **kwargs):
 
             )
 
+    # Auditoria de lançamento/alteração de nota
+    registrar_evento(None, 'LANCAMENTO_NOTA' if created else 'ALTERACAO_NOTA', 
+                    dados_novos={'valor': str(instance.valor), 'disciplina': instance.id_disciplina.nome},
+                    aluno=instance.id_aluno)
+
 
 
 @receiver(post_save, sender=Pagamento)
@@ -254,6 +267,11 @@ def notify_pagamento_confirmado(sender, instance, created, **kwargs):
                     id_encarregado=rel.id_encarregado
 
                 )
+
+        # Auditoria de pagamento
+        registrar_evento(None, 'PAGAMENTO_CONFIRMADO', 
+                        dados_novos={'valor': str(instance.valor_pago), 'fatura': fatura.descricao},
+                        aluno=fatura.id_aluno)
 
 
 
