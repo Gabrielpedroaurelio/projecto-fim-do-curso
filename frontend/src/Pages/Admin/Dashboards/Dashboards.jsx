@@ -50,7 +50,7 @@ export default function Dashboards() {
 
     if (!stats) return null
     // Destructuring new data keys
-    const { kpis, requests_comparison_data, engagement_data, recent_activities } = stats
+    const { kpis, requests_comparison_data, engagement_data, recent_activities, recent_audit_logs } = stats
 
     const calculatePercentage = (current, previous) => {
         if (previous === 0) return current > 0 ? "+100%" : "0%";
@@ -208,68 +208,96 @@ export default function Dashboards() {
                         </div>
                     </div>
                 </div>
-                <div className={style.RecentActivity}>
-                    <div className={style.TableHeaderAction}>
-                        <h3>Atividades Recentes</h3>
-                        <div className={style.SearchBarSmall}>
-                            <FaMagnifyingGlass />
-                            <input
-                                type="text"
-                                placeholder="Pesquisar..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                <div className={style.BottomGrid}>
+                    <div className={style.RecentActivity}>
+                        <div className={style.TableHeaderAction}>
+                            <h3>Últimas Solicitações</h3>
+                            <div className={style.SearchBarSmall}>
+                                <FaMagnifyingGlass />
+                                <input
+                                    type="text"
+                                    placeholder="Pesquisar..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className={style.TableContainer}>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Tipo</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredActivities.map((activity) => (
+                                        <tr key={activity.id_solicitacao}>
+                                            <td>
+                                                <div className="flex items-center gap-2">
+                                                    {activity.aluno_img ? (
+                                                        <img src={activity.aluno_img} alt="" className="w-8 h-8 rounded-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                            {activity.aluno_nome.charAt(0)}
+                                                        </div>
+                                                    )}
+                                                    <span>{activity.aluno_nome}</span>
+                                                </div>
+                                            </td>
+                                            <td>{activity.tipo_documento}</td>
+                                            <td>{new Date(activity.data_solicitacao).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={
+                                                    activity.status_solicitacao === 'pendente' ? style.StatusBadgeOrange :
+                                                        activity.status_solicitacao === 'aprovado' ? style.StatusBadgeGreen :
+                                                            activity.status_solicitacao === 'pago' ? style.StatusBadgeBlue :
+                                                                style.StatusBadgeRed
+                                                }>
+                                                    {activity.status_solicitacao}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {filteredActivities.length === 0 && (
+                                        <tr>
+                                            <td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                                                Nenhum resultado encontrado
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div className={style.TableContainer}>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Tipo</th>
-                                    <th>Data</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredActivities.map((activity) => (
-                                    <tr key={activity.id_solicitacao}>
-                                        <td>
-                                            <div className="flex items-center gap-2">
-                                                {activity.aluno_img ? (
-                                                    <img src={activity.aluno_img} alt="" className="w-8 h-8 rounded-full object-cover" />
-                                                ) : (
-                                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                                        {activity.aluno_nome.charAt(0)}
-                                                    </div>
-                                                )}
-                                                <span>{activity.aluno_nome}</span>
-                                            </div>
-                                        </td>
-                                        <td>{activity.tipo_documento}</td>
-                                        <td>{new Date(activity.data_solicitacao).toLocaleDateString()}</td>
-                                        <td>
-                                            <span className={
-                                                activity.status_solicitacao === 'pendente' ? style.StatusBadgeOrange :
-                                                    activity.status_solicitacao === 'aprovado' ? style.StatusBadgeGreen :
-                                                        activity.status_solicitacao === 'pago' ? style.StatusBadgeBlue :
-                                                            style.StatusBadgeRed
-                                            }>
-                                                {activity.status_solicitacao}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {filteredActivities.length === 0 && (
-                                    <tr>
-                                        <td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
-                                            Nenhum resultado encontrado para "{searchTerm}"
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                    <div className={style.RecentAudit}>
+                        <div className={style.TableHeaderAction}>
+                            <h3>Auditoria Recente</h3>
+                        </div>
+                        <div className={style.AuditList}>
+                            {recent_audit_logs?.map((log) => (
+                                <div key={log.id} className={style.AuditItem}>
+                                    <div className={style.AuditIcon}>
+                                        <div className={style.Dot}></div>
+                                    </div>
+                                    <div className={style.AuditContent}>
+                                        <p className={style.AuditText}>
+                                            <strong>{log.user}</strong> {log.action?.toLowerCase().replace(/_/g, ' ') || 'realizou uma ação'}
+                                        </p>
+                                        <span className={style.AuditTime}>
+                                            {new Date(log.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(log.time).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                            {recent_audit_logs?.length === 0 && (
+                                <p className={style.EmptyText}>Sem atividades recentes.</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </main>

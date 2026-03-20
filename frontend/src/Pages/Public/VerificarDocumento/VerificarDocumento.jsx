@@ -4,7 +4,8 @@ import api from '../../../Services/api'
 import style from './VerificarDocumento.module.css'
 import { FaCheckCircle, FaExclamationTriangle, FaTimesCircle, FaFileAlt, FaUniversity, FaCalendarAlt, FaUserGraduate, FaUpload, FaShieldAlt } from 'react-icons/fa'
 import Loading from '../../../Components/Elements/Loading/Loading'
-
+import MenuSitePublic from '../../../Components/Utils/MenuSitePublic/MenuSitePublic'
+import insignia from '../../../assets/images/insigna_angola.png'
 
 export default function VerificarDocumento() {
     const navigate = useNavigate()
@@ -105,12 +106,13 @@ export default function VerificarDocumento() {
 
     return (
         <div className={style.VerificationPage}>
+                 <MenuSitePublic />
             <div className={style.Overlay}></div>
             <div className={style.ContentWrapper}>
                 <div className={style.Card}>
                     <div className={style.Header}>
                         <div className={style.Logo}>
-                            <img src="/static/image/insigna_angola.png" alt="Insignia" />
+                            <img src={insignia} alt="Insignia" />
                             <h2>Instituto Politécnico do Maiombe</h2>
                         </div>
                         <h1>Autenticação de Documento</h1>
