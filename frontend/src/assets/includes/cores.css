@@ -1,0 +1,58 @@
+/**
+ * SISTEMA DE CORES - INSTITUTO POLITÉCNICO DO MAIOMBE (IPM)
+ * Foco: Light Mode Premium & Profissional
+ */
+
+:root {
+    /* --- PALETA BASE --- */
+    --cor-primaria: #0ea5e9;
+    --cor-primaria-hover: #0284c7;
+    --cor-primaria-clara: #e0f2fe;
+    --cor-secundaria: #64748b;
+    
+    /* --- CORES SEMÂNTICAS --- */
+    --cor-sucesso: #198754;
+    --cor-sucesso-hover: #157347;
+    --cor-perigo: #dc3545;
+    --cor-perigo-hover: #bb2d3b;
+    --cor-aviso: #ffc107;
+    --cor-info: #0dcaf0;
+    
+    /* --- FUNDOS (BACKGROUNDS) --- */
+    --cor-fundo-pagina: #f8fafc;
+    --cor-fundo-card: #ffffff;
+    --cor-fundo-input: #ffffff;
+    --cor-fundo-sidebar: #ffffff;
+    --cor-fundo-header: #ffffff;
+    --cor-fundo-login: #f1f5f9;
+    
+    /* --- TEXTOS --- */
+    --cor-texto-principal: #0f172a;
+    --cor-texto-secundario: #64748b;
+    --cor-texto-mudo: #94a3b8;
+    --cor-texto-claro: #ffffff;
+    --cor-texto-botao: #ffffff;
+    
+    /* --- BORDAS E DIVISORES --- */
+    --cor-borda: #e2e8f0;
+    --cor-linha: #f1f5f9;
+    
+    /* --- EFEITOS E GLASSMORPHISM --- */
+    --sombra-suave: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --glass-blur: blur(8px);
+    
+    /* --- ARREDONDAMENTOS --- */
+    --raio-sm: 8px;
+    --raio-md: 12px;
+    --raio-lg: 16px;
+
+    /* --- LEGACY BOOTSTRAP COMPATIBILITY --- */
+    --bs-blue: var(--cor-primaria);
+    --bs-green: var(--cor-sucesso);
+    --bs-red: var(--cor-perigo);
+    --bs-white: #ffffff;
+    --bs-gray: var(--cor-texto-secundario);
+    --bs-light: var(--cor-fundo-pagina);
+    --bs-dark: var(--cor-texto-principal);
+}

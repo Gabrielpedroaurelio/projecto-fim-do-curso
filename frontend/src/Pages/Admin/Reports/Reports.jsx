@@ -46,11 +46,11 @@ const Reports = () => {
     });
 
     const tabs = [
-        { id: 'solicitacoes', label: 'Solicitações', icon: <HiOutlineClipboardList />, color: '#6366f1' },
-        { id: 'mensal', label: 'Financeiro', icon: <HiOutlineTrendingUp />, color: '#10b981' },
-        { id: 'alunos', label: 'Estudantes', icon: <HiOutlineUsers />, color: '#3b82f6' },
-        { id: 'funcionarios', label: 'Recursos Humanos', icon: <HiOutlineUsers />, color: '#8b5cf6' },
-        { id: 'auditoria', label: 'Auditoria', icon: <HiOutlineShieldCheck />, color: '#f59e0b' },
+        { id: 'solicitacoes', label: 'Solicitações', icon: <HiOutlineClipboardList />, color: 'var(--cor-primaria)' },
+        { id: 'mensal', label: 'Financeiro', icon: <HiOutlineTrendingUp />, color: 'var(--cor-sucesso)' },
+        { id: 'alunos', label: 'Estudantes', icon: <HiOutlineUsers />, color: 'var(--cor-info)' },
+        { id: 'funcionarios', label: 'Recursos Humanos', icon: <HiOutlineUsers />, color: 'var(--cor-secundaria)' },
+        { id: 'auditoria', label: 'Auditoria', icon: <HiOutlineShieldCheck />, color: 'var(--cor-aviso)' },
     ];
 
     useEffect(() => {
@@ -239,7 +239,7 @@ const Reports = () => {
                             </div>
                         </div>
                         <div className={style.StatCard}>
-                            <div className={style.StatIcon} style={{ background: '#10b981' }}>
+                            <div className={style.StatIcon} style={{ background: 'var(--cor-sucesso)' }}>
                                 <HiOutlineTrendingUp />
                             </div>
                             <div className={style.StatInfo}>
@@ -248,7 +248,7 @@ const Reports = () => {
                             </div>
                         </div>
                         <div className={style.StatCard}>
-                            <div className={style.StatIcon} style={{ background: '#3b82f6' }}>
+                            <div className={style.StatIcon} style={{ background: 'var(--cor-info)' }}>
                                 <HiOutlineUsers />
                             </div>
                             <div className={style.StatInfo}>

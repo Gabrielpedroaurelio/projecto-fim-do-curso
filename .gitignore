@@ -1,7 +1,8 @@
 # --- Arquivos de Planejamento ---
 Arquivos-de-Planejamento/
 docs/*.docx
-
+backend/media/estudantes/*.pdf
+backen/*.pdf
 # --- Python / Django ---
 **/__pycache__/
 *.py[cod]
@@ -52,3 +53,23 @@ yasmin/yasmin_output/
 # --- Sistema Operacional ---
 .DS_Store
 Thumbs.db
+
+
+
+backend/7.1.7/.vite/deps/_metadata.json
+backend/7.1.7/.vite/deps/package.json
+backend/apis/__pycache__/dashboard.cpython-313.pyc
+backend/apis/__pycache__/signals.cpython-313.pyc
+backend/apis/__pycache__/urls.cpython-313.pyc
+backend/apis/models/__pycache__/__init__.cpython-313.pyc
+backend/apis/models/__pycache__/academico.cpython-313.pyc
+backend/apis/models/__pycache__/documentos.cpython-313.pyc
+backend/apis/serializers/__pycache__/avaliacao_serializers.cpython-313.pyc
+backend/apis/serializers/__pycache__/documento_serializers.cpython-313.pyc
+backend/apis/services/__pycache__/academic_service.cpython-313.pyc
+backend/apis/services/__pycache__/document_service.cpython-313.pyc
+backend/apis/views/__pycache__/__init__.cpython-313.pyc
+backend/apis/views/__pycache__/auditoria_views.cpython-313.pyc
+backend/apis/views/__pycache__/auth_views.cpython-313.pyc
+backend/apis/views/__pycache__/dashboard_view.cpython-313.pyc
+backend/apis/views/__pycache__/documento_views.cpython-313.pyc

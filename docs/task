@@ -1,0 +1,26 @@
+# Cronograma de Manutenção (18 Dias)
+
+## Fase 1: Segurança Crítica (Dias 1-4) [/]
+- [ ] Correção de vulnerabilidades críticas (DEBUG, Secrets, Tracebacks) [/]
+- [ ] Proteção contra IDOR (validação de propriedade de registros) [ ]
+- [ ] Endurecimento de Autenticação (status de utilizador, rate-limiting) [ ]
+- [ ] Segurança de Infraestrutura (Variáveis de ambiente, CORS) [ ]
+
+## Fase 2: Performance & Otimização (Dias 5-8) [ ]
+- [ ] Profiling de Banco de Dados (N+1 queries, indexação) [ ]
+- [ ] Otimização de APIs (Caching, Paginação avançada) [ ]
+- [ ] Performance Frontend (Bundle size, lazy loading) [ ]
+
+## Fase 3: Regras de Negócio & Lógica (Dias 9-13) [ ]
+- [ ] Revisão da Lógica Académica (Lançamento de notas, Faltas) [ ]
+- [ ] Fluxo de Gestão de Documentos (Aprovações, Geração de PDFs) [ ]
+- [ ] Lógica Financeira (Faturas, Confirmação de pagamentos) [ ]
+
+## Fase 4: UI/UX & Design Premium (Dias 14-17) [ ]
+- [ ] Redesign do Dashboard Principal (Estética moderna e vibrante) [ ]
+- [ ] Responsividade Móvel e Micro-animações [ ]
+- [ ] Melhoria nos fluxos de utilizador e feedback visual [ ]
+
+## Fase 5: Entrega Final (Dia 18) [ ]
+- [ ] Testes de regressão e validação final [ ]
+- [ ] Documentação e walkthrough completo [ ]

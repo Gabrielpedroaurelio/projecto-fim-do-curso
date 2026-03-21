@@ -4,6 +4,7 @@ import { RiUser3Line, RiFileList3Line, RiWallet3Line, RiCheckLine, RiPrinterLine
 import api from '../../../Services/api';
 
 import { useAuth } from '../../../Context/AuthContext';
+import { getMediaUrl } from '../../../Utils/urlHelper';
 
 const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }) => {
     const { user } = useAuth();
@@ -274,7 +275,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
 
             // Auto-open PDF if available
             if (finalResult.download_url || finalResult.caminho_arquivo) {
-                const url = finalResult.download_url || finalResult.caminho_arquivo;
+                const url = getMediaUrl(finalResult.download_url || finalResult.caminho_arquivo);
                 // Try to open in new tab
                 window.open(url, '_blank');
             }
@@ -672,7 +673,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                     style={{ marginTop: '1rem', background: result.confirmed ? '#10b981' : '#f59e0b' }}
                                     onClick={() => {
                                         if (result.confirmed) {
-                                            window.open(result.download_url || result.caminho_arquivo, '_blank');
+                                            window.open(getMediaUrl(result.download_url || result.caminho_arquivo), '_blank');
                                         } else {
                                             handlePrintRUP(result.solicitacao?.id_solicitacao || result.id_solicitacao);
                                         }

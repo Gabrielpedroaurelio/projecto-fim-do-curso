@@ -41,6 +41,8 @@ import ProtectedRoute from './Components/Security/ProtectedRoute'
 import Profile from './Pages/Common/Profile/Profile';
 import NotFound from './Pages/Public/NotFound/NotFound';
 import VerificarDocumento from './Pages/Public/VerificarDocumento/VerificarDocumento';
+import ForgotPassword from './Pages/Common/Auth/ForgotPassword';
+import ResetPassword from './Pages/Common/Auth/ResetPassword';
 
 const Routers = () => {
     return (
@@ -84,6 +86,10 @@ const Routers = () => {
             <Route path='/parent/actionstudent' element={<ProtectedRoute allowedTypes={['encarregado']}><ChildrenActions /></ProtectedRoute>}></Route>
             <Route path='/parent/auth' element={<AuthParent />}></Route>
             <Route path='/parent/yasmin' element={<ProtectedRoute allowedTypes={['encarregado']}><YasminChat /></ProtectedRoute>}></Route>
+
+            {/*** RECUPERAÇÃO DE SENHA ***/}
+            <Route path='/auth/forgot-password' element={<ForgotPassword />}></Route>
+            <Route path='/auth/reset-password' element={<ResetPassword />}></Route>
 
             {/*** COMUM ***/}
             <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>

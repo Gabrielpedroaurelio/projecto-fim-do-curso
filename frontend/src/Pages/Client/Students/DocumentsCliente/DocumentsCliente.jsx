@@ -6,6 +6,7 @@ import Header from '../../../../Components/Elements/Header/Header'
 import { RiFileList3Line, RiDownload2Line, RiEyeLine } from 'react-icons/ri';
 import { useAuth } from '../../../../Context/AuthContext';
 import api from '../../../../Services/api';
+import { getMediaUrl } from '../../../../Utils/urlHelper';
 
 const DocumentsCliente = () => {
   const { user } = useAuth();
@@ -13,20 +14,6 @@ const DocumentsCliente = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
-  // Determinar base de media dinamicamente
-  const MEDIA_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://127.0.0.1:8000/media'
-    : 'https://piih.apedrodevelopers.ao/media';
-
-  const normalizeUrl = (url) => {
-    if (!url) return null;
-    if (typeof url !== 'string') return url.url || null; // Lida com objetos FileField se vierem assim
-    if (url.startsWith('http')) return url;
-    
-    // Remove prefixos redundantes
-    const cleanPath = url.replace(/^\/media\//, '').replace(/^media\//, '');
-    return `${MEDIA_BASE}/${cleanPath.replace(/^\//, '')}`;
-  };
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -47,7 +34,7 @@ const DocumentsCliente = () => {
 
 
   const handleDownload = (doc) => {
-    const url = normalizeUrl(doc.caminho_arquivo || doc.caminho_pdf);
+    const url = getMediaUrl(doc.caminho_arquivo || doc.caminho_pdf);
     if (!url) return;
     const link = document.createElement('a');
     link.href = url;
@@ -211,7 +198,7 @@ const DocumentsCliente = () => {
             <div className={style.modalBody}>
               {selectedDoc.caminho_arquivo || selectedDoc.caminho_pdf ? (
                 <iframe
-                  src={`${normalizeUrl(selectedDoc.caminho_arquivo || selectedDoc.caminho_pdf)}#toolbar=1&navpanes=0&scrollbar=1`}
+                  src={`${getMediaUrl(selectedDoc.caminho_arquivo || selectedDoc.caminho_pdf)}#toolbar=1&navpanes=0&scrollbar=1`}
                   title="Visualizador de PDF"
                   className={style.pdfViewer}
                 ></iframe>

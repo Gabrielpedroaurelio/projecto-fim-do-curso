@@ -75,7 +75,7 @@
 
 .spinnerRingOne {
     /* Base Ring - Slow Rotation */
-    border-top-color: #6366f1;
+    border-top-color: var(--cor-primaria);
     /* Indigo 500 */
     border-right-color: rgba(99, 102, 241, 0.3);
     animation: rotate 3s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
@@ -87,7 +87,7 @@
     height: 80%;
     top: 10%;
     left: 10%;
-    border-bottom-color: #8b5cf6;
+    border-bottom-color: var(--cor-info);
     /* Violet 500 */
     border-left-color: rgba(139, 92, 246, 0.3);
     animation: rotateReverse 2s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
@@ -99,7 +99,7 @@
     height: 60%;
     top: 20%;
     left: 20%;
-    border-top-color: #d946ef;
+    border-top-color: var(--cor-primaria-hover);
     /* Fuchsia 500 */
     border-right-color: rgba(217, 70, 239, 0.3);
     animation: rotate 1.5s linear infinite;
@@ -112,7 +112,7 @@
     left: 50%;
     width: 12px;
     height: 12px;
-    background: linear-gradient(135deg, #6366f1, #d946ef);
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
     border-radius: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
@@ -133,7 +133,7 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     /* Gradient Text matching the rings */
-    background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef);
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-info), var(--cor-primaria-hover));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -38,7 +38,6 @@ const AskStudent = () => {
           <div className={style.formContainer}>
             <SolicitacaoFlow
               userType="aluno"
-              fixedStudent={user}
               onComplete={() => console.log("Solicitação completada")}
             />
           </div>

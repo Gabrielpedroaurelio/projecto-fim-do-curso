@@ -55,7 +55,7 @@ const Attendance = () => {
                                     <div className={style.progressBarContainer}>
                                         <div
                                             className={style.progressBar}
-                                            style={{ width: `${item.presenca_percentual}%`, backgroundColor: item.presenca_percentual >= 90 ? '#0ea5e9' : '#f59e0b' }}
+                                            style={{ width: `${item.presenca_percentual}%`, backgroundColor: item.presenca_percentual >= 90 ? 'var(--cor-primaria)' : 'var(--cor-aviso)' }}
                                         ></div>
                                     </div>
 

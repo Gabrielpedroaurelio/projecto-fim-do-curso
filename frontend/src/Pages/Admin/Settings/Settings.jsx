@@ -25,12 +25,12 @@ export default function Settings() {
     const [currentColor, setCurrentColor] = useState(localStorage.getItem('primary-color') || '#0ea5e9')
 
     const palettes = [
-        { id: 'sky', color: '#0ea5e9', name: 'Azul Celeste' },
-        { id: 'indigo', color: '#6366f1', name: 'Índigo Real' },
-        { id: 'emerald', color: '#10b981', name: 'Verde Esmeralda' },
-        { id: 'amber', color: '#f59e0b', name: 'Âmbar Escolar' },
-        { id: 'rose', color: '#ef4444', name: 'Vermelho Paixão' },
-        { id: 'slate', color: '#334155', name: 'Slate Profissional' },
+        { id: 'sky', color: '#0ea5e9', hover: '#0284c7', name: 'Azul Celeste' },
+        { id: 'indigo', color: '#6366f1', hover: '#4f46e5', name: 'Índigo Real' },
+        { id: 'emerald', color: '#10b981', hover: '#059669', name: 'Verde Esmeralda' },
+        { id: 'amber', color: '#f59e0b', hover: '#d97706', name: 'Âmbar Escolar' },
+        { id: 'rose', color: '#ef4444', hover: '#e11d48', name: 'Vermelho Paixão' },
+        { id: 'slate', color: '#334155', hover: '#1e293b', name: 'Slate Profissional' },
     ]
 
     useEffect(() => {
@@ -44,12 +44,22 @@ export default function Settings() {
     }, [])
 
     const applyColor = (color) => {
+        const selectedPalette = palettes.find(p => p.color === color) || palettes[0]
+        const hoverColor = selectedPalette.hover
+        
         const targets = [document.documentElement, document.body]
         targets.forEach(el => {
-            el.style.setProperty('--primary', color)
+            el.style.setProperty('--cor-primaria', color)
+            el.style.setProperty('--cor-primaria-hover', hoverColor)
+            el.style.setProperty('--cor-primaria-clara', `${color}20`)
+            
+            // Legacy Support (Mapeamento)
+            el.style.setProperty('--primary', color) 
+            el.style.setProperty('--primary-dark', hoverColor)
+            el.style.setProperty('--primary-light', `${color}20`)
+            el.style.setProperty('--primary-soft', `${color}15`)
             el.style.setProperty('--accent-indigo', color)
             el.style.setProperty('--text-primary', color)
-            el.style.setProperty('--primary-soft', `${color}15`)
         })
     }
 

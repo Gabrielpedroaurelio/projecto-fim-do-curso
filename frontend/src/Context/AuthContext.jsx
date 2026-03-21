@@ -79,8 +79,32 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const forgotPassword = async (email) => {
+        try {
+            const response = await api.post('auth/forgot-password/', { email });
+            return { success: true, message: response.data.message };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.error || "Falha ao enviar e-mail de recuperação"
+            };
+        }
+    };
+
+    const resetPassword = async (token, nova_senha) => {
+        try {
+            const response = await api.post('auth/reset-password/', { token, nova_senha });
+            return { success: true, message: response.data.message };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.error || "Falha ao redefinir senha"
+            };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, forgotPassword, resetPassword }}>
             {children}
         </AuthContext.Provider>
     );

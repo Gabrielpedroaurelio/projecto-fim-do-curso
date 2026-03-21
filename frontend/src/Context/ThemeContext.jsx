@@ -7,26 +7,15 @@ export const ThemeProvider = ({ children }) => {
 
     // Check localStorage or system preference
     const [theme, setTheme] = useState(() => {
-        const savedTheme = localStorage.getItem('site-theme');
-        if (savedTheme) return savedTheme;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        // Modo Light forçado globalmente.
+        // A lógica de dark mode foi removida conforme decisão de design premium-light.
+        return 'light';
     });
 
     useEffect(() => {
         localStorage.setItem('site-theme', theme);
-
-        // List of routes where dark mode should NOT be applied
-        const publicRoutes = ['/', '/public', '/admin/auth', '/student/auth', '/parent/auth'];
-        const isPublicRoute = publicRoutes.some(route =>
-            route === '/' ? location.pathname === '/' : location.pathname.startsWith(route)
-        );
-
-        // Apply class to body only if theme is dark and NOT a public route
-        if (theme === 'dark' && !isPublicRoute) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
+        // Ensure dark-mode class is always removed if it somehow got added.
+        document.body.classList.remove('dark-mode');
     }, [theme, location.pathname]);
 
     const toggleTheme = () => {

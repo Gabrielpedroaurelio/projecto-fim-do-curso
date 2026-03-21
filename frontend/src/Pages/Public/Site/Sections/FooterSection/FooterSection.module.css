@@ -122,3 +122,27 @@
         text-align: center;
     }
 }
+
+@media (max-width: 350px) {
+    .FooterSection {
+        padding: 40px 10px 20px;
+    }
+    
+    .Col h3 {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+    
+    .LinksList {
+        text-align: center;
+    }
+    
+    .Col h4 {
+        text-align: center;
+    }
+    
+    .Description {
+        text-align: center;
+        font-size: 0.85rem;
+    }
+}

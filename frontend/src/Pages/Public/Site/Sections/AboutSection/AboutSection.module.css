@@ -86,12 +86,13 @@
 }
 
 .Title {
-    font-size: clamp(2.5rem, 4vw, 3rem);
+    font-size: clamp(1.8rem, 4vw, 3rem);
     font-weight: 600;
     color: var(--text-title);
     line-height: 1.2;
     margin-bottom: 24px;
     font-family: 'Open Sans', sans-serif;
+    overflow-wrap: break-word; /* Safety measure for small screens */
 }
 
 .Description {
@@ -165,7 +166,11 @@
 @media (max-width: 900px) {
     .Container {
         grid-template-columns: 1fr;
-        gap: 60px;
+        gap: 40px;
+    }
+    
+    .Title {
+        font-size: 2.2rem;
     }
 
     .FloatingBadge {
@@ -174,7 +179,7 @@
         bottom: 0;
         margin-top: -40px;
         margin-left: auto;
-        margin-right: 20px;
+        margin-right: 0;
         z-index: 5;
     }
 }
@@ -184,5 +189,45 @@
         margin-right: 0;
         margin-left: auto;
         max-width: 220px;
+        padding: 8px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 350px) {
+    .AboutSection {
+        padding: 60px 10px;
+    }
+    
+    .Title {
+        font-size: 1.5rem;
+    }
+    
+    .Description {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .CheckList li {
+        gap: 12px;
+    }
+    
+    .CheckList strong {
+        font-size: 1rem;
+    }
+    
+    .FloatingBadge {
+        max-width: 180px;
+        bottom: 12px;
+    }
+    
+    .BadgeIcon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    .BadgeText h4 {
+        font-size: 1rem;
     }
 }
