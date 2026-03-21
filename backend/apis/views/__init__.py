@@ -1,5 +1,5 @@
 # Importar todas as views para facilitar o uso
-from .auth_views import login_view, logout_view, me_view, update_profile_view, change_password_view, verify_password_view
+from .auth_views import login_view, logout_view, me_view, update_profile_view, change_password_view, verify_password_view, forgot_password_view, reset_password_view
 from .usuario_views import (
     CargoViewSet, FuncionarioViewSet, EncarregadoViewSet, CargoFuncionarioViewSet
 )
@@ -26,6 +26,7 @@ from .report_data_views import ReportDataViewSet
 __all__ = [
     # Auth
     'login_view', 'logout_view', 'me_view', 'update_profile_view', 'change_password_view', 'verify_password_view',
+    'forgot_password_view', 'reset_password_view',
     # Usuários
     'CargoViewSet', 'FuncionarioViewSet', 'EncarregadoViewSet', 'CargoFuncionarioViewSet',
     # Alunos

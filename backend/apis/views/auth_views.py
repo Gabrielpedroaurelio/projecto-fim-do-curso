@@ -536,7 +536,129 @@ def verify_password_view(request):
         if check_password(senha_atual, user.senha_hash):
             return Response({'valid': True, 'message': 'Senha correta'}, status=status.HTTP_200_OK)
         else:
-            return Response({'valid': False, 'error': 'Senha ncorreta'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'valid': False, 'error': 'Senha incorreta'}, status=status.HTTP_400_BAD_REQUEST)
             
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_view(request):
+    """
+    Envia um e-mail com link de recuperação de senha
+    """
+    from django.core.mail import send_mail
+    from django.core.signing import Signer, TimestampSigner
+    from django.conf import settings
+    
+    email = request.data.get('email')
+    
+    if not email:
+        return Response({'error': 'E-mail é obrigatório'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    user = None
+    user_type = None
+    user_id = None
+    
+    # Procurar em todas as tabelas
+    try:
+        user = Funcionario.objects.get(email=email)
+        user_type = 'funcionario'
+        user_id = user.id_funcionario
+    except Funcionario.DoesNotExist:
+        try:
+            user = Aluno.objects.get(email=email)
+            user_type = 'aluno'
+            user_id = user.id_aluno
+        except Aluno.DoesNotExist:
+            try:
+                user = Encarregado.objects.get(email=email)
+                user_type = 'encarregado'
+                user_id = user.id_encarregado
+            except Encarregado.DoesNotExist:
+                # Retornar sucesso fictício para evitar enumeração de e-mails (segurança)
+                return Response({'message': 'Se o e-mail existir no sistema, você receberá um link de recuperação.'})
+
+    # Gerar token assinado com timestamp (expira em 1 hora)
+    signer = TimestampSigner()
+    token_str = f"{user_type}:{user_id}"
+    token = signer.sign(token_str)
+    
+    # Criar link de reset
+    reset_url = f"{settings.SITE_URL}/auth/reset-password?token={token}"
+    
+    # Mensagem
+    subject = "Recuperação de Senha - Instituto Politécnico do Maiombe"
+    message = f"""
+    Olá {user.nome_completo},
+    
+    Você solicitou a recuperação de senha da sua conta no sistema do Instituto Politécnico do Maiombe.
+    
+    Para redefinir sua senha, clique no link abaixo (ou cole no seu navegador):
+    {reset_url}
+    
+    Este link é válido por 1 hora. Se você não solicitou esta alteração, ignore este e-mail.
+    
+    Atentamente,
+    A Equipa de Suporte do IPM
+    """
+    
+    import threading
+    def send_email_thread(subject, message, from_email, recipient_list):
+        try:
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            print(f"E-mail de recuperação enviado com sucesso para: {recipient_list}")
+        except Exception as e:
+            print(f"ERRO CRÍTICO no envio de e-mail (Thread): {str(e)}")
+
+    # Disparar envio em segundo plano (não bloqueia a requisição)
+    threading.Thread(
+        target=send_email_thread,
+        args=(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    ).start()
+
+    return Response({'message': 'Se o e-mail existir no sistema, as instruções foram enviadas. Verifique a sua caixa de entrada.'})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def reset_password_view(request):
+    """
+    Valida o token e redefine a senha do usuário
+    """
+    from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
+    from django.contrib.auth.hashers import make_password
+    
+    token = request.data.get('token')
+    nova_senha = request.data.get('nova_senha')
+    
+    if not token or not nova_senha:
+        return Response({'error': 'Token e nova senha são obrigatórios'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    signer = TimestampSigner()
+    try:
+        # Validar token (max_age = 3600 segundos = 1 hora)
+        original_data = signer.unsign(token, max_age=3600)
+        user_type, user_id = original_data.split(':')
+        
+        user = None
+        if user_type == 'funcionario':
+            user = Funcionario.objects.get(id_funcionario=user_id)
+        elif user_type == 'aluno':
+            user = Aluno.objects.get(id_aluno=user_id)
+        elif user_type == 'encarregado':
+            user = Encarregado.objects.get(id_encarregado=user_id)
+            
+        if not user:
+             return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+             
+        # Atualizar senha
+        user.senha_hash = make_password(nova_senha)
+        user.save()
+        
+        return Response({'message': 'Senha redefinida com sucesso. Já pode fazer login.'})
+        
+    except SignatureExpired:
+        return Response({'error': 'O link de recuperação expirou. Por favor, solicite um novo.'}, status=status.HTTP_400_BAD_REQUEST)
+    except (BadSignature, ValueError, Exception) as e:
+        return Response({'error': 'Link de recuperação inválido.'}, status=status.HTTP_400_BAD_REQUEST)

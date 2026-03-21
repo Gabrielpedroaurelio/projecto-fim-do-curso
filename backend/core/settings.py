@@ -177,6 +177,11 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Workaround para erro de verificação de certificado SSL no ambiente local
+if DEBUG:
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
+
 
 
 

@@ -5,6 +5,8 @@ from apis.models import Aluno, AlunoEncarregado
 class AlunoSerializer(serializers.ModelSerializer):
     """Serializer para Aluno"""
     turma_codigo = serializers.CharField(source='id_turma.codigo_turma', read_only=True)
+    classe_nivel = serializers.CharField(source='id_turma.id_classe.nivel', read_only=True)
+    curso_nome = serializers.CharField(source='id_turma.id_curso.nome_curso', read_only=True)
     
     class Meta:
         model = Aluno
@@ -13,6 +15,7 @@ class AlunoSerializer(serializers.ModelSerializer):
             'telefone', 'provincia_residencia', 'municipio_residencia',
             'bairro_residencia', 'numero_casa', 'senha_hash', 'genero',
             'status_aluno', 'modo_user', 'id_turma', 'turma_codigo',
+            'classe_nivel', 'curso_nome',
             'img_path', 'is_online', 'criado_em', 'atualizado_em',
             'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
             'provincia_naturalidade', 'data_emissao_bilhete'
@@ -32,7 +35,7 @@ class AlunoListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Aluno
         fields = [
-            'id_aluno', 'nome_completo', 'numero_matricula',
+            'id_aluno', 'numero_bi', 'nome_completo', 'numero_matricula',
             'email', 'turma_codigo', 'classe_nivel', 'curso_nome',
             'status_aluno', 'genero', 'img_path',
             'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
@@ -45,6 +48,8 @@ class AlunoDetailSerializer(serializers.ModelSerializer):
     from .usuario_serializers import EncarregadoListSerializer
     
     turma_codigo = serializers.CharField(source='id_turma.codigo_turma', read_only=True)
+    classe_nivel = serializers.CharField(source='id_turma.id_classe.nivel', read_only=True)
+    curso_nome = serializers.CharField(source='id_turma.id_curso.nome_curso', read_only=True)
     encarregados = serializers.SerializerMethodField()
     
     class Meta:
@@ -53,8 +58,8 @@ class AlunoDetailSerializer(serializers.ModelSerializer):
             'id_aluno', 'numero_bi', 'nome_completo', 'email', 'numero_matricula',
             'telefone', 'provincia_residencia', 'municipio_residencia',
             'bairro_residencia', 'numero_casa', 'genero', 'status_aluno',
-            'modo_user', 'id_turma', 'turma_codigo', 'img_path', 'is_online',
-            'encarregados', 'criado_em', 'atualizado_em',
+            'modo_user', 'id_turma', 'turma_codigo', 'classe_nivel', 'curso_nome',
+            'img_path', 'is_online', 'encarregados', 'criado_em', 'atualizado_em',
             'nome_pai', 'nome_mae', 'data_nascimento', 'naturalidade', 
             'provincia_naturalidade', 'data_emissao_bilhete'
         ]
