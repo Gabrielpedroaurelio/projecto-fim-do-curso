@@ -89,54 +89,22 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
 
             
 
-        elif instance.status_solicitacao == 'aguardando_assinatura':
-
-             Notificacao.objects.create(
-
-                titulo="Documento Aguardando Assinatura",
-
-                mensagem=f"O documento de {instance.id_aluno.nome_completo} foi gerado e aguarda sua assinatura digital.",
-
-                tipo='warning',
-
-                # id_funcionario=Diretor
-
-            )
-
-            
-
         elif instance.status_solicitacao == 'disponivel':
-
-            msg = f"Seu documento ({instance.tipo_documento}) já está assinado e disponível para levantamento/download."
+            msg = f"Incrível! O seu documento oficial ({instance.tipo_documento}) acabou de ser emitido digitalmente e já se encontra disponível para download no painel."
 
             if instance.id_aluno:
-
                 Notificacao.objects.create(
-
-                    titulo="Documento Disponível",
-
+                    titulo="Documento Pronto e Validado!",
                     mensagem=msg,
-
                     tipo='success',
-
                     id_aluno=instance.id_aluno
-
                 )
-
             if instance.id_encarregado:
-
-                # Se foi solicitado pelo encarregado ou se notificamos sempre
-
                 Notificacao.objects.create(
-
-                    titulo="Documento Disponível",
-
+                    titulo="Documento Pronto e Validado!",
                     mensagem=msg,
-
                     tipo='success',
-
                     id_encarregado=instance.id_encarregado
-
                 )
 
 

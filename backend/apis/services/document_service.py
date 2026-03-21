@@ -316,13 +316,10 @@ class DocumentService:
             # 1. Atualizar Solicitação
             solicitacao.caminho_arquivo = relative_path
             
-            # Automação de Status baseada no tipo
-            if 'CERTIFICADO' in tipo_base:
-                solicitacao.status_solicitacao = 'aguardando_assinatura'
-            else:
-                # Documentos simples (Boletim, Declaração) são liberados instantaneamente
-                solicitacao.status_solicitacao = 'disponivel'
-                solicitacao.data_aprovacao = timezone.now()
+            # Automação de Status: O usuário requisitou que TODOS os docs fiquem disponíveis 
+            # imediatamente após a geração, eliminando a burocracia do aguardo.
+            solicitacao.status_solicitacao = 'disponivel'
+            solicitacao.data_aprovacao = timezone.now()
             
             solicitacao.save()
             

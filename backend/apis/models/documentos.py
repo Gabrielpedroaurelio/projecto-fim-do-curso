@@ -134,11 +134,9 @@ class SolicitacaoDocumento(models.Model):
     
     STATUS_CHOICES = [
         ('pendente', 'Aguardando Pagamento'),
-        ('pago', 'Pago (Aguardando Geração)'),
-        ('processando', 'Em Processamento'),
-        ('aguardando_assinatura', 'Aguardando Assinatura/Revisão'),
-        ('disponivel', 'Disponível'),
-        ('rejeitado', 'Rejeitado'),
+        ('pago', 'Pago (Aguardando/Processando)'),
+        ('disponivel', 'Concluído e Disponível'),
+        ('rejeitado', 'Rejeitado / Cancelado'),
     ]
 
     CANAL_PAGAMENTO_CHOICES = [
