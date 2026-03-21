@@ -89,3 +89,52 @@ class SolicitacaoDocumentoRejeitarSerializer(serializers.Serializer):
     """Serializer para rejeitar solicitação"""
     id_funcionario = serializers.IntegerField()
     motivo = serializers.CharField(required=True)
+
+
+class DocumentoVerificacaoSerializer(serializers.ModelSerializer):
+    """Serializer para verificação pública de autenticidade"""
+    aluno_nome_ofuscado = serializers.SerializerMethodField()
+    bi_aluno_ofuscado = serializers.SerializerMethodField()
+    instituicao = serializers.SerializerMethodField()
+    periodo_letivo = serializers.CharField(source='id_aluno.id_turma.ano', read_only=True)
+    classe = serializers.CharField(source='id_aluno.id_turma.id_classe.nivel', read_only=True)
+    download_url = serializers.SerializerMethodField()
+    codigo_seguranca = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Documento
+        fields = [
+            'uuid_documento', 'codigo_seguranca', 'tipo_documento', 
+            'aluno_nome_ofuscado', 'bi_aluno_ofuscado',
+            'instituicao', 'data_emissao', 'classe', 'periodo_letivo',
+            'download_url'
+        ]
+
+    def get_codigo_seguranca(self, obj):
+        return obj.codigo_seguranca if obj.codigo_seguranca else "N/A"
+
+    def get_download_url(self, obj):
+        request = self.context.get('request')
+        if obj.caminho_pdf:
+            if request:
+                return request.build_absolute_uri(obj.caminho_pdf.url)
+            return obj.caminho_pdf.url
+        return None
+
+    def get_aluno_nome_ofuscado(self, obj):
+        if not obj.id_aluno:
+            return "N/A"
+        nome = obj.id_aluno.nome_completo
+        partes = nome.split()
+        if len(partes) > 1:
+            return f"{partes[0]} {' '.join(['*' * len(p) for p in partes[1:-1]])} {partes[-1]}"
+        return f"{nome[0]}{'*' * (len(nome)-1)}"
+
+    def get_bi_aluno_ofuscado(self, obj):
+        if not obj.id_aluno or not obj.id_aluno.numero_bi:
+            return "N/A"
+        bi = obj.id_aluno.numero_bi
+        return f"{bi[:3]}******{bi[-2:]}"
+
+    def get_instituicao(self, obj):
+        return "Instituto Politécnico do Maiombe"

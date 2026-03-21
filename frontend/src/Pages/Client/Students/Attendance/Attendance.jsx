@@ -17,6 +17,8 @@ const Attendance = () => {
             try {
                 const response = await api.get(`/alunos/${user.id}/boletim/`);
                 setStats(response.data.notas_por_disciplina);
+                //console.log(stats);
+                
                 setLoading(false);
             } catch (error) {
                 console.error("Erro ao buscar presenças:", error);
@@ -44,7 +46,7 @@ const Attendance = () => {
                             stats.map((item, index) => (
                                 <div key={index} className={style.attendanceCard}>
                                     <div className={style.cardHeader}>
-                                        <h3>{item.id_disciplina__nome}</h3>
+                                        <h3>{item.disciplina}</h3>
                                         <span className={item.presenca_percentual >= 90 ? style.badgeSuccess : style.badgeWarning}>
                                             {item.presenca_percentual.toFixed(1)}%
                                         </span>
@@ -53,7 +55,7 @@ const Attendance = () => {
                                     <div className={style.progressBarContainer}>
                                         <div
                                             className={style.progressBar}
-                                            style={{ width: `${item.presenca_percentual}%`, backgroundColor: item.presenca_percentual >= 90 ? '#0ea5e9' : '#f59e0b' }}
+                                            style={{ width: `${item.presenca_percentual}%`, backgroundColor: item.presenca_percentual >= 90 ? 'var(--cor-primaria)' : 'var(--cor-aviso)' }}
                                         ></div>
                                     </div>
 

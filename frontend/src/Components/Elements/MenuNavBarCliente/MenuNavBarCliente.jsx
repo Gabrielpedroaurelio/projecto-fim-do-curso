@@ -32,7 +32,7 @@ export default function MenuNavBarCliente({ user }) {
     const studentLinks = [
         { to: '/student/dashboard', icon: <RiHome4Line />, label: 'Dashboards' },
         { to: '/student/grades', icon: <RiBarChartLine />, label: 'Minhas Notas' },
-        { to: '/student/schedule', icon: <RiCalendarLine />, label: 'Horários' },
+        //{ to: '/student/schedule', icon: <RiCalendarLine />, label: 'Horários' },
         { to: '/student/attendance', icon: <RiUserSearchLine />, label: 'Presenças' },
         { to: '/student/ask', icon: <RiFileTextLine />, label: 'Solicitações' },
         { to: '/student/document', icon: <RiFolderLine />, label: 'Documentos' },

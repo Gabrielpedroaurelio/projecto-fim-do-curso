@@ -56,6 +56,9 @@ export default function MenuSitePublic() {
                             <Link to="/public/library" className={styles.navLink} onClick={() => setToggleMenu(false)}>Biblioteca</Link>
                         </li>
                         <li>
+                            <Link to="/public/verificar" className={styles.navLink} onClick={() => setToggleMenu(false)}>Verificar Documento</Link>
+                        </li>
+                        <li>
                             <Link to="/parent/auth" className={styles.navLink} onClick={() => setToggleMenu(false)}>Entrar Como Encarregado</Link>
                         </li>
                     </ul>

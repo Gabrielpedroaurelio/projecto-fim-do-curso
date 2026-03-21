@@ -13,6 +13,7 @@ from apis.models.auditoria import Notificacao
 from apis.models.usuarios import Funcionario
 
 from apis.models.alunos import Aluno
+from apis.utils.auditoria_utils import registrar_evento
 
 
 
@@ -65,75 +66,45 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
         # Se o status mudou
 
         if instance.status_solicitacao == 'pago':
-
-            # Notificar Diretor (Simplificado: Notificar todos os admins ou funcionário específico)
-
+            # 1. Notificar 
             Notificacao.objects.create(
-
-                titulo="RUP Pago - Documento Pendente",
-
-                mensagem=f"O pagamento para {instance.tipo_documento} de {instance.id_aluno.nome_completo} foi confirmado. O documento pode ser gerado.",
-
-                tipo='info',
-
-                # Idealmente vincular a um perfil de Diretor/Secretaria. 
-
-                # Como não temos Diretor model explícito aqui, deixamos sem destinatário específico ou criamos logica futura.
-
-                # Para MVP, vamos assumir que o admin vê todas ou notificamos um funcionario padrão se existir.
-
+                titulo="Pagamento Confirmado",
+                mensagem=f"O pagamento de {instance.tipo_documento} foi confirmado. O documento está sendo gerado.",
+                tipo='success',
+                id_aluno=instance.id_aluno,
+                id_encarregado=instance.id_encarregado
             )
-
             
-
-        elif instance.status_solicitacao == 'aguardando_assinatura':
-
-             Notificacao.objects.create(
-
-                titulo="Documento Aguardando Assinatura",
-
-                mensagem=f"O documento de {instance.id_aluno.nome_completo} foi gerado e aguarda sua assinatura digital.",
-
-                tipo='warning',
-
-                # id_funcionario=Diretor
-
-            )
+            # 2. Disparar Geração Automática
+            from apis.services.document_service import DocumentService
+            try:
+                # Mudamos para 'processando' para evitar gatilhos duplicados se houver delay
+                # Nota: instance.save() aqui dispararia o sinal novamente, então usamos update
+                SolicitacaoDocumento.objects.filter(id_solicitacao=instance.id_solicitacao).update(status_solicitacao='processando')
+                
+                DocumentService.gerar_pdf_documento(instance.id_solicitacao)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Erro na geração automática: {str(e)}")
 
             
 
         elif instance.status_solicitacao == 'disponivel':
-
-            msg = f"Seu documento ({instance.tipo_documento}) já está assinado e disponível para levantamento/download."
+            msg = f"Incrível! O seu documento oficial ({instance.tipo_documento}) acabou de ser emitido digitalmente e já se encontra disponível para download no painel."
 
             if instance.id_aluno:
-
                 Notificacao.objects.create(
-
-                    titulo="Documento Disponível",
-
+                    titulo="Documento Pronto e Validado!",
                     mensagem=msg,
-
                     tipo='success',
-
                     id_aluno=instance.id_aluno
-
                 )
-
             if instance.id_encarregado:
-
-                # Se foi solicitado pelo encarregado ou se notificamos sempre
-
                 Notificacao.objects.create(
-
-                    titulo="Documento Disponível",
-
+                    titulo="Documento Pronto e Validado!",
                     mensagem=msg,
-
                     tipo='success',
-
                     id_encarregado=instance.id_encarregado
-
                 )
 
 
@@ -153,6 +124,12 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
                 id_encarregado=instance.id_encarregado
 
             )
+            
+        # Auditoria de mudança de status (Apenas se não for criação)
+        if not created:
+             registrar_evento(None, 'ALTEROU_STATUS_DOC', 
+                              dados_novos={'status': instance.status_solicitacao, 'doc': instance.tipo_documento},
+                              aluno=instance.id_aluno)
 
 
 
@@ -204,6 +181,11 @@ def notify_nova_nota(sender, instance, created, **kwargs):
 
             )
 
+    # Auditoria de lançamento/alteração de nota
+    registrar_evento(None, 'LANCAMENTO_NOTA' if created else 'ALTERACAO_NOTA', 
+                    dados_novos={'valor': str(instance.valor), 'disciplina': instance.id_disciplina.nome},
+                    aluno=instance.id_aluno)
+
 
 
 @receiver(post_save, sender=Pagamento)
@@ -253,6 +235,11 @@ def notify_pagamento_confirmado(sender, instance, created, **kwargs):
                     id_encarregado=rel.id_encarregado
 
                 )
+
+        # Auditoria de pagamento
+        registrar_evento(None, 'PAGAMENTO_CONFIRMADO', 
+                        dados_novos={'valor': str(instance.valor_pago), 'fatura': fatura.descricao},
+                        aluno=fatura.id_aluno)
 
 
 
@@ -313,4 +300,21 @@ def salvar_historico_turma_aluno(sender, instance, created, **kwargs):
                 logger = logging.getLogger(__name__)
 
                 logger.error(f"Erro ao salvar histórico da turma ativa: {str(e)}")
+
+
+@receiver(post_save, sender=Aluno)
+def audit_aluno_save(sender, instance, created, **kwargs):
+    """Grava auditoria de Aluno"""
+    # Nota: Em sinais, não temos o request facilmente sem usar middleware 
+    # ou passar manualmente. Para contornar, podemos gravar como 'Sistema'
+    # ou tentar capturar se o request estiver disponível via thread locals (arrojado).
+    # Por agora, gravamos como acção do sistema se o request não for passado.
+    if created:
+        registrar_evento(None, 'CRIOU_ALUNO', dados_novos={'nome': instance.nome_completo}, aluno=instance)
+
+@receiver(post_save, sender=Funcionario)
+def audit_funcionario_save(sender, instance, created, **kwargs):
+    """Grava auditoria de Funcionário"""
+    if created:
+        registrar_evento(None, 'CRIOU_FUNCIONARIO', dados_novos={'nome': instance.nome_completo})
 

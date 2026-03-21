@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom'
 import favicon from '../../../assets/images/favicon.ico'
 import fundo_login from '../../../assets/images/backgroundlogin.png'
-import fundo_login2 from '../../../assets/images/robot.png'
+import fundo_login2 from '../../../assets/images/backgroundEncaregados.png'
 import fundo_login3 from '../../../assets/images/img-login.jpg'
 import { useAuth } from '../../../Context/AuthContext';
 import { useState } from 'react';
@@ -80,7 +80,7 @@ export default function AuthGeneral({ userType = 'aluno', destination = '/studen
                             {loginError && <p className={`text-red-500 text-sm mb-2 ${style.error}`}>{loginError}</p>}
 
                             <div className={style.forgotPassword}>
-                                <small>  <Link to='/admin/dashboards'>Esqueceu a senha?</Link></small>
+                                <small>  <Link to='/auth/forgot-password'>Esqueceu a senha?</Link></small>
                             </div>
                             <div className={style.inputController}>
                                 <button type='submit' disabled={isSubmitting} className={`${userType==="aluno"?style.student:userType==="encarregado"?style.parent:userType==="funcionario"?style.admin:style.admin}`}>

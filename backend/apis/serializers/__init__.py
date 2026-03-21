@@ -21,7 +21,8 @@ from .avaliacao_serializers import (
 from .documento_serializers import (
     DocumentoSerializer, DocumentoListSerializer,
     SolicitacaoDocumentoSerializer, SolicitacaoDocumentoListSerializer,
-    SolicitacaoDocumentoAprovarSerializer, SolicitacaoDocumentoRejeitarSerializer
+    SolicitacaoDocumentoAprovarSerializer, SolicitacaoDocumentoRejeitarSerializer,
+    DocumentoVerificacaoSerializer
 )
 from .biblioteca_serializers import (
     CategoriaSerializer, LivroSerializer, LivroListSerializer
@@ -55,6 +56,7 @@ __all__ = [
     'DocumentoSerializer', 'DocumentoListSerializer',
     'SolicitacaoDocumentoSerializer', 'SolicitacaoDocumentoListSerializer',
     'SolicitacaoDocumentoAprovarSerializer', 'SolicitacaoDocumentoRejeitarSerializer',
+    'DocumentoVerificacaoSerializer',
     # Biblioteca
     'CategoriaSerializer', 'LivroSerializer', 'LivroListSerializer',
     # Financeiro

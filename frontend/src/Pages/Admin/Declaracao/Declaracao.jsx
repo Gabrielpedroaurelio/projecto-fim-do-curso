@@ -7,6 +7,7 @@ import { FaFileAlt, FaPencilAlt, FaEye, FaDownload, FaCopy, FaTrash } from 'reac
 import api from '../../../Services/api'
 import Loading from '../../../Components/Elements/Loading/Loading'
 import DocumentPreviewModal from '../../../Components/Elements/DocumentPreviewModal/DocumentPreviewModal'
+import Pagination from '../../../Components/Elements/Pagination/Pagination'
 
 // Sample templates data (Keeping static for now)
 const templatesData = [
@@ -22,6 +23,8 @@ export default function Declaracao() {
     const [documents, setDocuments] = useState([])
     const [loading, setLoading] = useState(true)
     const [previewModal, setPreviewModal] = useState({ isOpen: false, url: '', title: '' })
+    const [currentPage, setCurrentPage] = useState(1)
+    const ITEMS_PER_PAGE = 8
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -42,6 +45,14 @@ export default function Declaracao() {
         doc.tipo_documento.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (doc.classe && doc.classe.toLowerCase().includes(searchTerm.toLowerCase()))
     )
+
+    const totalPages = Math.ceil(filteredDocuments.length / ITEMS_PER_PAGE)
+    const paginatedDocuments = filteredDocuments.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    )
+
+    useEffect(() => { setCurrentPage(1) }, [searchTerm])
 
     const filteredTemplates = templatesData.filter(template =>
         template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -201,6 +212,7 @@ export default function Declaracao() {
                                             <Loading />
                                         </div>
                                     ) : (
+                                        <>
                                         <table className={style.Table}>
                                             <thead>
                                                 <tr>
@@ -213,7 +225,7 @@ export default function Declaracao() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {filteredDocuments.map(doc => (
+                                                {paginatedDocuments.map(doc => (
                                                     <tr key={doc.id_documento}>
                                                         <td>
                                                             <div className={style.StudentCell}>
@@ -264,6 +276,8 @@ export default function Declaracao() {
                                                 )}
                                             </tbody>
                                         </table>
+                                        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+                                        </>
                                     )}
                                 </div>
                             </>

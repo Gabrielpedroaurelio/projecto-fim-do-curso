@@ -1,56 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-ao">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaração Sem Notas</title>
     <style>
-        *{
+        * {
             margin: 0px;
             padding: 0px;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Times New Roman', Times, serif;
         }
-        main{
+        main {
             background-color: rgb(255, 255, 255);        
             margin: auto;
-            padding: 10px;
+            padding: 20px;
         }
-        header{
+        header {
             text-align: center;
             font-size: 14pt;
-            
-            
+            margin-bottom: 20px;
         }
-        
-        h3{
+        h3 {
             text-decoration: underline;
-            margin: 50px auto;
+            margin: 30px auto;
             font-size: 14pt;
-
+            text-transform: uppercase;
         }
-        section{
+        section {
             text-align: justify;
-            font-size: 11pt;
+            font-size: 12pt;
+            line-height: 1.6;
         }
-        .efect{
+        .efect {
             text-indent: 50px;
         }
-        .signature-section{
-            width: 300px;
-            margin: auto;
-        }
-        .signature-line{
+        .footer-date {
+            font-weight: bold;
             text-align: center;
-            padding: 10px;
+            font-size: 12pt;
+            margin-top: 30px;
         }
-     hr{
-        margin:10px 0px;
-     }
-        .footer{
-            font-weight: 600;
-            text-align: center;
-            font-size: 11pt;
+        .security-info {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -61,31 +56,66 @@
             REPÚBLICA DE ANGOLA <br>
             MINISTÉRIO DA EDUCAÇÃO <br>
             INSTITUTO POLITÉCNICO MAIOMBE I.B. Nº 3050 - SEQUELE
-            <h3>DECLARAÇÃO DE APROVEITAMENTO</h3>
+            <h3>DECLARAÇÃO</h3>
         </header>
         <section>
             <p>
                 Declara-se que <strong>{{ aluno.nome_completo }}</strong>, {{ aluno.genero|yesno:"filho,filha" }} de <strong>{{ aluno.nome_pai|default:"[Nome do Pai]" }}</strong> e de <strong>{{ aluno.nome_mae|default:"[Nome da Mãe]" }}</strong>, nascido aos <strong>{{ aluno.data_nascimento|date:"d" }} de {{ aluno.data_nascimento|date:"F" }} de {{ aluno.data_nascimento|date:"Y" }}</strong>, natural de <strong>{{ aluno.naturalidade|default:"[Naturalidade]" }}</strong>, província de <strong>{{ aluno.provincia_naturalidade|default:"[Província]" }}</strong>, portador do Bilhete de Identidade nº <strong>{{ aluno.numero_bi }}</strong>, passado pelo arquivo nacional de identificação aos <strong>{{ aluno.data_emissao_bilhete|date:"d" }} de {{ aluno.data_emissao_bilhete|date:"F" }} de {{ aluno.data_emissao_bilhete|date:"Y" }}</strong>. {{ status_temporal|default:"Frequenta" }} o ano lectivo de <strong>{{ turma.ano_letivo|default:turma.ano }}</strong> a <strong>{{ classe.nivel }}ª Classe</strong>, turma: <strong>{{ turma.codigo_turma }}</strong>, curriculum regular, Curso: <strong>{{ curso.nome_curso }}</strong>; Área de Formação: <strong>{{ curso.id_area_formacao.nome_area }}</strong>, registado com o processo individual nº <strong>{{ aluno.numero_matricula }}</strong> nos nossos arquivos.
             </p>
-            <br><br>
+            <br>
             <p class="efect">
                 A presente declaração destina-se a efeitos de <strong>{{ efeito|default:"fins legais" }}</strong>.
             </p>
-            <br><br>
+            <br>
             <p>
                 Por ser verdade e me ter sido solicitado mandei passar a presente Declaração, que vai por mim assinada e autenticada com o carimbo a óleo em uso nesta Instituição.
             </p>
-            <br><br>
-            <p class="footer">SECRETARIA PEDAGÓGICA DO IPM Nº 3050/MAIOMBE-SEQUELE, AOS 07 DE DEZEMBRO DE 2026</p>
-            <br>
-            <div class="signature-section">
-            <div class="signature-line">
-                O DIRECTOR GERAL<hr>
-               DOMINGOS PAULO ROMEU
+            
+            <p class="footer-date">SECRETARIA PEDAGÓGICA DO IPM Nº 3050/MAIOMBE-SEQUELE, AOS {{ hoje|date:"d" }} DE {{ hoje|date:"F"|upper }} DE {{ hoje|date:"Y" }}</p>
+
+            <div class="security-info">
+                <table style="width: 100%; border: none;">
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle; width: 80%; border: none;">
+                            <strong>Verificação de Autenticidade</strong><br>
+                            UUID: <strong>{{ solicitacao.uuid_documento|default:"[UUID-TEMP]" }}</strong> | Data: {{ hoje|date:"d/m/Y H:i" }}<br>
+                            Cód. Segurança: <strong style="font-family: monospace; font-size: 13px; color: #0056b3;">{{ codigo_seguranca|default:"N/A" }}</strong><br>
+                            Valide em: <span>{{ verificacao_url|default:"[URL-VERIFICACAO]" }}</span>
+                        </td>
+                        <td style="text-align: right; vertical-align: middle; width: 20%; border: none;">
+                            {% if qr_code_base64 %}
+                            <img src="{{ qr_code_base64 }}" style="width: 70px; height: 70px;" alt="QR Code">
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             </div>
-        </div>
+
+            <div style="margin-top: 50px; width: 100%;">
+                <table style="width: 100%; border: none; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: center; width: 50%; border: none; vertical-align: bottom;">
+                            <p style="margin-bottom: 5px; font-size: 14px; font-weight: bold;">O DIRECTOR GERAL</p>
+                            <div style="height: 80px; text-align: center; position: relative;">
+                                {% if config.assinatura_director %}
+                                <img src="{{ config.assinatura_director.path }}" style="z-index: 10; position: absolute; left: 50%; transform: translateX(-50%); bottom: -10px; height: 100px; opacity: 0.9;" alt="Assinatura">
+                                {% endif %}
+                                <div style="width: 250px; border-top: 1px solid #000; margin: 40px auto 5px auto; position: relative; z-index: 5;"></div>
+                            </div>
+                            <p style="font-size: 14px;"><strong>{{ director_geral_nome|upper }}</strong></p>
+                        </td>
+                        <td style="text-align: center; width: 50%; border: none; vertical-align: middle;">
+                            <div style="height: 100px; text-align: center; position: relative;">
+                                {% if config.carimbo_instituicao %}
+                                <img src="{{ config.carimbo_instituicao.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); top: -10px; height: 120px; opacity: 0.8; z-index: 10;" alt="Carimbo">
+                                {% endif %}
+                                <p style="font-size: 12px; position: relative; z-index: 5; margin-top: 50px;">(Carimbo em uso)</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </section>
     </main>
-    
 </body>
 </html>

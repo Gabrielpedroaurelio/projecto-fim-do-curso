@@ -1,5 +1,6 @@
 from django.db import models
 from .usuarios import Funcionario
+from apis.utils.upload_utils import upload_to_custom
 
 
 class Categoria(models.Model):
@@ -30,7 +31,7 @@ class Livro(models.Model):
         related_name='livros_gerenciados',
         verbose_name='Responsável'
     )
-    caminho_arquivo = models.FileField(upload_to="documentos/library/books/",null=False, blank=False, verbose_name='Arquivo em PDF')
+    caminho_arquivo = models.FileField(upload_to=upload_to_custom, null=False, blank=False, verbose_name='Arquivo em PDF')
     id_categoria = models.ForeignKey(
         Categoria,
         on_delete=models.SET_NULL,
@@ -39,7 +40,7 @@ class Livro(models.Model):
         verbose_name='Categoria'
     )
     data_upload = models.DateTimeField(auto_now_add=True, verbose_name='Data de Upload')
-    img_path = models.ImageField(upload_to='image/biblioteca/capas/', null=True, blank=True, verbose_name='Capa do Livro')
+    img_path = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Capa do Livro')
     recomendado = models.BooleanField(default=False, verbose_name='Recomendado')
     
     class Meta:

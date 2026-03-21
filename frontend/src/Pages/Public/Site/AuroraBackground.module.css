@@ -21,12 +21,13 @@ body.dark-mode .auroraContainer {
     filter: blur(100px);
     pointer-events: none;
     opacity: 0.5;
+    /*opacity:0.5*/
 }
 
 .auroraItem {
     position: absolute;
     border-radius: 50%;
-    animation: move 20s infinite alternate;
+    /*animation: move 20s infinite alternate;*/
 }
 
 .aurora1 {

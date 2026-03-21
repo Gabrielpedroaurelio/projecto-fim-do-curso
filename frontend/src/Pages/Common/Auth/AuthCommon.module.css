@@ -1,0 +1,229 @@
+@import url(../../../assets/includes/includes.includes.css);
+
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Force light colors regardless of system dark mode */
+.containerForm {
+    width: 100vw;
+    height: 100vh;
+    color: #000000;
+    background: #f8f9fa; /* Light background */
+}
+
+/* Remove body.dark-mode rules to prevent theme switching on these pages */
+
+.cardForm {
+    height: 500px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08); /* Softer shadow */
+    border: 1px solid #e9ecef;
+    transition: all .5s ease-in-out;
+    width: 95%;
+    margin: auto;
+    padding: 10px 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.form {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.infos {
+    width: 280px;
+    margin: auto;
+}
+
+.backLink {
+    width: 280px;
+    margin: 10px auto;
+}
+
+.backLink a {
+    color: #303233;
+    text-decoration: none;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.logo span {
+    margin-left: 5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #198754;
+}
+
+.mensage h1 {
+    font-size: 18pt;
+    font-weight: 500;
+    color: #212529;
+}
+
+.mensage p {
+    font-size: 11px;
+    color: #2f2f2f;
+}
+
+.mensage small {
+    font-size: 10px;
+    color: #adb5bd;
+}
+
+.inputGroup {
+    display: grid;
+    width: 280px;
+    margin: 20px auto;
+    gap: 5px;
+}
+
+.inputGroup label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.inputGroup input {
+    font-size: 12px;
+    height: 35px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+    color: #212529;
+}
+
+.inputGroup input:focus {
+    box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.1);
+    outline: 1px solid #198754;
+    border-color: #198754;
+}
+
+.primaryBtn {
+    border-radius: 8px;
+    width: 100%;
+    margin: 20px auto;
+    font-size: 10pt;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #198754;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+.primaryBtn:hover {
+    background-color: #157347;
+    transform: translateY(-1px);
+}
+
+.background {
+    display: none;
+}
+
+.errorMsg {
+    font-size: 10px;
+    color: #842029;
+    background-color: #f8d7da;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.errorBanner {
+    width: 280px;
+    margin: 10px auto;
+    background: #f8d7da;
+    color: #842029;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    text-align: center;
+}
+
+.successContainer {
+    width: 280px;
+    margin: auto;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.successIcon {
+    font-size: 3rem;
+    color: #198754;
+    margin-bottom: 20px;
+}
+
+/* Desktop styles to match AuthGeneral */
+@media screen and (min-width:668px) {
+    .cardForm {
+        max-width: 700px;
+        height: 500px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding-right: 10px;
+    }
+
+    .infos, .backLink, .inputGroup, .errorBanner, .successContainer {
+        width: 240px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .logo img {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 50px;
+    }
+
+    .logo span {
+        display: none;
+    }
+
+    .primaryBtn {
+        width: 160px;
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    .background {
+        display: grid;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .background img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+}

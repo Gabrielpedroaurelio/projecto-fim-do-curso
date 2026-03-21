@@ -2,8 +2,15 @@ import uuid
 from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
-from apis.models import SolicitacaoDocumento, Fatura, Funcionario
+from django.db import transaction
+from apis.models import SolicitacaoDocumento, Fatura, HistoricoTurmaAluno, Funcionario
 from apis.services.pdf_service import PDFService
+from apis.services.notification_service import NotificationService
+import qrcode
+import base64
+import random
+import string
+from io import BytesIO
 
 class DocumentService:
     """
@@ -180,8 +187,54 @@ class DocumentService:
             'turma': turma_frequentada,
             'classe': solicitacao.classe_solicitada or (turma_frequentada.id_classe if turma_frequentada else None),
             'curso': (solicitacao.id_aluno.id_turma.id_curso if solicitacao.id_aluno.id_turma else None) or (turma_frequentada.id_curso if turma_frequentada else None),
-            'site_url': settings.SITE_URL if hasattr(settings, 'settings.SITE_URL') else 'http://localhost:8000'
+            'site_url': settings.SITE_URL if hasattr(settings, 'settings.SITE_URL') else 'http://localhost:5173'
         }
+        
+        # Injetar Assinatura e Carimbo Oficiais (Caminhos Fixos conforme solicitado)
+        import os
+        assinatura_path = os.path.join(settings.MEDIA_ROOT, 'image/system/assinatura.jpg')
+        carimbo_path = os.path.join(settings.MEDIA_ROOT, 'image/system/carimbo.jpg')
+        
+        if os.path.exists(assinatura_path):
+            context['assinatura_diretor_path'] = assinatura_path
+        if os.path.exists(carimbo_path):
+            context['carimbo_escola_path'] = carimbo_path
+            
+        context['nome_diretor'] = "DOMINGOS PAULO ROMEU" # Nome fixo conforme template do usuário
+        
+        from apis.models import ConfiguracaoSistema
+        config = ConfiguracaoSistema.objects.first()
+        if config:
+            context['escola'] = {
+                'nome': config.nome_instituicao,
+                'nif': config.nif,
+                'telefone': config.telefone,
+                'email': config.email_oficial,
+                'endereco': config.endereco
+            }
+        else:
+            context['escola'] = {
+                'nome': "Instituto Politécnico do Maiombe",
+                'email': "secretaria@ipmaiombe.ao"
+            }
+        
+        # Gerar QR Code para verificação
+        verificacao_url = f"{context['site_url']}/public/verificar/{doc_uuid}"
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr.add_data(verificacao_url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+        context['qr_code_base64'] = f"data:image/png;base64,{qr_base64}"
+        context['verificacao_url'] = verificacao_url
+        
+        # Gerar Código de Segurança Curto (ex: AF82-K)
+        safe_chars = string.ascii_uppercase + string.digits
+        control_code = ''.join(random.choices(safe_chars, k=4)) + '-' + random.choice(safe_chars)
+        context['codigo_seguranca'] = control_code
         
         # Selecionar template e carregar notas se necessário
         template_name = 'pdf/declaracao_matricula.html'
@@ -242,18 +295,45 @@ class DocumentService:
             else:
                 context['efeito'] = 'fins legais'
             
-        pdf_content = PDFService.render_to_pdf(template_name, context)
+        # Renderizar PDF com WeasyPrint + Camada de Segurança XMP
+        pdf_content = PDFService.render_to_pdf(
+            template_name, 
+            context, 
+            doc_uuid=doc_uuid, 
+            control_code=control_code
+        )
         
         if pdf_content:
-            # A própria função _get_document_path agora cuida da categorização baseada no tipo
-            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, solicitacao.tipo_documento)
+            from apis.models import Documento
             
+            # Organizar diretório de saída
+            structured_sub_dir = DocumentService._get_document_path(solicitacao.id_aluno, solicitacao.tipo_documento)
             filename = f"doc_{doc_uuid}.pdf"
+            
+            # Salvar ficheiro físico
             relative_path = PDFService.save_pdf(pdf_content, filename, sub_dir=structured_sub_dir)
             
+            # 1. Atualizar Solicitação
             solicitacao.caminho_arquivo = relative_path
-            solicitacao.status_solicitacao = 'aguardando_assinatura'
+            
+            # Automação de Status: O usuário requisitou que TODOS os docs fiquem disponíveis 
+            # imediatamente após a geração, eliminando a burocracia do aguardo.
+            solicitacao.status_solicitacao = 'disponivel'
+            solicitacao.data_aprovacao = timezone.now()
+            
             solicitacao.save()
+            
+            # 2. Criar/Atualizar Registro de Documento para Verificação Pública
+            Documento.objects.update_or_create(
+                uuid_documento=doc_uuid,
+                defaults={
+                    'id_aluno': solicitacao.id_aluno,
+                    'tipo_documento': solicitacao.tipo_documento,
+                    'caminho_pdf': relative_path,
+                    'codigo_seguranca': control_code,
+                    'criado_por': Funcionario.objects.get(id_funcionario=funcionario_id) if funcionario_id else None
+                }
+            )
             
             return relative_path
         return None
@@ -305,6 +385,9 @@ class DocumentService:
         solicitacao.data_aprovacao = timezone.now()
         solicitacao.save()
         
+        # Enviar Notificação
+        NotificationService.notify_document_available(solicitacao)
+        
         # Criar registro oficial de documento emitido
         Documento.objects.create(
             id_aluno=solicitacao.id_aluno,
@@ -345,65 +428,52 @@ class DocumentService:
         return None
 
     @staticmethod
+    @transaction.atomic
     def confirmar_pagamento_funcionario(solicitacao_id, funcionario_id):
         """
         Funcionário confirma o pagamento, gera o documento final (com assinatura digital)
-        e marca como impresso para assinatura manual.
+        e marca como impresso para assinatura manual. Garante integridade transacional ACID.
         """
         if not funcionario_id:
             raise ValueError("ID do funcionário responsável é obrigatório para confirmar o pagamento.")
             
         try:
-            solicitacao = SolicitacaoDocumento.objects.get(id_solicitacao=solicitacao_id)
+            solicitacao = SolicitacaoDocumento.objects.select_for_update().get(id_solicitacao=solicitacao_id)
         except SolicitacaoDocumento.DoesNotExist:
             raise ValueError(f"Solicitação ID {solicitacao_id} não encontrada.")
+            
+        # 1. Atualizar Fatura (fazendo lock da linha para evitar concorrência dupla pagando)
+        fatura = Fatura.objects.select_for_update().filter(id_aluno=solicitacao.id_aluno, status='pendente').last()
+        if fatura:
+            fatura.status = 'paga'
+            fatura.data_pagamento = timezone.now().date()
+            fatura.save()
+            
+        # 2. Atualizar Solicitação
+        solicitacao.status_solicitacao = 'pago'
+        solicitacao.save()
         
-        try:
-            # 1. Atualizar Fatura
-            fatura = Fatura.objects.filter(id_aluno=solicitacao.id_aluno, status='pendente').last()
-            if fatura:
-                fatura.status = 'paga'
-                fatura.data_pagamento = timezone.now().date()
-                fatura.save()
-                
-            # 2. Atualizar Solicitação
-            solicitacao.status_solicitacao = 'pago'
+        # 3. Gerar Documento Final (PDF com Assinatura Digital)
+        # O método gerar_pdf_documento já deve incluir a lógica da assinatura digital no template
+        caminho_pdf = DocumentService.gerar_pdf_documento(solicitacao_id, funcionario_id)
+        
+        # 3.1 Recarregar a solicitação para garantir que temos o uuid_documento e o caminho_arquivo atualizados
+        solicitacao.refresh_from_db()
+        
+        if caminho_pdf:
+            # 4. Marcar como Disponível imediatamente (Fluxo Instantâneo)
+            solicitacao.status_solicitacao = 'disponivel'
+            solicitacao.data_aprovacao = timezone.now()
+            solicitacao.id_funcionario_id = funcionario_id # Quem confirmou/aprovou
             solicitacao.save()
             
-            # 3. Gerar Documento Final (PDF com Assinatura Digital)
-            # O método gerar_pdf_documento já deve incluir a lógica da assinatura digital no template
-            caminho_pdf = DocumentService.gerar_pdf_documento(solicitacao_id, funcionario_id)
+            # Enviar Notificação (Novo)
+            NotificationService.notify_document_available(solicitacao)
             
-            # 3.1 Recarregar a solicitação para garantir que temos o uuid_documento e o caminho_arquivo atualizados
-            solicitacao.refresh_from_db()
-            
-            if caminho_pdf:
-                # 4. Marcar como Disponível imediatamente (Fluxo Instantâneo)
-                solicitacao.status_solicitacao = 'disponivel'
-                solicitacao.data_aprovacao = timezone.now()
-                solicitacao.id_funcionario_id = funcionario_id # Quem confirmou/aprovou
-                solicitacao.save()
-                
-                # 5. Criar registro oficial de Documento para aparecer nas listagens
-                from apis.models import Documento, Funcionario
-                funcionario = Funcionario.objects.get(id_funcionario=funcionario_id)
-                
-                Documento.objects.create(
-                    id_aluno=solicitacao.id_aluno,
-                    tipo_documento=solicitacao.tipo_documento,
-                    caminho_pdf=solicitacao.caminho_arquivo,
-                    uuid_documento=solicitacao.uuid_documento,
-                    criado_por=funcionario,
-                    data_emissao=timezone.now()
-                )
+            # O documento já foi criado e registrado dentro de `gerar_pdf_documento`.
+            # Apenas garantimos que a vinculação do funcionário aprova a operação.
 
-                return caminho_pdf
-            else:
-                raise Exception("Erro ao gerar o conteúdo do PDF.")
-                
-        except Exception as e:
-            # Capturar erro original para depuração
-            import traceback
-            print(f"ERRO CRÍTICO NA GERAÇÃO DE DOCUMENTO: {str(e)}")
-            print(traceback.format_exc())
-            raise Exception(f"Erro ao processar documento: {str(e)}")
+            return caminho_pdf
+        else:
+            # Forçar Rollback pois a geração do documento falhou. A fatura e solicitação voltam ao modo anterior.
+            raise ValueError("Erro ao gerar o conteúdo do PDF. Nenhuma fatura foi debitada.")

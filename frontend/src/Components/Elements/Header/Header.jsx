@@ -11,17 +11,17 @@ import {
     RiUserLine,
     RiSettings4Line,
     RiLogoutBoxRLine,
+    RiPaletteLine
 } from "react-icons/ri";
+
 
 import style from './Header.module.css'
 import { useAuth } from '../../../Context/AuthContext';
-import { useTheme } from '../../../Context/ThemeContextData';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../../Services/api';
 
 export default function Header({ text1, text2, onSearch }) {
     const { user, logout } = useAuth();
-    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [showNotifications, setShowNotifications] = useState(false)
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
@@ -30,6 +30,51 @@ export default function Header({ text1, text2, onSearch }) {
     const [loadingNotifs, setLoadingNotifs] = useState(false)
     const notificationRef = useRef(null)
     const profileRef = useRef(null)
+    const paletteRef = useRef(null)
+    const [showPalette, setShowPalette] = useState(false)
+    const [currentColor, setCurrentColor] = useState(localStorage.getItem('primary-color') || '#0ea5e9')
+
+    const palettes = [
+        { id: 'sky', color: '#0ea5e9', hover: '#0284c7', name: 'Azul Celeste' },
+        { id: 'indigo', color: '#6366f1', hover: '#4f46e5', name: 'Índigo Real' },
+        { id: 'emerald', color: '#10b981', hover: '#059669', name: 'Verde Esmeralda' },
+        { id: 'amber', color: '#f59e0b', hover: '#d97706', name: 'Âmbar Escolar' },
+        { id: 'rose', color: '#ef4444', hover: '#e11d48', name: 'Vermelho Paixão' },
+        { id: 'slate', color: '#334155', hover: '#1e293b', name: 'Slate' },
+    ]
+
+    useEffect(() => {
+        const savedColor = localStorage.getItem('primary-color')
+        if (savedColor) applyColor(savedColor)
+    }, [])
+
+    const applyColor = (color) => {
+        const selectedPalette = palettes.find(p => p.color === color) || palettes[0]
+        const hoverColor = selectedPalette.hover
+        
+        const targets = [document.documentElement, document.body]
+        targets.forEach(el => {
+            el.style.setProperty('--cor-primaria', color)
+            el.style.setProperty('--cor-primaria-hover', hoverColor)
+            el.style.setProperty('--cor-primaria-clara', `${color}20`)
+            
+            // Legacy Support (Mapeamento)
+            el.style.setProperty('--primary', color) 
+            el.style.setProperty('--primary-dark', hoverColor)
+            el.style.setProperty('--primary-light', `${color}20`)
+            el.style.setProperty('--primary-soft', `${color}15`)
+            el.style.setProperty('--accent-indigo', color)
+            el.style.setProperty('--text-primary', color)
+        })
+    }
+
+    const handleColorChange = (color) => {
+        setCurrentColor(color)
+        localStorage.setItem('primary-color', color)
+        applyColor(color)
+        setShowPalette(false)
+    }
+
 
     // Load Notifications from API
     const fetchNotifications = async () => {
@@ -96,7 +141,11 @@ export default function Header({ text1, text2, onSearch }) {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
                 setShowProfileDropdown(false)
             }
+            if (paletteRef.current && !paletteRef.current.contains(event.target)) {
+                setShowPalette(false)
+            }
         }
+
         document.addEventListener("mousedown", handleClickOutside)
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
@@ -162,13 +211,39 @@ export default function Header({ text1, text2, onSearch }) {
                     />
                 </div>
                 <div className={style.ActionIcons}>
-                    <button
-                        className={style.IconButton}
-                        onClick={toggleTheme}
-                        title={theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
-                    >
-                        {theme === 'dark' ? <RiSunLine /> : <RiMoonLine />}
-                    </button>
+                    <div className={style.NotificationWrapper} ref={paletteRef}>
+                        <button
+                            className={`${style.IconButton} ${showPalette ? style.Active : ''}`}
+                            onClick={() => setShowPalette(!showPalette)}
+                            title="Mudar Cor do Sistema"
+                        >
+                            <RiPaletteLine />
+                        </button>
+                        {showPalette && (
+                            <div className={style.NotificationDropdown} style={{ width: '250px', right: 0 }}>
+                                <div className={style.DropdownHeader}>
+                                    <h3>Tema de Cores</h3>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', padding: '15px' }}>
+                                    {palettes.map(p => (
+                                        <div 
+                                            key={p.id}
+                                            onClick={() => handleColorChange(p.color)}
+                                            style={{
+                                                display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer',
+                                                border: currentColor === p.color ? `2px solid ${p.color}` : '2px solid transparent',
+                                                borderRadius: '8px', padding: '8px 4px', transition: 'all 0.2s ease',
+                                                background: currentColor === p.color ? `${p.color}10` : 'transparent'
+                                            }}
+                                        >
+                                            <div style={{ width: '25px', height: '25px', borderRadius: '50%', backgroundColor: p.color, marginBottom: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}></div>
+                                            <span style={{ fontSize: '0.75rem', textAlign: 'center', fontWeight: currentColor === p.color ? '600' : '400' }}>{p.name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     <div className={style.NotificationWrapper} ref={notificationRef}>
                         <button

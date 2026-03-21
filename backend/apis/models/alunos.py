@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from .base import BaseModel
 from .academico import Turma
+from apis.utils.upload_utils import upload_to_custom
 
 
 class Aluno(BaseModel):
@@ -17,6 +18,12 @@ class Aluno(BaseModel):
         ('Expulso', 'Expulso'),
         ('Transferido', 'Transferido'),
         ('Suspenso', 'Suspenso'),
+        ('Finalizou', 'Finalizou'),
+    ]
+    
+    STATUS_USER_CHOICES = [
+        ('Ativo', 'Ativo'),
+        ('Inativo', 'Inativo'),
     ]
     
     id_aluno = models.AutoField(primary_key=True)
@@ -42,11 +49,11 @@ class Aluno(BaseModel):
     senha_hash = models.CharField(max_length=255, verbose_name='Senha', null=True, blank=True)
     genero = models.CharField(max_length=1, choices=GENERO_CHOICES, null=True, blank=True, default="F")
     status_aluno = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Activo', verbose_name='Estado')
-    modo_user = models.CharField(max_length=20, default='Inativo', verbose_name='Modo Usuário')
+    modo_user = models.CharField(max_length=20, choices=STATUS_USER_CHOICES, default='Inativo', verbose_name='Modo Usuário')
     id_turma = models.ForeignKey(Turma, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Turma')
     
 
-    img_path = models.ImageField(upload_to="image/alunos/", verbose_name="Foto do Aluno", blank=True, null=True)
+    img_path = models.ImageField(upload_to=upload_to_custom, verbose_name="Foto do Aluno", blank=True, null=True)
     is_online = models.BooleanField(default=False)
     
     class Meta:

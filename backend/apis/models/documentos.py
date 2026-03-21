@@ -104,6 +104,7 @@ class Documento(models.Model):
     #models.TextField(null=True, blank=True, verbose_name='Caminho do PDF')
     #imagem_carimbo = models.TextField(null=True, blank=True, verbose_name='Carimbo/Assinatura')
     uuid_documento = models.UUIDField(default=uuid.uuid4, unique=True, verbose_name='CÓDIGO ÚNICO DO DOCUMENTO')
+    codigo_seguranca = models.CharField(max_length=10, null=True, blank=True, verbose_name='CÓDIGO DE SEGURANÇA')
     criado_por = models.ForeignKey(
         Funcionario,
         on_delete=models.SET_NULL,
@@ -132,12 +133,10 @@ class SolicitacaoDocumento(models.Model):
     """Solicitações de documentos"""
     
     STATUS_CHOICES = [
-        ('pendente', 'Pendente (Aguardando RUP)'),
-        ('pago', 'Pago (Confirmado)'),
-        ('aguardando_assinatura', 'Aguardando Assinatura'),
-        ('impresso', 'Impresso (Físico)'),
-        ('disponivel', 'Disponível para Levantamento'),
-        ('rejeitado', 'Rejeitado'),
+        ('pendente', 'Aguardando Pagamento'),
+        ('pago', 'Pago (Aguardando/Processando)'),
+        ('disponivel', 'Concluído e Disponível'),
+        ('rejeitado', 'Rejeitado / Cancelado'),
     ]
 
     CANAL_PAGAMENTO_CHOICES = [

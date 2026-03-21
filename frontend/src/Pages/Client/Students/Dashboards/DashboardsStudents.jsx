@@ -171,8 +171,8 @@ const DashboardsStudents = () => {
                   <AreaChart data={performanceData}>
                     <defs>
                       <linearGradient id="colorGrade" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                        <stop offset="5%" stopColor="var(--cor-primaria)" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="var(--cor-primaria)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
@@ -206,7 +206,7 @@ const DashboardsStudents = () => {
                     <Area
                       type="monotone"
                       dataKey="media"
-                      stroke="#0ea5e9"
+                      stroke="var(--cor-primaria)"
                       strokeWidth={2.5}
                       fillOpacity={1}
                       fill="url(#colorGrade)"
@@ -225,7 +225,7 @@ const DashboardsStudents = () => {
                   <PieChart>
                     <Pie
                       data={[
-                        { name: 'Boletins', value: documentsStats.boletim, color: '#0ea5e9' },
+                        { name: 'Boletins', value: documentsStats.boletim, color: 'var(--cor-primaria)' },
                         { name: 'Declarações', value: documentsStats.declaracao, color: '#8b5cf6' },
                         { name: 'Certificados', value: documentsStats.certificado, color: '#10b981' }
                       ]}
@@ -239,7 +239,7 @@ const DashboardsStudents = () => {
                       labelLine={false}
                     >
                       {[
-                        { name: 'Boletins', value: documentsStats.boletim, color: '#0ea5e9' },
+                        { name: 'Boletins', value: documentsStats.boletim, color: 'var(--cor-primaria)' },
                         { name: 'Declarações', value: documentsStats.declaracao, color: '#8b5cf6' },
                         { name: 'Certificados', value: documentsStats.certificado, color: '#10b981' }
                       ].map((entry, index) => (
@@ -273,13 +273,13 @@ const DashboardsStudents = () => {
             </div>
             <div className={style.quickAccessGrid}>
               <div className={style.revealItem}>
-                <CardsDocments text="Solicitações" icon={<RiFileList3Line size={50} />} url="/student/ask" />
+                <CardsDocments text="Solicitações" icon={<RiFileList3Line size={50} />} url="/student/ask" text_display={"Realizar Solicitação"} />
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Notas e Avaliações" icon={<RiShieldUserLine size={50} />} url="/student/grades" />
+                <CardsDocments text="Notas e Avaliações" icon={<RiShieldUserLine size={50} />} url="/student/grades"  text_display={"Ver Notas"}/>
               </div>
               <div className={style.revealItem}>
-                <CardsDocments text="Documentos" icon={<RiCalendarEventLine size={50} />} url="/student/document" />
+                <CardsDocments text="Documentos" icon={<RiCalendarEventLine size={50} />} url="/student/document" text_display={"Ver Documentos"}/>
               </div>
             </div>
           </section>

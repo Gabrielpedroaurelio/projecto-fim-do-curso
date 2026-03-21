@@ -6,6 +6,8 @@ import '../../../assets/style/global.style.css'
 import { FaMagnifyingGlass, FaPencil, FaTrash, FaDownload, FaEye } from 'react-icons/fa6'
 import { IoFilterSharp } from 'react-icons/io5'
 import api from '../../../Services/api'
+import { MEDIA_URL } from '../../../Services/api';
+import { getMediaUrl } from '../../../Utils/urlHelper';
 import SolicitacaoFlow from '../../../Components/Features/Documents/SolicitacaoFlow' // Importar Flow
 import Loading from '../../../Components/Elements/Loading/Loading'
 
@@ -349,7 +351,7 @@ export default function Solicitacao() {
                                             <FaDownload />
                                             <span>Documento Gerado</span>
                                         </div>
-                                        <a href={`http://localhost:8000/media/${selectedSolicitacao.caminho_arquivo}`} target="_blank" rel="noopener noreferrer"
+                                        <a href={getMediaUrl(selectedSolicitacao.caminho_arquivo)} target="_blank" rel="noopener noreferrer"
                                             style={{ padding: '0.5rem 1rem', background: 'var(--green-primay)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600 }}>
                                             Baixar PDF
                                         </a>

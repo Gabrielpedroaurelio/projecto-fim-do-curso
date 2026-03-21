@@ -35,10 +35,14 @@ import Boletim from './Pages/Admin/Boletim/Boletim'
 import Declaracao from './Pages/Admin/Declaracao/Declaracao'
 import YasminChat from './Pages/YasminAI/YasminChat'
 import GradeLaunching from './Pages/Admin/Grades/GradeLaunching'
+import Reports from './Pages/Admin/Reports/Reports'
 
 import ProtectedRoute from './Components/Security/ProtectedRoute'
 import Profile from './Pages/Common/Profile/Profile';
 import NotFound from './Pages/Public/NotFound/NotFound';
+import VerificarDocumento from './Pages/Public/VerificarDocumento/VerificarDocumento';
+import ForgotPassword from './Pages/Common/Auth/ForgotPassword';
+import ResetPassword from './Pages/Common/Auth/ResetPassword';
 
 const Routers = () => {
     return (
@@ -58,6 +62,7 @@ const Routers = () => {
             <Route path='/admin/history' element={<ProtectedRoute allowedTypes={['funcionario']}><Histories /></ProtectedRoute>}></Route>
             <Route path='/admin/setting' element={<ProtectedRoute allowedTypes={['funcionario']}><Settings /></ProtectedRoute>}></Route>
             <Route path='/admin/notas' element={<ProtectedRoute allowedTypes={['funcionario']}><GradeLaunching /></ProtectedRoute>}></Route>
+            <Route path='/admin/reports' element={<ProtectedRoute allowedTypes={['funcionario']}><Reports /></ProtectedRoute>}></Route>
             <Route path='/admin/auth' element={<AuthAdmin />}></Route>
             <Route path='/agent/account' element={<ProtectedRoute allowedTypes={['funcionario']}><Accounts /></ProtectedRoute>}></Route>
             <Route path='/admin/yasmin' element={<ProtectedRoute allowedTypes={['funcionario']}><YasminChat /></ProtectedRoute>}></Route>
@@ -82,6 +87,10 @@ const Routers = () => {
             <Route path='/parent/auth' element={<AuthParent />}></Route>
             <Route path='/parent/yasmin' element={<ProtectedRoute allowedTypes={['encarregado']}><YasminChat /></ProtectedRoute>}></Route>
 
+            {/*** RECUPERAÇÃO DE SENHA ***/}
+            <Route path='/auth/forgot-password' element={<ForgotPassword />}></Route>
+            <Route path='/auth/reset-password' element={<ResetPassword />}></Route>
+
             {/*** COMUM ***/}
             <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
 
@@ -90,6 +99,8 @@ const Routers = () => {
             <Route path='/public/site' element={<MainSite />}></Route>{/* */}
             <Route path='/public/library' element={<LIbrary />}></Route>{/* */}
             <Route path='/public/library/buy' element={"/public/library/buy"}></Route>{/* */}
+            <Route path='/public/verificar' element={<VerificarDocumento />}></Route>
+            <Route path='/public/verificar/:uuid' element={<VerificarDocumento />}></Route>
 
             {/* Rota 404 - Not Found */}
             <Route path='*' element={<NotFound />}></Route>

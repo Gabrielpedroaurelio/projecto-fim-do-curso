@@ -1,73 +1,148 @@
-{% extends "pdf/base_documento.html" %}
+<!DOCTYPE html>
+<html lang="pt-ao">
+<head>
+    <meta charset="UTF-8">
+    <title>RUP - {{ aluno.nome_completo }}</title>
+    <style>
+        @page {
+            size: A5 landscape;
+            margin: 0.5cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+            padding: 5px;
+            line-height: 1.2;
+            color: #1a1a1a;
+            font-size: 10pt;
+        }
+        .header {
+            display: table;
+            width: 100%;
+            border-bottom: 1.5pt solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+        .header-logo {
+            display: table-cell;
+            width: 50px;
+            vertical-align: middle;
+        }
+        .header-text {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            text-transform: uppercase;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12pt;
+            margin-bottom: 10px;
+            background: #eee;
+            padding: 3px;
+            border-radius: 4px;
+        }
+        .rup-container {
+            border: 1.5pt solid #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .rup-header {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 9pt;
+        }
+        .rup-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .rup-table td {
+            padding: 6px 12px;
+            border-bottom: 0.5pt solid #eee;
+        }
+        .rup-code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 18pt;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+        .student-box {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 9pt;
+        }
+        .student-box p { margin: 2px 0; }
+        .instructions {
+            border: 1pt solid #10b981;
+            padding: 8px;
+            border-radius: 6px;
+            background: #f0fdf4;
+            font-size: 8.5pt;
+        }
+        .instructions h4 { margin: 0 0 4px 0; color: #10b981; }
+        .footer {
+            margin-top: 10px;
+            font-size: 7.5pt;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-logo">
+            <img src="/static/image/insigna_angola.png" alt="" style="height: 35px;">
+        </div>
+        <div class="header-text">
+            REPÚBLICA DE ANGOLA | MINISTÉRIO DA EDUCAÇÃO<br>
+            INSTITUTO POLITÉCNICO MAIOMBE - SEQUELE
+        </div>
+    </div>
 
-{% block content %}
-<div style="font-size: 9px !important;">
-<div class="doc-title" style="font-size: 14pt; margin-bottom: 10px;">Comprovativo de Solicitação / Nota de Pagamento</div>
+    <div class="title">NOTA DE PAGAMENTO / RUP</div>
 
-<div style="border: 1.5pt solid #000; padding: 25px; margin: 20px 0;">
-    <h3 style="margin-top: 0; text-align: center; color: #000; text-transform: uppercase;">Dados para Pagamento (RUP)
-    </h3>
+    <div class="rup-container">
+        <div class="rup-header">Dados Obrigatórios para Liquidação</div>
+        <table class="rup-table">
+            <tr>
+                <td width="35%"><strong>Referência (RUP):</strong></td>
+                <td class="rup-code">{{ solicitacao.rupe }}</td>
+            </tr>
+            <tr>
+                <td><strong>Valor a Pagar:</strong></td>
+                <td style="font-size: 14pt; font-weight: bold; color: #000;">{{ solicitacao.valor_rupe|stringformat:".2f" }} KZ</td>
+            </tr>
+            <tr>
+                <td><strong>Data Limite:</strong></td>
+                <td style="color: #d32f2f; font-weight: bold;">{{ solicitacao.data_expiracao_rup|date:"d/m/Y H:i" }}</td>
+            </tr>
+        </table>
+    </div>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <tr style="border-bottom: 0.5pt solid #eee;">
-            <td style="padding: 12px;"><strong>Entidade:</strong></td>
-            <td style="padding: 12px; font-weight: bold;">INSTITUTO POLITÉCNICO DO MAIOMBE</td>
-        </tr>
-        <tr style="border-bottom: 0.5pt solid #eee;">
-            <td style="padding: 12px;"><strong>Referência (RUP):</strong></td>
-            <td style="padding: 12px; font-size: 16pt; font-weight: bold; letter-spacing: 2px;">{{ solicitacao.rupe }}
-            </td>
-        </tr>
-        <tr style="border-bottom: 0.5pt solid #eee;">
-            <td style="padding: 12px;"><strong>Valor a Liquidar:</strong></td>
-            <td style="padding: 12px; font-size: 14pt; font-weight: bold;">{{ solicitacao.valor_rupe|stringformat:".2f" }} KZ</td>
-        </tr>
-        <tr>
-            <td style="padding: 12px;"><strong>Válido até:</strong></td>
-            <td style="padding: 12px; color: #d32f2f; font-weight: bold;">{{ solicitacao.data_expiracao_rup|date:"d/m/Y H:i" }}</td>
-        </tr>
-    </table>
-</div>
+    <div class="student-box">
+        <p><strong>Estudante:</strong> {{ aluno.nome_completo }} | <strong>BI:</strong> {{ aluno.numero_bi }}</p>
+        <p><strong>Curso:</strong> {{ aluno.id_turma.id_curso.nome_curso }} ({{ aluno.id_turma.codigo_turma }})</p>
+        <p><strong>Solicitação:</strong> <span style="text-transform: uppercase;">{{ solicitacao.tipo_documento }}</span></p>
+    </div>
 
-<div style="margin-top: 30px;">
-    <h4 style="border-bottom: 1px solid #ccc; padding-bottom: 5px;">Detalhes do Requisitante</h4>
-    <table style="width: 100%;">
-        <tr>
-            <td style="width: 50%;">
-                <p><strong>Estudante:</strong> {{ aluno.nome_completo }}</p>
-            </td>
-            <td style="width: 50%;">
-                <p><strong>Nº Processo:</strong> {{ aluno.numero_matricula }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p><strong>Curso:</strong> {{ aluno.id_turma.id_curso.nome_curso }}</p>
-            </td>
-            <td>
-                <p><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p><strong>Documento Solicitado:</strong> {{ solicitacao.tipo_documento }}</p>
-            </td>
-        </tr>
-    </table>
-</div>
+    <div class="instructions">
+        <h4>Como Pagar:</h4>
+        No <strong>ATM</strong> ou <strong>Express</strong>, escolha: <strong>Pagamentos > Estado > Escolas/Institutos</strong> e insira a referência acima.
+    </div>
 
-<div style="margin-top: 30px; background-color: #f5f5f5; padding: 20px; border-left: 4pt solid #10b981;">
-    <h4 style="margin-top: 0;">Instruções Importantes:</h4>
-    <ol style="margin-bottom: 0;">
-        <li>Efetue o pagamento via <strong>Multicaixa Express</strong> ou <strong>ATM</strong>.</li>
-        <li>Escolha a opção: <strong>Pagamentos > Estado > Escolas / Institutos</strong>.</li>
-        <li>Insira a referência <strong>{{ solicitacao.rupe }}</strong> e confirme os dados.</li>
-        <li>Após o pagamento, o sistema processará o documento automaticamente em até 1 hora.</li>
-    </ol>
-</div>
-
-<div style="margin-top: 20px; font-size: 9pt; color: #666; font-style: italic;">
-    Nota: Este documento serve apenas para instrução de pagamento. Não substitui o documento oficial final.
-</div>
-</div>
-{% endblock %}
+    <div class="footer">
+        Nota: Este documento é provisório. O documento oficial será emitido após a confirmação bancária.
+    </div>
+</body>
+</html>

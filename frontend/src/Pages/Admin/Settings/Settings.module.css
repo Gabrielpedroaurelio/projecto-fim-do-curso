@@ -1,98 +1,146 @@
 .SettingsContainer {
-    display: flex;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
     padding: 24px;
-    height: calc(100vh - 80px);
-    /* Adjust based on header height */
+    min-height: calc(100vh - 120px);
 }
 
-/* Sidebar Navigation */
 .SideNav {
-    width: 250px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    flex-shrink: 0;
+    height: fit-content;
 }
-.SideNav button{
-}
+
 .NavButton {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 20px;
+    padding: 14px 16px;
     border-radius: var(--radius-md);
     background: transparent;
     border: none;
     color: var(--text-muted);
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
     text-align: left;
 }
 
 .NavButton:hover {
-    background-color: var(--bg-card);
-    color: var(--text-main);
+    background-color: var(--primary-light);
+    color: var(--primary);
 }
 
 .NavActive {
-    background: linear-gradient(135deg, var(--primary), var(--primary)) !important;
+    background-color: var(--primary) !important;
     color: white !important;
-    box-shadow: 0 4px 12px var(--primary-soft);
-}
-
-body.dark-mode .NavActive {
-    box-shadow: 0 4px 12px var(--primary);
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
 }
 
 .NavIcon {
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
+    font-size: 1.2rem;
 }
 
-/* Content Area */
 .ContentArea {
-    flex-grow: 1;
     background-color: var(--bg-card);
     border-radius: var(--radius-lg);
-    padding: 32px;
-    box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-color);
-    overflow-y: auto;
-}
-
-.SettingSection {
-    animation: fadeIn 0.4s ease-out;
+    padding: 32px;
 }
 
 .SectionHeader {
     margin-bottom: 32px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
 }
 
 .SectionHeader h3 {
     font-size: 1.5rem;
     color: var(--text-main);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .SectionHeader p {
     color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Files Grid */
+.FilesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.FileUploadCard {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.FilePreview {
+    width: 80px;
+    height: 80px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--primary);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.FilePreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.FileInfo h4 {
     font-size: 0.9rem;
+    margin-bottom: 12px;
+    color: var(--text-main);
+}
+
+.UploadBtnSmall {
+    padding: 6px 16px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.UploadBtnSmall:hover {
+    opacity: 0.9;
 }
 
 /* Form Styles */
 .FormGrid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     margin-bottom: 32px;
 }
 
-.InputGroup,
-.InputGroupFull {
+.InputGroup {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -100,592 +148,201 @@ body.dark-mode .NavActive {
 
 .InputGroupFull {
     grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.InputGroup label,
-.InputGroupFull label {
+.InputGroup label, .InputGroupFull label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-main);
+    color: var(--text-muted);
 }
 
-.InputGroup input,
-.InputGroupFull input {
+.InputGroup input, .InputGroupFull input {
     padding: 12px 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
     background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
     color: var(--text-main);
-    font-size: 0.95rem;
+    outline: none;
     transition: border-color 0.2s;
 }
 
-.InputGroup input:focus,
-.InputGroupFull input:focus {
-    outline: none;
-    border-color: var(--accent-indigo);
+.InputGroup input:focus, .InputGroupFull input:focus {
+    border-color: var(--primary);
 }
 
 .SaveButton {
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+    padding: 12px 32px;
+    background-color: var(--primary);
     color: white;
-    padding: 12px 24px;
-    border-radius: var(--radius-md);
     border: none;
+    border-radius: var(--radius-md);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.2s;
 }
 
 .SaveButton:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
-/* Backup Specific */
-.BackupCard {
-    background-color: var(--bg-input);
-    padding: 24px;
-    border-radius: var(--radius-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    border: 1px dashed var(--border-color);
-}
-
-.BackupInfo {
-    display: flex;
-    align-items: center;
+/* Color Palette Modern */
+.ColorsModernGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 20px;
 }
 
-.BackupIconLarge {
-    font-size: 2.5rem;
-    color: var(--accent-indigo);
-}
-
-.BackupInfo h4 {
-    margin-bottom: 4px;
-}
-
-.BackupInfo span {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.RunBackupBtn {
-    background-color: var(--text-main);
-    color: var(--bg-card);
-    padding: 10px 20px;
-    border-radius: var(--radius-sm);
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.RunBackupBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.ProgressBarContainer {
-    width: 100%;
-    height: 8px;
-    background-color: var(--border-color);
-    border-radius: 4px;
-    margin-bottom: 32px;
-    overflow: hidden;
-}
-
-.ProgressBar {
-    height: 100%;
-    background:#0095ff;
-    transition: width 0.3s ease;
-}
-
-.HistoryList {
-    margin-top: 32px;
-}
-
-.HistoryList h4 {
-    margin-bottom: 16px;
-    font-size: 1rem;
-}
-
-.HistoryItem {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.HistoryItem svg {
-    color: var(--text-muted);
-}
-
-.HistoryDetails {
-    flex-grow: 1;
-}
-
-.HistoryDetails p {
-    font-family: monospace;
-    font-size: 0.9rem;
-    margin-bottom: 2px;
-}
-
-.HistoryDetails span {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.ProfileUpload {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 40px;
-    padding: 24px;
-    background-color: var(--bg-input);
-    border-radius: var(--radius-lg);
-}
-
-.AvatarLarge {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    color: white;
-    font-weight: 700;
-    overflow: hidden;
-    border: 4px solid var(--bg-card);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.AvatarLarge img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.PhotoActions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.ChangePhotoBtn {
-    background-color: var(--bg-card);
-    color: var(--text-main);
-    padding: 10px 20px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.ChangePhotoBtn:hover {
-    background-color: var(--border-color);
-}
-
-.BackupActions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.DeleteLink {
-    color: #ef4444;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-
-.DeleteLink:hover {
-    background-color: rgba(239, 68, 68, 0.1);
-}
-
-.EmptyState {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-/* Security Toggle */
-.ToggleGroup {
-    margin-bottom: 24px;
-}
-
-.ToggleLabel {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.HelperText {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-/* Status Grid */
-.StatusGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-.StatusCard {
-    background-color: var(--bg-input);
-    padding: 20px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-}
-
-.StatusValue {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.StatusCard p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.SuccessIcon {
-    color: var(--primary);
-}
-
-.InfoIcon {
-    color: var(--primary);
-}
-
-.WarningIcon {
-    color: #f59e0b;
-}
-
-.SystemInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 24px;
-    background-color: var(--bg-input);
-    border-radius: var(--radius-md);
-}
-
-.InfoRow {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-}
-
-/* Logo Upload */
-.LogoUploadSection {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 40px;
-    padding: 24px;
-    background-color: var(--bg-input);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-}
-
-.LogoPreview {
-    width: 120px;
-    height: 120px;
-    background-color: var(--bg-card);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: var(--text-muted);
-    border: 2px dashed var(--border-color);
-    overflow: hidden;
-}
-
-.LogoPreview img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 10px;
-}
-
-.LogoInfo h4 {
-    margin-bottom: 4px;
-    color: var(--text-main);
-}
-
-.LogoInfo p {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-}
-
-.UploadSmallBtn {
-    background-color: var(--bg-card);
-    color: var(--text-main);
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.UploadSmallBtn:hover {
-    background-color: var(--border-color);
-}
-
-/* Appearance / Themes */
-.ThemeSelectors {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    margin-bottom: 40px;
-}
-
-.ThemeCard {
+.ColorLargeSquare {
     background-color: var(--bg-input);
     border: 2px solid transparent;
     border-radius: var(--radius-lg);
-    padding: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-}
-
-.ThemeCard:hover {
-    border-color: var(--accent-indigo);
-    transform: translateY(-4px);
-}
-
-.ActiveTheme {
-    border-color: var(--accent-indigo);
-    background-color: var(--bg-card);
-    box-shadow: var(--shadow-soft);
-}
-
-.ThemePreviewLight, .ThemePreviewDark {
-    width: 100%;
-    height: 120px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-}
-
-.ThemePreviewLight {
-    background-color: #f8fafc;
-    color: #f59e0b;
-    border: 1px solid #e2e8f0;
-}
-
-.ThemePreviewDark {
-    background-color: #0f172a;
-    color: #f8fafc;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-.ColorPaletteList h4 {
-    margin-bottom: 16px;
-    font-size: 1rem;
-}
-
-.ColorsGrid {
-    display: flex;
-    gap: 16px;
-}
-
-.ColorSwatch {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    gap: 12px;
     cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.2s;
+    transition: all 0.3s;
 }
 
-.ColorSwatch:hover {
-    transform: scale(1.1);
+.ColorLargeSquare:hover {
+    transform: scale(1.05);
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
 }
 
-.ActiveSwatch {
-    border-color: var(--text-main);
-    box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text-main);
+.ActiveColor {
+    border-color: var(--preview-color) !important;
+    background-color: var(--bg-card);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Audit Logs */
-.LogsTableContainer {
-    margin-top: 24px;
-    overflow-x: auto;
+.ColorBox {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.LogsTable {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-.LogsTable th {
-    text-align: left;
-    padding: 12px 16px;
-    background-color: var(--bg-input);
-    color: var(--text-muted);
+.ColorLargeSquare span {
+    font-size: 0.85rem;
     font-weight: 600;
-}
-
-.LogsTable td {
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
     color: var(--text-main);
 }
 
-.ActionBadge {
-    padding: 4px 10px;
-    background-color: var(--primary-soft);
-    color: var(--primary-dark);
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.DetailsCell {
-    font-style: italic;
-    color: var(--text-muted);
-}
-
-/* Notifications */
-.NotificationList {
-    background-color: var(--bg-input);
+/* Backup Cards */
+.BackupActionCard {
+    background-color: var(--primary-light);
+    border: 1px dashed var(--primary);
     border-radius: var(--radius-lg);
-    padding: 8px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
     margin-bottom: 32px;
 }
 
-.ToggleItem {
+.BackupIcon {
+    font-size: 3rem;
+    color: var(--primary);
+}
+
+.BackupCallToAction h4 {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+    color: var(--text-main);
+}
+
+.BackupCallToAction p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.PrimaryBtn {
+    padding: 10px 24px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.BackupTableContainer h4 {
+    margin-bottom: 16px;
+    color: var(--text-main);
+}
+
+.BackupListItem {
+    background-color: var(--bg-input);
+    padding: 16px;
+    border-radius: var(--radius-md);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid var(--border-color);
+    gap: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
 }
 
-.ToggleItem:last-child {
-    border-bottom: none;
+.BackupListItem svg {
+    color: var(--primary);
 }
 
-.ToggleItem h4 {
-    font-size: 1rem;
-    margin-bottom: 2px;
+.BkpInfo {
+    flex: 1;
 }
 
-.ToggleItem p {
-    font-size: 0.8rem;
+.BkpInfo p {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.BkpInfo span {
+    font-size: 0.75rem;
     color: var(--text-muted);
 }
 
-.ToggleItem input[type="checkbox"] {
-    width: 44px;
-    height: 22px;
-    appearance: none;
-    background-color: #cbd5e1;
-    border-radius: 20px;
-    position: relative;
+.BkpActions {
+    display: flex;
+    gap: 8px;
+}
+
+.BkpActions button {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
 }
 
-.ToggleItem input[type="checkbox"]:checked {
-    background-color: var(--accent-indigo);
+.DownloadBtn {
+    color: var(--primary);
 }
 
-.ToggleItem input[type="checkbox"]::before {
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background-color: white;
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.3s;
+.DeleteBtn {
+    color: #ef4444;
 }
 
-.ToggleItem input[type="checkbox"]:checked::before {
-    transform: translateX(22px);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .SettingsContainer {
-        flex-direction: column;
-        height: auto;
+        grid-template-columns: 1fr;
     }
-
+    
     .SideNav {
-        width: 100%;
         flex-direction: row;
         overflow-x: auto;
-        padding-bottom: 8px;
-    }
-
-    .NavButton {
-        flex-shrink: 0;
-        white-space: nowrap;
     }
 
     .FormGrid {
         grid-template-columns: 1fr;
     }
-
+    
     .InputGroupFull {
         grid-column: span 1;
-    }
-
-    .LogoUploadSection {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .ThemeSelectors {
-        grid-template-columns: 1fr;
     }
 }

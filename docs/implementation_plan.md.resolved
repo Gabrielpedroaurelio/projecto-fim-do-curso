@@ -1,0 +1,47 @@
+# Plano de Manutenção de 18 Dias
+
+Este plano detalha o cronograma para revitalizar o sistema, com foco em segurança, performance, lógica de negócio e excelência visual (UI/UX).
+
+## 📅 Calendário de Execução
+
+### Semana 1: Segurança e Performance
+
+| Dia | Foco Principal | Descrição |
+| :--- | :--- | :--- |
+| **01-02** | **Segurança Base** | Corrigir `DEBUG=True`, ocultar segredos, remover tracebacks das APIs. |
+| **03** | **Acesso e IDOR** | Implementar validação de posse para que um aluno/encarregado não veja dados de outros. |
+| **04** | **Auth Hardening** | Bloquear logins inativos, implementar expiração de sessões e rate-limiting. |
+| **05** | **DB Performance** | Analisar queries lentas e adicionar índices onde necessário. |
+| **06** | **API Speed** | Implementar cache em endpoints pesados (Dashboard). |
+
+### Semana 2: Regras de Negócio e Estrutura
+
+| Dia | Foco Principal | Descrição |
+| :--- | :--- | :--- |
+| **07-08** | **Frontend Opt** | Otimizar assets e carregamento inicial do React. |
+| **09-10** | **Lógica Académica** | Validar regras de aprovação, cálculo de médias e lançamento massivo. |
+| **11-12** | **Documentação** | Refinar o fluxo de solicitações e geração de RUP/Certificados. |
+| **13** | **Financeiro** | Garantir consistência entre faturas e documentos gerados. |
+
+### Semana 3: Experiência do Utilizador (UI/UX) e Entrega
+
+| Dia | Foco Principal | Descrição |
+| :--- | :--- | :--- |
+| **14-15** | **Design Premium** | Aplicar estética moderna: gradientes suaves, glassmorphism e cores vibrantes. |
+| **16** | **Interatividade** | Adicionar micro-animações e transições fluidas entre páginas. |
+| **17** | **UX Mobile** | Ajustar o sistema para ser perfeito em telemóveis e tablets. |
+| **18** | **Finalização** | Testes finais, limpeza de código e entrega do projeto. |
+
+---
+
+## 🛠️ Prioridades Iniciais (Hoje e Amanhã)
+
+1. **Blindagem Contra Ataques**: Fechar as portas abertas identificadas na auditoria.
+2. **Estabilização de Lógica**: Garantir que as regras de negócio angolanas/escolares estejam sólidas.
+3. **Identidade Visual**: Definir uma paleta de cores "Emerald Forest Professional" (Verde Esmeralda e Branco) para todo o sistema.
+
+> [!IMPORTANT]
+> Este calendário é flexível, mas prioriza a **Segurança** como o primeiro passo inegociável.
+
+> [!TIP]
+> Durante a fase de UI/UX, usarei ferramentas de geração de imagem para criar assets exclusivos para o seu dashboard.

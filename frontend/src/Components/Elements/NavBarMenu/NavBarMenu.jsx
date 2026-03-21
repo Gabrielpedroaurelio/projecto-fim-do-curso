@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { BsCart3, BsFolder, BsHouse, BsPeople } from "react-icons/bs";
 import { FiTrendingUp } from "react-icons/fi";
 import { RiBillLine } from "react-icons/ri";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 import { CiFileOn, CiSettings } from 'react-icons/ci';
 import favicon from '../../../assets/images/favicon.ico'
 
@@ -132,6 +133,11 @@ export default function NavBarMenu() {
                         <li>
                             <Link to={"/admin/setting"}>
                                 <CiSettings /> Configurações
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={"/admin/reports"}>
+                                <HiOutlineDocumentReport /> Relatórios
                             </Link>
                         </li>
 

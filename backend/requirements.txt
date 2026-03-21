@@ -17,5 +17,10 @@ Pillow>=10.0
 
 # Funcionalidades Específicas
 django-unfold>=0.30.0
-xhtml2pdf>=0.2.11
+django-import-export>=4.0.0
+certifi>=2024.2.2
+xhtml2pdf>=0.2.16
+pypdf>=4.1.0
 user-agents>=2.2.0
+qrcode[pil]>=7.4.2
+#sslserver>=

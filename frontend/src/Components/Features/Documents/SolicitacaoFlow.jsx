@@ -4,6 +4,7 @@ import { RiUser3Line, RiFileList3Line, RiWallet3Line, RiCheckLine, RiPrinterLine
 import api from '../../../Services/api';
 
 import { useAuth } from '../../../Context/AuthContext';
+import { getMediaUrl } from '../../../Utils/urlHelper';
 
 const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }) => {
     const { user } = useAuth();
@@ -131,10 +132,10 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                 // Sem notas: permite a classe actual (igual ao boletim)
                 filtered = classes.filter(c => c.nivel <= currentLevel);
             }
-        } else if (docUpper.includes('BOLETIM')) {
-            filtered = classes.filter(c => c.nivel <= currentLevel);
         } else if (docUpper.includes('CERTIFICADO')) {
-            filtered = classes.filter(c => c.nivel === 13);
+            const isFinalista = studentInfo.status_aluno === 'Finalizou';
+            // Só libera a 13ª classe se o status for explicitamente 'Finalizou'
+            filtered = isFinalista ? classes.filter(c => c.nivel === 13) : [];
         } else {
             // Fallback para outros documentos (se houver)
             filtered = classes.filter(c => c.nivel <= currentLevel);
@@ -156,9 +157,26 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             }
         };
 
+        const fetchStudentInfo = async () => {
+            try {
+                setLoading(true);
+                const id = user.id_aluno || user.id;
+                const response = await api.get(`/alunos/${id}/`);
+                setStudentInfo(response.data);
+                setStep(2); // Vai direto para o passo de documento
+            } catch (err) {
+                console.error("Erro ao carregar dados do aluno", err);
+                setError("Não foi possível carregar os seus dados académicos.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (fixedStudent) {
             setStudentInfo(fixedStudent);
             setStep(2);
+        } else if (userType === 'aluno' && (user?.id || user?.id_aluno)) {
+            fetchStudentInfo();
         } else if (userType === 'encarregado' && (user?.id || user?.id_encarregado)) {
             fetchMyStudents();
         }
@@ -257,7 +275,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
 
             // Auto-open PDF if available
             if (finalResult.download_url || finalResult.caminho_arquivo) {
-                const url = finalResult.download_url || finalResult.caminho_arquivo;
+                const url = getMediaUrl(finalResult.download_url || finalResult.caminho_arquivo);
                 // Try to open in new tab
                 window.open(url, '_blank');
             }
@@ -299,6 +317,17 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
         }
     };
 
+    // Add a small helper component for Errors inside the flow
+    const FlowError = ({ message }) => {
+        if (!message) return null;
+        return (
+            <div className={style.errorContainer}>
+                <RiErrorWarningLine className={style.errorIcon} />
+                <p className={style.errorMsg} dangerouslySetInnerHTML={{ __html: message }}></p>
+            </div>
+        );
+    };
+
     return (
         <div className={style.flowContainer}>
             {/* Modal de Confirmação de Pagamento Instantâneo */}
@@ -315,9 +344,9 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                             </div>
 
                             <div className={style.detailsList}>
-                                <p><strong>Aluno:</strong> {pendingSolicitacao.solicitacao?.aluno_nome}</p>
-                                <p><strong>Documento:</strong> {pendingSolicitacao.solicitacao?.tipo_documento}</p>
-                                <p><strong>Valor a Receber:</strong> {pendingSolicitacao.fatura?.total ? new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(pendingSolicitacao.fatura.total) : '---'}</p>
+                                <p><strong>Aluno</strong> <span>{pendingSolicitacao.solicitacao?.aluno_nome}</span></p>
+                                <p><strong>Documento</strong> <span>{pendingSolicitacao.solicitacao?.tipo_documento}</span></p>
+                                <p><strong>Valor</strong> <strong>{pendingSolicitacao.fatura?.total ? new Intl.NumberFormat('pt-AO', { style: 'currency', currency: 'AOA' }).format(pendingSolicitacao.fatura.total) : '---'}</strong></p>
                             </div>
 
                             <div className={style.alertInfo}>
@@ -330,11 +359,11 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 className={style.btnCancel}
                                 onClick={() => {
                                     setShowConfirmModal(false);
-                                    setStep(4); // Vai para sucesso mas Pendente (como RUP normal)
+                                    setStep(4);
                                     setResult(pendingSolicitacao);
                                 }}
                             >
-                                Cancelar (Manter Pendente)
+                                Cancelar
                             </button>
                             <button
                                 className={style.btnConfirm}
@@ -348,42 +377,33 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                 </div>
             )}
 
-            {/* Success Modal - Shows after payment confirmation */}
+            {/* Success Modal */}
             {showSuccessModal && result && (
                 <div className={style.modalOverlay}>
-                    <div className={`${style.modalContent} ${style.successModal}`}>
+                    <div className={style.modalContent}>
                         <div className={style.successIcon}>
                             <RiCheckLine />
                         </div>
-                        <h2>Operação Realizada com Sucesso!</h2>
-                        <p className={style.successMessage}>
-                            O pagamento foi confirmado e o documento foi gerado automaticamente.
+                        <h2>Operação Concluída!</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                            O pagamento foi validado e o documento já está pronto.
                         </p>
 
-                        <div className={style.successDetails}>
-                            <div className={style.detailItem}>
-                                <RiFileList3Line />
-                                <div>
-                                    <span>Documento</span>
-                                    <strong>{result.solicitacao?.tipo_documento || result.tipo_documento}</strong>
-                                </div>
-                            </div>
-                            <div className={style.detailItem}>
-                                <RiUser3Line />
-                                <div>
-                                    <span>Aluno</span>
-                                    <strong>{result.solicitacao?.aluno_nome || result.aluno_nome}</strong>
-                                </div>
-                            </div>
+                        <div className={style.detailsList} style={{ textAlign: 'left', background: 'var(--bg-page)', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+                            <p style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+                                <strong>Documento:</strong> {result.solicitacao?.tipo_documento || result.tipo_documento}
+                            </p>
+                            <p style={{ paddingTop: '0.5rem' }}>
+                                <strong>Aluno:</strong> {result.solicitacao?.aluno_nome || result.aluno_nome}
+                            </p>
                         </div>
 
-                        <div className={style.modalActions}>
+                        <div className={style.modalActions} style={{ justifyContent: 'center' }}>
                             <button
-                                className={style.btnSecondary}
+                                className={style.btnPrev}
                                 onClick={() => {
                                     setShowSuccessModal(false);
                                     setStep(1);
-                                    // Reset form
                                     setStudentInfo(fixedStudent);
                                     setSelectedDoc('');
                                     setSelectedClass('');
@@ -394,18 +414,19 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 Nova Solicitação
                             </button>
                             <button
-                                className={style.btnPrimary}
+                                className={style.btnSubmit}
                                 onClick={() => {
                                     setShowSuccessModal(false);
                                     setStep(4);
                                 }}
                             >
-                                <RiCheckLine /> Ver Resultado
+                                <RiCheckLine /> Ver Detalhes
                             </button>
                         </div>
                     </div>
                 </div>
             )}
+
             <div className={style.stepper}>
                 <div className={`${style.step} ${step >= 1 ? style.active : ''}`}>
                     <div className={style.stepIcon}><RiUser3Line /></div>
@@ -414,7 +435,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                 <div className={style.stepLine} />
                 <div className={`${style.step} ${step >= 2 ? style.active : ''}`}>
                     <div className={style.stepIcon}><RiFileList3Line /></div>
-                    <span>Confirmação</span>
+                    <span>Documento</span>
                 </div>
                 <div className={style.stepLine} />
                 <div className={`${style.step} ${step >= 3 ? style.active : ''}`}>
@@ -424,174 +445,141 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
             </div>
 
             <div className={style.stepContent}>
-                {
-                   // useLayoutEffect(() => {
-                        step === 1 && (
-                            <div className={style.stepIn}>
-                                <h2>Identificar Estudante</h2>
+                {step === 1 && (
+                    <div className={style.stepIn}>
+                        <h2>Quem está a solicitar?</h2>
+                        <p>Identifique o estudante para o qual deseja emitir o documento oficial.</p>
 
-                                {
+                        {userType === 'encarregado' && myStudents.length > 0 ? (
+                            <div className={style.confirmCard}>
+                                <label style={{ fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Seus Educandos</label>
+                                <select
+                                    className={style.selectField}
+                                    onChange={handleStudentSelect}
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Escolha o aluno...</option>
+                                    {myStudents.map(student => (
+                                        <option key={student.id_aluno} value={student.id_aluno}>
+                                            {student.nome_completo} ({student.classe_nivel}ª Classe)
+                                        </option>
+                                    ))}
+                                </select>
 
-
-                                    userType === 'encarregado' && myStudents.length > 0 ? (
-                                        <div className={style.searchBox} style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                            <p>Selecione um dos seus educandos abaixo:</p>
-                                            <select
-                                                className={style.selectField}
-                                                onChange={handleStudentSelect}
-                                                defaultValue=""
-                                            >
-                                                <option value="" disabled>Escolha o aluno...</option>
-                                                {myStudents.map(student => (
-                                                    <option key={student.id_aluno} value={student.id_aluno}>
-                                                        {student.nome_completo} ({student.classe_nivel}ª Classe)
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            <button
-                                                className={style.btnNext}
-                                                onClick={confirmStudentSelection}
-                                                disabled={!studentInfo}
-                                                style={{ marginTop: '1rem' }}
-                                            >
-                                                Avançar <RiArrowRightLine />
-                                            </button>
-                                            {error && <p className={style.errorMsg}>{error}</p>}
-                                        </div>
-                                    ) : (
-                                        /* Search Box - Default for Funcionario or Fallback */
-                                        <div className={style.searchBox} style={userType === 'funcionario' ? { marginTop: 0 } : {}}>
-                                            <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                                                {userType === 'funcionario' ? 'Pesquisar Aluno por BI' : 'Pesquisar por BI'}
-                                            </h4>
-                                            <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Digite o número do BI..."
-                                                    value={biSearch}
-                                                    onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
-                                                    style={{ flex: 1 }}
-                                                />
-                                                <button onClick={searchStudent} disabled={loading}>
-                                                    {loading ? 'Pesquisando...' : <RiSearchLine />}
-                                                </button>
-                                            </div>
-                                            {error && <p className={style.errorMsg}>{error}</p>}
-                                        </div>
-                                    )
-
-                                }
+                                <div className={style.actions}>
+                                    <button
+                                        className={style.btnNext}
+                                        onClick={confirmStudentSelection}
+                                        disabled={!studentInfo}
+                                    >
+                                        Continuar <RiArrowRightLine />
+                                    </button>
+                                </div>
+                                <FlowError message={error} />
                             </div>
-
-                        )
-                   // }, [userType])
-                }
-
+                        ) : (
+                            <div className={style.stepIn}>
+                                <div className={style.searchBox}>
+                                    <input
+                                        type="text"
+                                        placeholder="Número do Bilhete de Identidade (BI)"
+                                        value={biSearch}
+                                        onChange={(e) => setBiSearch(e.target.value.toUpperCase())}
+                                        onKeyPress={(e) => e.key === 'Enter' && searchStudent()}
+                                    />
+                                    <button onClick={searchStudent} disabled={loading}>
+                                        {loading ? '...' : <RiSearchLine />}
+                                    </button>
+                                </div>
+                                <FlowError message={error} />
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {step === 2 && studentInfo && (
                     <div className={style.stepIn}>
-                        <h2>Confirmar Dados do Educando</h2>
+                        <h2>Confirmar Dados e Documento</h2>
+                        <p>Verifique se os dados do estudante estão corretos antes de emitir o documento.</p>
+
                         <div className={style.confirmCard}>
-                            <div className={style.studentSummary}>
+                            <div className={style.studentProfileHeader}>
                                 <div className={style.avatar}>
                                     {studentInfo.img_path ? <img src={studentInfo.img_path} alt="" /> : <RiUser3Line />}
                                 </div>
-                                <div className={style.details}>
+                                <div className={style.profileInfo}>
                                     <h3>{studentInfo.nome_completo || studentInfo.nome}</h3>
-                                    <p><strong>BI:</strong> {studentInfo.numero_bi}</p>
-                                    <p><strong>Matrícula:</strong> {studentInfo.numero_matricula}</p>
-                                    <p>
-                                        <strong>Actual:</strong> {
-                                            studentInfo.classe_nivel || 
-                                            studentInfo.turma_detalhes?.classe?.nivel || 
-                                            studentInfo.id_turma?.id_classe?.nivel || 
-                                            '?'
-                                        }ª Classe - {
-                                            studentInfo.curso_nome || 
-                                            studentInfo.perfil?.id_turma?.id_curso?.nome_curso ||
-                                            studentInfo.aluno?.id_turma?.id_curso?.nome_curso ||
-                                            studentInfo.turma_detalhes?.curso?.nome || 
-                                            studentInfo.id_turma?.id_curso?.nome_curso || 
-                                            'Curso N/A'
-                                        }
-                                    </p>
+                                    <div className={style.badgeRow}>
+                                        <span className={style.statusBadge}>{studentInfo.status_aluno || 'Activo'}</span>
+                                        <span className={style.classBadge}>
+                                            {studentInfo.classe_nivel || studentInfo.id_turma?.id_classe?.nivel || '?'}ª Classe
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className={style.actionsTop}>
-                                    <button className={style.btnWrongData} onClick={() => {
-                                        if (window.confirm("Deseja cancelar esta solicitação e voltar ao início?")) {
-                                            setStep(1);
-                                            setStudentInfo(fixedStudent ? fixedStudent : null);
-                                        }
-                                    }}>
-                                        <RiErrorWarningLine /> Dados Incorretos? (Cancelar)
-                                    </button>
+                                <button className={style.btnOutline} onClick={() => setStep(1)}>
+                                    Trocar Aluno
+                                </button>
+                            </div>
+
+                            <div className={style.infoGrid}>
+                                <div className={style.infoItem}>
+                                    <label>Número de BI</label>
+                                    <strong>{studentInfo.numero_bi}</strong>
+                                </div>
+                                <div className={style.infoItem}>
+                                    <label>Nº de Matrícula</label>
+                                    <strong>{studentInfo.numero_matricula || 'N/A'}</strong>
+                                </div>
+                                <div className={style.infoItem}>
+                                    <label>Curso Atual</label>
+                                    <strong>{studentInfo.curso_nome || studentInfo.id_turma?.id_curso?.nome_curso || 'N/A'}</strong>
+                                </div>
+                                <div className={style.infoItem}>
+                                    <label>Ano Letivo</label>
+                                    <strong>{new Date().getFullYear()}</strong>
                                 </div>
                             </div>
 
-                            {/* Missing Data Form */}
-                            {isEditingMissing ? (
-                                <div className={style.missingDataForm}>
-                                    <div className={style.alertInfo}>
-                                        <RiErrorWarningLine />
-                                        <p>Para prosseguir, precisamos completar as informações em falta no seu cadastro:</p>
-                                    </div>
-                                    <div className={style.gridForm}>
-                                        {mandatoryFields.filter(f => studentInfo[f.key] === null || studentInfo[f.key] === '').map(field => (
-                                            <div key={field.key} className={style.formGroup}>
-                                                <label>{field.label}</label>
-                                                <input
-                                                    type={field.type || 'text'}
-                                                    value={missingFields[field.key] || ''}
-                                                    onChange={(e) => handleMissingFieldChange(field.key, e.target.value)}
-                                                />
-                                            </div>
+                            <div className={style.selectionSection}>
+                                <div className={style.formGroup}>
+                                    <label>Documento de Solicitação</label>
+                                    <select className={style.selectField} value={selectedDoc} onChange={(e) => {
+                                        setSelectedDoc(e.target.value);
+                                        setSelectedClass('');
+                                        setError('');
+                                    }}>
+                                        <option value="">Escolha uma opção...</option>
+                                        {docOptions.map(opt => (
+                                            <option key={opt.id} value={opt.id}>{opt.label}</option>
                                         ))}
-                                    </div>
-                                    <button className={style.btnSave} onClick={saveMissingData} disabled={loading}>
-                                        {loading ? 'Salvando...' : 'Salvar e Continuar'}
-                                    </button>
+                                    </select>
                                 </div>
-                            ) : (
-                                <div className={style.selectionArea}>
-                                    <div className={style.formGroup}>
-                                        <label>Tipo de Documento Desejado:</label>
-                                        <select value={selectedDoc} onChange={(e) => {
-                                            setSelectedDoc(e.target.value);
-                                            setSelectedClass('');
-                                        }}>
-                                            <option value="">Selecione um documento...</option>
-                                            {docOptions.map(opt => (
-                                                <option key={opt.id} value={opt.id}>{opt.label}</option>
+
+                                {selectedDoc && !error && (
+                                    <div className={style.formGroup} style={{ marginTop: '1.5rem' }}>
+                                        <label>Referente à Classe</label>
+                                        <select
+                                            className={style.selectField}
+                                            value={selectedClass}
+                                            onChange={(e) => setSelectedClass(e.target.value)}
+                                            disabled={availableClasses.length === 0}
+                                        >
+                                            <option value="">Selecione a classe acadêmica...</option>
+                                            {availableClasses.map(cls => (
+                                                <option key={cls.id_classe} value={cls.id_classe}>
+                                                    {cls.nivel}ª Classe ({cls.descricao})
+                                                </option>
                                             ))}
                                         </select>
+                                        {availableClasses.length === 0 && (
+                                            <span className={style.helperText}>Nenhuma classe compatível encontrada para este documento.</span>
+                                        )}
                                     </div>
+                                )}
+                            </div>
+                            
+                            <FlowError message={error} />
 
-                                    {selectedDoc && (
-                                        <div className={style.formGroup}>
-                                            <label>Referente à Classe:</label>
-                                            <select
-                                                value={selectedClass}
-                                                onChange={(e) => setSelectedClass(e.target.value)}
-                                                disabled={availableClasses.length === 0}
-                                            >
-                                                <option value="">Selecione a classe...</option>
-                                                {availableClasses.map(cls => (
-                                                    <option key={cls.id_classe} value={cls.id_classe}>
-                                                        {cls.nivel}ª Classe ({cls.descricao})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            {availableClasses.length === 0 && (
-                                                <span className={style.helperText}>Nenhuma classe disponível para este documento conforme as regras de emissão.</span>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-
-                        {!isEditingMissing && (
                             <div className={style.actions}>
                                 <button className={style.btnPrev} onClick={() => setStep(1)}>
                                     <RiArrowLeftLine /> Voltar
@@ -601,70 +589,57 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                     onClick={() => setStep(3)}
                                     disabled={!selectedDoc || !selectedClass}
                                 >
-                                    Próximo (Pagamento) <RiArrowRightLine />
+                                    Próximo Passo <RiArrowRightLine />
                                 </button>
                             </div>
-                        )}
-                        {error && <p className={style.errorMsg}>{error}</p>}
+                        </div>
                     </div>
                 )}
 
                 {step === 3 && (
                     <div className={style.stepIn}>
-                        <h2>Opção de Pagamento</h2>
-                        <p className={style.stepDescription}>
-                            Para concluir a solicitação, escolha como deseja realizar o pagamento do emolumento.
-                        </p>
+                        <h2>Opções de Pagamento</h2>
+                        <p>Selecione um dos métodos de pagamento autorizados abaixo.</p>
 
                         <div className={style.paymentGrid}>
-
-                            {/* Option 1: Multicaixa Express (General Public) */}
-                            <div className={`${style.paymentOption} ${style.disabled} ${paymentMethod === 'express' ? style.selected : ''}`}>
-                                <div className={style.optionHeader}>
-                                    <RiSmartphoneLine className={style.payIcon} />
-                                    <span className={style.badge}>Em Breve</span>
-                                </div>
-                                <h3>Multicaixa Express</h3>
-                                <p>Pagamento instantâneo via aplicativo MCX (Indisponível no momento).</p>
+                            {/* Multicaixa Express (Indisponível mas visual) */}
+                            <div className={`${style.paymentOption} ${style.disabled}`}>
+                                <RiSmartphoneLine className={style.payIcon} />
+                                <span className={style.badge} style={{ background: '#64748b' }}>EM BREVE</span>
+                                <h3>MCX Express</h3>
+                                <p>Pagamento via smartphone.</p>
                             </div>
 
-                            {/* Option 2: Manual / RUP (General Public & Employees) */}
                             <div
                                 className={`${style.paymentOption} ${paymentMethod === 'fisico_rup' ? style.selected : ''}`}
                                 onClick={() => setPaymentMethod('fisico_rup')}
                             >
-                                <div className={style.optionHeader}>
-                                    <RiPrinterLine className={style.payIcon} />
-                                </div>
-                                <h3>Pagamento por Referência (RUP)</h3>
-                                <p>Gera um formulário RUP para pagamento em ATM ou Internet Banking. Válido por 24h.</p>
+                                <RiPrinterLine className={style.payIcon} />
+                                <h3>Referência RUP</h3>
+                                <p>Pague no ATM ou Internet Banking.</p>
                             </div>
 
-                            {/* Option 3: Instant Payment (Employees Only) */}
                             {userType === 'funcionario' && (
                                 <div
                                     className={`${style.paymentOption} ${style.premiumOption} ${paymentMethod === 'confirmado_local' ? style.selected : ''}`}
                                     onClick={() => setPaymentMethod('confirmado_local')}
                                 >
-                                    <div className={style.optionHeader}>
-                                        <RiWallet3Line className={style.payIcon} />
-                                        <span className={style.badgeSuccess}>Exclusivo Funcionário</span>
-                                    </div>
-                                    <h3>Pagamento Instantâneo</h3>
-                                    <p>Confirmar recebimento do valor na hora e gerar documento imediatamente.</p>
+                                    <RiWallet3Line className={style.payIcon} />
+                                    <span className={style.badge} style={{ background: '#f59e0b' }}>LOCAL</span>
+                                    <h3>Pagamento Local</h3>
+                                    <p>Confirmar recebimento direto.</p>
                                 </div>
                             )}
-
                         </div>
 
                         {paymentMethod === 'confirmado_local' && (
-                            <div className={style.alertInfo}>
-                                <RiErrorWarningLine />
-                                <p><strong>Atenção Funcionário:</strong> Ao selecionar "Pagamento Instantâneo", você confirma que recebeu o valor do emolumento em numerário ou TPA. O documento será emitido imediatamente.</p>
+                            <div className={style.alertInfo} style={{ marginTop: '2rem', maxWidth: '600px' }}>
+                                < RiErrorWarningLine />
+                                <p><strong>Atenção:</strong> Use esta opção APENAS se já tiver o valor em mãos. A emissão será irreversível.</p>
                             </div>
                         )}
 
-                        {error && <p className={style.errorMsg}>{error}</p>}
+                        <FlowError message={error} />
 
                         <div className={style.actions}>
                             <button className={style.btnPrev} onClick={() => setStep(2)}>
@@ -675,7 +650,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                 onClick={handleSubmit}
                                 disabled={!paymentMethod || loading}
                             >
-                                {loading ? 'Processando...' : (paymentMethod === 'confirmado_local' ? 'Confirmar e Gerar Documento' : 'Gerar RUP e Finalizar')}
+                                {loading ? 'A processar...' : 'Finalizar Solicitação'}
                             </button>
                         </div>
                     </div>
@@ -684,65 +659,37 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                 {step === 4 && result && (
                     <div className={`${style.stepIn} ${style.successStep}`}>
                         <div className={style.successIcon}><RiCheckLine /></div>
-                        <h2>Solicitação Realizada com Sucesso!</h2>
-                        <p>O pedido de <strong>{selectedDoc}</strong> foi registado.</p>
+                        <h2>Solicitação Concluída!</h2>
+                        <p>O pedido foi registado no sistema com sucesso.</p>
 
-                        {/* Employee: Payment Confirmed Immediately */}
-                        {userType === 'funcionario' && result.confirmed ? (
-                            <div className={style.rupAviso} style={{ borderColor: 'var(--success-color)' }}>
-                                <RiPrinterLine color="var(--success-color)" />
-                                <div>
-                                    <h4>Operação Realizada com Sucesso</h4>
-                                    <p>O pagamento foi confirmado e o documento gerado com certificação digital.</p>
-                                    <button
-                                        className={style.btnDownload}
-                                        onClick={() => window.open(result.download_url || result.caminho_arquivo, '_blank')}
-                                    >
-                                        Imprimir Documento Oficial (PDF)
-                                    </button>
-                                </div>
+                        <div className={style.rupAviso} style={result.confirmed ? { borderColor: '#10b981', background: 'rgba(16, 185, 129, 0.05)' } : {}}>
+                            <RiPrinterLine style={result.confirmed ? { color: '#10b981' } : {}} />
+                            <div>
+                                <h4>{result.confirmed ? 'Documento Pronto' : 'Aguardando Pagamento'}</h4>
+                                <p>{result.confirmed ? 'O documento oficial já foi gerado e assinado digitalmente.' : 'Imprima o RUP e efetue o pagamento para libertar o documento.'}</p>
+                                
+                                <button
+                                    className={style.btnSubmit}
+                                    style={{ marginTop: '1rem', background: result.confirmed ? '#10b981' : '#f59e0b' }}
+                                    onClick={() => {
+                                        if (result.confirmed) {
+                                            window.open(getMediaUrl(result.download_url || result.caminho_arquivo), '_blank');
+                                        } else {
+                                            handlePrintRUP(result.solicitacao?.id_solicitacao || result.id_solicitacao);
+                                        }
+                                    }}
+                                >
+                                    {result.confirmed ? 'Imprimir Documento (.pdf)' : 'Imprimir Guia RUP (.pdf)'}
+                                </button>
                             </div>
-                        ) : (
-                            // Standard RUP Flow (Employee printing RUP or User/Employee chose RUP)
-                            (paymentMethod === 'fisico_rup' || (userType === 'funcionario' && paymentMethod === 'fisico_rup')) ? (
-                                <div className={style.rupAviso}>
-                                    <RiPrinterLine />
-                                    <div>
-                                        <h4>RUP Gerado</h4>
-                                        <p>Formulário de RUP válido por <strong>24 horas</strong>.</p>
-                                        <p style={{ fontSize: '0.9em', color: '#666' }}>O documento será listado no painel do aluno.</p>
-
-                                        <button
-                                            className={style.btnDownload}
-                                            onClick={() => handlePrintRUP(result.solicitacao ? result.solicitacao.id_solicitacao : result.id_solicitacao)}
-                                            disabled={loading}
-                                        >
-                                            {loading ? 'Preparando...' : 'Imprimir Formulário RUP (PDF)'}
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <p>Por favor, confirme o pagamento na sua aplicação Multicaixa Express para que possamos processar o documento.</p>
-                            )
-                        )}
-
-                        <div className={style.instruction}>
-                            {userType === 'funcionario' && result.confirmed
-                                ? <p>Entregue o documento impresso ao Diretor para assinatura manual se necessário.</p>
-                                : <p>O documento oficial estará disponível após a confirmação do pagamento e aprovação.</p>
-                            }
                         </div>
 
-                        {/* Final Close Button */}
-                        <div className={style.actions} style={{ justifyContent: 'center', marginTop: '2rem' }}>
+                        <div className={style.actions}>
                             <button
-                                className={style.btnSubmit} // Reuse submit styling for main action
-                                onClick={() => {
-                                    if (onComplete) onComplete(result);
-                                }}
-                                style={{ background: 'var(--text-main)', width: 'auto', padding: '0 2rem' }}
+                                className={style.btnPrev}
+                                onClick={() => onComplete && onComplete(result)}
                             >
-                                Fechar e Voltar
+                                Concluir e Sair
                             </button>
                         </div>
                     </div>

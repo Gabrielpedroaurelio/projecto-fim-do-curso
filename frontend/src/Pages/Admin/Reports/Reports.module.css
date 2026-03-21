@@ -1,0 +1,270 @@
+.ReportsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Stats Dashboard --- */
+.StatsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.StatCard {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.StatCard:hover {
+    transform: translateY(-5px);
+}
+
+.StatIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    color: white;
+}
+
+.StatInfo h3 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--text-main);
+}
+
+.StatInfo p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* --- Tabs --- */
+.TabsContainer {
+    display: flex;
+    gap: 1rem;
+    background: rgba(241, 245, 249, 0.8);
+    padding: 0.6rem;
+    border-radius: 16px;
+    align-self: flex-start;
+}
+
+.TabButton {
+    background: transparent;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.ActiveTab {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 4px 15px -3px rgba(0,0,0,0.1);
+}
+
+/* --- Filters --- */
+.FiltersSection {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 1.8rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: flex-end;
+}
+
+.FilterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 200px;
+}
+
+.FilterGroup label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.FilterGroup select, .FilterGroup input {
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: white;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.FilterGroup select:focus { border-color: var(--primary); }
+
+/* --- Actions --- */
+.ActionsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ButtonsGap {
+    display: flex;
+    gap: 1rem;
+}
+
+.BtnExport {
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.BtnPdf {
+    background: #000;
+    color: white;
+}
+
+.BtnPdf:hover {
+    background: #27272a;
+    transform: translateY(-2px);
+}
+
+.BtnLight {
+    background: var(--primary);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* --- Preview Section --- */
+.PreviewSection {
+    margin-top: 2rem;
+}
+
+.PaperWrapper {
+    background: #cbd5e1;
+    padding: 3rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.Paper {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3);
+    padding: 2.5cm;
+    display: flex;
+    flex-direction: column;
+}
+
+.InsigniaHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    border-bottom: 2pt solid #000;
+    padding-bottom: 1.5rem;
+}
+
+.InsigniaImg {
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+.ReportTitle {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.PreviewTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.PreviewTable th {
+    background: #f1f5f9;
+    padding: 12px;
+    text-align: left;
+    font-size: 10pt;
+    border-bottom: 2pt solid #000;
+}
+
+.PreviewTable td {
+    padding: 12px;
+    border-bottom: 0.5pt solid #cbd5e1;
+    font-size: 10pt;
+}
+
+.Badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.BoldText { font-weight: 700; }
+
+.SkeletonLoader {
+    padding: 5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.EmptyState {
+    padding: 4rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-weight: 600;
+}
