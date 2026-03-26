@@ -128,7 +128,7 @@ export default function YasminChat() {
                                         <h2 className={style.textGradient}>Como posso ajudar hoje?</h2>
                                     </div>
                                     <div className={style.suggestionGrid}>
-                                        <div className={style.suggestionCard} onClick={() => handleSend('Como consulto minhas notas?')}>
+                                     {/**    <div className={style.suggestionCard} onClick={() => handleSend('Como consulto minhas notas?')}>
                                             <span>Consultar Notas</span>
                                             <small>Verificar aproveitamento</small>
                                         </div>
@@ -144,10 +144,12 @@ export default function YasminChat() {
                                             <span>Suporte</span>
                                             <small>Contactar secretaria</small>
                                         </div>
+                                         */}
                                     </div>
                                 </div>
                             ) : (
-                                <>
+                                <div className={style.boxmessage}>
+                                <div className={style.boxmessagemini}>
                                     {messages.map((msg, index) => (
                                         <div key={index} className={`${style.messageRow} ${style[msg.role]}`}>
                                             <div className={`${style.msgAvatar} ${style[msg.role]}`}>
@@ -175,15 +177,14 @@ export default function YasminChat() {
                                         </div>
                                     )}
                                     <div ref={messagesEndRef} />
-                                </>
+                                </div>
+                                </div>
                             )}
                         </div>
 
                         <div className={style.inputContainer}>
                             <div className={style.inputWrapper}>
-                                <button className={style.actionBtn}>
-                                    <RiImageAddLine size={20} />
-                                </button>
+                                
                                 <textarea
                                     className={style.textInput}
                                     placeholder="Envie uma mensagem para Yasmin..."
@@ -197,8 +198,8 @@ export default function YasminChat() {
                                         <RiSendPlane2Fill size={20} />
                                     </button>
                                 ) : (
-                                    <button className={style.actionBtn}>
-                                        <RiMicLine size={20} />
+                                    <button className={style.actionBtn} disabled style={{cursor:'not-allowed'}}>
+                                         <RiSendPlane2Fill size={20} />
                                     </button>
                                 )}
                             </div>

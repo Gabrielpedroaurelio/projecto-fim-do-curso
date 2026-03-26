@@ -219,7 +219,7 @@ const ChildrenActions = () => {
                                     >
                                         <RiEyeLine />
                                     </button>
-                                    <button 
+                                    <button  
                                         className={style.downloadBtnIcon} 
                                         onClick={() => handleDownload(item)}
                                         title="Baixar"

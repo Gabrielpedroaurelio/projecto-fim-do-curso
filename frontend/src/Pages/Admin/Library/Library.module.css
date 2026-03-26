@@ -44,7 +44,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background-color:#00b4fb;
+    background-color:var(--primary);
     color: var(--text-inverted);
     border-radius: var(--radius-md);
     border: none;
@@ -53,6 +53,16 @@
     transition: all 0.3s ease;
     box-shadow: var(--shadow-soft);
 }
+.inputfile::-webkit-file-upload-button{
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px dashed var(--primary);
+    padding: 10px;
+    width: 100%;
+    color: var(--primary);
+    cursor: pointer;
+}
+.inputfile{}
 
 .AddButton:hover {
     

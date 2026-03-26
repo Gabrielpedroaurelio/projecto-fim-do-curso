@@ -84,6 +84,7 @@
     border: none;
     border-radius: var(--radius-md);
     color: white;
+    opacity: .4;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;

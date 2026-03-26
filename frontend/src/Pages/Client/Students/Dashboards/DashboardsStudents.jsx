@@ -137,26 +137,26 @@ const DashboardsStudents = () => {
               <Cards
                 icon={<RiLineChartLine size={30} />}
                 title="Média Geral"
-                value={animatedMediaGeral.toFixed(1)}
-                value_percentual={(stats.media_geral >= 10 ? 5 : -2) + "%"}
-              />
+                value={animatedMediaGeral.toFixed(1)+" Valores"}
+            
+              />{/*
               <Cards
                 icon={<RiPieChartLine size={30} />}
                 title="Presença Total"
                 value={`${Math.round(animatedPresenca)}%`}
                 value_percentual={(stats.presenca_percentual >= 75 ? 2.1 : -4.5) + "%"}
-              />
+              />*/}
               <Cards
                 icon={<RiArticleLine size={30} />}
                 title="Faltas Acumuladas"
                 value={`${Math.round(animatedFaltas)} Faltas`}
-                value_percentual={(0) + '%'}
+      
               />
               <Cards
                 icon={<RiFileList3Line size={30} />}
                 title="Status Geral"
                 value={stats.media_geral >= 10 ? "Aprovado" : "Em Risco"}
-                value_percentual={stats.media_geral + "%"}
+                
               />
             </div>
           </div>

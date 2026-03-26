@@ -21,7 +21,8 @@ const Profile = () => {
     const [passwordVerified, setPasswordVerified] = useState(false);
 
     // Sidebar choice based on user type
-    const Sidebar = user?.tipo === 'funcionario' ? NavBarMenu : MenuNavBarCliente;
+    const Sidebar = user?.tipo === 'funcionario' ? NavBarMenu : user?.tipo==="aluno"? MenuNavBarCliente:MenuNavBarCliente;
+
     const sidebarProp = user?.tipo === 'funcionario' ? {} : { user: user?.tipo };
 
     const handleImageChange = (e) => {

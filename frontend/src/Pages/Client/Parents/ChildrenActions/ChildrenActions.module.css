@@ -172,7 +172,11 @@
     border-collapse: collapse;
     text-align: left;
 }
-
+.historyTable tr{
+ 
+    height: 20px;
+  
+}
 .historyTable th {
     padding: 1rem;
     border-bottom: 2px solid var(--border-color);
@@ -188,6 +192,7 @@
     color: var(--text-main);
     font-size: 0.95rem;
 }
+
 
 .historyTable tr:last-child td {
     border-bottom: none;
@@ -209,6 +214,7 @@
     padding: 0.2rem 0.5rem;
     background: rgba(16, 185, 129, 0.1);
     color: var(--green-primay);
+    
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
@@ -253,9 +259,11 @@
 }
 
 .downloadBtnIcon {
-    background: var(--green-primay);
-    color: white;
-    border: none;
+    background: #fff;
+    color: var(--primary);
+
+    border: 1px dashed var(--primary);
+    border-radius: 5px;
 }
 
 .downloadBtnIcon:hover {

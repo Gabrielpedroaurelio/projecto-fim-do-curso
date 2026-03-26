@@ -84,15 +84,12 @@ const Children = () => {
                   </div>
 
                   <div className={style.stats}>
-                    <div className={style.statItem}>
-                      <span className={style.statValue}>---</span>
-                      <span className={style.statLabel}>Média</span>
-                    </div>
-                    <div className={style.statItem}>
-                      <span className={style.statValue}>---</span>
-                      <span className={style.statLabel}>Presença</span>
-                    </div>
-                    <div className={style.statItem}>
+                    
+               
+                    <div className={style.statItem} style={{
+                      
+                      margin:'auto'
+                    }}>
                       <span className={`${style.statValue} ${child.status_aluno === 'Activo' ? 'text-emerald-500' : 'text-red-500'}`}>
                         {child.status_aluno}
                       </span>

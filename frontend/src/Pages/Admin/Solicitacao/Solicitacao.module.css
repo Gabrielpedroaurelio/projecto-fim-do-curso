@@ -110,14 +110,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background-color:#00b4fb;
+    background-color:var(--primary);
     border: none;
     border-radius: var(--radius-md);
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px var(--primary-soft);
+    box-shadow: 0 0px 3px var(--primary);
 }
 
 .RequestButton:hover {

@@ -130,7 +130,7 @@
     width: 100%;
     padding: 1rem;
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
+    border: 1px dashed var(--border-color);
     background: var(--bg-page);
     color: var(--text-main);
     font-weight: 600;
@@ -143,9 +143,10 @@
 }
 
 .childCard:hover .btnAction {
-    background: var(  --bs-green);
-    color: #ffffff;
-    border-color: var(  --bs-green);
+    background: #fff;
+ 
+    color: var(--primary);
+    border-color: var(  --primary);
 }
 
 @media (max-width: 768px) {
