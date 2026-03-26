@@ -46,7 +46,7 @@
 
         .info-grid td {
             border: 1px solid black;
-            padding: 5px;
+            padding:5px 0px 0px 5px;
         }
 
         .main-table {
@@ -63,7 +63,8 @@
             /*
             height: 25px;
             */
-            padding: 5px;
+            padding:5px 0px 0px 0px;
+            
             text-align: center;
         }
 
@@ -102,7 +103,15 @@
             height: 40px;
             font-size: 11px;
         }
-
+        .card-image{
+      
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-image img{
+             
+        }
         .blue {
             color: rgb(0, 119, 255);
         }
@@ -136,7 +145,7 @@
             <tr>
                 <td style="width: 40%;"><strong>Curso:</strong>
                     {{curso.nome_curso|default:aluno.id_turma.id_curso.nome_curso }}</td>
-                <td><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"N/A" }}</td>
+                <td colspan="2"><strong>Turma:</strong> {{ aluno.id_turma.codigo_turma|default:"N/A" }}</td>
                 <td><strong>Classe:</strong> {{ classe.nivel|default:aluno.id_turma.id_classe.nivel }}ª</td>
                 <td><strong>N.º:</strong> {{ aluno.numero_pauta|default:aluno.id_aluno }}</td>
                 <td><strong>Sala:</strong> {{ turma.id_sala.numero_sala|default:"N/A" }}</td>
@@ -188,7 +197,7 @@
             </tbody>
         </table>
 
-        <div style="font-size: 11px; font-weight: bold; margin-top: 15px;">
+        <div style="font-size: 11px; font-weight: bold; margin-top: 5px;">
             INSTITUTO POLITÉCNICO MAIOMBE I.B.Nº 3050 - SEQUELE, {{ hoje|date:"d/m/Y" }}
         </div>
 
@@ -207,7 +216,7 @@
                         {% endif %}
                     </td>
                 </tr>
-            </table>        <div style="margin-top: 30px; width: 100%;">
+            </table>        <div style="margin-top: 5px; width: 100%;">
             <table style="width: 100%; border: none; border-collapse: collapse; font-size: 11px;">
                 <tr>
                     <td style="text-align: center; width: 33%; border: none; border-top: 1px solid #000; padding-top: 5px;">O Director de Turma</td>
@@ -223,11 +232,11 @@
         </div>
 
         <div style="margin-top: 40px; width: 100%;">
-            <table style="width: 100%; border: none; border-collapse: collapse;">
+            <table style="width: 100%; border: none; border-collapse: collapse; height: 50px;background-color: rebeccapurple;">
                 <tr>
                     <td style="text-align: center; width: 50%; border: none; vertical-align: bottom;">
                         <p style="margin-bottom: 5px; font-size: 12px; font-weight: bold;">O DIRECTOR GERAL</p>
-                        <div style="height: 60px; text-align: center; position: relative;">
+                        <div style="height: 60px; text-align: center; position: relative;overflow: hidden; ">
                             {% if config.assinatura_director %}
                             <img src="{{ config.assinatura_director.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); bottom: -5px; height: 80px; opacity: 0.9; z-index: 10;" alt="Assinatura">
                             {% endif %}
@@ -236,7 +245,7 @@
                         <p style="font-size: 12px;"><strong>{{ director_geral_nome|upper }}</strong></p>
                     </td>
                     <td style="text-align: center; width: 50%; border: none; vertical-align: middle;">
-                        <div style="height: 80px; text-align: center; position: relative;">
+                        <div class="card-image" style="height: 80px; text-align: center; position: relative; overflow: hidden; width: 80px;">
                             {% if config.carimbo_instituicao %}
                             <img src="{{ config.carimbo_instituicao.path }}" style="position: absolute; left: 50%; transform: translateX(-50%); top: -10px; height: 100px; opacity: 0.8; z-index: 10;" alt="Carimbo">
                             {% endif %}

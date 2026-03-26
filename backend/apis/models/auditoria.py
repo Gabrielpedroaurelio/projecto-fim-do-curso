@@ -43,7 +43,8 @@ class ConfiguracaoSistema(BaseModel):
     email_oficial = models.EmailField(verbose_name='Email Oficial', null=True, blank=True)
     director_geral = models.CharField(max_length=150, verbose_name='Director Geral', null=True, blank=True)
     logo = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Logo')
-    assinatura_director = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Assinatura do Director')
+    assinatura_director = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Assinatura do Director Geral')
+    assinatura_director_pedagogico = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Assinatura do Director Pedagógico')
     carimbo_instituicao = models.ImageField(upload_to=upload_to_custom, null=True, blank=True, verbose_name='Carimbo da Instituição')
     
     # Configurações de Backup
@@ -76,7 +77,7 @@ class Historico(models.Model):
         blank=True,
         verbose_name='Aluno',editable=False
     )
-    tipo_accao = models.CharField(max_length=50, verbose_name='Tipo de Ação',editable=False)
+    tipo_accao = models.CharField(max_length=255, verbose_name='Ação Restalizada',editable=False)
     dados_anteriores = models.JSONField(null=True, blank=True, verbose_name='Dados Anteriores',editable=False)
     dados_novos = models.JSONField(null=True, blank=True, verbose_name='Dados Novos',editable=False)
     data_hora = models.DateTimeField(auto_now_add=True, verbose_name='Data/Hora',editable=False)

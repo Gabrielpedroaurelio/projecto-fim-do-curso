@@ -204,7 +204,7 @@ export default function Library() {
 
                                     <div className={style.InputGroupFull}>
                                         <label>Arquivo PDF (Obrigatório)</label>
-                                        <input
+                                        <input className={style.inputfile}
                                             type="file"
                                             accept="application/pdf"
                                             required
@@ -213,7 +213,7 @@ export default function Library() {
                                     </div>
                                     <div className={style.InputGroupFull}>
                                         <label>Capa do Livro (Opcional)</label>
-                                        <input
+                                        <input className={style.inputfile}
                                             type="file"
                                             accept="image/*"
                                             onChange={(e) => handleFileChange(e, 'img_path')}

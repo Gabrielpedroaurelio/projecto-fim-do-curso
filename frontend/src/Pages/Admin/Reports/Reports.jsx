@@ -47,7 +47,7 @@ const Reports = () => {
 
     const tabs = [
         { id: 'solicitacoes', label: 'Solicitações', icon: <HiOutlineClipboardList />, color: 'var(--cor-primaria)' },
-        { id: 'mensal', label: 'Financeiro', icon: <HiOutlineTrendingUp />, color: 'var(--cor-sucesso)' },
+      //  { id: 'mensal', label: 'Financeiro', icon: <HiOutlineTrendingUp />, color: 'var(--cor-sucesso)' },
         { id: 'alunos', label: 'Estudantes', icon: <HiOutlineUsers />, color: 'var(--cor-info)' },
         { id: 'funcionarios', label: 'Recursos Humanos', icon: <HiOutlineUsers />, color: 'var(--cor-secundaria)' },
         { id: 'auditoria', label: 'Auditoria', icon: <HiOutlineShieldCheck />, color: 'var(--cor-aviso)' },
@@ -81,7 +81,7 @@ const Reports = () => {
                 let endpoint = '';
                 switch(activeTab) {
                     case 'solicitacoes': endpoint = '/reports/data/solicitacoes/'; break;
-                    case 'mensal': endpoint = `/reports/mensal/?format=json&mes=${filters.mes}&ano=${filters.ano}`; break;
+                 case 'mensal': endpoint = `/reports/mensal/?format=json&mes=${filters.mes}&ano=${filters.ano}`; break;
                     case 'alunos': endpoint = '/reports/data/alunos/'; break;
                     case 'funcionarios': endpoint = '/reports/data/funcionarios/'; break;
                     case 'auditoria': endpoint = '/reports/data/auditoria/'; break;
@@ -377,15 +377,20 @@ const Reports = () => {
                                                     )}
                                                     {activeTab === 'alunos' && (
                                                         <>
+                                                        {
+                                                            console.log(item)
+                                                            
+                                                        }
                                                             <td className={style.BoldText}>{item.nome_completo}</td>
                                                             <td>{item.numero_bi}</td>
-                                                            <td>{item.id_turma?.codigo_turma || '-'}</td>
+                                                            <td>{item.turma_codigo || '-'}</td>
                                                         </>
                                                     )}
                                                     {activeTab === 'funcionarios' && (
                                                         <>
+                                                        
                                                             <td className={style.BoldText}>{item.nome_completo}</td>
-                                                            <td>{item.id_cargo?.nome_cargo || '-'}</td>
+                                                            <td>{item.cargo_nome || '-'}</td>
                                                             <td>{item.telefone}</td>
                                                         </>
                                                     )}

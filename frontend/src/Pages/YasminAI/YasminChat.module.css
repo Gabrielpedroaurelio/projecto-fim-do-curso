@@ -19,15 +19,42 @@
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .messagesContainer {
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.boxmessage {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.boxmessagemini {
     flex: 1;
     overflow-y: auto;
     padding: 40px 15% 150px;
     display: flex;
     flex-direction: column;
     gap: 32px;
+    scroll-behavior: smooth;
+}
+
+.boxmessagemini::-webkit-scrollbar {
+    width: 6px;
+}
+
+.boxmessagemini::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
 }
 
 .messagesContainer::-webkit-scrollbar {
@@ -313,3 +340,4 @@
         padding-right: 5%;
     }
 }
+ 

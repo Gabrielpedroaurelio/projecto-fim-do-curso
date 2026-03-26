@@ -114,7 +114,7 @@
 
 .saveBtn {
     margin-top: 1rem;
-    background: var(--emerald-500);
+    background: var(--primary);
     color: white;
     border: none;
     padding: 0.5rem 1.2rem;

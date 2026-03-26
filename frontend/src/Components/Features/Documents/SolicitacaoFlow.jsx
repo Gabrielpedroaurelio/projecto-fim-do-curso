@@ -534,10 +534,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                                     <label>Curso Atual</label>
                                     <strong>{studentInfo.curso_nome || studentInfo.id_turma?.id_curso?.nome_curso || 'N/A'}</strong>
                                 </div>
-                                <div className={style.infoItem}>
-                                    <label>Ano Letivo</label>
-                                    <strong>{new Date().getFullYear()}</strong>
-                                </div>
+                               
                             </div>
 
                             <div className={style.selectionSection}>
@@ -635,7 +632,7 @@ const SolicitacaoFlow = ({ userType = 'aluno', fixedStudent = null, onComplete }
                         {paymentMethod === 'confirmado_local' && (
                             <div className={style.alertInfo} style={{ marginTop: '2rem', maxWidth: '600px' }}>
                                 < RiErrorWarningLine />
-                                <p><strong>Atenção:</strong> Use esta opção APENAS se já tiver o valor em mãos. A emissão será irreversível.</p>
+                                <p><strong>Atenção:</strong> Use esta opção APENAS se já tiver sido pago o valor em na usando o TPA da INSTITUIÇÃO. A emissão será irreversível.</p>
                             </div>
                         )}
 

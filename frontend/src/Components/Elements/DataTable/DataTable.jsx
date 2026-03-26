@@ -59,7 +59,6 @@ export default function DataTable({
 
             <div className={style.TableCard}>
                 <div className={style.TableControls}>
-                    <h3>{title.split(' ')[0]} Information</h3>
                     <div className={style.ControlsRight}>
                         <div className={style.SearchBox}>
                             <FaMagnifyingGlass />
@@ -227,7 +226,7 @@ export default function DataTable({
                     </div>
 
                     <div className={style.PerPageSelector}>
-                        <span>{itemsPerPage} / page</span>
+                        <span>{itemsPerPage} Itens por Página</span>
                     </div>
                 </div>
             </div>
