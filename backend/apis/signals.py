@@ -125,11 +125,39 @@ def notify_solicitacao_status(sender, instance, created, **kwargs):
 
             )
             
-        # Auditoria de mudança de status (Apenas se não for criação)
-        if not created:
-             registrar_evento(None, 'ALTEROU_STATUS_DOC', 
-                              dados_novos={'status': instance.status_solicitacao, 'doc': instance.tipo_documento},
-                              aluno=instance.id_aluno)
+        # Auditoria amigável no Histórico
+        aluno_nome = instance.id_aluno.nome_completo if instance.id_aluno else 'Desconhecido'
+        doc_tipo = instance.tipo_documento
+        
+        # Identificar quem fez a ação com base nos campos preenchidos e extrair o BI
+        if instance.id_funcionario:
+            ag_nome = instance.id_funcionario.nome_completo
+            ag_bi = getattr(instance.id_funcionario, 'numero_bi', None) or 'Sem BI Registado'
+            agente = f"O funcionário {ag_nome} (BI: {ag_bi})"
+        elif instance.id_encarregado:
+            ag_nome = instance.id_encarregado.nome_completo
+            ag_bi = getattr(instance.id_encarregado, 'numero_bi', None) or getattr(instance.id_encarregado, 'telefone', 'Sem Contacto')
+            agente = f"O encarregado {ag_nome} (Doc/Tel: {ag_bi})"
+        else:
+            if instance.id_aluno:
+                ag_nome = instance.id_aluno.nome_completo
+                ag_bi = getattr(instance.id_aluno, 'numero_bi', None) or 'Sem BI Registado'
+                agente = f"O aluno {ag_nome} (BI: {ag_bi})"
+            else:
+                agente = "Agente Desconhecido"
+            
+        if created:
+            mensagem = f"{agente} realizou uma solicitação de {doc_tipo} para o aluno {aluno_nome}."
+        else:
+            status_text = dict(SolicitacaoDocumento.STATUS_CHOICES).get(instance.status_solicitacao, instance.status_solicitacao)
+            mensagem = f"A solicitação de {doc_tipo} do aluno {aluno_nome} mudou para: {status_text} (Ação por: {agente})."
+            
+        registrar_evento(
+            request=None, 
+            tipo_accao=mensagem, 
+            dados_novos={'status': instance.status_solicitacao, 'doc': instance.tipo_documento},
+            aluno=instance.id_aluno
+        )
 
 
 

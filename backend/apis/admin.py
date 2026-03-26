@@ -561,14 +561,76 @@ class NotificacaoAdmin(ModelAdmin):
 @admin.register(ConfiguracaoSistema)
 class ConfiguracaoSistemaAdmin(ModelAdmin):
     list_display = ['nome_instituicao', 'nif', 'telefone']
-    fieldsets = [
-        ('Dados da Instituição', {
-            'fields': ['nome_instituicao', 'nif', 'endereco', 'telefone', 'email_oficial', 'logo']
-        }),
-        ('Assinatura e Carimbo Oficiais', {
-            'fields': ['assinatura_director', 'carimbo_instituicao']
-        }),
-        ('Sistema', {
-            'fields': ['backup_automatico', 'frequencia_backup']
-        }),
-    ]
+    
+    def get_fieldsets(self, request, obj=None):
+        eh_geral = request.user.is_superuser
+        eh_pedagogico = False
+        
+        try:
+            func = Funcionario.objects.get(email=request.user.email)
+            cargo_nome = func.id_cargo.nome_cargo.upper()
+            if cargo_nome in ['DIRECTOR GERAL', 'DIRETOR GERAL']:
+                eh_geral = True
+            elif cargo_nome in ['DIRECTOR PEDAGOGICO', 'DIRETOR PEDAGÓGICO', 'DIRECTOR PEDAGOGICOL']:
+                eh_pedagogico = True
+        except:
+            pass
+            
+        assinaturas_fields = []
+        if eh_geral:
+            assinaturas_fields.extend(['assinatura_director', 'carimbo_instituicao'])
+            
+        # O Pedagogico só mexe na dele e no logo. O Director Geral (se tiver esse campo) também pode mexer na dele (geral)
+        if eh_pedagogico or eh_geral:
+            assinaturas_fields.append('assinatura_director_pedagogico')
+            
+        fieldsets = [
+            ('Dados da Instituição', {
+                'fields': ['nome_instituicao', 'nif', 'endereco', 'telefone', 'email_oficial', 'logo']
+            }),
+        ]
+        
+        # Só adiciona aba de assinaturas se for Director
+        if assinaturas_fields:
+            fieldsets.append(('Assinatura e Carimbo Oficiais', {
+                'fields': assinaturas_fields
+            }))
+            
+        # Só Director Geral (e Admin) mexe no sistema
+        if eh_geral:
+            fieldsets.append(('Sistema', {
+                'fields': ['backup_automatico', 'frequencia_backup']
+            }))
+            
+        return fieldsets
+
+    def get_readonly_fields(self, request, obj=None):
+        eh_pedagogico = False
+        try:
+            func = Funcionario.objects.get(email=request.user.email)
+            if func.id_cargo.nome_cargo.upper() in ['DIRECTOR PEDAGOGICO', 'DIRETOR PEDAGÓGICO', 'DIRECTOR PEDAGOGICOL']:
+                eh_pedagogico = True
+        except:
+            pass
+            
+        # Director Pedagógico só pode alterar Logo e a sua assinatura. Bloqueia os dados textuais da instituição.
+        if eh_pedagogico and not request.user.is_superuser:
+            return ['nome_instituicao', 'nif', 'endereco', 'telefone', 'email_oficial']
+        return []
+
+    def has_add_permission(self, request):
+        if ConfiguracaoSistema.objects.exists():
+            return False
+        return request.user.is_superuser
+        
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        try:
+            func = Funcionario.objects.get(email=request.user.email)
+            cargo = func.id_cargo.nome_cargo.upper()
+            if cargo in ['DIRECTOR GERAL', 'DIRETOR GERAL', 'DIRECTOR PEDAGOGICO', 'DIRETOR PEDAGÓGICO', 'DIRECTOR PEDAGOGICOL']:
+                return True
+        except:
+            pass
+        return False

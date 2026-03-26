@@ -281,12 +281,25 @@ export default function Histories() {
                                 <div className={style.DetailField}>
                                     <span className={style.FieldLabel}>Dados Alterados</span>
                                     <div className={style.FieldValue}>
-                                        {selectedLog.details ? (
-                                            <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
-                                                {JSON.stringify(selectedLog.details, null, 2)}
-                                            </pre>
+                                        {selectedLog.details && Object.keys(selectedLog.details).length > 0 ? (
+                                            <ul style={{ margin: 0, paddingLeft: '20px', listStyleType: 'disc', fontFamily: 'inherit' }}>
+                                                {Object.entries(selectedLog.details).map(([key, value]) => {
+                                                    const formatKey = (k) => k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                                    const formatValue = (v) => {
+                                                        if (typeof v === 'boolean') return v ? 'Sim' : 'Não';
+                                                        if (v === null || v === undefined) return 'Não preenchido';
+                                                        if (typeof v === 'object') return JSON.stringify(v);
+                                                        return String(v);
+                                                    };
+                                                    return (
+                                                        <li key={key} style={{ marginBottom: '8px' }}>
+                                                            <strong>{formatKey(key)}:</strong> {formatValue(value)}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
                                         ) : (
-                                            "Nenhum detalhe adicional disponível."
+                                            <span style={{ color: '#666', fontStyle: 'italic' }}>Nenhum detalhe adicional disponível.</span>
                                         )}
                                     </div>
                                 </div>

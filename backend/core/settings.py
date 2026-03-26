@@ -23,7 +23,7 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1').split(' ')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1 192.168.56.1').split(' ')
 
 SITE_URL = os.environ.get('SITE_URL', 'http://localhost:5173')
 
@@ -258,6 +258,28 @@ UNFOLD = {
                 ],
             },
             {
+                "title": "Configuração da Instituição",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Departamentos",
+                        "icon": "corporate_fare",
+                        "link": lambda request: "/admin/apis/departamento/",
+                    },
+                    {
+                        "title": "Secções",
+                        "icon": "workspaces",
+                        "link": lambda request: "/admin/apis/seccao/",
+                    },
+                    {
+                        "title": "Áreas de Formação",
+                        "icon": "account_tree",
+                        "link": lambda request: "/admin/apis/areaformacao/",
+                    },
+                ],
+            },
+            {
                 "title": "Pessoas",
                 "separator": True,
                 "collapsible": True,
@@ -266,6 +288,11 @@ UNFOLD = {
                         "title": "Funcionários",
                         "icon": "badge",
                         "link": lambda request: "/admin/apis/funcionario/",
+                    },
+                    {
+                        "title": "Cargos e Perfil",
+                        "icon": "work",
+                        "link": lambda request: "/admin/apis/cargo/",
                     },
                     {
                         "title": "Alunos",
@@ -277,18 +304,29 @@ UNFOLD = {
                         "icon": "supervisor_account",
                         "link": lambda request: "/admin/apis/encarregado/",
                     },
+                ],
+            },
+            {
+                "title": "Matrículas & Secretaria",
+                "separator": True,
+                "collapsible": True,
+                "items": [
                     {
-                        "title": "Cargos",
-                        "icon": "work",
-                        "link": lambda request: "/admin/apis/cargo/",
+                        "title": "Inscrições (Candidatos)",
+                        "icon": "how_to_reg",
+                        "link": lambda request: "/admin/apis/inscricao/",
+                    },
+                    {
+                        "title": "Matrículas",
+                        "icon": "assignment_ind",
+                        "link": lambda request: "/admin/apis/matricula/",
                     },
                 ],
             },
             {
-                "title": "Académico",
+                "title": "Gestão Académica",
                 "separator": True,
                 "collapsible": True,
-
                 "items": [
                     {
                         "title": "Cursos",
@@ -296,14 +334,29 @@ UNFOLD = {
                         "link": lambda request: "/admin/apis/curso/",
                     },
                     {
-                        "title": "Turmas",
-                        "icon": "groups",
-                        "link": lambda request: "/admin/apis/turma/",
+                        "title": "Classes e Períodos",
+                        "icon": "stairs",
+                        "link": lambda request: "/admin/apis/classe/",
+                    },
+                    {
+                        "title": "Matrizes Curriculares",
+                        "icon": "account_tree",
+                        "link": lambda request: "/admin/apis/matrizcurricular/",
                     },
                     {
                         "title": "Disciplinas",
                         "icon": "subject",
                         "link": lambda request: "/admin/apis/disciplina/",
+                    },
+                    {
+                        "title": "Prof. vs Disciplina",
+                        "icon": "co_present",
+                        "link": lambda request: "/admin/apis/professordisciplina/",
+                    },
+                    {
+                        "title": "Turmas",
+                        "icon": "groups",
+                        "link": lambda request: "/admin/apis/turma/",
                     },
                     {
                         "title": "Salas",
@@ -318,10 +371,14 @@ UNFOLD = {
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Notas",
+                        "title": "Notas & Pautas",
                         "icon": "grade",
-                        #"link": lambda request: "/admin/apis/nota/",
                         "link": lambda request: "/admin/apis/nota/lancamento-massivo/",
+                    },
+                    {
+                        "title": "Registo de Notas",
+                        "icon": "checklist",
+                        "link": lambda request: "/admin/apis/nota/",
                     },
                     {
                         "title": "Faltas",
@@ -331,17 +388,17 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Documentos",
+                "title": "Documentos Oficiais",
                 "separator": True,
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Solicitações",
+                        "title": "Solicitações Recebidas",
                         "icon": "description",
                         "link": lambda request: "/admin/apis/solicitacaodocumento/",
                     },
                     {
-                        "title": "Documentos Gerados",
+                        "title": "Documentos Emitidos",
                         "icon": "insert_drive_file",
                         "link": lambda request: "/admin/apis/documento/",
                     },
@@ -353,7 +410,7 @@ UNFOLD = {
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Faturas",
+                        "title": "Faturas & Propinas",
                         "icon": "receipt",
                         "link": lambda request: "/admin/apis/fatura/",
                     },
@@ -370,7 +427,7 @@ UNFOLD = {
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "Livros",
+                        "title": "Acervo de Livros",
                         "icon": "book",
                         "link": lambda request: "/admin/apis/livro/",
                     },
@@ -378,6 +435,33 @@ UNFOLD = {
                         "title": "Categorias",
                         "icon": "category",
                         "link": lambda request: "/admin/apis/categoria/",
+                    },
+                ],
+            },
+            {
+                "title": "Sistema & Manutenção",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Definições Gerais",
+                        "icon": "settings",
+                        "link": lambda request: "/admin/apis/configuracaosistema/",
+                    },
+                    {
+                        "title": "Notificações",
+                        "icon": "notifications",
+                        "link": lambda request: "/admin/apis/notificacao/",
+                    },
+                    {
+                        "title": "Auditoria de Ações",
+                        "icon": "history",
+                        "link": lambda request: "/admin/apis/historico/",
+                    },
+                    {
+                        "title": "Registo de Acessos",
+                        "icon": "login",
+                        "link": lambda request: "/admin/apis/historicologin/",
                     },
                 ],
             },
